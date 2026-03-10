@@ -2,6 +2,45 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Lead, Interaction, Task, Sale, Product, PipelineStage, DEFAULT_PIPELINE_STAGES, DEFAULT_ORIGINS } from '@/types/crm';
 
+export interface CRMUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: 'admin' | 'vendedora' | 'usuario';
+  active: boolean;
+}
+
+export interface CRMTag {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface InterestLevel {
+  id: string;
+  value: string;
+  label: string;
+}
+
+const DEFAULT_INTEREST_LEVELS: InterestLevel[] = [
+  { id: '1', value: 'frio', label: 'Frio' },
+  { id: '2', value: 'morno', label: 'Morno' },
+  { id: '3', value: 'quente', label: 'Quente' },
+];
+
+const DEFAULT_TAGS: CRMTag[] = [
+  { id: crypto.randomUUID(), name: 'aula assistida', color: 'hsl(var(--primary))' },
+  { id: crypto.randomUUID(), name: 'veio do direct', color: 'hsl(var(--accent))' },
+  { id: crypto.randomUUID(), name: 'interessada na comunidade', color: 'hsl(var(--warm))' },
+  { id: crypto.randomUUID(), name: 'alta prioridade', color: 'hsl(var(--hot))' },
+  { id: crypto.randomUUID(), name: 'follow-up', color: 'hsl(var(--cold))' },
+];
+
+const DEFAULT_USERS: CRMUser[] = [
+  { id: crypto.randomUUID(), name: 'Francelle', email: 'francelle@email.com', phone: '5511999999999', role: 'admin', active: true },
+];
+
 interface CRMState {
   leads: Lead[];
   interactions: Interaction[];
@@ -12,6 +51,9 @@ interface CRMState {
   origins: string[];
   productTypes: string[];
   saleStatuses: string[];
+  users: CRMUser[];
+  tags: CRMTag[];
+  interestLevels: InterestLevel[];
 
   addLead: (lead: Lead) => void;
   updateLead: (id: string, data: Partial<Lead>) => void;
@@ -36,20 +78,32 @@ interface CRMState {
 
   addOrigin: (origin: string) => void;
   removeOrigin: (origin: string) => void;
+  updateOrigin: (oldOrigin: string, newOrigin: string) => void;
   addProductType: (type: string) => void;
   addPipelineStage: (stage: PipelineStage) => void;
+  updatePipelineStage: (id: string, data: Partial<PipelineStage>) => void;
   removePipelineStage: (id: string) => void;
+
+  addUser: (user: CRMUser) => void;
+  updateUser: (id: string, data: Partial<CRMUser>) => void;
+
+  addTag: (tag: CRMTag) => void;
+  updateTag: (id: string, data: Partial<CRMTag>) => void;
+  removeTag: (id: string) => void;
+
+  addInterestLevel: (level: InterestLevel) => void;
+  updateInterestLevel: (id: string, data: Partial<InterestLevel>) => void;
+  removeInterestLevel: (id: string) => void;
 }
 
 const uid = () => crypto.randomUUID();
 
-// Sample data
 const sampleLeads: Lead[] = [
-  { id: uid(), name: 'Maria Silva', phone: '5511999990001', email: 'maria@email.com', instagram: '@mariasilva', city: 'São Paulo', entryDate: '2026-03-01', origin: 'Instagram – direct', interestLevel: 'quente', mainInterest: 'Programa Dançar pra Curar', tags: ['dança', 'terapia'], painPoint: 'Ansiedade', bodyTensionArea: 'Quadril', emotionalGoal: 'Leveza', pipelineStage: '3', responsible: 'Ana', notes: '' },
-  { id: uid(), name: 'Juliana Costa', phone: '5521988880002', email: 'juliana@email.com', instagram: '@jucosta', city: 'Rio de Janeiro', entryDate: '2026-03-03', origin: 'Aula gratuita', interestLevel: 'morno', mainInterest: 'Comunidade', tags: ['movimento'], painPoint: 'Bloqueio emocional', bodyTensionArea: 'Ombros', emotionalGoal: 'Reconexão', pipelineStage: '2', responsible: 'Ana', notes: '' },
+  { id: uid(), name: 'Maria Silva', phone: '5511999990001', email: 'maria@email.com', instagram: '@mariasilva', city: 'São Paulo', entryDate: '2026-03-01', origin: 'Instagram – direct', interestLevel: 'quente', mainInterest: 'Programa Dançar pra Curar', tags: ['aula assistida'], painPoint: 'Ansiedade', bodyTensionArea: 'Quadril', emotionalGoal: 'Leveza', pipelineStage: '3', responsible: 'Francelle', notes: '' },
+  { id: uid(), name: 'Juliana Costa', phone: '5521988880002', email: 'juliana@email.com', instagram: '@jucosta', city: 'Rio de Janeiro', entryDate: '2026-03-03', origin: 'Aula gratuita', interestLevel: 'morno', mainInterest: 'Comunidade', tags: ['veio do direct'], painPoint: 'Bloqueio emocional', bodyTensionArea: 'Ombros', emotionalGoal: 'Reconexão', pipelineStage: '2', responsible: 'Francelle', notes: '' },
   { id: uid(), name: 'Fernanda Lima', phone: '5531977770003', email: 'fernanda@email.com', instagram: '@ferlima', city: 'Belo Horizonte', entryDate: '2026-03-05', origin: 'Landing page', interestLevel: 'frio', mainInterest: 'Imersão presencial', tags: [], painPoint: 'Tensão corporal', bodyTensionArea: 'Costas', emotionalGoal: 'Liberar emoções', pipelineStage: '1', responsible: '', notes: '' },
-  { id: uid(), name: 'Camila Rocha', phone: '5541966660004', email: 'camila@email.com', instagram: '@camilarocha', city: 'Curitiba', entryDate: '2026-02-20', origin: 'Indicação', interestLevel: 'quente', mainInterest: 'Mentoria', tags: ['premium'], painPoint: 'Desconexão corpo', bodyTensionArea: 'Quadril', emotionalGoal: 'Leveza', pipelineStage: '5', responsible: 'Ana', notes: '' },
-  { id: uid(), name: 'Patrícia Santos', phone: '5551955550005', email: 'patricia@email.com', instagram: '@patsantos', city: 'Porto Alegre', entryDate: '2026-02-15', origin: 'Evento', interestLevel: 'quente', mainInterest: 'Programa Dançar pra Curar', tags: ['evento'], painPoint: 'Trauma emocional', bodyTensionArea: 'Ombros', emotionalGoal: 'Reconexão', pipelineStage: '7', responsible: 'Ana', notes: '' },
+  { id: uid(), name: 'Camila Rocha', phone: '5541966660004', email: 'camila@email.com', instagram: '@camilarocha', city: 'Curitiba', entryDate: '2026-02-20', origin: 'Indicação', interestLevel: 'quente', mainInterest: 'Mentoria', tags: ['alta prioridade'], painPoint: 'Desconexão corpo', bodyTensionArea: 'Quadril', emotionalGoal: 'Leveza', pipelineStage: '5', responsible: 'Francelle', notes: '' },
+  { id: uid(), name: 'Patrícia Santos', phone: '5551955550005', email: 'patricia@email.com', instagram: '@patsantos', city: 'Porto Alegre', entryDate: '2026-02-15', origin: 'Evento', interestLevel: 'quente', mainInterest: 'Programa Dançar pra Curar', tags: ['follow-up'], painPoint: 'Trauma emocional', bodyTensionArea: 'Ombros', emotionalGoal: 'Reconexão', pipelineStage: '7', responsible: 'Francelle', notes: '' },
 ];
 
 const sampleProducts: Product[] = [
@@ -88,6 +142,9 @@ export const useCRMStore = create<CRMState>()(
       origins: DEFAULT_ORIGINS,
       productTypes: ['Programa online', 'Mentoria', 'Assinatura', 'Evento presencial', 'Ebook', 'Aula online', 'Desafio online'],
       saleStatuses: ['ativo', 'concluído', 'cancelado', 'pendência'],
+      users: DEFAULT_USERS,
+      tags: DEFAULT_TAGS,
+      interestLevels: DEFAULT_INTEREST_LEVELS,
 
       addLead: (lead) => set((s) => ({ leads: [...s.leads, lead] })),
       updateLead: (id, data) => set((s) => ({ leads: s.leads.map((l) => l.id === id ? { ...l, ...data } : l) })),
@@ -112,9 +169,22 @@ export const useCRMStore = create<CRMState>()(
 
       addOrigin: (o) => set((s) => ({ origins: [...s.origins, o] })),
       removeOrigin: (o) => set((s) => ({ origins: s.origins.filter((x) => x !== o) })),
+      updateOrigin: (oldOrigin, newOrigin) => set((s) => ({ origins: s.origins.map((o) => o === oldOrigin ? newOrigin : o) })),
       addProductType: (t) => set((s) => ({ productTypes: [...s.productTypes, t] })),
       addPipelineStage: (stage) => set((s) => ({ pipelineStages: [...s.pipelineStages, stage] })),
+      updatePipelineStage: (id, data) => set((s) => ({ pipelineStages: s.pipelineStages.map((st) => st.id === id ? { ...st, ...data } : st) })),
       removePipelineStage: (id) => set((s) => ({ pipelineStages: s.pipelineStages.filter((st) => st.id !== id) })),
+
+      addUser: (user) => set((s) => ({ users: [...s.users, user] })),
+      updateUser: (id, data) => set((s) => ({ users: s.users.map((u) => u.id === id ? { ...u, ...data } : u) })),
+
+      addTag: (tag) => set((s) => ({ tags: [...s.tags, tag] })),
+      updateTag: (id, data) => set((s) => ({ tags: s.tags.map((t) => t.id === id ? { ...t, ...data } : t) })),
+      removeTag: (id) => set((s) => ({ tags: s.tags.filter((t) => t.id !== id) })),
+
+      addInterestLevel: (level) => set((s) => ({ interestLevels: [...s.interestLevels, level] })),
+      updateInterestLevel: (id, data) => set((s) => ({ interestLevels: s.interestLevels.map((l) => l.id === id ? { ...l, ...data } : l) })),
+      removeInterestLevel: (id) => set((s) => ({ interestLevels: s.interestLevels.filter((l) => l.id !== id) })),
     }),
     { name: 'danca-sistematica-crm' }
   )

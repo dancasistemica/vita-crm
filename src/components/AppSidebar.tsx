@@ -19,6 +19,7 @@ const items = [
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
   { title: "Produtos", url: "/produtos", icon: Package },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
+  { title: "Configurações", url: "/configuracoes", icon: Settings },
 ];
 
 export function AppSidebar() {
