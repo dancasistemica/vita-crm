@@ -55,6 +55,11 @@ export default function PipelinePage() {
                     >
                       <p className="font-medium text-sm text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
+                      {lead.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
+                        </div>
+                      )}
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs text-muted-foreground">Última: {getLastInteraction(lead.id)}</span>
                         {lead.responsible && <span className="text-xs text-primary">{lead.responsible}</span>}
