@@ -1,127 +1,104 @@
-import { useState } from "react";
-import { useCRMStore } from "@/store/crmStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus, ShoppingCart } from "lucide-react";
-import { Sale } from "@/types/crm";
-import { toast } from "sonner";
-
-const statusColors: Record<string, string> = { ativo: 'bg-success/20 text-success', concluído: 'bg-muted text-muted-foreground', cancelado: 'bg-destructive/20 text-destructive', pendência: 'bg-warning/20 text-warning' };
+import { useState } from 'react';
+import { Plus, Filter, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
+import ClientsTable from '@/components/clients/ClientsTable';
+import { FilterChip } from '@/components/clients/FilterChip';
+import { useClientsFilter } from '@/hooks/useClientsFilter';
 
 export default function ClientesPage() {
-  const { leads, sales, products, addSale, updateSale, saleStatuses } = useCRMStore();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<string>('');
+  const hook = useClientsFilter();
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  const clients = leads.filter(l => l.pipelineStage === '7');
-  const getClientSales = (leadId: string) => sales.filter(s => s.leadId === leadId);
-  const getProductName = (id: string) => products.find(p => p.id === id)?.name || '—';
-
-  const handleAddSale = (data: Partial<Sale>) => {
-    const sale: Sale = {
-      id: crypto.randomUUID(),
-      leadId: data.leadId || selectedLead,
-      productId: data.productId || '',
-      value: data.value || 0,
-      date: data.date || new Date().toISOString().split('T')[0],
-      paymentMethod: data.paymentMethod || '',
-      status: (data.status as Sale['status']) || 'ativo',
-    };
-    addSale(sale);
-    toast.success("Venda registrada!");
-    setDialogOpen(false);
-  };
+  const filterPanel = (
+    <ClientsAdvancedFilter
+      filters={hook.filters}
+      updateFilter={hook.updateFilter}
+      resetFilters={hook.resetFilters}
+      activeFilterCount={hook.activeFilterCount}
+      products={hook.products}
+      origins={hook.origins}
+      users={hook.users}
+      saleStatuses={hook.saleStatuses}
+    />
+  );
 
   return (
     <div className="space-y-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display text-foreground">Clientes</h1>
-      </div>
-
-      {clients.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhum cliente ainda. Mova leads para a etapa "Cliente" no pipeline.</p>}
-
-      {clients.map(client => {
-        const clientSales = getClientSales(client.id);
-        return (
-          <Card key={client.id}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-display">{client.name}</CardTitle>
-                <Dialog open={dialogOpen && selectedLead === client.id} onOpenChange={o => { setDialogOpen(o); if (o) setSelectedLead(client.id); }}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" /> Nova Venda</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader><DialogTitle className="font-display">Registrar Venda</DialogTitle></DialogHeader>
-                    <SaleForm products={products} saleStatuses={saleStatuses} onSave={handleAddSale} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <p className="text-sm text-muted-foreground">{client.email} • {client.city}</p>
-            </CardHeader>
-            <CardContent>
-              {clientSales.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Nenhuma venda registrada.</p>
-              ) : (
-                <div className="space-y-2">
-                  {clientSales.map(sale => (
-                    <div key={sale.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm font-medium">{getProductName(sale.productId)}</p>
-                          <p className="text-xs text-muted-foreground">{sale.date} • {sale.paymentMethod}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm">R$ {sale.value.toLocaleString('pt-BR')}</span>
-                        <Badge className={statusColors[sale.status] || ''}>{sale.status}</Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
-    </div>
-  );
-}
-
-function SaleForm({ products, saleStatuses, onSave }: { products: any[]; saleStatuses: string[]; onSave: (data: Partial<Sale>) => void }) {
-  const [form, setForm] = useState<Partial<Sale>>({ date: new Date().toISOString().split('T')[0], status: 'ativo' });
-  const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
-
-  return (
-    <div className="space-y-3">
-      <div>
-        <Label>Produto</Label>
-        <Select value={form.productId || ''} onValueChange={v => set('productId', v)}>
-          <SelectTrigger><SelectValue placeholder="Selecionar produto" /></SelectTrigger>
-          <SelectContent>{products.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
-        </Select>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Valor (R$)</Label><Input type="number" value={form.value || ''} onChange={e => set('value', Number(e.target.value))} /></div>
-        <div><Label>Data</Label><Input type="date" value={form.date || ''} onChange={e => set('date', e.target.value)} /></div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div><Label>Pagamento</Label><Input value={form.paymentMethod || ''} onChange={e => set('paymentMethod', e.target.value)} placeholder="Cartão, Pix..." /></div>
         <div>
-          <Label>Status</Label>
-          <Select value={form.status || 'ativo'} onValueChange={v => set('status', v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{saleStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-          </Select>
+          <h1 className="text-2xl font-display text-foreground">Clientes</h1>
+          <p className="text-sm text-muted-foreground">Gestão de clientes e histórico de vendas</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* Mobile filter trigger */}
+          <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="lg:hidden relative">
+                <Filter className="h-4 w-4 mr-1" /> Filtros
+                {hook.activeFilterCount > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 min-w-5 justify-center rounded-full px-1 text-[10px]">
+                    {hook.activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[320px] p-4 overflow-y-auto">
+              <SheetHeader className="sr-only"><SheetTitle>Filtros</SheetTitle></SheetHeader>
+              {filterPanel}
+            </SheetContent>
+          </Sheet>
+          <Button size="sm">
+            <Plus className="h-4 w-4 mr-1" /> Novo Cliente
+          </Button>
         </div>
       </div>
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.productId}>Salvar</Button>
+
+      {/* Active filter chips */}
+      {hook.getActiveFilterChips.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {hook.getActiveFilterChips.map(chip => (
+            <FilterChip key={chip.key} label={chip.label} onRemove={() => hook.removeFilterChip(chip.key)} />
+          ))}
+          <button onClick={hook.resetFilters} className="text-xs text-muted-foreground hover:text-foreground underline">
+            Limpar todos
+          </button>
+        </div>
+      )}
+
+      {/* Layout: sidebar + table */}
+      <div className="flex gap-6">
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:block w-[320px] shrink-0">
+          <div className="sticky top-4 rounded-lg border border-border bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto">
+            {filterPanel}
+          </div>
+        </aside>
+
+        {/* Table */}
+        <div className="flex-1 min-w-0">
+          <ClientsTable
+            clients={hook.filteredClients}
+            getClientSales={hook.getClientSales}
+            getLastInteraction={hook.getLastInteraction}
+            sortField={hook.sortField}
+            sortDir={hook.sortDir}
+            toggleSort={hook.toggleSort}
+            selectedIds={hook.selectedIds}
+            toggleSelect={hook.toggleSelect}
+            toggleSelectAll={hook.toggleSelectAll}
+            page={hook.page}
+            setPage={hook.setPage}
+            perPage={hook.perPage}
+            setPerPage={hook.setPerPage}
+            totalPages={hook.totalPages}
+            totalFiltered={hook.totalFiltered}
+          />
+        </div>
+      </div>
     </div>
   );
 }
