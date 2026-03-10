@@ -7,7 +7,7 @@ export interface Lead {
   city: string;
   entryDate: string;
   origin: string;
-  interestLevel: 'frio' | 'morno' | 'quente';
+  interestLevel: string;
   mainInterest: string;
   tags: string[];
   painPoint: string;
