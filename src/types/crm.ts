@@ -89,7 +89,7 @@ export const DEFAULT_ORIGINS = [
   'Link da bio',
 ];
 
-export const INTEREST_LEVELS = ['frio', 'morno', 'quente'] as const;
+export const INTEREST_LEVELS = ['frio', 'morno', 'quente'];
 
 export const INTERACTION_TYPES = [
   { value: 'mensagem', label: 'Mensagem enviada' },
