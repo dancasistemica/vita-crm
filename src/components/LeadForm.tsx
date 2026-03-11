@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
-import { useState as useLocalState } from "react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
 
 interface LeadFormProps {
