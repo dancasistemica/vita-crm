@@ -19,6 +19,7 @@ import ExportModal from "@/components/export/ExportModal";
 const interestColors: Record<string, string> = { frio: 'bg-cold/20 text-cold', morno: 'bg-warm/20 text-warm', quente: 'bg-hot/20 text-hot' };
 
 export default function LeadsPage() {
+  const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
