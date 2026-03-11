@@ -67,6 +67,8 @@ export default function LeadsPage() {
         email: data.email || '',
         instagram: data.instagram || '',
         city: data.city || '',
+        rg: data.rg || '',
+        cpf: data.cpf || '',
         entryDate: data.entryDate || new Date().toISOString().split('T')[0],
         origin: data.origin || origins[0],
         interestLevel: data.interestLevel || 'frio',
