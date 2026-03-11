@@ -147,7 +147,7 @@ export default function ClientsTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
-                  <DropdownMenuItem>Nova venda</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
                   <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
