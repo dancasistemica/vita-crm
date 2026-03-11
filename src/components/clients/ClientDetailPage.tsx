@@ -26,6 +26,7 @@ export default function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { leads, sales, products, interactions, tasks, saleStatuses, addSale, addInteraction, updateLead } = useCRMStore();
+  const [editSaleId, setEditSaleId] = useState<string | null>(null);
 
   const client = leads.find(l => l.id === id);
   if (!client) {
