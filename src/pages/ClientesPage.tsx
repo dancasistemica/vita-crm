@@ -92,6 +92,14 @@ export default function ClientesPage() {
         </div>
       )}
 
+      {/* Record counter */}
+      <RecordCounter
+        totalCount={totalClientsCount}
+        filteredCount={hook.totalFiltered}
+        perPage={hook.perPage}
+        onPerPageChange={hook.setPerPage}
+      />
+
       {/* Layout: sidebar + table */}
       <div className="flex gap-6">
         {/* Desktop sidebar */}
