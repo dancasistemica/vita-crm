@@ -29,7 +29,7 @@ export default function ImportLeadsGuide() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Importar Leads</h1>
-        <p className="text-muted-foreground mt-1">Guia passo a passo para importar seus leads via CSV</p>
+        <p className="text-muted-foreground mt-1">Guia passo a passo para importar seus leads via CSV ou Excel</p>
       </div>
 
       {/* Section 1: Info */}
