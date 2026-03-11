@@ -190,6 +190,12 @@ export default function ClientDetailPage() {
           />
         </TabsContent>
       </Tabs>
+
+      <EditSaleModal
+        open={!!editSaleId}
+        onOpenChange={(o) => { if (!o) setEditSaleId(null); }}
+        saleId={editSaleId}
+      />
     </div>
   );
 }
