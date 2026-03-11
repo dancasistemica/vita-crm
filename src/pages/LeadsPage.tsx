@@ -273,6 +273,13 @@ export default function LeadsPage() {
         type="leads"
         onSuccess={() => setSelectedIds([])}
       />
+      <BulkDeleteModal
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        selectedIds={selectedIds}
+        type="leads"
+        onSuccess={() => setSelectedIds([])}
+      />
       <ExportModal
         open={exportOpen}
         onOpenChange={setExportOpen}

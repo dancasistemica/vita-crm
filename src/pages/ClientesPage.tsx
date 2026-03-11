@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Filter, X, FileDown, Pencil } from 'lucide-react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,7 @@ import { useClientsFilter } from '@/hooks/useClientsFilter';
 import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
+import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import RecordCounter from '@/components/common/RecordCounter';
 import NewSaleModal from '@/components/sales/NewSaleModal';
 
