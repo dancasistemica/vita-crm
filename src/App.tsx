@@ -37,6 +37,7 @@ const App = () => (
             <Route path="/produtos" element={<ProdutosPage />} />
             <Route path="/relatorios" element={<RelatoriosPage />} />
             <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+            <Route path="/importar-modelo" element={<ImportLeadsGuide />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
