@@ -73,6 +73,7 @@ interface Props {
   totalPages: number;
   totalFiltered: number;
   loading?: boolean;
+  onNewSale?: (leadId?: string) => void;
 }
 
 function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
@@ -85,7 +86,7 @@ export default function ClientsTable({
   sortField, sortDir, toggleSort,
   selectedIds, toggleSelect, toggleSelectAll,
   page, setPage, perPage, setPerPage, totalPages, totalFiltered,
-  loading,
+  loading, onNewSale,
 }: Props) {
   const navigate = useNavigate();
   const { products } = useCRMStore();
@@ -146,7 +147,7 @@ export default function ClientsTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
-                  <DropdownMenuItem>Nova venda</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
                   <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -290,7 +291,7 @@ export default function ClientsTable({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
-                        <DropdownMenuItem>Nova venda</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onNewSale?.(client.id)}>Nova venda</DropdownMenuItem>
                         <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

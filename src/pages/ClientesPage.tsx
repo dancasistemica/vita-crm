@@ -11,6 +11,7 @@ import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import RecordCounter from '@/components/common/RecordCounter';
+import NewSaleModal from '@/components/sales/NewSaleModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
@@ -18,6 +19,13 @@ export default function ClientesPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [saleModalOpen, setSaleModalOpen] = useState(false);
+  const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
+
+  const handleNewSale = (leadId?: string) => {
+    setSaleLeadId(leadId);
+    setSaleModalOpen(true);
+  };
 
   // All clients (leads in "Cliente" stage)
   const allClients = store.leads.filter(l => {
@@ -127,6 +135,7 @@ export default function ClientesPage() {
             setPerPage={hook.setPerPage}
             totalPages={hook.totalPages}
             totalFiltered={hook.totalFiltered}
+            onNewSale={handleNewSale}
           />
         </div>
       </div>
@@ -144,9 +153,13 @@ export default function ClientesPage() {
         selectedIds={hook.selectedIds}
         type="clients"
         onSuccess={() => {
-          // Clear selection by toggling all off
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
+      />
+      <NewSaleModal
+        open={saleModalOpen}
+        onOpenChange={setSaleModalOpen}
+        preSelectedLeadId={saleLeadId}
       />
     </div>
   );
