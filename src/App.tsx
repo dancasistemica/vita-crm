@@ -14,6 +14,7 @@ import TarefasPage from "@/pages/TarefasPage";
 import ProdutosPage from "@/pages/ProdutosPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route element={<CRMLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/leads" element={<LeadsPage />} />
+            <Route path="/import-wizard" element={<ImportLeadsWizard />} />
             <Route path="/pipeline" element={<PipelinePage />} />
             <Route path="/clientes" element={<ClientesPage />} />
             <Route path="/clientes/:id" element={<ClientDetailPage />} />
