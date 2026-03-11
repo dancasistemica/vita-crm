@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Download, Copy, Check, FileSpreadsheet, Info, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { TEMPLATE_COLUMNS, templateExamples, downloadTemplate, copyExampleToClipboard } from '@/services/templateService';
+import { TEMPLATE_COLUMNS, templateExamples, downloadTemplate, downloadTemplateXLSX, copyExampleToClipboard } from '@/services/templateService';
 
 const PREVIEW_COLS = ['nome', 'telefone', 'email', 'origem', 'nivel_interesse', 'dor_principal'] as const;
 
