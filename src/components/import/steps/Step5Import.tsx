@@ -71,6 +71,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           id: crypto.randomUUID(),
           name: data.name || '', phone: data.phone || '', email: data.email || '',
           instagram: data.instagram || '', city: data.city || '',
+          rg: data.rg || '', cpf: data.cpf || '',
           entryDate: data.entryDate || new Date().toISOString().split('T')[0],
           origin: data.origin || store.origins[0] || '',
           interestLevel: data.interestLevel || 'frio',
