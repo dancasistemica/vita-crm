@@ -56,30 +56,49 @@ export default function LeadImportModal({ open, onOpenChange }: Props) {
     setImportResult(null);
   };
 
-  const handleFile = useCallback((file: File) => {
+  const handleFile = useCallback(async (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
       toast.error('Arquivo muito grande (máx 10MB)');
       return;
     }
-    if (!file.name.endsWith('.csv')) {
-      toast.error('Apenas arquivos .csv são aceitos');
+    const fileType = getFileType(file);
+    if (fileType === 'invalid') {
+      toast.error('Formato não suportado. Use CSV, XLSX ou XLS.');
       return;
     }
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      const { headers, rows } = parseCSVText(text);
+
+    try {
+      let headers: string[];
+      let rows: CSVRow[];
+
+      if (fileType === 'csv') {
+        const text = await file.text();
+        const parsed = parseCSVText(text);
+        headers = parsed.headers;
+        rows = parsed.rows;
+      } else {
+        const parsed = await parseFile(file);
+        headers = parsed.headers;
+        rows = parsed.rows;
+      }
+
       if (headers.length === 0) {
-        toast.error('Arquivo CSV vazio ou inválido');
+        toast.error('Arquivo vazio ou inválido');
         return;
       }
+      if (rows.length > 1000) {
+        toast.error('Máximo 1.000 linhas por importação. Divida em múltiplos arquivos.');
+        return;
+      }
+
       setCsvHeaders(headers);
       setCsvRows(rows);
       const suggested = suggestMapping(headers);
       setMapping(suggested);
-    };
-    reader.readAsText(file, 'UTF-8');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao processar arquivo');
+    }
   }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
