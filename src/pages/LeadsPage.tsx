@@ -205,9 +205,11 @@ export default function LeadsPage() {
           </div>
         )}
 
-        {paginated.map(lead => (
-          <Card key={lead.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        {paginated.map((lead, idx) => (
+          <Card key={lead.id} className="hover-lift shadow-card border-border/60 relative overflow-hidden animate-slide-up" style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'backwards' }}>
+            {/* Interest level bar */}
+            <div className={`interest-bar ${interestBarColors[lead.interestLevel] || 'bg-muted'}`} />
+            <CardContent className="py-3 px-4 pl-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <Checkbox
                   checked={selectedIds.includes(lead.id)}
@@ -216,38 +218,38 @@ export default function LeadsPage() {
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-foreground">{lead.name}</span>
-                    <Badge variant="secondary" className={interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}>{getInterestLabel(lead.interestLevel)}</Badge>
-                    <Badge variant="outline" className="text-xs">{getStageName(lead.pipelineStage)}</Badge>
-                    {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>)}
+                    <span className="font-semibold text-foreground text-sm">{lead.name}</span>
+                    <Badge variant="outline" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
+                    <Badge variant="outline" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>
+                    {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] bg-primary/8 text-primary border-primary/15">{tag}</Badge>)}
                   </div>
-                  <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground flex-wrap">
+                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
                     <span>{lead.origin}</span>
-                    <span>{lead.city}</span>
-                    {lead.responsible && <span>→ {lead.responsible}</span>}
+                    {lead.city && <span>• {lead.city}</span>}
+                    {lead.responsible && <span className="text-primary/70">→ {lead.responsible}</span>}
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 {lead.phone && (
                   <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8"><Phone className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-success hover:bg-success/10 hover:text-success"><Phone className="h-4 w-4" /></Button>
                   </a>
                 )}
                 {lead.email && (
                   <a href={`mailto:${lead.email}`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8"><Mail className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-info/10 hover:text-info"><Mail className="h-4 w-4" /></Button>
                   </a>
                 )}
                 {lead.instagram && (
                   <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8"><Instagram className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
                   </a>
                 )}
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
                   <Edit className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
