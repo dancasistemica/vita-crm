@@ -14,8 +14,6 @@ import TarefasPage from "@/pages/TarefasPage";
 import ProdutosPage from "@/pages/ProdutosPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
-import ImportLeadsGuide from "@/pages/ImportLeadsGuide";
-import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,8 +36,6 @@ const App = () => (
             <Route path="/produtos" element={<ProdutosPage />} />
             <Route path="/relatorios" element={<RelatoriosPage />} />
             <Route path="/configuracoes" element={<ConfiguracoesPage />} />
-            <Route path="/importar-modelo" element={<ImportLeadsGuide />} />
-            <Route path="/importar-wizard" element={<ImportLeadsWizard />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

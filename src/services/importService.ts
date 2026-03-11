@@ -86,7 +86,7 @@ export function suggestMapping(csvHeaders: string[]): Record<string, string> {
 
 export function getCRMFields(): { value: string; label: string }[] {
   return [
-    { value: '', label: '— Ignorar —' },
+    { value: '_ignore', label: '— Ignorar —' },
     { value: 'name', label: 'Nome' },
     { value: 'phone', label: 'Telefone' },
     { value: 'email', label: 'Email' },

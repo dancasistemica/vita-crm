@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
-import { Progress } from '@/components/ui/progress';
 import { useImportModal } from '@/hooks/useImportModal';
 import Step1Intent from './steps/Step1Intent';
 import Step2Explanation from './steps/Step2Explanation';
@@ -20,6 +20,10 @@ const STEP_LABELS = ['Intenção', 'Explicação', 'Download', 'Upload', 'Import
 export default function ImportLeadsModal({ open, onOpenChange }: Props) {
   const isMobile = useIsMobile();
   const { state, update, reset, setStep } = useImportModal();
+
+  useEffect(() => {
+    if (open) reset();
+  }, [open, reset]);
 
   const handleClose = () => {
     onOpenChange(false);
