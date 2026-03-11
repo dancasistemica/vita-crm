@@ -291,7 +291,7 @@ export default function ClientsTable({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
-                        <DropdownMenuItem>Nova venda</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onNewSale?.(client.id)}>Nova venda</DropdownMenuItem>
                         <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
