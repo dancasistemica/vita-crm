@@ -63,6 +63,14 @@ export default function ClientesPage() {
               {filterPanel}
             </SheetContent>
           </Sheet>
+          <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4 mr-1" /> Exportar
+          </Button>
+          {hook.selectedIds.length > 0 && (
+            <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
+              <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
+            </Button>
+          )}
           <Button size="sm">
             <Plus className="h-4 w-4 mr-1" /> Novo Cliente
           </Button>
