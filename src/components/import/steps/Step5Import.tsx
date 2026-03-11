@@ -101,6 +101,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
             name: (dup.newData.name as string) || '', phone: (dup.newData.phone as string) || '',
             email: (dup.newData.email as string) || '', instagram: (dup.newData.instagram as string) || '',
             city: (dup.newData.city as string) || '',
+            rg: (dup.newData.rg as string) || '', cpf: (dup.newData.cpf as string) || '',
             entryDate: (dup.newData.entryDate as string) || new Date().toISOString().split('T')[0],
             origin: (dup.newData.origin as string) || store.origins[0] || '',
             interestLevel: (dup.newData.interestLevel as string) || 'frio',

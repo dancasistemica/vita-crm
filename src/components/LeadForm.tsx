@@ -45,6 +45,28 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         <div><Label>Instagram</Label><Input value={form.instagram || ''} onChange={e => set('instagram', e.target.value)} placeholder="@usuario" /></div>
         <div><Label>Cidade</Label><Input value={form.city || ''} onChange={e => set('city', e.target.value)} /></div>
         <div><Label>Data de entrada</Label><Input type="date" value={form.entryDate || ''} onChange={e => set('entryDate', e.target.value)} /></div>
+        <div>
+          <Label>RG</Label>
+          <Input value={form.rg || ''} onChange={e => set('rg', formatRG(e.target.value))} placeholder="00.000.000-0" maxLength={12} />
+        </div>
+        <div>
+          <Label>CPF</Label>
+          <Input
+            value={form.cpf || ''}
+            onChange={e => set('cpf', formatCPF(e.target.value))}
+            onBlur={() => {
+              const raw = (form.cpf || '').replace(/\D/g, '');
+              if (raw.length === 11 && !validateCPF(form.cpf || '')) {
+                setCpfWarning(true);
+              } else {
+                setCpfWarning(false);
+              }
+            }}
+            placeholder="000.000.000-00"
+            maxLength={14}
+          />
+          {cpfWarning && <p className="text-xs text-amber-500 mt-1">⚠️ CPF inválido</p>}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
