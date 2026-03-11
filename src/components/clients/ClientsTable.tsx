@@ -73,6 +73,7 @@ interface Props {
   totalPages: number;
   totalFiltered: number;
   loading?: boolean;
+  onNewSale?: (leadId?: string) => void;
 }
 
 function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
