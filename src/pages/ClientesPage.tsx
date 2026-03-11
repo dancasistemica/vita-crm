@@ -10,6 +10,7 @@ import { useClientsFilter } from '@/hooks/useClientsFilter';
 import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
+import RecordCounter from '@/components/common/RecordCounter';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
@@ -23,6 +24,8 @@ export default function ClientesPage() {
     const stage = store.pipelineStages.find(s => s.id === l.pipelineStage);
     return stage?.name === 'Cliente';
   });
+
+  const totalClientsCount = allClients.length;
 
   const filterPanel = (
     <ClientsAdvancedFilter
@@ -88,6 +91,14 @@ export default function ClientesPage() {
           </button>
         </div>
       )}
+
+      {/* Record counter */}
+      <RecordCounter
+        totalCount={totalClientsCount}
+        filteredCount={hook.totalFiltered}
+        perPage={hook.perPage}
+        onPerPageChange={hook.setPerPage}
+      />
 
       {/* Layout: sidebar + table */}
       <div className="flex gap-6">

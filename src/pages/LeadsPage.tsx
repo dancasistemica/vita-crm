@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCRMStore } from "@/store/crmStore";
 import { Lead } from "@/types/crm";
@@ -12,9 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
-
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import ExportModal from "@/components/export/ExportModal";
+import RecordCounter from "@/components/common/RecordCounter";
+import { useTablePagination } from "@/hooks/useTablePagination";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/20 text-cold', morno: 'bg-warm/20 text-warm', quente: 'bg-hot/20 text-hot' };
 
@@ -32,16 +33,27 @@ export default function LeadsPage() {
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  
+  const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
-  const filtered = leads.filter(l => {
-    const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
-    const matchOrigin = filterOrigin === "all" || l.origin === filterOrigin;
-    const matchInterest = filterInterest === "all" || l.interestLevel === filterInterest;
-    const matchStage = filterStage === "all" || l.pipelineStage === filterStage;
-    const matchTag = filterTag === "all" || l.tags.includes(filterTag);
-    return matchSearch && matchOrigin && matchInterest && matchStage && matchTag;
-  });
+  const filtered = useMemo(() => {
+    return leads.filter(l => {
+      const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
+      const matchOrigin = filterOrigin === "all" || l.origin === filterOrigin;
+      const matchInterest = filterInterest === "all" || l.interestLevel === filterInterest;
+      const matchStage = filterStage === "all" || l.pipelineStage === filterStage;
+      const matchTag = filterTag === "all" || l.tags.includes(filterTag);
+      return matchSearch && matchOrigin && matchInterest && matchStage && matchTag;
+    });
+  }, [leads, search, filterOrigin, filterInterest, filterStage, filterTag]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+
+  // Reset page when filters change
+  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
+    setter(value);
+    resetPage();
+  };
 
   const handleSave = (data: Partial<Lead>) => {
     if (editingLead) {
@@ -82,10 +94,10 @@ export default function LeadsPage() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedIds.length === filtered.length) {
+    if (selectedIds.length === paginated.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(filtered.map(l => l.id));
+      setSelectedIds(paginated.map(l => l.id));
     }
   };
 
@@ -117,30 +129,30 @@ export default function LeadsPage() {
       <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar por nome, email ou telefone..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+          <Input placeholder="Buscar por nome, email ou telefone..." value={search} onChange={e => { setSearch(e.target.value); resetPage(); }} className="pl-9" />
         </div>
-        <Select value={filterOrigin} onValueChange={setFilterOrigin}>
+        <Select value={filterOrigin} onValueChange={handleFilterChange(setFilterOrigin)}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Origem" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas origens</SelectItem>
             {origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={filterInterest} onValueChange={setFilterInterest}>
+        <Select value={filterInterest} onValueChange={handleFilterChange(setFilterInterest)}>
           <SelectTrigger className="w-[140px]"><SelectValue placeholder="Nível" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos níveis</SelectItem>
             {interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={filterStage} onValueChange={setFilterStage}>
+        <Select value={filterStage} onValueChange={handleFilterChange(setFilterStage)}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Etapa" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas etapas</SelectItem>
             {pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={filterTag} onValueChange={setFilterTag}>
+        <Select value={filterTag} onValueChange={handleFilterChange(setFilterTag)}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Tag" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas tags</SelectItem>
@@ -148,6 +160,14 @@ export default function LeadsPage() {
           </SelectContent>
         </Select>
       </div>
+
+      {/* Record counter */}
+      <RecordCounter
+        totalCount={leads.length}
+        filteredCount={filtered.length}
+        perPage={perPage}
+        onPerPageChange={setPerPage}
+      />
 
       {/* Bulk actions bar */}
       {selectedIds.length > 0 && (
@@ -163,20 +183,20 @@ export default function LeadsPage() {
       )}
 
       <div className="space-y-2">
-        {filtered.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhum lead encontrado.</p>}
+        {paginated.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhum lead encontrado.</p>}
 
         {/* Select all header */}
-        {filtered.length > 0 && (
+        {paginated.length > 0 && (
           <div className="flex items-center gap-2 px-4 py-1">
             <Checkbox
-              checked={selectedIds.length === filtered.length && filtered.length > 0}
+              checked={selectedIds.length === paginated.length && paginated.length > 0}
               onCheckedChange={toggleSelectAll}
             />
             <span className="text-xs text-muted-foreground">Selecionar todos</span>
           </div>
         )}
 
-        {filtered.map(lead => (
+        {paginated.map(lead => (
           <Card key={lead.id} className="hover:shadow-md transition-shadow">
             <CardContent className="py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -227,7 +247,18 @@ export default function LeadsPage() {
         ))}
       </div>
 
-      
+      {/* Pagination */}
+      {filtered.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
+            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+          </div>
+        </div>
+      )}
+
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
