@@ -199,6 +199,10 @@ export const useCRMStore = create<CRMState>()(
       addInterestLevel: (level) => set((s) => ({ interestLevels: [...s.interestLevels, level] })),
       updateInterestLevel: (id, data) => set((s) => ({ interestLevels: s.interestLevels.map((l) => l.id === id ? { ...l, ...data } : l) })),
       removeInterestLevel: (id) => set((s) => ({ interestLevels: s.interestLevels.filter((l) => l.id !== id) })),
+
+      addPaymentMethod: (method: PaymentMethod) => set((s) => ({ paymentMethods: [...s.paymentMethods, method] })),
+      updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => set((s) => ({ paymentMethods: s.paymentMethods.map((m) => m.id === id ? { ...m, ...data } : m) })),
+      removePaymentMethod: (id: string) => set((s) => ({ paymentMethods: s.paymentMethods.filter((m) => m.id !== id) })),
     }),
     { name: 'danca-sistematica-crm' }
   )
