@@ -106,7 +106,11 @@ export default function ClientDetailPage() {
           ) : (
             <div className="space-y-2">
               {clientSales.map(sale => (
-                <div key={sale.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
+                <div
+                  key={sale.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => setEditSaleId(sale.id)}
+                >
                   <div className="flex items-center gap-3">
                     <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                     <div>
@@ -117,6 +121,9 @@ export default function ClientDetailPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-success">R$ {sale.value.toLocaleString('pt-BR')}</span>
                     <Badge className={statusColors[sale.status] || ''}>{sale.status}</Badge>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
+                      <Edit2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
                 </div>
               ))}
