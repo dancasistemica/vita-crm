@@ -80,9 +80,14 @@ export default function ClientesPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {hook.selectedIds.length > 0 && (
-            <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
-              <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
-            </Button>
+            <>
+              <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
+                <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+                <Trash2 className="h-4 w-4 mr-1" /> Deletar ({hook.selectedIds.length})
+              </Button>
+            </>
           )}
           <Button size="sm" onClick={() => handleNewSale()}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
