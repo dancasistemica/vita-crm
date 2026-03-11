@@ -151,6 +151,14 @@ export const useCRMStore = create<CRMState>()(
       users: DEFAULT_USERS,
       tags: DEFAULT_TAGS,
       interestLevels: DEFAULT_INTEREST_LEVELS,
+      paymentMethods: [
+        { id: crypto.randomUUID(), name: 'Dinheiro', active: true },
+        { id: crypto.randomUUID(), name: 'Cartão Crédito', active: true },
+        { id: crypto.randomUUID(), name: 'Cartão Débito', active: true },
+        { id: crypto.randomUUID(), name: 'Pix', active: true },
+        { id: crypto.randomUUID(), name: 'Transferência Bancária', active: true },
+        { id: crypto.randomUUID(), name: 'Boleto', active: true },
+      ] as PaymentMethod[],
 
       addLead: (lead) => set((s) => ({ leads: [...s.leads, lead] })),
       updateLead: (id, data) => set((s) => ({ leads: s.leads.map((l) => l.id === id ? { ...l, ...data } : l) })),
