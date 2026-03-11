@@ -180,6 +180,9 @@ export default function LeadsPage() {
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
             <Pencil className="h-3 w-3 mr-1" /> Editar em massa
           </Button>
+          <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
+            <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
+          </Button>
           <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
             Limpar seleção
           </Button>
