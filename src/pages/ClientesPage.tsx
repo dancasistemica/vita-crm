@@ -19,6 +19,13 @@ export default function ClientesPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [saleModalOpen, setSaleModalOpen] = useState(false);
+  const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
+
+  const handleNewSale = (leadId?: string) => {
+    setSaleLeadId(leadId);
+    setSaleModalOpen(true);
+  };
 
   // All clients (leads in "Cliente" stage)
   const allClients = store.leads.filter(l => {
