@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCRMStore } from "@/store/crmStore";
 import { Lead } from "@/types/crm";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,13 +12,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
-import LeadImportModal from "@/components/import/LeadImportModal";
+
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import ExportModal from "@/components/export/ExportModal";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/20 text-cold', morno: 'bg-warm/20 text-warm', quente: 'bg-hot/20 text-hot' };
 
 export default function LeadsPage() {
+  const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
@@ -26,7 +28,7 @@ export default function LeadsPage() {
   const [filterTag, setFilterTag] = useState("all");
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [importOpen, setImportOpen] = useState(false);
+  
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -91,8 +93,8 @@ export default function LeadsPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-            <Upload className="h-4 w-4 mr-1" /> Importar CSV
+          <Button variant="outline" size="sm" onClick={() => navigate('/importar-wizard')}>
+            <Upload className="h-4 w-4 mr-1" /> Importar Leads
           </Button>
           <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4 mr-1" /> Exportar
@@ -224,7 +226,7 @@ export default function LeadsPage() {
         ))}
       </div>
 
-      <LeadImportModal open={importOpen} onOpenChange={setImportOpen} />
+      
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
