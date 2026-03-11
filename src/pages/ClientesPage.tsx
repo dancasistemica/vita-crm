@@ -119,6 +119,24 @@ export default function ClientesPage() {
           />
         </div>
       </div>
+
+      <ExportModal
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        type="clients"
+        allData={allClients}
+        filteredData={hook.filteredClients}
+      />
+      <BulkEditModal
+        open={bulkEditOpen}
+        onOpenChange={setBulkEditOpen}
+        selectedIds={hook.selectedIds}
+        type="clients"
+        onSuccess={() => {
+          // Clear selection by toggling all off
+          hook.selectedIds.forEach(id => hook.toggleSelect(id));
+        }}
+      />
     </div>
   );
 }
