@@ -210,7 +210,7 @@ export default function ClientsTable({
             return (
               <TableRow
                 key={client.id}
-                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                className="cursor-pointer hover:bg-muted/40 transition-colors group"
                 onClick={() => navigate(`/clientes/${client.id}`)}
               >
                 <TableCell onClick={e => e.stopPropagation()}>
