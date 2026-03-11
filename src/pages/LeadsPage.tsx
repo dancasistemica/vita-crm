@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useCRMStore } from "@/store/crmStore";
+import ImportLeadsModal from "@/components/import/ImportLeadsModal";
 import { Lead } from "@/types/crm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,6 @@ import ExportModal from "@/components/export/ExportModal";
 const interestColors: Record<string, string> = { frio: 'bg-cold/20 text-cold', morno: 'bg-warm/20 text-warm', quente: 'bg-hot/20 text-hot' };
 
 export default function LeadsPage() {
-  const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
@@ -32,6 +31,7 @@ export default function LeadsPage() {
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [importOpen, setImportOpen] = useState(false);
 
   const filtered = leads.filter(l => {
     const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
@@ -93,7 +93,7 @@ export default function LeadsPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate('/importar-wizard')}>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
             <Upload className="h-4 w-4 mr-1" /> Importar Leads
           </Button>
           <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
@@ -240,6 +240,10 @@ export default function LeadsPage() {
         type="leads"
         allData={leads}
         filteredData={filtered}
+      />
+      <ImportLeadsModal
+        open={importOpen}
+        onOpenChange={setImportOpen}
       />
     </div>
   );
