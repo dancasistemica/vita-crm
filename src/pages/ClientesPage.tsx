@@ -10,6 +10,7 @@ import { useClientsFilter } from '@/hooks/useClientsFilter';
 import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
+import RecordCounter from '@/components/common/RecordCounter';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
