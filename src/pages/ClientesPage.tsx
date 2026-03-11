@@ -119,7 +119,7 @@ export default function ClientesPage() {
       <div className="flex gap-6">
         {/* Desktop sidebar */}
         <aside className="hidden lg:block w-[320px] shrink-0">
-          <div className="sticky top-4 rounded-lg border border-border bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto">
+          <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
             {filterPanel}
           </div>
         </aside>

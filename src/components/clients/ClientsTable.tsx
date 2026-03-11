@@ -126,7 +126,7 @@ export default function ClientsTable({
         return (
           <div
             key={client.id}
-            className="rounded-lg border border-border bg-card p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            className="rounded-xl border border-border/60 bg-card p-4 cursor-pointer hover-lift shadow-card transition-all"
             onClick={() => navigate(`/clientes/${client.id}`)}
           >
             <div className="flex items-start justify-between mb-2">
@@ -170,7 +170,7 @@ export default function ClientsTable({
 
   // Desktop table view
   const desktopView = (
-    <div className="hidden md:block rounded-lg border border-border overflow-hidden">
+    <div className="hidden md:block rounded-xl border border-border/60 overflow-hidden shadow-card bg-card">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/30 hover:bg-muted/30">
@@ -210,7 +210,7 @@ export default function ClientsTable({
             return (
               <TableRow
                 key={client.id}
-                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                className="cursor-pointer hover:bg-muted/40 transition-colors group"
                 onClick={() => navigate(`/clientes/${client.id}`)}
               >
                 <TableCell onClick={e => e.stopPropagation()}>
@@ -278,7 +278,7 @@ export default function ClientsTable({
                     </Tooltip>
                   ) : <span className="text-sm text-muted-foreground">—</span>}
                 </TableCell>
-                <TableCell onClick={e => e.stopPropagation()}>
+                <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
