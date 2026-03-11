@@ -145,15 +145,15 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
                   <span className="text-xs font-medium text-foreground flex-1 truncate">{header}</span>
                   <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
                   <Select
-                    value={state.mapping[header] || ''}
-                    onValueChange={v => update({ mapping: { ...state.mapping, [header]: v } })}
+                    value={state.mapping[header] || '_ignore'}
+                    onValueChange={v => update({ mapping: { ...state.mapping, [header]: v === '_ignore' ? '' : v } })}
                   >
                     <SelectTrigger className="w-[160px] h-8 text-xs">
                       <SelectValue placeholder="Selecionar" />
                     </SelectTrigger>
                     <SelectContent>
                       {crmFields.map(f => (
-                        <SelectItem key={f.value} value={f.value || '_ignore'}>{f.label}</SelectItem>
+                        <SelectItem key={f.value || '_ignore'} value={f.value || '_ignore'}>{f.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
