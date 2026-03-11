@@ -147,7 +147,11 @@ export default function ImportLeadsGuide() {
             Baixar Modelo
           </h3>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button onClick={downloadTemplate} className="flex-1 gap-2" size="lg">
+            <Button onClick={downloadTemplateXLSX} className="flex-1 gap-2" size="lg">
+              <Download className="h-4 w-4" />
+              Baixar Modelo XLSX (Recomendado)
+            </Button>
+            <Button onClick={downloadTemplate} variant="outline" className="flex-1 gap-2" size="lg">
               <Download className="h-4 w-4" />
               Baixar Modelo CSV
             </Button>
