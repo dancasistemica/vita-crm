@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import LeadsPage from "@/pages/LeadsPage";
@@ -21,28 +22,30 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<CRMLayout />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/leads" element={<LeadsPage />} />
-            <Route path="/import-wizard" element={<ImportLeadsWizard />} />
-            <Route path="/pipeline" element={<PipelinePage />} />
-            <Route path="/clientes" element={<ClientesPage />} />
-            <Route path="/clientes/:id" element={<ClientDetailPage />} />
-            <Route path="/interacoes" element={<InteracoesPage />} />
-            <Route path="/tarefas" element={<TarefasPage />} />
-            <Route path="/produtos" element={<ProdutosPage />} />
-            <Route path="/relatorios" element={<RelatoriosPage />} />
-            <Route path="/configuracoes" element={<ConfiguracoesPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <OrganizationProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<CRMLayout />}>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/leads" element={<LeadsPage />} />
+              <Route path="/import-wizard" element={<ImportLeadsWizard />} />
+              <Route path="/pipeline" element={<PipelinePage />} />
+              <Route path="/clientes" element={<ClientesPage />} />
+              <Route path="/clientes/:id" element={<ClientDetailPage />} />
+              <Route path="/interacoes" element={<InteracoesPage />} />
+              <Route path="/tarefas" element={<TarefasPage />} />
+              <Route path="/produtos" element={<ProdutosPage />} />
+              <Route path="/relatorios" element={<RelatoriosPage />} />
+              <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </OrganizationProvider>
   </QueryClientProvider>
 );
 
