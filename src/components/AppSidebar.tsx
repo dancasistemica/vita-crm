@@ -18,8 +18,6 @@ const items = [
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
   { title: "Produtos", url: "/produtos", icon: Package },
-  { title: "Importar Leads", url: "/importar-modelo", icon: FileDown },
-  { title: "Wizard Importação", url: "/importar-wizard", icon: Upload },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
   { title: "Configurações", url: "/configuracoes", icon: Settings },
 ];
