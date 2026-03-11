@@ -93,7 +93,7 @@ export default function LeadsPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate('/importar-wizard')}>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
             <Upload className="h-4 w-4 mr-1" /> Importar Leads
           </Button>
           <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
