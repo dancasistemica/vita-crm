@@ -226,7 +226,7 @@ export default function LeadsPage() {
         ))}
       </div>
 
-      <LeadImportModal open={importOpen} onOpenChange={setImportOpen} />
+      
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
