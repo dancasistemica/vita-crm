@@ -21,6 +21,10 @@ export default function ImportLeadsModal({ open, onOpenChange }: Props) {
   const isMobile = useIsMobile();
   const { state, update, reset, setStep } = useImportModal();
 
+  useEffect(() => {
+    if (open) reset();
+  }, [open, reset]);
+
   const handleClose = () => {
     onOpenChange(false);
     setTimeout(reset, 300);

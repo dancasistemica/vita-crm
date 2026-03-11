@@ -147,6 +147,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
                   <Select
                     value={state.mapping[header] || '_ignore'}
                     onValueChange={v => update({ mapping: { ...state.mapping, [header]: v === '_ignore' ? '' : v } })}
+                    key={`${header}-${state.mapping[header] || '_ignore'}`}
                   >
                     <SelectTrigger className="w-[160px] h-8 text-xs">
                       <SelectValue placeholder="Selecionar" />
