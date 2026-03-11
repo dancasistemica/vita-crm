@@ -238,9 +238,9 @@ export default function LeadImportModal({ open, onOpenChange }: Props) {
               onClick={() => document.getElementById('csv-input')?.click()}
             >
               <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-sm text-foreground font-medium">Arraste seu arquivo CSV aqui</p>
-              <p className="text-xs text-muted-foreground mt-1">ou clique para selecionar (máx 10MB)</p>
-              <input id="csv-input" type="file" accept=".csv" className="hidden" onChange={handleFileInput} />
+              <p className="text-sm text-foreground font-medium">Arraste seu arquivo aqui</p>
+              <p className="text-xs text-muted-foreground mt-1">CSV, XLSX ou XLS (máx 10MB, 1.000 linhas)</p>
+              <input id="csv-input" type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFileInput} />
             </div>
 
             {fileName && (
