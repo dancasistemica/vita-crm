@@ -278,7 +278,7 @@ export default function ClientsTable({
                     </Tooltip>
                   ) : <span className="text-sm text-muted-foreground">—</span>}
                 </TableCell>
-                <TableCell onClick={e => e.stopPropagation()}>
+                <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
