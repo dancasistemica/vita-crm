@@ -199,7 +199,7 @@ export default function LeadImportModal({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle className="font-display flex items-center gap-2">
             <FileSpreadsheet className="h-5 w-5 text-primary" />
-            Importar Leads via CSV
+            Importar Leads (CSV / Excel)
           </DialogTitle>
         </DialogHeader>
 
