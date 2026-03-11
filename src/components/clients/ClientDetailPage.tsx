@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, ExternalLink, Edit2 } from 'lucide-react';
 import { Sale, INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
+import EditSaleModal from '@/components/sales/EditSaleModal';
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success',
