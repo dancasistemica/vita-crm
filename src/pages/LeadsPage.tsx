@@ -28,7 +28,7 @@ export default function LeadsPage() {
   const [filterTag, setFilterTag] = useState("all");
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [importOpen, setImportOpen] = useState(false);
+  
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
