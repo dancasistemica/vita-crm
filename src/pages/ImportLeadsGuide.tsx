@@ -43,7 +43,7 @@ export default function ImportLeadsGuide() {
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             {[
-              ['Formato', 'CSV (separado por vírgula)'],
+              ['Formato', 'CSV, XLSX ou XLS (recomendado: XLSX)'],
               ['Tamanho máximo', '10MB'],
               ['Máximo por importação', '1.000 leads'],
               ['Campos obrigatórios', 'Nome + (Email OU Telefone)'],
