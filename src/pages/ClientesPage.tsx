@@ -20,6 +20,7 @@ export default function ClientesPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
 
