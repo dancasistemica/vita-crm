@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
+import LeadImportModal from "@/components/import/LeadImportModal";
+import BulkEditModal from "@/components/bulk/BulkEditModal";
+import ExportModal from "@/components/export/ExportModal";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/20 text-cold', morno: 'bg-warm/20 text-warm', quente: 'bg-hot/20 text-hot' };
 
@@ -24,6 +26,10 @@ export default function LeadsPage() {
   const [filterTag, setFilterTag] = useState("all");
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const filtered = leads.filter(l => {
     const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
@@ -68,21 +74,41 @@ export default function LeadsPage() {
   const getStageName = (id: string) => pipelineStages.find(s => s.id === id)?.name || '';
   const getInterestLabel = (value: string) => interestLevels.find(l => l.value === value)?.label || value;
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filtered.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filtered.map(l => l.id));
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
-        <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
-          <DialogTrigger asChild>
-            <Button onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
-            </DialogHeader>
-            <LeadForm lead={editingLead} onSave={handleSave} />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+            <Upload className="h-4 w-4 mr-1" /> Importar CSV
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4 mr-1" /> Exportar
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
+            <DialogTrigger asChild>
+              <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+              </DialogHeader>
+              <LeadForm lead={editingLead} onSave={handleSave} />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
@@ -120,22 +146,54 @@ export default function LeadsPage() {
         </Select>
       </div>
 
+      {/* Bulk actions bar */}
+      {selectedIds.length > 0 && (
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
+          <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
+          <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
+            <Pencil className="h-3 w-3 mr-1" /> Editar em massa
+          </Button>
+          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
+            Limpar seleção
+          </Button>
+        </div>
+      )}
+
       <div className="space-y-2">
         {filtered.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhum lead encontrado.</p>}
+
+        {/* Select all header */}
+        {filtered.length > 0 && (
+          <div className="flex items-center gap-2 px-4 py-1">
+            <Checkbox
+              checked={selectedIds.length === filtered.length && filtered.length > 0}
+              onCheckedChange={toggleSelectAll}
+            />
+            <span className="text-xs text-muted-foreground">Selecionar todos</span>
+          </div>
+        )}
+
         {filtered.map(lead => (
           <Card key={lead.id} className="hover:shadow-md transition-shadow">
             <CardContent className="py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-semibold text-foreground">{lead.name}</span>
-                  <Badge variant="secondary" className={interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}>{getInterestLabel(lead.interestLevel)}</Badge>
-                  <Badge variant="outline" className="text-xs">{getStageName(lead.pipelineStage)}</Badge>
-                  {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>)}
-                </div>
-                <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground flex-wrap">
-                  <span>{lead.origin}</span>
-                  <span>{lead.city}</span>
-                  {lead.responsible && <span>→ {lead.responsible}</span>}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <Checkbox
+                  checked={selectedIds.includes(lead.id)}
+                  onCheckedChange={() => toggleSelect(lead.id)}
+                  onClick={e => e.stopPropagation()}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-foreground">{lead.name}</span>
+                    <Badge variant="secondary" className={interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}>{getInterestLabel(lead.interestLevel)}</Badge>
+                    <Badge variant="outline" className="text-xs">{getStageName(lead.pipelineStage)}</Badge>
+                    {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>)}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground flex-wrap">
+                    <span>{lead.origin}</span>
+                    <span>{lead.city}</span>
+                    {lead.responsible && <span>→ {lead.responsible}</span>}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -165,6 +223,22 @@ export default function LeadsPage() {
           </Card>
         ))}
       </div>
+
+      <LeadImportModal open={importOpen} onOpenChange={setImportOpen} />
+      <BulkEditModal
+        open={bulkEditOpen}
+        onOpenChange={setBulkEditOpen}
+        selectedIds={selectedIds}
+        type="leads"
+        onSuccess={() => setSelectedIds([])}
+      />
+      <ExportModal
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        type="leads"
+        allData={leads}
+        filteredData={filtered}
+      />
     </div>
   );
 }

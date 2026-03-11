@@ -13,7 +13,16 @@ import BulkEditModal from '@/components/bulk/BulkEditModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
+  const store = useCRMStore();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
+
+  // All clients (leads in "Cliente" stage)
+  const allClients = store.leads.filter(l => {
+    const stage = store.pipelineStages.find(s => s.id === l.pipelineStage);
+    return stage?.name === 'Cliente';
+  });
 
   const filterPanel = (
     <ClientsAdvancedFilter
