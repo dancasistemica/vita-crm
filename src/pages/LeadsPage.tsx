@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
-import LeadImportModal from "@/components/import/LeadImportModal";
+
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import ExportModal from "@/components/export/ExportModal";
 
