@@ -14,6 +14,7 @@ import {
   validateRows, getNewOptions,
   type CSVRow, type ImportValidationResult,
 } from '@/services/importService';
+import { parseFile, getFileType } from '@/services/excelParser';
 
 interface Props {
   open: boolean;
