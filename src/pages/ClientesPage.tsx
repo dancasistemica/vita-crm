@@ -154,6 +154,14 @@ export default function ClientesPage() {
         allData={allClients}
         filteredData={hook.filteredClients}
       />
+      <BulkDeleteModal
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        selectedIds={hook.selectedIds}
+        type="clients"
+        onSuccess={() => {
+          hook.selectedIds.forEach(id => hook.toggleSelect(id));
+        }}
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
