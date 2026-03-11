@@ -29,6 +29,7 @@ const App = () => (
           <Route element={<CRMLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/leads" element={<LeadsPage />} />
+            <Route path="/import-wizard" element={<ImportLeadsWizard />} />
             <Route path="/pipeline" element={<PipelinePage />} />
             <Route path="/clientes" element={<ClientesPage />} />
             <Route path="/clientes/:id" element={<ClientDetailPage />} />

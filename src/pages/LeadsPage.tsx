@@ -242,10 +242,6 @@ export default function LeadsPage() {
         allData={leads}
         filteredData={filtered}
       />
-      <ImportLeadsModal
-        open={importOpen}
-        onOpenChange={setImportOpen}
-      />
     </div>
   );
 }
