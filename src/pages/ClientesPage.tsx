@@ -153,9 +153,13 @@ export default function ClientesPage() {
         selectedIds={hook.selectedIds}
         type="clients"
         onSuccess={() => {
-          // Clear selection by toggling all off
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
+      />
+      <NewSaleModal
+        open={saleModalOpen}
+        onOpenChange={setSaleModalOpen}
+        preSelectedLeadId={saleLeadId}
       />
     </div>
   );
