@@ -13,6 +13,7 @@ import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, P
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
+import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
 import { useTablePagination } from "@/hooks/useTablePagination";
@@ -32,6 +33,7 @@ export default function LeadsPage() {
   
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
@@ -178,6 +180,9 @@ export default function LeadsPage() {
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
             <Pencil className="h-3 w-3 mr-1" /> Editar em massa
           </Button>
+          <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
+            <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
+          </Button>
           <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
             Limpar seleção
           </Button>
@@ -264,6 +269,13 @@ export default function LeadsPage() {
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
+        selectedIds={selectedIds}
+        type="leads"
+        onSuccess={() => setSelectedIds([])}
+      />
+      <BulkDeleteModal
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
         selectedIds={selectedIds}
         type="leads"
         onSuccess={() => setSelectedIds([])}

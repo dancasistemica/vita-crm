@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Filter, X, FileDown, Pencil } from 'lucide-react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,7 @@ import { useClientsFilter } from '@/hooks/useClientsFilter';
 import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
+import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import RecordCounter from '@/components/common/RecordCounter';
 import NewSaleModal from '@/components/sales/NewSaleModal';
 
@@ -19,6 +20,7 @@ export default function ClientesPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
 
@@ -78,9 +80,14 @@ export default function ClientesPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {hook.selectedIds.length > 0 && (
-            <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
-              <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
-            </Button>
+            <>
+              <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
+                <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+                <Trash2 className="h-4 w-4 mr-1" /> Deletar ({hook.selectedIds.length})
+              </Button>
+            </>
           )}
           <Button size="sm" onClick={() => handleNewSale()}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
@@ -146,6 +153,15 @@ export default function ClientesPage() {
         type="clients"
         allData={allClients}
         filteredData={hook.filteredClients}
+      />
+      <BulkDeleteModal
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        selectedIds={hook.selectedIds}
+        type="clients"
+        onSuccess={() => {
+          hook.selectedIds.forEach(id => hook.toggleSelect(id));
+        }}
       />
       <BulkEditModal
         open={bulkEditOpen}
