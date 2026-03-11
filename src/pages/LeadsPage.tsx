@@ -192,7 +192,7 @@ export default function LeadsPage() {
       )}
 
       <div className="space-y-2">
-        {paginated.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhum lead encontrado.</p>}
+        {paginated.length === 0 && <p className="text-muted-foreground text-center py-12 text-sm">Nenhum lead encontrado.</p>}
 
         {/* Select all header */}
         {paginated.length > 0 && (
