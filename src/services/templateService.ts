@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 export interface TemplateRow {
   nome: string;
   telefone: string;
