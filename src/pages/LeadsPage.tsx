@@ -31,6 +31,7 @@ export default function LeadsPage() {
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [importOpen, setImportOpen] = useState(false);
 
   const filtered = leads.filter(l => {
     const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
