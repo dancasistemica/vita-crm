@@ -13,6 +13,7 @@ import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, P
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
+import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
 import { useTablePagination } from "@/hooks/useTablePagination";

@@ -1,0 +1,102 @@
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
+import { useCRMStore } from '@/store/crmStore';
+
+type DeletableType = 'leads' | 'clients';
+
+interface Props {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedIds: string[];
+  type: DeletableType;
+  onSuccess: () => void;
+}
+
+export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type, onSuccess }: Props) {
+  const [confirmed, setConfirmed] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const { leads, deleteLead } = useCRMStore();
+
+  const selectedItems = leads.filter(l => selectedIds.includes(l.id));
+  const label = type === 'leads' ? 'lead' : 'cliente';
+  const labelPlural = type === 'leads' ? 'leads' : 'clientes';
+
+  const handleDelete = async () => {
+    if (!confirmed) return;
+    setDeleting(true);
+    try {
+      console.log(`[BulkDeleteModal] Deletando ${selectedIds.length} ${labelPlural}`);
+      selectedIds.forEach(id => deleteLead(id));
+      toast.success(`${selectedIds.length} ${selectedIds.length > 1 ? labelPlural : label} deletado(s) com sucesso`);
+      setConfirmed(false);
+      onOpenChange(false);
+      onSuccess();
+    } catch (error) {
+      console.error('[BulkDeleteModal] Erro ao deletar:', error);
+      toast.error(`Erro ao deletar ${labelPlural}`);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!deleting) { onOpenChange(o); setConfirmed(false); } }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-destructive">
+            <AlertTriangle className="h-5 w-5" />
+            Deletar {type === 'leads' ? 'Leads' : 'Clientes'}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Você está prestes a deletar <strong>{selectedIds.length}</strong> {selectedIds.length > 1 ? labelPlural : label} permanentemente.
+          </p>
+
+          <div className="rounded-lg border border-border bg-muted/30 p-3 max-h-40 overflow-y-auto space-y-1">
+            <p className="text-xs font-medium text-muted-foreground mb-2">{type === 'leads' ? 'Leads' : 'Clientes'} a deletar:</p>
+            {selectedItems.slice(0, 5).map(item => (
+              <p key={item.id} className="text-sm text-foreground">• {item.name} ({item.email || item.phone})</p>
+            ))}
+            {selectedIds.length > 5 && (
+              <p className="text-xs text-muted-foreground mt-1">... e mais {selectedIds.length - 5}</p>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3">
+            <p className="text-xs text-destructive font-medium flex items-center gap-1">
+              <AlertTriangle className="h-3 w-3" />
+              Esta ação é irreversível. Os dados serão deletados permanentemente.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="confirm-delete"
+              checked={confirmed}
+              onCheckedChange={(checked) => setConfirmed(checked === true)}
+            />
+            <label htmlFor="confirm-delete" className="text-sm text-foreground cursor-pointer">
+              Tenho certeza que desejo deletar {selectedIds.length > 1 ? `estes ${labelPlural}` : `este ${label}`}
+            </label>
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+            Cancelar
+          </Button>
+          <Button variant="destructive" onClick={handleDelete} disabled={!confirmed || deleting}>
+            {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
