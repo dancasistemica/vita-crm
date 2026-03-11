@@ -14,6 +14,7 @@ import TarefasPage from "@/pages/TarefasPage";
 import ProdutosPage from "@/pages/ProdutosPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();

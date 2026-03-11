@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCRMStore } from "@/store/crmStore";
-import ImportLeadsModal from "@/components/import/ImportLeadsModal";
 import { Lead } from "@/types/crm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
