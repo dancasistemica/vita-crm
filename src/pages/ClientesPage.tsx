@@ -82,8 +82,8 @@ export default function ClientesPage() {
               <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
             </Button>
           )}
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-1" /> Novo Cliente
+          <Button size="sm" onClick={() => handleNewSale()}>
+            <Plus className="h-4 w-4 mr-1" /> Nova Venda
           </Button>
         </div>
       </div>
