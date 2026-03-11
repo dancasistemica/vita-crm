@@ -25,6 +25,8 @@ export default function ClientesPage() {
     return stage?.name === 'Cliente';
   });
 
+  const totalClientsCount = allClients.length;
+
   const filterPanel = (
     <ClientsAdvancedFilter
       filters={hook.filters}
