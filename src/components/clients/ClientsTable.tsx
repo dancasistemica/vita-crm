@@ -126,7 +126,7 @@ export default function ClientsTable({
         return (
           <div
             key={client.id}
-            className="rounded-lg border border-border bg-card p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            className="rounded-xl border border-border/60 bg-card p-4 cursor-pointer hover-lift shadow-card transition-all"
             onClick={() => navigate(`/clientes/${client.id}`)}
           >
             <div className="flex items-start justify-between mb-2">
