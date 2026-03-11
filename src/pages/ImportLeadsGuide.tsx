@@ -165,7 +165,7 @@ export default function ImportLeadsGuide() {
             <h4 className="font-medium text-foreground">Passo a passo:</h4>
             <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
               <li>Baixe o arquivo modelo acima</li>
-              <li>Abra em Excel ou Google Sheets</li>
+              <li>Abra em Excel ou Google Sheets (ou edite o XLSX diretamente)</li>
               <li>Preencha com seus dados (mantenha os cabeçalhos)</li>
               <li>Salve como CSV (Arquivo → Salvar como → CSV)</li>
               <li>Vá para <strong className="text-foreground">Leads → Importar CSV</strong></li>
