@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, ExternalLink, Edit2 } from 'lucide-react';
 import { Sale, INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
+import EditSaleModal from '@/components/sales/EditSaleModal';
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success',
@@ -25,6 +26,7 @@ export default function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { leads, sales, products, interactions, tasks, saleStatuses, addSale, addInteraction, updateLead } = useCRMStore();
+  const [editSaleId, setEditSaleId] = useState<string | null>(null);
 
   const client = leads.find(l => l.id === id);
   if (!client) {
@@ -104,7 +106,11 @@ export default function ClientDetailPage() {
           ) : (
             <div className="space-y-2">
               {clientSales.map(sale => (
-                <div key={sale.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
+                <div
+                  key={sale.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => setEditSaleId(sale.id)}
+                >
                   <div className="flex items-center gap-3">
                     <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                     <div>
@@ -115,6 +121,9 @@ export default function ClientDetailPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-success">R$ {sale.value.toLocaleString('pt-BR')}</span>
                     <Badge className={statusColors[sale.status] || ''}>{sale.status}</Badge>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
+                      <Edit2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -181,6 +190,12 @@ export default function ClientDetailPage() {
           />
         </TabsContent>
       </Tabs>
+
+      <EditSaleModal
+        open={!!editSaleId}
+        onOpenChange={(o) => { if (!o) setEditSaleId(null); }}
+        saleId={editSaleId}
+      />
     </div>
   );
 }
