@@ -23,6 +23,12 @@ export interface InterestLevel {
   label: string;
 }
 
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
 const DEFAULT_INTEREST_LEVELS: InterestLevel[] = [
   { id: '1', value: 'frio', label: 'Frio' },
   { id: '2', value: 'morno', label: 'Morno' },
