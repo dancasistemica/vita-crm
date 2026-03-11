@@ -135,6 +135,7 @@ export default function ClientesPage() {
             setPerPage={hook.setPerPage}
             totalPages={hook.totalPages}
             totalFiltered={hook.totalFiltered}
+            onNewSale={handleNewSale}
           />
         </div>
       </div>
