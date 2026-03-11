@@ -100,6 +100,11 @@ interface CRMState {
   addInterestLevel: (level: InterestLevel) => void;
   updateInterestLevel: (id: string, data: Partial<InterestLevel>) => void;
   removeInterestLevel: (id: string) => void;
+
+  paymentMethods: PaymentMethod[];
+  addPaymentMethod: (method: PaymentMethod) => void;
+  updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => void;
+  removePaymentMethod: (id: string) => void;
 }
 
 const uid = () => crypto.randomUUID();
