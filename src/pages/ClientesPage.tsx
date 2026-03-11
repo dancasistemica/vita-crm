@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Filter, X } from 'lucide-react';
+import { Plus, Filter, X, FileDown, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -7,10 +7,22 @@ import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import { FilterChip } from '@/components/clients/FilterChip';
 import { useClientsFilter } from '@/hooks/useClientsFilter';
+import { useCRMStore } from '@/store/crmStore';
+import ExportModal from '@/components/export/ExportModal';
+import BulkEditModal from '@/components/bulk/BulkEditModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
+  const store = useCRMStore();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
+
+  // All clients (leads in "Cliente" stage)
+  const allClients = store.leads.filter(l => {
+    const stage = store.pipelineStages.find(s => s.id === l.pipelineStage);
+    return stage?.name === 'Cliente';
+  });
 
   const filterPanel = (
     <ClientsAdvancedFilter
@@ -51,6 +63,14 @@ export default function ClientesPage() {
               {filterPanel}
             </SheetContent>
           </Sheet>
+          <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4 mr-1" /> Exportar
+          </Button>
+          {hook.selectedIds.length > 0 && (
+            <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(true)}>
+              <Pencil className="h-4 w-4 mr-1" /> Editar em massa ({hook.selectedIds.length})
+            </Button>
+          )}
           <Button size="sm">
             <Plus className="h-4 w-4 mr-1" /> Novo Cliente
           </Button>
@@ -99,6 +119,24 @@ export default function ClientesPage() {
           />
         </div>
       </div>
+
+      <ExportModal
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        type="clients"
+        allData={allClients}
+        filteredData={hook.filteredClients}
+      />
+      <BulkEditModal
+        open={bulkEditOpen}
+        onOpenChange={setBulkEditOpen}
+        selectedIds={hook.selectedIds}
+        type="clients"
+        onSuccess={() => {
+          // Clear selection by toggling all off
+          hook.selectedIds.forEach(id => hook.toggleSelect(id));
+        }}
+      />
     </div>
   );
 }
