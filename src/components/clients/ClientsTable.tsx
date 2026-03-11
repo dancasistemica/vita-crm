@@ -170,7 +170,7 @@ export default function ClientsTable({
 
   // Desktop table view
   const desktopView = (
-    <div className="hidden md:block rounded-lg border border-border overflow-hidden">
+    <div className="hidden md:block rounded-xl border border-border/60 overflow-hidden shadow-card bg-card">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/30 hover:bg-muted/30">
