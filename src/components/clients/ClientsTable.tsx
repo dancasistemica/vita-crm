@@ -86,7 +86,7 @@ export default function ClientsTable({
   sortField, sortDir, toggleSort,
   selectedIds, toggleSelect, toggleSelectAll,
   page, setPage, perPage, setPerPage, totalPages, totalFiltered,
-  loading,
+  loading, onNewSale,
 }: Props) {
   const navigate = useNavigate();
   const { products } = useCRMStore();
