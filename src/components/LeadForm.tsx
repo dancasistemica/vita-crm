@@ -24,6 +24,8 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
     lead || { interestLevel: interestLevels[0]?.value || 'frio', pipelineStage: '1', tags: [], entryDate: new Date().toISOString().split('T')[0], responsible: defaultResponsible }
   );
 
+  const [cpfWarning, setCpfWarning] = useState(false);
+
   const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
 
   const toggleTag = (tagName: string) => {
