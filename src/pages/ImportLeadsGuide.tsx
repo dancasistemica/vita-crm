@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Download, Copy, Check, FileSpreadsheet, Info, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { TEMPLATE_COLUMNS, templateExamples, downloadTemplate, copyExampleToClipboard } from '@/services/templateService';
+import { TEMPLATE_COLUMNS, templateExamples, downloadTemplate, downloadTemplateXLSX, copyExampleToClipboard } from '@/services/templateService';
 
 const PREVIEW_COLS = ['nome', 'telefone', 'email', 'origem', 'nivel_interesse', 'dor_principal'] as const;
 
@@ -29,7 +29,7 @@ export default function ImportLeadsGuide() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Importar Leads</h1>
-        <p className="text-muted-foreground mt-1">Guia passo a passo para importar seus leads via CSV</p>
+        <p className="text-muted-foreground mt-1">Guia passo a passo para importar seus leads via CSV ou Excel</p>
       </div>
 
       {/* Section 1: Info */}
@@ -43,7 +43,7 @@ export default function ImportLeadsGuide() {
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             {[
-              ['Formato', 'CSV (separado por vírgula)'],
+              ['Formato', 'CSV, XLSX ou XLS (recomendado: XLSX)'],
               ['Tamanho máximo', '10MB'],
               ['Máximo por importação', '1.000 leads'],
               ['Campos obrigatórios', 'Nome + (Email OU Telefone)'],
@@ -147,7 +147,11 @@ export default function ImportLeadsGuide() {
             Baixar Modelo
           </h3>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button onClick={downloadTemplate} className="flex-1 gap-2" size="lg">
+            <Button onClick={downloadTemplateXLSX} className="flex-1 gap-2" size="lg">
+              <Download className="h-4 w-4" />
+              Baixar Modelo XLSX (Recomendado)
+            </Button>
+            <Button onClick={downloadTemplate} variant="outline" className="flex-1 gap-2" size="lg">
               <Download className="h-4 w-4" />
               Baixar Modelo CSV
             </Button>
@@ -161,7 +165,7 @@ export default function ImportLeadsGuide() {
             <h4 className="font-medium text-foreground">Passo a passo:</h4>
             <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
               <li>Baixe o arquivo modelo acima</li>
-              <li>Abra em Excel ou Google Sheets</li>
+              <li>Abra em Excel ou Google Sheets (ou edite o XLSX diretamente)</li>
               <li>Preencha com seus dados (mantenha os cabeçalhos)</li>
               <li>Salve como CSV (Arquivo → Salvar como → CSV)</li>
               <li>Vá para <strong className="text-foreground">Leads → Importar CSV</strong></li>

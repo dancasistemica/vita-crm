@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 export interface TemplateRow {
   nome: string;
   telefone: string;
@@ -113,6 +115,21 @@ export function downloadTemplate(): void {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export function downloadTemplateXLSX(): void {
+  const sheetData = templateExamples.map(row => {
+    const obj: Record<string, string> = {};
+    TEMPLATE_COLUMNS.forEach(col => {
+      obj[col.label] = row[col.key as keyof TemplateRow] || '';
+    });
+    return obj;
+  });
+  const ws = XLSX.utils.json_to_sheet(sheetData);
+  ws['!cols'] = TEMPLATE_COLUMNS.map(col => ({ wch: Math.max(col.label.length + 4, 18) }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Leads');
+  XLSX.writeFile(wb, `modelo-importacao-leads-${new Date().toISOString().split('T')[0]}.xlsx`);
 }
 
 export async function copyExampleToClipboard(): Promise<void> {
