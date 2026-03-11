@@ -23,6 +23,12 @@ export interface InterestLevel {
   label: string;
 }
 
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
 const DEFAULT_INTEREST_LEVELS: InterestLevel[] = [
   { id: '1', value: 'frio', label: 'Frio' },
   { id: '2', value: 'morno', label: 'Morno' },
@@ -94,6 +100,11 @@ interface CRMState {
   addInterestLevel: (level: InterestLevel) => void;
   updateInterestLevel: (id: string, data: Partial<InterestLevel>) => void;
   removeInterestLevel: (id: string) => void;
+
+  paymentMethods: PaymentMethod[];
+  addPaymentMethod: (method: PaymentMethod) => void;
+  updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => void;
+  removePaymentMethod: (id: string) => void;
 }
 
 const uid = () => crypto.randomUUID();
@@ -145,6 +156,14 @@ export const useCRMStore = create<CRMState>()(
       users: DEFAULT_USERS,
       tags: DEFAULT_TAGS,
       interestLevels: DEFAULT_INTEREST_LEVELS,
+      paymentMethods: [
+        { id: crypto.randomUUID(), name: 'Dinheiro', active: true },
+        { id: crypto.randomUUID(), name: 'Cartão Crédito', active: true },
+        { id: crypto.randomUUID(), name: 'Cartão Débito', active: true },
+        { id: crypto.randomUUID(), name: 'Pix', active: true },
+        { id: crypto.randomUUID(), name: 'Transferência Bancária', active: true },
+        { id: crypto.randomUUID(), name: 'Boleto', active: true },
+      ] as PaymentMethod[],
 
       addLead: (lead) => set((s) => ({ leads: [...s.leads, lead] })),
       updateLead: (id, data) => set((s) => ({ leads: s.leads.map((l) => l.id === id ? { ...l, ...data } : l) })),
@@ -185,6 +204,10 @@ export const useCRMStore = create<CRMState>()(
       addInterestLevel: (level) => set((s) => ({ interestLevels: [...s.interestLevels, level] })),
       updateInterestLevel: (id, data) => set((s) => ({ interestLevels: s.interestLevels.map((l) => l.id === id ? { ...l, ...data } : l) })),
       removeInterestLevel: (id) => set((s) => ({ interestLevels: s.interestLevels.filter((l) => l.id !== id) })),
+
+      addPaymentMethod: (method: PaymentMethod) => set((s) => ({ paymentMethods: [...s.paymentMethods, method] })),
+      updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => set((s) => ({ paymentMethods: s.paymentMethods.map((m) => m.id === id ? { ...m, ...data } : m) })),
+      removePaymentMethod: (id: string) => set((s) => ({ paymentMethods: s.paymentMethods.filter((m) => m.id !== id) })),
     }),
     { name: 'danca-sistematica-crm' }
   )
