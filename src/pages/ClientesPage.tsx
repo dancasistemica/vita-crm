@@ -162,6 +162,7 @@ export default function ClientesPage() {
         onSuccess={() => {
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
+      />
       <BulkEditModal
         open={bulkEditOpen}
         onOpenChange={setBulkEditOpen}
