@@ -5,6 +5,8 @@ export interface Lead {
   email: string;
   instagram: string;
   city: string;
+  rg: string;
+  cpf: string;
   entryDate: string;
   origin: string;
   interestLevel: string;
