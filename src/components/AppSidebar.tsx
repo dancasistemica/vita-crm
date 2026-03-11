@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings,
+  CheckSquare, Package, BarChart3, Settings, FileDown,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
