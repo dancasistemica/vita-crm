@@ -8,12 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
-  const { totalLeads, clients, conversionRate, totalRevenue, leadsByStage, leadsByOrigin, revenueByProduct, loading } = useDashboardData();
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
 
   const metrics = [
-    { icon: Users, label: "Total de Leads", value: totalLeads, color: 'bg-primary/10 text-primary' },
-    { icon: Target, label: "Clientes", value: clients, color: 'bg-success/10 text-success' },
-    { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate}%`, color: 'bg-info/10 text-info' },
+    { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
+    { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
+    { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
     { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
   ];
 
