@@ -133,10 +133,15 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         return;
       }
     }
+    if (form.senhaAdmin && form.senhaAdmin.length < 8) {
+      toast.error('Senha deve ter no mínimo 8 caracteres');
+      return;
+    }
     if (!orgId) return;
 
     setSaving(true);
     try {
+      // 1. Update organization data
       const updateData: Record<string, any> = {
         name: form.name,
         contact_email: form.contact_email || null,
@@ -160,6 +165,27 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         .eq('id', orgId);
 
       if (error) throw error;
+
+      // 2. Update admin password if provided
+      if (form.senhaAdmin) {
+        console.log('[EditOrganizationModal] Updating admin password via edge function');
+        const { data: fnData, error: fnError } = await supabase.functions.invoke('update-admin-password', {
+          body: { organization_id: orgId, new_password: form.senhaAdmin },
+        });
+
+        if (fnError) {
+          console.error('[EditOrganizationModal] Password update error:', fnError);
+          toast.error('Organização salva, mas erro ao atualizar senha do admin');
+        } else if (fnData?.error) {
+          toast.error(fnData.error);
+        } else {
+          toast.success('Organização e senha do admin atualizadas');
+          onSuccess();
+          onOpenChange(false);
+          return;
+        }
+      }
+
       toast.success('Organização atualizada');
       onSuccess();
       onOpenChange(false);
