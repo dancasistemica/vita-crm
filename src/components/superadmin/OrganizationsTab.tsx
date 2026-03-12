@@ -148,13 +148,61 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
             <Building2 className="h-4 w-4" />
-            <span>{orgs.length} organização(ões) cadastrada(s)</span>
+            <span>
+              {hasActiveFilters
+                ? `${filteredOrgs.length} de ${orgs.length} organização(ões)`
+                : `${orgs.length} organização(ões) cadastrada(s)`}
+            </span>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" /> Nova Organização
           </Button>
         </div>
 
+        {/* Filter bar */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome ou email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              <SelectItem value="active">Ativa</SelectItem>
+              <SelectItem value="suspended">Suspensa</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={planFilter} onValueChange={setPlanFilter}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Plano" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os planos</SelectItem>
+              {plans.map((p) => (
+                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+              <X className="h-4 w-4" /> Limpar
+            </Button>
+          )}
+        </div>
+
+        {filteredOrgs.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
+          </div>
+        ) : (
         <Table>
           <TableHeader>
             <TableRow>
