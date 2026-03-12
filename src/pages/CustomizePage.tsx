@@ -39,27 +39,42 @@ export default function CustomizePage() {
   }, [updateLocalBrand]);
 
   const handleUpload = async (file: File, type: 'logo' | 'favicon') => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      toast.error('Organização não encontrada. Faça login novamente.');
+      return;
+    }
+    const allowedTypes = ['image/png', 'image/svg+xml', 'image/webp', 'image/x-icon', 'image/vnd.microsoft.icon'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Formato não suportado. Use PNG, SVG ou WebP.');
+      return;
+    }
     if (file.size > 2 * 1024 * 1024) {
       toast.error('Arquivo muito grande (máx. 2MB)');
       return;
     }
     setUploading(true);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `${organizationId}/${type}.${ext}`;
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `${organizationId}/${type}_${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from('logos').upload(path, file, { upsert: true });
       if (error) throw error;
       const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path);
       const urlWithCache = `${publicUrl}?t=${Date.now()}`;
       const key = type === 'logo' ? 'logo_url' : 'favicon_url';
       updateLocalBrand({ [key]: urlWithCache });
-      toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado!`);
+      toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado com sucesso!`);
     } catch (e: any) {
-      toast.error('Erro no upload: ' + e.message);
+      console.error('Upload error:', e);
+      toast.error('Erro no upload: ' + (e.message || 'Tente novamente'));
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleDrop = (e: React.DragEvent, type: 'logo' | 'favicon') => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleUpload(file, type);
   };
 
   const removeLogo = () => {
