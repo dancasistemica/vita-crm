@@ -79,10 +79,13 @@ export function useAI({ type, cacheKey, cacheDurationHours = 24 }: UseAIOptions)
         return cached;
       }
 
+      const orgAIContext = getFormattedContext();
+
       const { data, error: fnError } = await supabase.functions.invoke('crm-ai', {
         body: {
           type,
           messages: [{ role: 'user', content: userMessage }],
+          aiContext: orgAIContext,
         },
       });
 
