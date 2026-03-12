@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import LeadsPage from "@/pages/LeadsPage";
@@ -16,6 +17,8 @@ import ProdutosPage from "@/pages/ProdutosPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
 import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
+import AuthPage from "@/pages/AuthPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,19 +31,27 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route element={<CRMLayout />}>
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/leads" element={<LeadsPage />} />
-              <Route path="/import-wizard" element={<ImportLeadsWizard />} />
-              <Route path="/pipeline" element={<PipelinePage />} />
-              <Route path="/clientes" element={<ClientesPage />} />
-              <Route path="/clientes/:id" element={<ClientDetailPage />} />
-              <Route path="/interacoes" element={<InteracoesPage />} />
-              <Route path="/tarefas" element={<TarefasPage />} />
-              <Route path="/produtos" element={<ProdutosPage />} />
-              <Route path="/relatorios" element={<RelatoriosPage />} />
-              <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+            {/* Public routes */}
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<CRMLayout />}>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/leads" element={<LeadsPage />} />
+                <Route path="/import-wizard" element={<ImportLeadsWizard />} />
+                <Route path="/pipeline" element={<PipelinePage />} />
+                <Route path="/clientes" element={<ClientesPage />} />
+                <Route path="/clientes/:id" element={<ClientDetailPage />} />
+                <Route path="/interacoes" element={<InteracoesPage />} />
+                <Route path="/tarefas" element={<TarefasPage />} />
+                <Route path="/produtos" element={<ProdutosPage />} />
+                <Route path="/relatorios" element={<RelatoriosPage />} />
+                <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+              </Route>
             </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
