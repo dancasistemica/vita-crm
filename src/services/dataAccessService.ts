@@ -269,7 +269,7 @@ export class DataAccessService {
   async createTag(tagData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('tags')
-      .insert({ ...tagData, organization_id: this.orgId })
+      .insert({ ...tagData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createTag error:', error); throw error; }
