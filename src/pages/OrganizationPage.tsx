@@ -35,7 +35,10 @@ export default function OrganizationPage() {
   });
 
   useEffect(() => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      setLoading(false);
+      return;
+    }
 
     const load = async () => {
       try {
@@ -44,9 +47,15 @@ export default function OrganizationPage() {
           .from('organizations')
           .select('*')
           .eq('id', organizationId)
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
+
+        if (!data) {
+          toast.error('Organização não encontrada');
+          setLoading(false);
+          return;
+        }
 
         setFormData({
           name: data.name || '',
