@@ -37,7 +37,7 @@ const roleLabels: Record<string, string> = {
   owner: "Proprietário",
   admin: "Administrador",
   vendedor: "Vendedor",
-  member: "Membro",
+  member: "Usuário",
 };
 
 const roleBadgeVariant = (role: string) => {
