@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const roleLabels: Record<string, string> = { admin: 'Administrador', vendedora: 'Vendedora', usuario: 'Usuário' };
+const roleLabels: Record<string, string> = { superadmin: 'Superadmin', admin: 'Administrador', vendedora: 'Vendedora', usuario: 'Usuário' };
 
 export default function UsersTab() {
   const { users, addUser, updateUser } = useCRMStore();
