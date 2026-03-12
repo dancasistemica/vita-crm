@@ -44,7 +44,8 @@ const App = () => (
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<CRMLayout />}>
-                <Route path="/superadmin" element={<SuperadminDashboard />} />
+              <Route path="/superadmin" element={<SuperadminDashboard />} />
+                <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
                 <Route path="/import-wizard" element={<ImportLeadsWizard />} />
