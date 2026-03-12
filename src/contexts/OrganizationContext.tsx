@@ -40,20 +40,39 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Check if superadmin has a saved org override
-      const { data: saRole } = await supabase
-        .from('superadmin_roles')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      // Check if user is superadmin and has a saved org override
+      const { data: isSuperadmin, error: superadminError } = await supabase.rpc('is_superadmin', {
+        _user_id: user.id,
+      });
 
-      const superadminOrgId = saRole ? localStorage.getItem('superadmin_current_org') : null;
+      if (superadminError) {
+        console.error('[OrganizationContext] Error checking superadmin:', superadminError);
+      }
+
+      const superadminOrgId = isSuperadmin ? localStorage.getItem('superadmin_current_org') : null;
 
       let targetOrgId: string | null = null;
 
       if (superadminOrgId) {
         console.log('[OrganizationContext] SuperAdmin override org:', superadminOrgId);
         targetOrgId = superadminOrgId;
+      } else if (isSuperadmin) {
+        const { data: firstOrg, error: firstOrgError } = await supabase
+          .from('organizations')
+          .select('id')
+          .order('name', { ascending: true })
+          .limit(1)
+          .maybeSingle();
+
+        if (firstOrgError) {
+          console.error('[OrganizationContext] Error loading first org for superadmin:', firstOrgError);
+        }
+
+        if (firstOrg?.id) {
+          targetOrgId = firstOrg.id;
+          localStorage.setItem('superadmin_current_org', firstOrg.id);
+          console.log('[OrganizationContext] SuperAdmin org padrão selecionada:', firstOrg.id);
+        }
       } else {
         // Get user's first organization via membership
         const { data: membership } = await supabase
