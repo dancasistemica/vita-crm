@@ -48,6 +48,7 @@ const roleBadgeVariant = (role: string) => {
 
 export default function UsersTab() {
   const { organizationId, organization } = useOrganization();
+  const { isSuperadmin } = useSuperadmin();
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -66,6 +67,12 @@ export default function UsersTab() {
   const [formEmail, setFormEmail] = useState("");
   const [formPhone, setFormPhone] = useState("");
   const [formRole, setFormRole] = useState("member");
+  const [formOrgId, setFormOrgId] = useState("");
+  const [orgSelectOpen, setOrgSelectOpen] = useState(false);
+
+  // Organizations list (superadmin only)
+  const [orgOptions, setOrgOptions] = useState<OrgOption[]>([]);
+  const [orgsLoading, setOrgsLoading] = useState(false);
 
   const fetchUsers = async () => {
     if (!organizationId) return;
