@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X } from "lucide-react";
+import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
 
 interface AdminUser {
@@ -59,6 +59,9 @@ export default function AdminUsersPage() {
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
   const [editRole, setEditRole] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPassword, setEditPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Delete modal
@@ -187,25 +190,54 @@ export default function AdminUsersPage() {
     setEditName(u.full_name);
     setEditPhone(u.phone || "");
     setEditRole(u.role);
+    setEditEmail(u.email);
+    setEditPassword("");
+    setShowPassword(false);
     setEditOpen(true);
   };
 
   const handleEditSave = async () => {
     if (!editUser) return;
+    if (editPassword && editPassword.length < 6) {
+      toast.error("Senha deve ter no mínimo 6 caracteres");
+      return;
+    }
     setSaving(true);
     try {
+      // Update profile (name, phone)
       const { error: profileError } = await supabase
         .from("profiles")
         .update({ full_name: editName, phone: editPhone || null })
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
+      // Update role if changed
       if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
         const { error: roleError } = await supabase
           .from("organization_members")
           .update({ role: editRole as any })
           .eq("id", editUser.member_id);
         if (roleError) throw roleError;
+      }
+
+      // Update email/password via edge function if changed
+      const emailChanged = editEmail !== editUser.email;
+      const passwordChanged = editPassword.length > 0;
+
+      if (emailChanged || passwordChanged) {
+        const payload: any = {
+          action: "update_auth",
+          organization_id: editUser.org_id || "global",
+          user_id: editUser.user_id,
+        };
+        if (emailChanged) payload.email = editEmail;
+        if (passwordChanged) payload.password = editPassword;
+
+        const { data, error } = await supabase.functions.invoke("manage-org-users", {
+          body: payload,
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
       }
 
       toast.success("Usuário atualizado!");
@@ -425,8 +457,31 @@ export default function AdminUsersPage() {
             </div>
             <div className="space-y-1">
               <Label>Email</Label>
-              <Input value={editUser?.email || ""} disabled />
-              <p className="text-xs text-muted-foreground">O email não pode ser alterado.</p>
+              <Input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} type="email" />
+              {editEmail !== editUser?.email && (
+                <p className="text-xs text-amber-600">O email será atualizado na autenticação e no perfil.</p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label>Nova Senha</Label>
+              <div className="relative">
+                <Input
+                  value={editPassword}
+                  onChange={(e) => setEditPassword(e.target.value)}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Deixe em branco para não alterar"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">Mínimo 6 caracteres. Deixe em branco para não alterar.</p>
             </div>
             <div className="space-y-1">
               <Label>Telefone</Label>
