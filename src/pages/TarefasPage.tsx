@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import { Task as TaskType, TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
+import AIFollowUpGenerator from "@/components/ai/AIFollowUpGenerator";
 
 export default function TarefasPage() {
   const { leads, tasks, addTask, toggleTask, deleteTask } = useCRMStore();
