@@ -195,12 +195,32 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 </div>
                 <div className="space-y-2">
                   <Label>CNPJ</Label>
-                  <Input
-                    value={form.cnpj}
-                    onChange={(e) => setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }))}
-                    placeholder="00.000.000/0000-00"
-                    maxLength={18}
-                  />
+                  <div className="relative">
+                    <Input
+                      value={form.cnpj}
+                      onChange={(e) => {
+                        setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }));
+                        if (cnpjTouched) {
+                          setCnpjValidation(validateCNPJWithResult(formatCNPJ(e.target.value)));
+                        }
+                      }}
+                      onBlur={() => {
+                        if (form.cnpj) {
+                          setCnpjTouched(true);
+                          setCnpjValidation(validateCNPJWithResult(form.cnpj));
+                        }
+                      }}
+                      placeholder="00.000.000/0000-00"
+                      maxLength={18}
+                      className={cnpjTouched && !cnpjValidation.valid ? 'border-destructive bg-destructive/5 pr-10' : ''}
+                    />
+                    {cnpjTouched && !cnpjValidation.valid && (
+                      <XCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-destructive" />
+                    )}
+                  </div>
+                  {cnpjTouched && !cnpjValidation.valid && (
+                    <p className="text-xs text-destructive">{cnpjValidation.error}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Email de Contato</Label>
