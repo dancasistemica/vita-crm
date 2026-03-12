@@ -11,9 +11,9 @@ import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { validateCNPJ, formatCNPJ } from '@/utils/cnpjValidator';
+import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
-import { Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -30,6 +30,8 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
+  const [cnpjValidation, setCnpjValidation] = useState<CNPJValidationResult>({ valid: true });
+  const [cnpjTouched, setCnpjTouched] = useState(false);
 
   const [form, setForm] = useState({
     name: '',
@@ -122,7 +124,15 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
   const handleSave = async () => {
     if (!form.name.trim()) { toast.error('Nome é obrigatório'); return; }
-    if (form.cnpj && !validateCNPJ(form.cnpj)) { toast.error('CNPJ inválido'); return; }
+    if (form.cnpj) {
+      const result = validateCNPJWithResult(form.cnpj);
+      if (!result.valid) {
+        setCnpjTouched(true);
+        setCnpjValidation(result);
+        toast.error(result.error || 'CNPJ inválido');
+        return;
+      }
+    }
     if (!orgId) return;
 
     setSaving(true);
@@ -185,12 +195,32 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 </div>
                 <div className="space-y-2">
                   <Label>CNPJ</Label>
-                  <Input
-                    value={form.cnpj}
-                    onChange={(e) => setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }))}
-                    placeholder="00.000.000/0000-00"
-                    maxLength={18}
-                  />
+                  <div className="relative">
+                    <Input
+                      value={form.cnpj}
+                      onChange={(e) => {
+                        setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }));
+                        if (cnpjTouched) {
+                          setCnpjValidation(validateCNPJWithResult(formatCNPJ(e.target.value)));
+                        }
+                      }}
+                      onBlur={() => {
+                        if (form.cnpj) {
+                          setCnpjTouched(true);
+                          setCnpjValidation(validateCNPJWithResult(form.cnpj));
+                        }
+                      }}
+                      placeholder="00.000.000/0000-00"
+                      maxLength={18}
+                      className={cnpjTouched && !cnpjValidation.valid ? 'border-destructive bg-destructive/5 pr-10' : ''}
+                    />
+                    {cnpjTouched && !cnpjValidation.valid && (
+                      <XCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-destructive" />
+                    )}
+                  </div>
+                  {cnpjTouched && !cnpjValidation.valid && (
+                    <p className="text-xs text-destructive">{cnpjValidation.error}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Email de Contato</Label>
@@ -316,7 +346,8 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving || loading}>
+          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+            title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
         </DialogFooter>
