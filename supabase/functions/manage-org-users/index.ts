@@ -237,6 +237,71 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ---- UPDATE AUTH (email/password) ----
+    if (action === 'update_auth') {
+      const { user_id, email, password } = body;
+      if (!user_id) {
+        return new Response(JSON.stringify({ error: 'user_id obrigatório' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const updateData: Record<string, string> = {};
+      if (email) updateData.email = email;
+      if (password) {
+        if (password.length < 6) {
+          return new Response(JSON.stringify({ error: 'Senha deve ter no mínimo 6 caracteres' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        updateData.password = password;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        return new Response(JSON.stringify({ error: 'Nenhum campo para atualizar' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // If email is changing, check uniqueness
+      if (email) {
+        const { data: existingUsers } = await adminClient.auth.admin.listUsers();
+        const duplicate = existingUsers?.users?.find(u => u.email === email && u.id !== user_id);
+        if (duplicate) {
+          return new Response(JSON.stringify({ error: 'Este email já está em uso por outro usuário' }), {
+            status: 409,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
+
+      console.log('[manage-org-users] update_auth for user:', user_id, 'fields:', Object.keys(updateData));
+
+      const { data: authData, error: authError } = await adminClient.auth.admin.updateUserById(user_id, updateData);
+
+      if (authError) {
+        console.error('[manage-org-users] update_auth error:', authError);
+        return new Response(JSON.stringify({ error: 'Erro ao atualizar autenticação: ' + authError.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // If email changed, also update profiles table
+      if (email) {
+        await adminClient.from('profiles').update({ email }).eq('id', user_id);
+      }
+
+      console.log('[manage-org-users] update_auth success for user:', user_id);
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ error: 'Ação inválida' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
