@@ -103,8 +103,12 @@ export default function TarefasPage() {
 }
 
 function TaskForm({ leads, onSave }: { leads: any[]; onSave: (data: Partial<TaskType>) => void }) {
+  const { pipelineStages } = useCRMStore();
   const [form, setForm] = useState<Partial<TaskType>>({ dueDate: new Date().toISOString().split('T')[0], type: 'follow_up' });
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
+
+  const selectedLead = leads.find((l: any) => l.id === form.leadId);
+  const stageName = pipelineStages.find(s => s.id === selectedLead?.pipelineStage)?.name || '';
 
   return (
     <div className="space-y-3">
@@ -127,6 +131,12 @@ function TaskForm({ leads, onSave }: { leads: any[]; onSave: (data: Partial<Task
         </div>
         <div><Label>Data</Label><Input type="date" value={form.dueDate || ''} onChange={e => set('dueDate', e.target.value)} /></div>
       </div>
+
+      {/* AI Follow-up Generator for follow_up tasks */}
+      {form.type === 'follow_up' && selectedLead && (
+        <AIFollowUpGenerator lead={selectedLead} stageName={stageName} />
+      )}
+
       <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title?.trim()}>Salvar</Button>
     </div>
   );
