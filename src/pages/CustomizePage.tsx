@@ -39,27 +39,42 @@ export default function CustomizePage() {
   }, [updateLocalBrand]);
 
   const handleUpload = async (file: File, type: 'logo' | 'favicon') => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      toast.error('Organização não encontrada. Faça login novamente.');
+      return;
+    }
+    const allowedTypes = ['image/png', 'image/svg+xml', 'image/webp', 'image/x-icon', 'image/vnd.microsoft.icon'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Formato não suportado. Use PNG, SVG ou WebP.');
+      return;
+    }
     if (file.size > 2 * 1024 * 1024) {
       toast.error('Arquivo muito grande (máx. 2MB)');
       return;
     }
     setUploading(true);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `${organizationId}/${type}.${ext}`;
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `${organizationId}/${type}_${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from('logos').upload(path, file, { upsert: true });
       if (error) throw error;
       const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path);
       const urlWithCache = `${publicUrl}?t=${Date.now()}`;
       const key = type === 'logo' ? 'logo_url' : 'favicon_url';
       updateLocalBrand({ [key]: urlWithCache });
-      toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado!`);
+      toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado com sucesso!`);
     } catch (e: any) {
-      toast.error('Erro no upload: ' + e.message);
+      console.error('Upload error:', e);
+      toast.error('Erro no upload: ' + (e.message || 'Tente novamente'));
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleDrop = (e: React.DragEvent, type: 'logo' | 'favicon') => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleUpload(file, type);
   };
 
   const removeLogo = () => {
@@ -117,27 +132,37 @@ export default function CustomizePage() {
               <div>
                 <Label>Logo principal</Label>
                 <p className="text-xs text-muted-foreground mb-2">PNG, SVG ou WebP, fundo transparente recomendado (máx. 2MB)</p>
-                <div className="flex gap-3 items-center">
-                  <input ref={logoInputRef} type="file" accept=".png,.svg,.webp" className="hidden"
-                    onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0], 'logo')} />
-                  <Button variant="outline" onClick={() => logoInputRef.current?.click()} disabled={uploading}>
-                    <Upload className="h-4 w-4 mr-1" /> Upload logo
-                  </Button>
-                  {brand.logo_url && (
-                    <Button variant="ghost" size="sm" onClick={removeLogo} className="text-destructive">
-                      <Trash2 className="h-4 w-4 mr-1" /> Remover
-                    </Button>
+                <div
+                  className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={e => handleDrop(e, 'logo')}
+                  onClick={() => logoInputRef.current?.click()}
+                >
+                  <input ref={logoInputRef} type="file" accept="image/png,image/svg+xml,image/webp" className="hidden"
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'logo'); e.target.value = ''; }} />
+                  {brand.logo_url ? (
+                    <div className="space-y-3">
+                      <div className="flex justify-center gap-4">
+                        <div className="p-4 rounded-lg bg-card border">
+                          <img src={brand.logo_url} alt="Logo claro" className="h-10 object-contain" />
+                        </div>
+                        <div className="p-4 rounded-lg bg-sidebar border">
+                          <img src={brand.logo_url} alt="Logo escuro" className="h-10 object-contain" />
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
+                    </div>
                   )}
                 </div>
                 {brand.logo_url && (
-                  <div className="flex gap-4 mt-3">
-                    <div className="p-4 rounded-lg bg-card border">
-                      <img src={brand.logo_url} alt="Logo claro" className="h-10 object-contain" />
-                    </div>
-                    <div className="p-4 rounded-lg bg-sidebar border">
-                      <img src={brand.logo_url} alt="Logo escuro" className="h-10 object-contain" />
-                    </div>
-                  </div>
+                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
+                    <Trash2 className="h-4 w-4 mr-1" /> Remover logo
+                  </Button>
                 )}
               </div>
               <div>
@@ -150,11 +175,27 @@ export default function CustomizePage() {
               </div>
               <div>
                 <Label>Favicon (32x32px)</Label>
-                <input ref={faviconInputRef} type="file" accept=".png,.ico,.svg" className="hidden"
-                  onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0], 'favicon')} />
-                <Button variant="outline" size="sm" onClick={() => faviconInputRef.current?.click()} disabled={uploading}>
-                  <Upload className="h-4 w-4 mr-1" /> Upload favicon
-                </Button>
+                <p className="text-xs text-muted-foreground mb-2">PNG, ICO ou SVG</p>
+                <div
+                  className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={e => handleDrop(e, 'favicon')}
+                  onClick={() => faviconInputRef.current?.click()}
+                >
+                  <input ref={faviconInputRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
+                  {brand.favicon_url ? (
+                    <div className="flex items-center gap-2">
+                      <img src={brand.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
+                      <span className="text-xs text-muted-foreground">Clique para trocar</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Upload favicon</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
