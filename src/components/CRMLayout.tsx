@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
+import { useBrand } from "@/contexts/BrandContext";
 
 export default function CRMLayout() {
   return (
