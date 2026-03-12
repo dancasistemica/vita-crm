@@ -336,7 +336,7 @@ export default function UsersTab() {
               <SelectItem value="owner">Proprietário</SelectItem>
               <SelectItem value="admin">Administrador</SelectItem>
               <SelectItem value="vendedor">Vendedor</SelectItem>
-              <SelectItem value="member">Membro</SelectItem>
+              <SelectItem value="member">Usuário</SelectItem>
             </SelectContent>
           </Select>
         </div>
