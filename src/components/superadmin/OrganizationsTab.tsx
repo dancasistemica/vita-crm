@@ -90,6 +90,20 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
       }
     };
 
+    const handleDelete = async () => {
+      if (!deleteConfirmOrg) return;
+      try {
+        await deleteOrganization(deleteConfirmOrg.id);
+        toast.success('Organização deletada');
+        setDeleteConfirmOrg(null);
+        fetchData();
+        onStatsChange?.();
+      } catch (err) {
+        console.error('[OrganizationsTab] delete:', err);
+        toast.error('Erro ao deletar organização');
+      }
+    };
+
     const handleCreateSuccess = () => {
       fetchData();
       onStatsChange?.();
