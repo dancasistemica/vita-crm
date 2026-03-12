@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 interface SwitchableOrg {
   id: string;
@@ -13,10 +14,8 @@ const STORAGE_KEY = 'superadmin_current_org';
 
 export function useOrganizationSwitch() {
   const { isSuperadmin, loading: saLoading } = useSuperadmin();
+  const { switchOrg, organizationId } = useOrganization();
   const [organizations, setOrganizations] = useState<SwitchableOrg[]>([]);
-  const [currentOrgId, setCurrentOrgId] = useState<string | null>(
-    () => localStorage.getItem(STORAGE_KEY)
-  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,20 +49,19 @@ export function useOrganizationSwitch() {
     load();
   }, [isSuperadmin, saLoading]);
 
-  const switchOrganization = useCallback((orgId: string) => {
-    console.log('[useOrganizationSwitch] Trocando para org:', orgId);
-    localStorage.setItem(STORAGE_KEY, orgId);
-    setCurrentOrgId(orgId);
-    // Reload to apply new context everywhere
-    window.location.reload();
-  }, []);
+  const switchOrganization = useCallback(async (orgId: string) => {
+    console.log('[useOrganizationSwitch] 🔄 Trocando para org:', orgId);
+    // Delegate to context — updates localStorage + state + triggers re-render everywhere
+    await switchOrg(orgId);
+    console.log('[useOrganizationSwitch] ✅ switchOrg concluído');
+  }, [switchOrg]);
 
-  const currentOrganization = organizations.find(o => o.id === currentOrgId) || null;
+  const currentOrganization = organizations.find(o => o.id === organizationId) || null;
 
   return {
     organizations,
     currentOrganization,
-    currentOrgId,
+    currentOrgId: organizationId,
     loading: loading || saLoading,
     isSuperadmin,
     switchOrganization,
