@@ -1,34 +1,14 @@
-import { useCRMStore } from "@/store/crmStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
-import { usePermission } from "@/hooks/usePermission";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
-  const { leads, sales, products, pipelineStages, origins } = useCRMStore();
-
-  const totalLeads = leads.length;
-  const clients = leads.filter(l => l.pipelineStage === '7').length;
-  const conversionRate = totalLeads ? ((clients / totalLeads) * 100).toFixed(1) : '0';
-  const totalRevenue = sales.reduce((sum, s) => sum + s.value, 0);
-
-  const leadsByOrigin = origins.map(o => ({
-    name: o.length > 15 ? o.slice(0, 15) + '…' : o,
-    value: leads.filter(l => l.origin === o).length,
-  })).filter(x => x.value > 0);
-
-  const leadsByStage = pipelineStages.map(s => ({
-    name: s.name.length > 12 ? s.name.slice(0, 12) + '…' : s.name,
-    value: leads.filter(l => l.pipelineStage === s.id).length,
-  }));
-
-  const revenueByProduct = products.map(p => ({
-    name: p.name.length > 15 ? p.name.slice(0, 15) + '…' : p.name,
-    value: sales.filter(s => s.productId === p.id).reduce((sum, s) => sum + s.value, 0),
-  })).filter(x => x.value > 0);
+  const { totalLeads, clients, conversionRate, totalRevenue, leadsByStage, leadsByOrigin, revenueByProduct, loading } = useDashboardData();
 
   const metrics = [
     { icon: Users, label: "Total de Leads", value: totalLeads, color: 'bg-primary/10 text-primary' },
@@ -36,6 +16,26 @@ export default function DashboardPage() {
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate}%`, color: 'bg-info/10 text-info' },
     { icon: DollarSign, label: "Receita Total", value: `R$ ${totalRevenue.toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
   ];
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-display text-foreground">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i} className="shadow-card border-border/60">
+              <CardContent className="pt-5 pb-4">
+                <Skeleton className="h-16 w-full" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
