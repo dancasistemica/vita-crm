@@ -3,6 +3,7 @@ import { useCRMStore } from "@/store/crmStore";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import AIPipelineTip from "@/components/ai/AIPipelineTip";
 
 const interestColors = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' } as const;
 
@@ -62,7 +63,10 @@ export default function PipelinePage() {
                       )}
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs text-muted-foreground">Última: {getLastInteraction(lead.id)}</span>
-                        {lead.responsible && <span className="text-xs text-primary">{lead.responsible}</span>}
+                        <div className="flex items-center gap-1">
+                          <AIPipelineTip lead={lead} stageName={stage.name} />
+                          {lead.responsible && <span className="text-xs text-primary">{lead.responsible}</span>}
+                        </div>
                       </div>
                     </Card>
                   ))}

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
 import { toast } from "sonner";
+import AIResponseSuggestion from "@/components/ai/AIResponseSuggestion";
 
 export default function InteracoesPage() {
   const { leads, interactions, addInteraction } = useCRMStore();
@@ -79,8 +80,13 @@ export default function InteracoesPage() {
 }
 
 function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Partial<Interaction>) => void }) {
+  const { interactions, products, pipelineStages } = useCRMStore();
   const [form, setForm] = useState<Partial<Interaction>>({ date: new Date().toISOString().split('T')[0], type: 'mensagem' });
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
+
+  const selectedLead = leads.find((l: any) => l.id === form.leadId);
+  const leadInteractions = interactions.filter(i => i.leadId === form.leadId);
+  const stageName = pipelineStages.find(s => s.id === selectedLead?.pipelineStage)?.name || '';
 
   return (
     <div className="space-y-3">
@@ -88,7 +94,7 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
         <Label>Lead</Label>
         <Select value={form.leadId || ''} onValueChange={v => set('leadId', v)}>
           <SelectTrigger><SelectValue placeholder="Selecionar lead" /></SelectTrigger>
-          <SelectContent>{leads.map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
+          <SelectContent>{leads.map((l: any) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
         </Select>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -102,6 +108,17 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
         <div><Label>Data</Label><Input type="date" value={form.date || ''} onChange={e => set('date', e.target.value)} /></div>
       </div>
       <div><Label>Anotação</Label><Textarea value={form.note || ''} onChange={e => set('note', e.target.value)} /></div>
+
+      {/* AI Response Suggestion */}
+      {selectedLead && (
+        <AIResponseSuggestion
+          lead={selectedLead}
+          interactions={leadInteractions}
+          products={products}
+          stageName={stageName}
+        />
+      )}
+
       <Button className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</Button>
     </div>
   );
