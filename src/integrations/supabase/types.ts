@@ -286,51 +286,63 @@ export type Database = {
       organizations: {
         Row: {
           active: boolean
+          contact_email: string | null
           created_at: string
+          description: string | null
           id: string
           logo_url: string | null
           max_leads: number
           max_users: number
           name: string
           owner_id: string | null
+          phone: string | null
           plan: Database["public"]["Enums"]["org_plan"]
           plan_expires_at: string | null
           plan_id: string | null
           primary_color: string | null
           slug: string
           updated_at: string
+          website: string | null
         }
         Insert: {
           active?: boolean
+          contact_email?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           logo_url?: string | null
           max_leads?: number
           max_users?: number
           name: string
           owner_id?: string | null
+          phone?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
           plan_id?: string | null
           primary_color?: string | null
           slug: string
           updated_at?: string
+          website?: string | null
         }
         Update: {
           active?: boolean
+          contact_email?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           logo_url?: string | null
           max_leads?: number
           max_users?: number
           name?: string
           owner_id?: string | null
+          phone?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
           plan_id?: string | null
           primary_color?: string | null
           slug?: string
           updated_at?: string
+          website?: string | null
         }
         Relationships: [
           {

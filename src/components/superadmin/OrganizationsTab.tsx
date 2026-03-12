@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans } from '@/services/superadminService';
-import { Building2, Users } from 'lucide-react';
+import { CreateOrganizationModal } from './CreateOrganizationModal';
+import { Building2, Users, Plus } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -23,12 +24,19 @@ interface Org {
 interface Plan {
   id: string;
   name: string;
+  value: number;
+  period: string;
+  max_users: number;
+  max_leads: number | null;
+  max_integrations: number | null;
+  description: string | null;
 }
 
 export function OrganizationsTab() {
   const [orgs, setOrgs] = useState<Org[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -73,9 +81,14 @@ export function OrganizationsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-        <Building2 className="h-4 w-4" />
-        <span>{orgs.length} organização(ões) cadastrada(s)</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <Building2 className="h-4 w-4" />
+          <span>{orgs.length} organização(ões) cadastrada(s)</span>
+        </div>
+        <Button onClick={() => setCreateOpen(true)} className="gap-2">
+          <Plus className="h-4 w-4" /> Nova Organização
+        </Button>
       </div>
 
       <Table>
@@ -144,6 +157,13 @@ export function OrganizationsTab() {
           ))}
         </TableBody>
       </Table>
+
+      <CreateOrganizationModal
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={fetchData}
+        plans={plans}
+      />
     </div>
   );
 }
