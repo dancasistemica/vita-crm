@@ -82,7 +82,21 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-2">
+      <SidebarFooter className="p-2 space-y-1">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <NavLink
+                to="/perfil"
+                className="hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg"
+                activeClassName="bg-sidebar-accent text-sidebar-primary font-medium shadow-sm"
+              >
+                <User className="mr-2 h-4 w-4" />
+                {!collapsed && <span className="text-sm">Meu Perfil</span>}
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <button
           onClick={signOut}
           className="flex items-center gap-2 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
