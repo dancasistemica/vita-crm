@@ -16,6 +16,7 @@ import TarefasPage from "@/pages/TarefasPage";
 import ProdutosPage from "@/pages/ProdutosPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import ProfilePage from "@/pages/ProfilePage";
 import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage";
@@ -57,6 +58,7 @@ const App = () => (
                 <Route path="/produtos" element={<ProdutosPage />} />
                 <Route path="/relatorios" element={<RelatoriosPage />} />
                 <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+                <Route path="/perfil" element={<ProfilePage />} />
               </Route>
             </Route>
 
