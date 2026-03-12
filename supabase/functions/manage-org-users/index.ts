@@ -42,6 +42,9 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { action, organization_id } = body;
 
+    // For update_auth, org_id can be "global" for orphan users (superadmin only)
+    const isGlobalAction = action === 'update_auth' && organization_id === 'global';
+
     if (!organization_id) {
       return new Response(JSON.stringify({ error: 'organization_id obrigatório' }), {
         status: 400,
@@ -57,6 +60,12 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (!saCheck) {
+      if (isGlobalAction) {
+        return new Response(JSON.stringify({ error: 'Apenas superadmins podem executar esta ação' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       const { data: callerMember } = await adminClient
         .from('organization_members')
         .select('role')
