@@ -114,14 +114,21 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    console.log('[OrganizationContext] 🔄 useEffect mount — chamando fetchOrganization');
     fetchOrganization();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      console.log('[OrganizationContext] 🔄 onAuthStateChange event:', event);
       fetchOrganization();
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Log quando organization muda
+  useEffect(() => {
+    console.log('[OrganizationContext] ✅ organization atualizado → id:', organization?.id, 'name:', organization?.name);
+  }, [organization]);
 
   return (
     <OrganizationContext.Provider

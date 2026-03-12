@@ -37,20 +37,23 @@ export function useDashboardData(): DashboardData {
   }, [organizationId, isSuperadmin]);
 
   useEffect(() => {
+    console.log('[useDashboardData] 1️⃣ useEffect disparado — orgLoading:', orgLoading, 'superadminLoading:', superadminLoading, 'effectiveOrgId:', effectiveOrgId, 'organizationId:', organizationId, 'isSuperadmin:', isSuperadmin);
+
     if (orgLoading || superadminLoading) {
+      console.log('[useDashboardData] 2️⃣ Ainda carregando contextos, aguardando...');
       setLoading(true);
       return;
     }
 
     if (!effectiveOrgId) {
-      console.warn('[useDashboardData] Nenhuma organização selecionada para carregar dashboard');
+      console.warn('[useDashboardData] ⚠️ Nenhuma organização selecionada');
       setLoading(false);
       return;
     }
 
     const fetchData = async () => {
       setLoading(true);
-      console.log('[useDashboardData] Carregando dados para org:', effectiveOrgId);
+      console.log('[useDashboardData] 3️⃣ Buscando dados para org:', effectiveOrgId);
 
       const requests = [
         supabase.from('leads').select('id, pipeline_stage, origin').eq('organization_id', effectiveOrgId),
