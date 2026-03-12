@@ -241,6 +241,48 @@ export type Database = {
           },
         ]
       }
+      organization_plans: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          id: string
+          max_integrations: number | null
+          max_leads: number | null
+          max_users: number
+          name: string
+          period: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_integrations?: number | null
+          max_leads?: number | null
+          max_users?: number
+          name: string
+          period?: string
+          updated_at?: string
+          value: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_integrations?: number | null
+          max_leads?: number | null
+          max_users?: number
+          name?: string
+          period?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           active: boolean
@@ -253,6 +295,7 @@ export type Database = {
           owner_id: string | null
           plan: Database["public"]["Enums"]["org_plan"]
           plan_expires_at: string | null
+          plan_id: string | null
           primary_color: string | null
           slug: string
           updated_at: string
@@ -268,6 +311,7 @@ export type Database = {
           owner_id?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
+          plan_id?: string | null
           primary_color?: string | null
           slug: string
           updated_at?: string
@@ -283,11 +327,20 @@ export type Database = {
           owner_id?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
+          plan_id?: string | null
           primary_color?: string | null
           slug?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "organization_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payment_methods: {
         Row: {
@@ -555,6 +608,24 @@ export type Database = {
           },
         ]
       }
+      superadmin_roles: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tags: {
         Row: {
           color: string | null
@@ -649,6 +720,7 @@ export type Database = {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
       }
+      is_superadmin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       org_plan: "free" | "starter" | "pro" | "agency"
