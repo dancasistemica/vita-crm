@@ -4,9 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans } from '@/services/superadminService';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
-import { Building2, Users, Plus } from 'lucide-react';
+import { EditOrganizationModal } from './EditOrganizationModal';
+import { Building2, Users, Plus, Pencil, Trash2 } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -14,6 +16,7 @@ interface Org {
   slug: string;
   plan: string;
   plan_id: string | null;
+  contact_email: string | null;
   active: boolean;
   max_leads: number;
   max_users: number;
@@ -42,6 +45,8 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     const [plans, setPlans] = useState<Plan[]>([]);
     const [loading, setLoading] = useState(true);
     const [createOpen, setCreateOpen] = useState(false);
+    const [editOrgId, setEditOrgId] = useState<string | null>(null);
+    const [deleteConfirmOrg, setDeleteConfirmOrg] = useState<Org | null>(null);
 
     useImperativeHandle(ref, () => ({
       openCreateModal: () => setCreateOpen(true),
@@ -85,6 +90,20 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
       }
     };
 
+    const handleDelete = async () => {
+      if (!deleteConfirmOrg) return;
+      try {
+        await deleteOrganization(deleteConfirmOrg.id);
+        toast.success('Organização deletada');
+        setDeleteConfirmOrg(null);
+        fetchData();
+        onStatsChange?.();
+      } catch (err) {
+        console.error('[OrganizationsTab] delete:', err);
+        toast.error('Erro ao deletar organização');
+      }
+    };
+
     const handleCreateSuccess = () => {
       fetchData();
       onStatsChange?.();
@@ -110,10 +129,10 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
+              <TableHead>Email</TableHead>
               <TableHead>Plano Atual</TableHead>
               <TableHead>Alterar Plano</TableHead>
               <TableHead>Membros</TableHead>
-              <TableHead>Limites</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Criada em</TableHead>
               <TableHead>Ações</TableHead>
@@ -123,6 +142,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {orgs.map((org) => (
               <TableRow key={org.id}>
                 <TableCell className="font-medium">{org.name}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
                 <TableCell>
                   <Badge variant="outline">{org.plan}</Badge>
                 </TableCell>
@@ -148,9 +168,6 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     {org.organization_members?.length || 0}
                   </div>
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
-                  {org.max_users} usuários / {org.max_leads} leads
-                </TableCell>
                 <TableCell>
                   <Badge variant={org.active ? 'default' : 'destructive'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
@@ -160,13 +177,21 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                   {new Date(org.created_at).toLocaleDateString('pt-BR')}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant={org.active ? 'destructive' : 'default'}
-                    size="sm"
-                    onClick={() => handleToggleStatus(org)}
-                  >
-                    {org.active ? 'Suspender' : 'Ativar'}
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => setEditOrgId(org.id)} title="Editar">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                    <Button
+                      variant={org.active ? 'destructive' : 'default'}
+                      size="sm"
+                      onClick={() => handleToggleStatus(org)}
+                    >
+                      {org.active ? 'Suspender' : 'Ativar'}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -179,6 +204,30 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           onSuccess={handleCreateSuccess}
           plans={plans}
         />
+
+        <EditOrganizationModal
+          open={!!editOrgId}
+          onOpenChange={(open) => { if (!open) setEditOrgId(null); }}
+          orgId={editOrgId}
+          onSuccess={() => { fetchData(); onStatsChange?.(); }}
+        />
+
+        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { if (!open) setDeleteConfirmOrg(null); }}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Deletar organização</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja deletar "{deleteConfirmOrg?.name}"? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Deletar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     );
   }

@@ -40,8 +40,8 @@ const App = () => (
 
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/superadmin" element={<SuperadminDashboard />} />
               <Route element={<CRMLayout />}>
+                <Route path="/superadmin" element={<SuperadminDashboard />} />
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
                 <Route path="/import-wizard" element={<ImportLeadsWizard />} />

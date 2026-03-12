@@ -58,23 +58,16 @@ export default function SuperadminDashboard() {
   if (!isSuperadmin) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <ShieldCheck className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Painel Superadmin</h1>
-              <p className="text-sm text-muted-foreground">Gestão de organizações, planos e usuários</p>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <ShieldCheck className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Painel Superadmin</h1>
+          <p className="text-sm text-muted-foreground">Gestão de organizações, planos e usuários</p>
         </div>
       </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Quick Access Cards */}
         <div>
           <h2 className="text-sm font-medium text-muted-foreground mb-3">⚡ Atalhos Rápidos</h2>
@@ -139,7 +132,6 @@ export default function SuperadminDashboard() {
             <UsersManagementTab />
           </TabsContent>
         </Tabs>
-      </div>
     </div>
   );
 }
