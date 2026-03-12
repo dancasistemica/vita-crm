@@ -106,6 +106,9 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* AI Weekly Summary */}
+        <AIWeeklySummary />
       </div>
     </div>
   );
