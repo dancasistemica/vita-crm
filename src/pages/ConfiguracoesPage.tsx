@@ -42,6 +42,7 @@ export default function ConfiguracoesPage() {
         {canAccessSettings && <TabsContent value="roles"><CustomRolesTab onRoleCreated={handleRoleCreated} /></TabsContent>}
         {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager preselectedRole={preselectedRole} /></TabsContent>}
         {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}
+        {canAccessSettings && <TabsContent value="ia"><AIContextTab /></TabsContent>}
       </Tabs>
     </div>
   );
