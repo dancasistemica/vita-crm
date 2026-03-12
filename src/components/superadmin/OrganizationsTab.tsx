@@ -168,9 +168,6 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     {org.organization_members?.length || 0}
                   </div>
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
-                  {org.max_users} usuários / {org.max_leads} leads
-                </TableCell>
                 <TableCell>
                   <Badge variant={org.active ? 'default' : 'destructive'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
@@ -180,13 +177,21 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                   {new Date(org.created_at).toLocaleDateString('pt-BR')}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant={org.active ? 'destructive' : 'default'}
-                    size="sm"
-                    onClick={() => handleToggleStatus(org)}
-                  >
-                    {org.active ? 'Suspender' : 'Ativar'}
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => setEditOrgId(org.id)} title="Editar">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                    <Button
+                      variant={org.active ? 'destructive' : 'default'}
+                      size="sm"
+                      onClick={() => handleToggleStatus(org)}
+                    >
+                      {org.active ? 'Suspender' : 'Ativar'}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
