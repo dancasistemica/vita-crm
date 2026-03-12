@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
 
 export interface BrandSettings {
   primary_color: string;
@@ -96,73 +95,76 @@ function applyBrandCSS(brand: BrandSettings) {
 }
 
 export function BrandProvider({ children }: { children: ReactNode }) {
-  const { organizationId, loading: orgLoading } = useOrganization();
   const [brand, setBrand] = useState<BrandSettings>(DEFAULT_BRAND);
   const [loading, setLoading] = useState(true);
+  const [resolvedOrgId, setResolvedOrgId] = useState<string | null>(null);
 
-  const fetchBrand = useCallback(async () => {
-    console.log('[BrandContext] 1️⃣ fetchBrand start', { orgLoading, organizationId });
-
-    if (orgLoading) {
-      setLoading(true);
-      console.log('[BrandContext] ⏳ OrganizationContext ainda carregando');
-      return;
-    }
-
-    if (!organizationId) {
-      console.warn('[BrandContext] ⚠️ organizationId ausente, aplicando tema padrão');
-      setBrand(DEFAULT_BRAND);
-      applyBrandCSS(DEFAULT_BRAND);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      console.log('[BrandContext] 2️⃣ Buscando brand_settings para org:', organizationId);
-      const { data, error } = await supabase
-        .from('brand_settings')
-        .select('*')
-        .eq('organization_id', organizationId)
-        .maybeSingle();
-
-      console.log('[BrandContext] 3️⃣ Resposta da query:', { data, error });
-
-      if (error) throw error;
-
-      const settings: BrandSettings = data
-        ? {
-            primary_color: data.primary_color,
-            secondary_color: data.secondary_color,
-            accent_color: data.accent_color,
-            sidebar_color: data.sidebar_color,
-            logo_url: data.logo_url,
-            favicon_url: data.favicon_url,
-            org_display_name: data.org_display_name,
-            font_family: data.font_family,
-          }
-        : DEFAULT_BRAND;
-
-      console.log('[BrandContext] 4️⃣ Aplicando tema:', {
-        primary_color: settings.primary_color,
-        org_display_name: settings.org_display_name,
-      });
-
-      setBrand(settings);
-      applyBrandCSS(settings);
-      console.log('[BrandContext] ✅ Tema aplicado com sucesso');
-    } catch (e) {
-      console.error('[BrandContext] ❌ Erro ao carregar/aplicar tema:', e);
-    } finally {
-      setLoading(false);
-      console.log('[BrandContext] 5️⃣ fetchBrand finalizado');
-    }
-  }, [organizationId, orgLoading]);
-
+  // Fetch org id + brand settings directly from user session
   useEffect(() => {
-    fetchBrand();
-  }, [fetchBrand]);
+    const loadBrand = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          console.log('[BrandContext] No user, using defaults');
+          setLoading(false);
+          return;
+        }
+
+        // Get user's org directly
+        const { data: membership } = await supabase
+          .from('organization_members')
+          .select('organization_id')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (!membership) {
+          console.log('[BrandContext] No org membership, using defaults');
+          setLoading(false);
+          return;
+        }
+
+        setResolvedOrgId(membership.organization_id);
+
+        const { data, error } = await supabase
+          .from('brand_settings')
+          .select('*')
+          .eq('organization_id', membership.organization_id)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        const settings: BrandSettings = data
+          ? {
+              primary_color: data.primary_color,
+              secondary_color: data.secondary_color,
+              accent_color: data.accent_color,
+              sidebar_color: data.sidebar_color,
+              logo_url: data.logo_url,
+              favicon_url: data.favicon_url,
+              org_display_name: data.org_display_name,
+              font_family: data.font_family,
+            }
+          : DEFAULT_BRAND;
+
+        console.log('[BrandContext] ✅ Tema carregado:', settings.primary_color);
+        setBrand(settings);
+        applyBrandCSS(settings);
+      } catch (e) {
+        console.error('[BrandContext] ❌ Erro:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBrand();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      loadBrand();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const updateLocalBrand = useCallback((partial: Partial<BrandSettings>) => {
     console.log('[BrandContext] updateLocalBrand:', partial);
@@ -174,10 +176,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const saveBrand = useCallback(async (partial: Partial<BrandSettings>) => {
-    console.log('[BrandContext] saveBrand start:', partial);
-
-    if (!organizationId) {
-      console.error('[BrandContext] ❌ Não foi possível salvar: organizationId ausente');
+    if (!resolvedOrgId) {
       throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
     }
 
@@ -187,33 +186,26 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       .from('brand_settings')
       .upsert(
         {
-          organization_id: organizationId,
+          organization_id: resolvedOrgId,
           ...updated,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'organization_id' }
       );
 
-    if (error) {
-      console.error('[BrandContext] ❌ Erro ao salvar brand_settings:', error);
-      throw error;
-    }
+    if (error) throw error;
 
     setBrand(updated);
     applyBrandCSS(updated);
-    console.log('[BrandContext] ✅ brand_settings salvo e aplicado');
-  }, [organizationId, brand]);
+    console.log('[BrandContext] ✅ brand_settings salvo');
+  }, [resolvedOrgId, brand]);
 
   const resetBrand = useCallback(async () => {
-    console.log('[BrandContext] resetBrand');
-
-    if (!organizationId) {
-      console.error('[BrandContext] ❌ Não foi possível resetar: organizationId ausente');
+    if (!resolvedOrgId) {
       throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
     }
-
     await saveBrand(DEFAULT_BRAND);
-  }, [organizationId, saveBrand]);
+  }, [resolvedOrgId, saveBrand]);
 
   return (
     <BrandContext.Provider value={{ brand, loading, saveBrand, resetBrand, updateLocalBrand }}>
