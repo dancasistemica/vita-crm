@@ -99,7 +99,7 @@ export class DataAccessService {
   async createSale(saleData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('sales')
-      .insert({ ...saleData, organization_id: this.orgId })
+      .insert({ ...saleData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createSale error:', error); throw error; }
