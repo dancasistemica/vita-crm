@@ -114,23 +114,27 @@ export default function LeadsPage() {
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
-            <Upload className="h-4 w-4 mr-1" /> Importar Leads
-          </Button>
+          {userCanCreate && (
+            <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
+              <Upload className="h-4 w-4 mr-1" /> Importar Leads
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
-          <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
-            <DialogTrigger asChild>
-              <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
-              </DialogHeader>
-              <LeadForm lead={editingLead} onSave={handleSave} />
-            </DialogContent>
-          </Dialog>
+          {userCanCreate && (
+            <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
+              <DialogTrigger asChild>
+                <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+                </DialogHeader>
+                <LeadForm lead={editingLead} onSave={handleSave} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
 
