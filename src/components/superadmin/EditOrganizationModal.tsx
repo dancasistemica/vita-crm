@@ -124,7 +124,15 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
   const handleSave = async () => {
     if (!form.name.trim()) { toast.error('Nome é obrigatório'); return; }
-    if (form.cnpj && !validateCNPJ(form.cnpj)) { toast.error('CNPJ inválido'); return; }
+    if (form.cnpj) {
+      const result = validateCNPJWithResult(form.cnpj);
+      if (!result.valid) {
+        setCnpjTouched(true);
+        setCnpjValidation(result);
+        toast.error(result.error || 'CNPJ inválido');
+        return;
+      }
+    }
     if (!orgId) return;
 
     setSaving(true);
