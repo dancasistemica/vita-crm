@@ -187,6 +187,11 @@ export default function UsersTab() {
       toast.error("Nome e email são obrigatórios");
       return;
     }
+    if (!editing && isSuperadmin && !formOrgId) {
+      toast.error("Selecione uma organização");
+      return;
+    }
+    const targetOrgId = editing ? organizationId : (isSuperadmin ? formOrgId : organizationId);
     setSaving(true);
     try {
       if (editing) {
@@ -212,7 +217,7 @@ export default function UsersTab() {
         const { data, error } = await supabase.functions.invoke("manage-org-users", {
           body: {
             action: "create",
-            organization_id: organizationId,
+            organization_id: targetOrgId,
             email: formEmail,
             full_name: formName,
             phone: formPhone,
