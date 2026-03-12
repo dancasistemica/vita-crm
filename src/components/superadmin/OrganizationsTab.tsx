@@ -48,10 +48,39 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     const [createOpen, setCreateOpen] = useState(false);
     const [editOrgId, setEditOrgId] = useState<string | null>(null);
     const [deleteConfirmOrg, setDeleteConfirmOrg] = useState<Org | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all');
+    const [planFilter, setPlanFilter] = useState<string>('all');
 
     useImperativeHandle(ref, () => ({
       openCreateModal: () => setCreateOpen(true),
     }));
+
+    const filteredOrgs = useMemo(() => {
+      let result = orgs;
+      if (searchTerm) {
+        const lower = searchTerm.toLowerCase();
+        result = result.filter(o =>
+          o.name.toLowerCase().includes(lower) ||
+          (o.contact_email || '').toLowerCase().includes(lower)
+        );
+      }
+      if (statusFilter !== 'all') {
+        result = result.filter(o => statusFilter === 'active' ? o.active : !o.active);
+      }
+      if (planFilter !== 'all') {
+        result = result.filter(o => o.plan_id === planFilter);
+      }
+      return result;
+    }, [orgs, searchTerm, statusFilter, planFilter]);
+
+    const hasActiveFilters = searchTerm !== '' || statusFilter !== 'all' || planFilter !== 'all';
+
+    const clearFilters = () => {
+      setSearchTerm('');
+      setStatusFilter('all');
+      setPlanFilter('all');
+    };
 
     const fetchData = async () => {
       try {
