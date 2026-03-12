@@ -96,13 +96,22 @@ function applyBrandCSS(brand: BrandSettings) {
 }
 
 export function BrandProvider({ children }: { children: ReactNode }) {
-  const { organizationId } = useOrganization();
+  const { organizationId, loading: orgLoading } = useOrganization();
   const [brand, setBrand] = useState<BrandSettings>(DEFAULT_BRAND);
   const [loading, setLoading] = useState(true);
 
   const fetchBrand = useCallback(async () => {
-    if (!organizationId) { setLoading(false); return; }
+    // Wait for org context to finish loading before deciding
+    if (orgLoading) return;
+
+    if (!organizationId) {
+      console.log('[BrandContext] No organizationId, using defaults');
+      setLoading(false);
+      return;
+    }
+
     try {
+      console.log('[BrandContext] Fetching brand for org:', organizationId);
       const { data } = await supabase
         .from('brand_settings')
         .select('*')
@@ -120,6 +129,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         font_family: data.font_family,
       } : DEFAULT_BRAND;
 
+      console.log('[BrandContext] Applying brand:', settings.primary_color, settings.org_display_name);
       setBrand(settings);
       applyBrandCSS(settings);
     } catch (e) {
@@ -127,7 +137,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [organizationId]);
+  }, [organizationId, orgLoading]);
 
   useEffect(() => { fetchBrand(); }, [fetchBrand]);
 
