@@ -80,7 +80,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        {/* User Info */}
+        {/* Organization Switcher (SuperAdmin only) */}
+        {!collapsed && <OrganizationSwitcher />}
 
         {/* User & Organization Info */}
         {!collapsed && (
