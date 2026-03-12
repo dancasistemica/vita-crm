@@ -124,8 +124,27 @@ export default function UserRolesManager() {
   const [permissions, setPermissions] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [customRoles, setCustomRoles] = useState<{ value: string; label: string }[]>([]);
 
   const isAdmin = role === 'superadmin' || role === 'owner' || role === 'admin';
+
+  const ROLES = [...BASE_ROLES, ...customRoles];
+
+  // Load custom roles from DB
+  useEffect(() => {
+    if (!organizationId || !isAdmin) return;
+    const loadCustomRoles = async () => {
+      const { data } = await supabase
+        .from('custom_roles')
+        .select('name')
+        .eq('organization_id', organizationId)
+        .order('name');
+      if (data) {
+        setCustomRoles(data.map(r => ({ value: r.name, label: r.name })));
+      }
+    };
+    loadCustomRoles();
+  }, [organizationId, isAdmin]);
 
   useEffect(() => {
     if (!organizationId || !isAdmin) return;
