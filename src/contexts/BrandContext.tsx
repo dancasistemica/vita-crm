@@ -176,10 +176,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const saveBrand = useCallback(async (partial: Partial<BrandSettings>) => {
-    console.log('[BrandContext] saveBrand start:', partial);
-
-    if (!organizationId) {
-      console.error('[BrandContext] ❌ Não foi possível salvar: organizationId ausente');
+    if (!resolvedOrgId) {
       throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
     }
 
@@ -189,33 +186,26 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       .from('brand_settings')
       .upsert(
         {
-          organization_id: organizationId,
+          organization_id: resolvedOrgId,
           ...updated,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'organization_id' }
       );
 
-    if (error) {
-      console.error('[BrandContext] ❌ Erro ao salvar brand_settings:', error);
-      throw error;
-    }
+    if (error) throw error;
 
     setBrand(updated);
     applyBrandCSS(updated);
-    console.log('[BrandContext] ✅ brand_settings salvo e aplicado');
-  }, [organizationId, brand]);
+    console.log('[BrandContext] ✅ brand_settings salvo');
+  }, [resolvedOrgId, brand]);
 
   const resetBrand = useCallback(async () => {
-    console.log('[BrandContext] resetBrand');
-
-    if (!organizationId) {
-      console.error('[BrandContext] ❌ Não foi possível resetar: organizationId ausente');
+    if (!resolvedOrgId) {
       throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
     }
-
     await saveBrand(DEFAULT_BRAND);
-  }, [organizationId, saveBrand]);
+  }, [resolvedOrgId, saveBrand]);
 
   return (
     <BrandContext.Provider value={{ brand, loading, saveBrand, resetBrand, updateLocalBrand }}>
