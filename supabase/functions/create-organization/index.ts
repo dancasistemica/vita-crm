@@ -111,9 +111,23 @@ Deno.serve(async (req) => {
       user_metadata: { full_name: admin_name },
     });
 
-    if (createUserError || !authData.user) {
+    if (createUserError) {
+      if (createUserError.code === 'email_exists' || createUserError.status === 422) {
+        return new Response(JSON.stringify({ error: 'Este email de admin já está registrado no sistema' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       console.error('[create-organization] Error creating user:', createUserError);
-      return new Response(JSON.stringify({ error: 'Erro ao criar usuário admin: ' + (createUserError?.message || 'desconhecido') }), {
+      return new Response(JSON.stringify({ error: 'Erro ao criar usuário admin: ' + (createUserError.message || 'desconhecido') }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (!authData.user) {
+      return new Response(JSON.stringify({ error: 'Erro ao criar usuário admin: usuário não retornado' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
