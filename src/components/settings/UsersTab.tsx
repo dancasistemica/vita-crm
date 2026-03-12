@@ -75,6 +75,7 @@ function UserForm({ user, onSave }: { user: CRMUser | null; onSave: (data: Parti
         <Select value={form.role || 'usuario'} onValueChange={v => set('role', v)}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
+            <SelectItem value="superadmin">Superadmin</SelectItem>
             <SelectItem value="admin">Administrador</SelectItem>
             <SelectItem value="vendedora">Vendedora</SelectItem>
             <SelectItem value="usuario">Usuário</SelectItem>
