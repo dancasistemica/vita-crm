@@ -51,7 +51,7 @@ export class DataAccessService {
   async createLead(leadData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('leads')
-      .insert({ ...leadData, organization_id: this.orgId })
+      .insert({ ...leadData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createLead error:', error); throw error; }
