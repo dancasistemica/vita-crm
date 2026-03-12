@@ -86,12 +86,16 @@ export function AppSidebar() {
         {/* Logo */}
         <div className="p-4 pb-2">
           <div className={collapsed ? "flex justify-center" : "flex items-center gap-2.5"}>
-            <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm shrink-0">
-              💃
-            </div>
+            {brand.logo_url ? (
+              <img src={brand.logo_url} alt="Logo" className="h-8 w-8 object-contain shrink-0" />
+            ) : (
+              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm shrink-0">
+                💃
+              </div>
+            )}
             {!collapsed && (
               <h1 className="text-base font-display tracking-wide text-sidebar-foreground">
-                CRM
+                {brand.org_display_name || "CRM"}
               </h1>
             )}
           </div>
