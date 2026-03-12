@@ -195,7 +195,7 @@ export class DataAccessService {
   async createInteraction(interactionData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('interactions')
-      .insert({ ...interactionData, organization_id: this.orgId })
+      .insert({ ...interactionData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createInteraction error:', error); throw error; }
