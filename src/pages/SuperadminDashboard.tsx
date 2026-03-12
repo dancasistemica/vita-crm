@@ -132,7 +132,6 @@ export default function SuperadminDashboard() {
             <UsersManagementTab />
           </TabsContent>
         </Tabs>
-      </div>
     </div>
   );
 }

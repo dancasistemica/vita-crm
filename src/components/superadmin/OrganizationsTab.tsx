@@ -204,6 +204,30 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           onSuccess={handleCreateSuccess}
           plans={plans}
         />
+
+        <EditOrganizationModal
+          open={!!editOrgId}
+          onOpenChange={(open) => { if (!open) setEditOrgId(null); }}
+          orgId={editOrgId}
+          onSuccess={() => { fetchData(); onStatsChange?.(); }}
+        />
+
+        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { if (!open) setDeleteConfirmOrg(null); }}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Deletar organização</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja deletar "{deleteConfirmOrg?.name}"? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Deletar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     );
   }

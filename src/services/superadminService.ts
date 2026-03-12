@@ -127,3 +127,36 @@ export async function removeSuperadmin(roleId: string) {
 
   if (error) throw error;
 }
+
+// Update organization details
+export async function updateOrganization(orgId: string, data: {
+  name: string;
+  contact_email: string;
+  phone: string;
+  website: string;
+  description: string;
+}) {
+  const { error } = await supabase
+    .from('organizations')
+    .update({
+      name: data.name,
+      contact_email: data.contact_email || null,
+      phone: data.phone || null,
+      website: data.website || null,
+      description: data.description || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', orgId);
+
+  if (error) throw error;
+}
+
+// Delete organization
+export async function deleteOrganization(orgId: string) {
+  const { error } = await supabase
+    .from('organizations')
+    .delete()
+    .eq('id', orgId);
+
+  if (error) throw error;
+}
