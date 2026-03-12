@@ -32,6 +32,7 @@ export default function ConfiguracoesPage() {
             {canAccessSettings && <TabsTrigger value="roles">🏷️ Roles</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="permissoes">🔐 Permissões</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="organizacao">🏢 Organização</TabsTrigger>}
+            {canAccessSettings && <TabsTrigger value="ia">🧠 Contexto IA</TabsTrigger>}
           </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
