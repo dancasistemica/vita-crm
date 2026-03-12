@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     const { data: saCheck } = await adminClient
       .from('superadmin_roles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .maybeSingle();
 
     if (!saCheck) {
