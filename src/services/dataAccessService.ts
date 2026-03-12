@@ -226,7 +226,7 @@ export class DataAccessService {
   async createProduct(productData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('products')
-      .insert({ ...productData, organization_id: this.orgId })
+      .insert({ ...productData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createProduct error:', error); throw error; }
