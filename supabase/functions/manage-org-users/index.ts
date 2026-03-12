@@ -165,12 +165,6 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Send password reset email so user can set their own password
-      await adminClient.auth.admin.generateLink({
-        type: 'recovery',
-        email,
-      });
-
       return new Response(JSON.stringify({ success: true, user_id: newUserId, temp_password: tempPassword }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
