@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Lock, Save } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 
 interface PermissionModule {
@@ -111,7 +112,7 @@ const MODULES: PermissionModule[] = [
 ];
 
 const ALL_PERMISSION_KEYS = MODULES.flatMap(m => m.permissions.map(p => p.key));
-const ROLES = [
+const BASE_ROLES = [
   { value: 'admin', label: 'Administrador' },
   { value: 'vendedor', label: 'Vendedor' },
   { value: 'member', label: 'Usuário' },
@@ -124,8 +125,27 @@ export default function UserRolesManager() {
   const [permissions, setPermissions] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [customRoles, setCustomRoles] = useState<{ value: string; label: string }[]>([]);
 
   const isAdmin = role === 'superadmin' || role === 'owner' || role === 'admin';
+
+  const ROLES = [...BASE_ROLES, ...customRoles];
+
+  // Load custom roles from DB
+  useEffect(() => {
+    if (!organizationId || !isAdmin) return;
+    const loadCustomRoles = async () => {
+      const { data } = await supabase
+        .from('custom_roles')
+        .select('name')
+        .eq('organization_id', organizationId)
+        .order('name');
+      if (data) {
+        setCustomRoles(data.map(r => ({ value: r.name, label: r.name })));
+      }
+    };
+    loadCustomRoles();
+  }, [organizationId, isAdmin]);
 
   useEffect(() => {
     if (!organizationId || !isAdmin) return;
@@ -218,11 +238,14 @@ export default function UserRolesManager() {
   return (
     <div className="space-y-4">
       <Tabs value={selectedRole} onValueChange={setSelectedRole}>
-        <TabsList className="grid w-full grid-cols-3">
-          {ROLES.map(r => (
-            <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
-          ))}
-        </TabsList>
+        <ScrollArea className="w-full">
+          <TabsList className="inline-flex w-max min-w-full">
+            {ROLES.map(r => (
+              <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
+            ))}
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         {ROLES.map(r => (
           <TabsContent key={r.value} value={r.value}>
