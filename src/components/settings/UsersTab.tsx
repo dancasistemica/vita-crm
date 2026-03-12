@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const roleLabels: Record<string, string> = { admin: 'Administrador', vendedora: 'Vendedora', usuario: 'Usuário' };
+const roleLabels: Record<string, string> = { superadmin: 'Superadmin', admin: 'Administrador', vendedora: 'Vendedora', usuario: 'Usuário' };
 
 export default function UsersTab() {
   const { users, addUser, updateUser } = useCRMStore();
@@ -75,6 +75,7 @@ function UserForm({ user, onSave }: { user: CRMUser | null; onSave: (data: Parti
         <Select value={form.role || 'usuario'} onValueChange={v => set('role', v)}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
+            <SelectItem value="superadmin">Superadmin</SelectItem>
             <SelectItem value="admin">Administrador</SelectItem>
             <SelectItem value="vendedora">Vendedora</SelectItem>
             <SelectItem value="usuario">Usuário</SelectItem>
