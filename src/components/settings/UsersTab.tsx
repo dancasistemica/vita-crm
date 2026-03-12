@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
+import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface OrgUser {
@@ -21,6 +25,12 @@ interface OrgUser {
   email: string;
   phone: string | null;
   created_at: string;
+}
+
+interface OrgOption {
+  id: string;
+  name: string;
+  cnpj: string | null;
 }
 
 const roleLabels: Record<string, string> = {
@@ -38,6 +48,7 @@ const roleBadgeVariant = (role: string) => {
 
 export default function UsersTab() {
   const { organizationId, organization } = useOrganization();
+  const { isSuperadmin } = useSuperadmin();
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -56,6 +67,12 @@ export default function UsersTab() {
   const [formEmail, setFormEmail] = useState("");
   const [formPhone, setFormPhone] = useState("");
   const [formRole, setFormRole] = useState("member");
+  const [formOrgId, setFormOrgId] = useState("");
+  const [orgSelectOpen, setOrgSelectOpen] = useState(false);
+
+  // Organizations list (superadmin only)
+  const [orgOptions, setOrgOptions] = useState<OrgOption[]>([]);
+  const [orgsLoading, setOrgsLoading] = useState(false);
 
   const fetchUsers = async () => {
     if (!organizationId) return;
@@ -107,6 +124,24 @@ export default function UsersTab() {
     fetchUsers();
   }, [organizationId]);
 
+  // Fetch organizations for superadmin
+  const fetchOrgs = async () => {
+    setOrgsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("organizations")
+        .select("id, name, cnpj")
+        .eq("active", true)
+        .order("name");
+      if (error) throw error;
+      setOrgOptions(data || []);
+    } catch (err) {
+      console.error("[UsersTab] fetch orgs error:", err);
+    } finally {
+      setOrgsLoading(false);
+    }
+  };
+
   const filtered = useMemo(() => {
     let list = users;
     if (roleFilter !== "all") {
@@ -132,6 +167,9 @@ export default function UsersTab() {
     setFormEmail("");
     setFormPhone("");
     setFormRole("member");
+    setFormOrgId("");
+    setOrgSelectOpen(false);
+    if (isSuperadmin) fetchOrgs();
     setFormOpen(true);
   };
 
@@ -149,6 +187,11 @@ export default function UsersTab() {
       toast.error("Nome e email são obrigatórios");
       return;
     }
+    if (!editing && isSuperadmin && !formOrgId) {
+      toast.error("Selecione uma organização");
+      return;
+    }
+    const targetOrgId = editing ? organizationId : (isSuperadmin ? formOrgId : organizationId);
     setSaving(true);
     try {
       if (editing) {
@@ -174,7 +217,7 @@ export default function UsersTab() {
         const { data, error } = await supabase.functions.invoke("manage-org-users", {
           body: {
             action: "create",
-            organization_id: organizationId,
+            organization_id: targetOrgId,
             email: formEmail,
             full_name: formName,
             phone: formPhone,
@@ -416,6 +459,57 @@ export default function UsersTab() {
                 <Label>Telefone</Label>
                 <Input value={formPhone} onChange={(e) => setFormPhone(e.target.value)} placeholder="(11) 99999-9999" />
               </div>
+              {/* Organization select - superadmin only, create mode only */}
+              {isSuperadmin && !editing && (
+                <div className="space-y-1">
+                  <Label>Organização *</Label>
+                  <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={orgSelectOpen}
+                        className="w-full justify-between font-normal"
+                      >
+                        {formOrgId
+                          ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
+                          : "Selecione uma organização"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Buscar organização..." />
+                        <CommandList>
+                          <CommandEmpty>
+                            {orgsLoading ? "Carregando..." : "Nenhuma organização encontrada."}
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {orgOptions.map((org) => (
+                              <CommandItem
+                                key={org.id}
+                                value={`${org.name} ${org.cnpj || ""}`}
+                                onSelect={() => {
+                                  setFormOrgId(org.id);
+                                  setOrgSelectOpen(false);
+                                }}
+                              >
+                                <Check className={cn("mr-2 h-4 w-4", formOrgId === org.id ? "opacity-100" : "opacity-0")} />
+                                <div className="flex flex-col">
+                                  <span>{org.name}</span>
+                                  {org.cnpj && (
+                                    <span className="text-xs text-muted-foreground">{org.cnpj}</span>
+                                  )}
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
               <div className="space-y-1">
                 <Label>Função</Label>
                 <Select value={formRole} onValueChange={setFormRole}>
