@@ -61,10 +61,15 @@ export function useAIContext() {
   }, [organizationId]);
 
   const save = useCallback(async (updated: AIContextData) => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      console.warn('[useAIContext] Organização não encontrada para salvar');
+      toast.error('Não foi possível salvar: organização não encontrada.');
+      return;
+    }
+
     setSaving(true);
     try {
-      const { error } = await supabase
+      const { data: updatedOrg, error } = await supabase
         .from('organizations')
         .update({
           ai_context: updated.ai_context,
@@ -72,11 +77,15 @@ export function useAIContext() {
           ai_target_audience: updated.ai_target_audience,
           ai_business_model: updated.ai_business_model,
         } as any)
-        .eq('id', organizationId);
+        .eq('id', organizationId)
+        .select('id')
+        .maybeSingle();
 
       if (error) throw error;
+      if (!updatedOrg) throw new Error('Nenhum registro foi atualizado.');
+
       setData(updated);
-      toast.success('Contexto da IA salvo com sucesso!');
+      toast.success('Alterações salvas com sucesso');
       console.log('[useAIContext] ✅ Salvo');
     } catch (err: any) {
       console.error('[useAIContext] Erro ao salvar:', err);
