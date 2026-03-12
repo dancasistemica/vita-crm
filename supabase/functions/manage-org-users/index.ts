@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
           .insert({ organization_id, user_id: existingUser.id, role: userRole });
 
         if (memberError) {
-          return new Response(JSON.stringify({ error: 'Erro ao adicionar membro: ' + memberError.message }), {
+          return new Response(JSON.stringify({ error: 'Erro ao adicionar usuário: ' + memberError.message }), {
             status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
