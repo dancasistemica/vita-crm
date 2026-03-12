@@ -6,6 +6,7 @@ import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import UserRolesManager from "@/components/settings/UserRolesManager";
 import CustomRolesTab from "@/components/settings/CustomRolesTab";
 import OrganizationPage from "@/pages/OrganizationPage";
+import AIContextTab from "@/components/settings/AIContextTab";
 import { useUserRole } from "@/hooks/useUserRole";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
@@ -31,6 +32,7 @@ export default function ConfiguracoesPage() {
             {canAccessSettings && <TabsTrigger value="roles">🏷️ Roles</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="permissoes">🔐 Permissões</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="organizacao">🏢 Organização</TabsTrigger>}
+            {canAccessSettings && <TabsTrigger value="ia">🧠 Contexto IA</TabsTrigger>}
           </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
@@ -40,6 +42,7 @@ export default function ConfiguracoesPage() {
         {canAccessSettings && <TabsContent value="roles"><CustomRolesTab onRoleCreated={handleRoleCreated} /></TabsContent>}
         {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager preselectedRole={preselectedRole} /></TabsContent>}
         {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}
+        {canAccessSettings && <TabsContent value="ia"><AIContextTab /></TabsContent>}
       </Tabs>
     </div>
   );

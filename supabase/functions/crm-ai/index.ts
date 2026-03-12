@@ -10,7 +10,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, type } = await req.json();
+    const { messages, type, aiContext } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -47,7 +47,12 @@ Analise os dados fornecidos e gere um resumo semanal contendo:
 Responda em português brasileiro, de forma objetiva e encorajadora.`,
     };
 
-    const systemPrompt = systemPrompts[type] || systemPrompts.suggest_response;
+    let systemPrompt = systemPrompts[type] || systemPrompts.suggest_response;
+
+    // Append organization AI context if provided
+    if (aiContext && typeof aiContext === 'string' && aiContext.trim()) {
+      systemPrompt += `\n\n${aiContext}`;
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

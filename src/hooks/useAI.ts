@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
+import { useAIContext } from '@/hooks/useAIContext';
 import { toast } from 'sonner';
 
 interface UseAIOptions {
@@ -20,6 +21,7 @@ interface UseAIReturn {
 
 export function useAI({ type, cacheKey, cacheDurationHours = 24 }: UseAIOptions): UseAIReturn {
   const { organizationId } = useOrganization();
+  const { getFormattedContext } = useAIContext();
   const [response, setResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,10 +79,13 @@ export function useAI({ type, cacheKey, cacheDurationHours = 24 }: UseAIOptions)
         return cached;
       }
 
+      const orgAIContext = getFormattedContext();
+
       const { data, error: fnError } = await supabase.functions.invoke('crm-ai', {
         body: {
           type,
           messages: [{ role: 'user', content: userMessage }],
+          aiContext: orgAIContext,
         },
       });
 
