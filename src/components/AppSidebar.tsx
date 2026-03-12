@@ -125,11 +125,6 @@ export function AppSidebar() {
                 <p className="text-sm font-semibold text-sidebar-foreground truncate">
                   {profileName || "Carregando..."}
                 </p>
-                {organization?.name && (
-                  <p className="text-[11px] text-sidebar-foreground/50 uppercase tracking-wide truncate">
-                    {organization.name}
-                  </p>
-                )}
               </div>
             </div>
             <Separator className="mt-3 bg-sidebar-foreground/10" />
