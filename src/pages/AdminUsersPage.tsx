@@ -190,6 +190,9 @@ export default function AdminUsersPage() {
     setEditName(u.full_name);
     setEditPhone(u.phone || "");
     setEditRole(u.role);
+    setEditEmail(u.email);
+    setEditPassword("");
+    setShowPassword(false);
     setEditOpen(true);
   };
 
