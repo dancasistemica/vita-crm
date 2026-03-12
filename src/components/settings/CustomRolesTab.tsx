@@ -102,7 +102,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
           }
           throw error;
         }
-        toast.success('Role criada!');
+        toast.success('Role criada! Configurando permissões...');
+        setFormOpen(false);
+        fetchRoles();
+        if (onRoleCreated) onRoleCreated(formName.trim());
+        return;
       }
       setFormOpen(false);
       fetchRoles();

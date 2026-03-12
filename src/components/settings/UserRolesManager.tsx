@@ -118,7 +118,11 @@ const BASE_ROLES = [
   { value: 'member', label: 'Usuário' },
 ];
 
-export default function UserRolesManager() {
+interface UserRolesManagerProps {
+  preselectedRole?: string | null;
+}
+
+export default function UserRolesManager({ preselectedRole }: UserRolesManagerProps) {
   const { role } = useUserRole();
   const { organizationId } = useOrganization();
   const [selectedRole, setSelectedRole] = useState('vendedor');
