@@ -185,12 +185,16 @@ export default function LeadsPage() {
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
-          <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
-            <Pencil className="h-3 w-3 mr-1" /> Editar em massa
-          </Button>
-          <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
-            <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
-          </Button>
+          {userCanEdit && (
+            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
+              <Pencil className="h-3 w-3 mr-1" /> Editar em massa
+            </Button>
+          )}
+          {userCanDelete && (
+            <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
+              <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
+            </Button>
+          )}
           <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
             Limpar seleção
           </Button>
