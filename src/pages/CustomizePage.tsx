@@ -175,11 +175,27 @@ export default function CustomizePage() {
               </div>
               <div>
                 <Label>Favicon (32x32px)</Label>
-                <input ref={faviconInputRef} type="file" accept=".png,.ico,.svg" className="hidden"
-                  onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0], 'favicon')} />
-                <Button variant="outline" size="sm" onClick={() => faviconInputRef.current?.click()} disabled={uploading}>
-                  <Upload className="h-4 w-4 mr-1" /> Upload favicon
-                </Button>
+                <p className="text-xs text-muted-foreground mb-2">PNG, ICO ou SVG</p>
+                <div
+                  className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={e => handleDrop(e, 'favicon')}
+                  onClick={() => faviconInputRef.current?.click()}
+                >
+                  <input ref={faviconInputRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
+                  {brand.favicon_url ? (
+                    <div className="flex items-center gap-2">
+                      <img src={brand.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
+                      <span className="text-xs text-muted-foreground">Clique para trocar</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Upload favicon</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
