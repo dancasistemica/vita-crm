@@ -45,6 +45,8 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     const [plans, setPlans] = useState<Plan[]>([]);
     const [loading, setLoading] = useState(true);
     const [createOpen, setCreateOpen] = useState(false);
+    const [editOrgId, setEditOrgId] = useState<string | null>(null);
+    const [deleteConfirmOrg, setDeleteConfirmOrg] = useState<Org | null>(null);
 
     useImperativeHandle(ref, () => ({
       openCreateModal: () => setCreateOpen(true),
