@@ -6,8 +6,6 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
-import { useBrand } from "@/contexts/BrandContext";
-import { useOrganization } from "@/contexts/OrganizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -33,8 +31,6 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const { user, signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
-  const { brand } = useBrand();
-  const { organization } = useOrganization();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -83,23 +79,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        {/* Logo */}
-        <div className="p-4 pb-2">
-          <div className={collapsed ? "flex justify-center" : "flex items-center gap-2.5"}>
-            {brand.logo_url ? (
-              <img src={brand.logo_url} alt="Logo" className="h-8 w-8 object-contain shrink-0" />
-            ) : (
-              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm shrink-0">
-                💃
-              </div>
-            )}
-            {!collapsed && (
-              <h1 className="text-base font-display tracking-wide text-sidebar-foreground">
-                {brand.org_display_name || "CRM"}
-              </h1>
-            )}
-          </div>
-        </div>
+        {/* User Info */}
 
         {/* User & Organization Info */}
         {!collapsed && (
