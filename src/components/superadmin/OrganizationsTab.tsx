@@ -1,14 +1,15 @@
-import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
 import { EditOrganizationModal } from './EditOrganizationModal';
-import { Building2, Users, Plus, Pencil, Trash2 } from 'lucide-react';
+import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -47,10 +48,39 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     const [createOpen, setCreateOpen] = useState(false);
     const [editOrgId, setEditOrgId] = useState<string | null>(null);
     const [deleteConfirmOrg, setDeleteConfirmOrg] = useState<Org | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all');
+    const [planFilter, setPlanFilter] = useState<string>('all');
 
     useImperativeHandle(ref, () => ({
       openCreateModal: () => setCreateOpen(true),
     }));
+
+    const filteredOrgs = useMemo(() => {
+      let result = orgs;
+      if (searchTerm) {
+        const lower = searchTerm.toLowerCase();
+        result = result.filter(o =>
+          o.name.toLowerCase().includes(lower) ||
+          (o.contact_email || '').toLowerCase().includes(lower)
+        );
+      }
+      if (statusFilter !== 'all') {
+        result = result.filter(o => statusFilter === 'active' ? o.active : !o.active);
+      }
+      if (planFilter !== 'all') {
+        result = result.filter(o => o.plan_id === planFilter);
+      }
+      return result;
+    }, [orgs, searchTerm, statusFilter, planFilter]);
+
+    const hasActiveFilters = searchTerm !== '' || statusFilter !== 'all' || planFilter !== 'all';
+
+    const clearFilters = () => {
+      setSearchTerm('');
+      setStatusFilter('all');
+      setPlanFilter('all');
+    };
 
     const fetchData = async () => {
       try {
@@ -118,13 +148,61 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
             <Building2 className="h-4 w-4" />
-            <span>{orgs.length} organização(ões) cadastrada(s)</span>
+            <span>
+              {hasActiveFilters
+                ? `${filteredOrgs.length} de ${orgs.length} organização(ões)`
+                : `${orgs.length} organização(ões) cadastrada(s)`}
+            </span>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" /> Nova Organização
           </Button>
         </div>
 
+        {/* Filter bar */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome ou email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              <SelectItem value="active">Ativa</SelectItem>
+              <SelectItem value="suspended">Suspensa</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={planFilter} onValueChange={setPlanFilter}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Plano" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os planos</SelectItem>
+              {plans.map((p) => (
+                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+              <X className="h-4 w-4" /> Limpar
+            </Button>
+          )}
+        </div>
+
+        {filteredOrgs.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
+          </div>
+        ) : (
         <Table>
           <TableHeader>
             <TableRow>
@@ -139,7 +217,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orgs.map((org) => (
+            {filteredOrgs.map((org) => (
               <TableRow key={org.id}>
                 <TableCell className="font-medium">{org.name}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
@@ -197,7 +275,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             ))}
           </TableBody>
         </Table>
-
+        )}
         <CreateOrganizationModal
           open={createOpen}
           onOpenChange={setCreateOpen}
