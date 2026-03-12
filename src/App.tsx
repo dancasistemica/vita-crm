@@ -27,6 +27,7 @@ import NotFound from "@/pages/NotFound";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
+import AdminUsersPage from "@/pages/AdminUsersPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
             <Route element={<ProtectedRoute />}>
               <Route element={<CRMLayout />}>
               <Route path="/superadmin" element={<SuperadminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
                 <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />

@@ -38,7 +38,10 @@ export function AppSidebar() {
     { title: "Configurações", url: "/configuracoes", icon: Settings },
     { title: "Personalizar", url: "/personalizar", icon: Palette },
   ] : []),
-  ...(isSuperadmin ? [{ title: "Superadmin", url: "/superadmin", icon: Shield }] : [])];
+  ...(isSuperadmin ? [
+    { title: "Superadmin", url: "/superadmin", icon: Shield },
+    { title: "Todos Usuários", url: "/admin/users", icon: Users },
+  ] : [])];
 
   return (
     <Sidebar collapsible="icon">
