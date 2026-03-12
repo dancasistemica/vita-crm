@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router-dom';
+import { hasSuperadmin } from '@/services/bootstrapService';
 
 const loginSchema = z.object({
   email: z.string().trim().email('Email inválido').max(255),
@@ -37,6 +37,17 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
+  const [checkingBootstrap, setCheckingBootstrap] = useState(true);
+
+  useEffect(() => {
+    hasSuperadmin().then((exists) => {
+      if (!exists) {
+        navigate('/setup', { replace: true });
+      } else {
+        setCheckingBootstrap(false);
+      }
+    });
+  }, [navigate]);
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -48,7 +59,7 @@ export default function AuthPage() {
     defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
   });
 
-  if (loading) {
+  if (loading || checkingBootstrap) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
