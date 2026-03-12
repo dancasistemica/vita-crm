@@ -1,8 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
-import TagsTab from "@/components/settings/TagsTab";
-import FunnelStagesTab from "@/components/settings/FunnelStagesTab";
+import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import UserRolesManager from "@/components/settings/UserRolesManager";
 import OrganizationPage from "@/pages/OrganizationPage";
