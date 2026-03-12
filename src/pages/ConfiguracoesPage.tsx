@@ -28,8 +28,6 @@ export default function ConfiguracoesPage() {
         </ScrollArea>
         <TabsContent value="usuarios"><UsersTab /></TabsContent>
         <TabsContent value="campos"><CRMFieldsTab /></TabsContent>
-        <TabsContent value="tags"><TagsTab /></TabsContent>
-        <TabsContent value="funil"><FunnelStagesTab /></TabsContent>
         <TabsContent value="pagamento"><PaymentMethodsTab /></TabsContent>
         {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager /></TabsContent>}
         {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}
