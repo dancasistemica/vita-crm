@@ -40,15 +40,33 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Get user's first organization via membership
-      const { data: membership } = await supabase
-        .from('organization_members')
-        .select('organization_id')
+      // Check if superadmin has a saved org override
+      const { data: saRole } = await supabase
+        .from('superadmin_roles')
+        .select('id')
         .eq('user_id', user.id)
-        .limit(1)
         .maybeSingle();
 
-      if (!membership) {
+      const superadminOrgId = saRole ? localStorage.getItem('superadmin_current_org') : null;
+
+      let targetOrgId: string | null = null;
+
+      if (superadminOrgId) {
+        console.log('[OrganizationContext] SuperAdmin override org:', superadminOrgId);
+        targetOrgId = superadminOrgId;
+      } else {
+        // Get user's first organization via membership
+        const { data: membership } = await supabase
+          .from('organization_members')
+          .select('organization_id')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        targetOrgId = membership?.organization_id || null;
+      }
+
+      if (!targetOrgId) {
         setOrganization(null);
         setLoading(false);
         return;
@@ -57,7 +75,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
       const { data: org } = await supabase
         .from('organizations')
         .select('*')
-        .eq('id', membership.organization_id)
+        .eq('id', targetOrgId)
         .maybeSingle();
 
       setOrganization(org as Organization | null);
