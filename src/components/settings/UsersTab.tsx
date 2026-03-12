@@ -74,6 +74,9 @@ export default function UsersTab() {
   const [orgOptions, setOrgOptions] = useState<OrgOption[]>([]);
   const [orgsLoading, setOrgsLoading] = useState(false);
 
+  // Custom roles
+  const [customRoleOptions, setCustomRoleOptions] = useState<string[]>([]);
+
   const fetchUsers = async () => {
     if (!organizationId) return;
     setLoading(true);
