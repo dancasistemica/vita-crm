@@ -125,6 +125,17 @@ export default function UsersTab() {
 
   useEffect(() => {
     fetchUsers();
+    // Load custom roles for the org
+    if (organizationId) {
+      supabase
+        .from('custom_roles')
+        .select('name')
+        .eq('organization_id', organizationId)
+        .order('name')
+        .then(({ data }) => {
+          setCustomRoleOptions(data?.map(r => r.name) || []);
+        });
+    }
   }, [organizationId]);
 
   // Fetch organizations for superadmin
