@@ -50,6 +50,7 @@ const App = () => (
             <Route element={<ProtectedRoute />}>
               <Route element={<CRMLayout />}>
               <Route path="/superadmin" element={<SuperadminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
                 <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
