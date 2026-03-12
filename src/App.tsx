@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
+import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
