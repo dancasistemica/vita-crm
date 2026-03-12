@@ -4,9 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans } from '@/services/superadminService';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
-import { Building2, Users, Plus } from 'lucide-react';
+import { EditOrganizationModal } from './EditOrganizationModal';
+import { Building2, Users, Plus, Pencil, Trash2 } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -14,6 +16,7 @@ interface Org {
   slug: string;
   plan: string;
   plan_id: string | null;
+  contact_email: string | null;
   active: boolean;
   max_leads: number;
   max_users: number;
