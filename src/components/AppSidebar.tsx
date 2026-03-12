@@ -83,7 +83,7 @@ export function AppSidebar() {
 
         {/* User & Organization Info */}
         {!collapsed && (
-          <div className="px-4 pb-1">
+          <div className="px-4 pt-4 pb-1">
             <div className="flex items-center gap-2.5">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={avatarUrl || undefined} alt={profileName || "Usuário"} />
