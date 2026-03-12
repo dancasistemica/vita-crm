@@ -151,6 +151,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
     loadCustomRoles();
   }, [organizationId, isAdmin]);
 
+  // Handle preselected role from CustomRolesTab
+  useEffect(() => {
+    if (preselectedRole && customRoles.some(r => r.value === preselectedRole)) {
+      setSelectedRole(preselectedRole);
+    }
+  }, [preselectedRole, customRoles]);
+
   useEffect(() => {
     if (!organizationId || !isAdmin) return;
     loadPermissions(selectedRole);
