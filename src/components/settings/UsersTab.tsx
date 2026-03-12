@@ -534,6 +534,14 @@ export default function UsersTab() {
                     <SelectItem value="admin">Administrador</SelectItem>
                     <SelectItem value="vendedor">Vendedor</SelectItem>
                     <SelectItem value="member">Membro</SelectItem>
+                    {customRoleOptions.length > 0 && (
+                      <>
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t mt-1 pt-1">Roles Customizadas</div>
+                        {customRoleOptions.map(cr => (
+                          <SelectItem key={cr} value={cr}>{cr}</SelectItem>
+                        ))}
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
