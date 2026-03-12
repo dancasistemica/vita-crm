@@ -1,11 +1,12 @@
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User } from
+  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette } from
 "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useBrand } from "@/contexts/BrandContext";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
@@ -29,12 +30,15 @@ export function AppSidebar() {
   const location = useLocation();
   const { signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
+  const { brand } = useBrand();
 
   const items = [
   ...baseItems,
-  ...(canAccessSettings ? [{ title: "Configurações", url: "/configuracoes", icon: Settings }] : []),
+  ...(canAccessSettings ? [
+    { title: "Configurações", url: "/configuracoes", icon: Settings },
+    { title: "Personalizar", url: "/personalizar", icon: Palette },
+  ] : []),
   ...(isSuperadmin ? [{ title: "Superadmin", url: "/superadmin", icon: Shield }] : [])];
-
 
   return (
     <Sidebar collapsible="icon">
@@ -42,18 +46,25 @@ export function AppSidebar() {
         <div className="p-4 pb-2">
           {!collapsed ?
           <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm bg-yellow-600 text-yellow-600">
-                💃
-              </div>
-              <h1 className="text-base font-display tracking-wide text-yellow-600">
-                CRM sem nome 
+              {brand.logo_url ? (
+                <img src={brand.logo_url} alt="Logo" className="h-8 object-contain" />
+              ) : (
+                <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm">
+                  💃
+                </div>
+              )}
+              <h1 className="text-base font-display tracking-wide text-sidebar-foreground">
+                {brand.org_display_name || 'CRM'}
               </h1>
             </div> :
-
           <div className="flex justify-center">
-              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm">
-                💃
-              </div>
+              {brand.logo_url ? (
+                <img src={brand.logo_url} alt="Logo" className="h-8 w-8 object-contain" />
+              ) : (
+                <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm">
+                  💃
+                </div>
+              )}
             </div>
           }
         </div>
@@ -106,5 +117,4 @@ export function AppSidebar() {
         </button>
       </SidebarFooter>
     </Sidebar>);
-
 }
