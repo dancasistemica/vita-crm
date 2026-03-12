@@ -74,6 +74,9 @@ export default function UsersTab() {
   const [orgOptions, setOrgOptions] = useState<OrgOption[]>([]);
   const [orgsLoading, setOrgsLoading] = useState(false);
 
+  // Custom roles
+  const [customRoleOptions, setCustomRoleOptions] = useState<string[]>([]);
+
   const fetchUsers = async () => {
     if (!organizationId) return;
     setLoading(true);
@@ -122,6 +125,17 @@ export default function UsersTab() {
 
   useEffect(() => {
     fetchUsers();
+    // Load custom roles for the org
+    if (organizationId) {
+      supabase
+        .from('custom_roles')
+        .select('name')
+        .eq('organization_id', organizationId)
+        .order('name')
+        .then(({ data }) => {
+          setCustomRoleOptions(data?.map(r => r.name) || []);
+        });
+    }
   }, [organizationId]);
 
   // Fetch organizations for superadmin
@@ -520,6 +534,14 @@ export default function UsersTab() {
                     <SelectItem value="admin">Administrador</SelectItem>
                     <SelectItem value="vendedor">Vendedor</SelectItem>
                     <SelectItem value="member">Membro</SelectItem>
+                    {customRoleOptions.length > 0 && (
+                      <>
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t mt-1 pt-1">Roles Customizadas</div>
+                        {customRoleOptions.map(cr => (
+                          <SelectItem key={cr} value={cr}>{cr}</SelectItem>
+                        ))}
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
               </div>

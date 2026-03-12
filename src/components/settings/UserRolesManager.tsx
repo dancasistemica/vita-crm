@@ -118,7 +118,11 @@ const BASE_ROLES = [
   { value: 'member', label: 'Usuário' },
 ];
 
-export default function UserRolesManager() {
+interface UserRolesManagerProps {
+  preselectedRole?: string | null;
+}
+
+export default function UserRolesManager({ preselectedRole }: UserRolesManagerProps) {
   const { role } = useUserRole();
   const { organizationId } = useOrganization();
   const [selectedRole, setSelectedRole] = useState('vendedor');
@@ -146,6 +150,13 @@ export default function UserRolesManager() {
     };
     loadCustomRoles();
   }, [organizationId, isAdmin]);
+
+  // Handle preselected role from CustomRolesTab
+  useEffect(() => {
+    if (preselectedRole && customRoles.some(r => r.value === preselectedRole)) {
+      setSelectedRole(preselectedRole);
+    }
+  }, [preselectedRole, customRoles]);
 
   useEffect(() => {
     if (!organizationId || !isAdmin) return;
