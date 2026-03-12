@@ -14,7 +14,7 @@ export default function DashboardPage() {
     { icon: Users, label: "Total de Leads", value: totalLeads, color: 'bg-primary/10 text-primary' },
     { icon: Target, label: "Clientes", value: clients, color: 'bg-success/10 text-success' },
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate}%`, color: 'bg-info/10 text-info' },
-    { icon: DollarSign, label: "Receita Total", value: `R$ ${totalRevenue.toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
   ];
 
   if (loading) {
