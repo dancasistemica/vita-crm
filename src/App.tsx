@@ -26,6 +26,7 @@ import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
 import NotFound from "@/pages/NotFound";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
+import CustomizePage from "@/pages/CustomizePage";
 
 const queryClient = new QueryClient();
 
