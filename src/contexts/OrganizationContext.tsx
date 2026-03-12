@@ -40,14 +40,16 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Check if superadmin has a saved org override
-      const { data: saRole } = await supabase
-        .from('superadmin_roles')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      // Check if user is superadmin and has a saved org override
+      const { data: isSuperadmin, error: superadminError } = await supabase.rpc('is_superadmin', {
+        _user_id: user.id,
+      });
 
-      const superadminOrgId = saRole ? localStorage.getItem('superadmin_current_org') : null;
+      if (superadminError) {
+        console.error('[OrganizationContext] Error checking superadmin:', superadminError);
+      }
+
+      const superadminOrgId = isSuperadmin ? localStorage.getItem('superadmin_current_org') : null;
 
       let targetOrgId: string | null = null;
 
