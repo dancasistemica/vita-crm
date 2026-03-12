@@ -147,7 +147,7 @@ export class DataAccessService {
   async createTask(taskData: Record<string, unknown>) {
     const { data, error } = await supabase
       .from('tasks')
-      .insert({ ...taskData, organization_id: this.orgId })
+      .insert({ ...taskData, organization_id: this.orgId } as any)
       .select()
       .single();
     if (error) { console.error('[DataAccessService] createTask error:', error); throw error; }
