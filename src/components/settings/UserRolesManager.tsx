@@ -111,7 +111,7 @@ const MODULES: PermissionModule[] = [
 ];
 
 const ALL_PERMISSION_KEYS = MODULES.flatMap(m => m.permissions.map(p => p.key));
-const ROLES = [
+const BASE_ROLES = [
   { value: 'admin', label: 'Administrador' },
   { value: 'vendedor', label: 'Vendedor' },
   { value: 'member', label: 'Usuário' },
