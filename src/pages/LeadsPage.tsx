@@ -256,12 +256,16 @@ export default function LeadsPage() {
                     <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
                   </a>
                 )}
-                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {userCanEdit && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+                {userCanDelete && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>

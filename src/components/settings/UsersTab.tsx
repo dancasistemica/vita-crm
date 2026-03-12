@@ -72,13 +72,12 @@ function UserForm({ user, onSave }: { user: CRMUser | null; onSave: (data: Parti
       <div><Label>Telefone</Label><Input value={form.phone || ''} onChange={e => set('phone', e.target.value)} /></div>
       <div>
         <Label>Função</Label>
-        <Select value={form.role || 'usuario'} onValueChange={v => set('role', v)}>
+        <Select value={form.role || 'member'} onValueChange={v => set('role', v)}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="superadmin">Superadmin</SelectItem>
             <SelectItem value="admin">Administrador</SelectItem>
-            <SelectItem value="vendedora">Vendedora</SelectItem>
-            <SelectItem value="usuario">Usuário</SelectItem>
+            <SelectItem value="vendedor">Vendedor</SelectItem>
+            <SelectItem value="member">Usuário</SelectItem>
           </SelectContent>
         </Select>
       </div>
