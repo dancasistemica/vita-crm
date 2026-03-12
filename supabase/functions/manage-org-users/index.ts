@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
 
       if (memberError) {
         await adminClient.auth.admin.deleteUser(newUserId);
-        return new Response(JSON.stringify({ error: 'Erro ao criar membro: ' + memberError.message }), {
+        return new Response(JSON.stringify({ error: 'Erro ao criar usuário: ' + memberError.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

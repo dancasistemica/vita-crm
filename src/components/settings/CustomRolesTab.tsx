@@ -179,7 +179,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </div>
           ) : roles.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Membro) estão disponíveis na aba Permissões.
+              Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Usuário) estão disponíveis na aba Permissões.
             </p>
           ) : (
             <div className="overflow-x-auto">
