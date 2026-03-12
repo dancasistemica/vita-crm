@@ -165,6 +165,14 @@ export default function OrganizationPage() {
     }
   };
 
+  if (!organizationId) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-muted-foreground">Nenhuma organização vinculada à sua conta.</p>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
