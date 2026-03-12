@@ -56,6 +56,23 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
       if (superadminOrgId) {
         console.log('[OrganizationContext] SuperAdmin override org:', superadminOrgId);
         targetOrgId = superadminOrgId;
+      } else if (isSuperadmin) {
+        const { data: firstOrg, error: firstOrgError } = await supabase
+          .from('organizations')
+          .select('id')
+          .order('name', { ascending: true })
+          .limit(1)
+          .maybeSingle();
+
+        if (firstOrgError) {
+          console.error('[OrganizationContext] Error loading first org for superadmin:', firstOrgError);
+        }
+
+        if (firstOrg?.id) {
+          targetOrgId = firstOrg.id;
+          localStorage.setItem('superadmin_current_org', firstOrg.id);
+          console.log('[OrganizationContext] SuperAdmin org padrão selecionada:', firstOrg.id);
+        }
       } else {
         // Get user's first organization via membership
         const { data: membership } = await supabase
