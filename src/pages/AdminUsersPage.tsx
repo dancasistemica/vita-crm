@@ -198,20 +198,46 @@ export default function AdminUsersPage() {
 
   const handleEditSave = async () => {
     if (!editUser) return;
+    if (editPassword && editPassword.length < 6) {
+      toast.error("Senha deve ter no mínimo 6 caracteres");
+      return;
+    }
     setSaving(true);
     try {
+      // Update profile (name, phone)
       const { error: profileError } = await supabase
         .from("profiles")
         .update({ full_name: editName, phone: editPhone || null })
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
+      // Update role if changed
       if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
         const { error: roleError } = await supabase
           .from("organization_members")
           .update({ role: editRole as any })
           .eq("id", editUser.member_id);
         if (roleError) throw roleError;
+      }
+
+      // Update email/password via edge function if changed
+      const emailChanged = editEmail !== editUser.email;
+      const passwordChanged = editPassword.length > 0;
+
+      if (emailChanged || passwordChanged) {
+        const payload: any = {
+          action: "update_auth",
+          organization_id: editUser.org_id || "global",
+          user_id: editUser.user_id,
+        };
+        if (emailChanged) payload.email = editEmail;
+        if (passwordChanged) payload.password = editPassword;
+
+        const { data, error } = await supabase.functions.invoke("manage-org-users", {
+          body: payload,
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
       }
 
       toast.success("Usuário atualizado!");
