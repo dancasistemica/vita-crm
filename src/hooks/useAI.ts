@@ -21,6 +21,7 @@ interface UseAIReturn {
 
 export function useAI({ type, cacheKey, cacheDurationHours = 24 }: UseAIOptions): UseAIReturn {
   const { organizationId } = useOrganization();
+  const { getFormattedContext } = useAIContext();
   const [response, setResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
