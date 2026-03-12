@@ -18,6 +18,7 @@ import RelatoriosPage from "@/pages/RelatoriosPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
 import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import AuthPage from "@/pages/AuthPage";
+import LoginPage from "@/pages/LoginPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
 import NotFound from "@/pages/NotFound";
