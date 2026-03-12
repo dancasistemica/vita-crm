@@ -30,6 +30,8 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
+  const [cnpjValidation, setCnpjValidation] = useState<CNPJValidationResult>({ valid: true });
+  const [cnpjTouched, setCnpjTouched] = useState(false);
 
   const [form, setForm] = useState({
     name: '',
