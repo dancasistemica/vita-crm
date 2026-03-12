@@ -17,6 +17,7 @@ import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
@@ -24,6 +25,7 @@ const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-
 export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
+  const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
   const [filterInterest, setFilterInterest] = useState("all");
@@ -112,23 +114,27 @@ export default function LeadsPage() {
         <h1 className="text-2xl font-display text-foreground">Leads</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
-            <Upload className="h-4 w-4 mr-1" /> Importar Leads
-          </Button>
+          {userCanCreate && (
+            <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
+              <Upload className="h-4 w-4 mr-1" /> Importar Leads
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
-          <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
-            <DialogTrigger asChild>
-              <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
-              </DialogHeader>
-              <LeadForm lead={editingLead} onSave={handleSave} />
-            </DialogContent>
-          </Dialog>
+          {userCanCreate && (
+            <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
+              <DialogTrigger asChild>
+                <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+                </DialogHeader>
+                <LeadForm lead={editingLead} onSave={handleSave} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
 
@@ -179,12 +185,16 @@ export default function LeadsPage() {
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
-          <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
-            <Pencil className="h-3 w-3 mr-1" /> Editar em massa
-          </Button>
-          <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
-            <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
-          </Button>
+          {userCanEdit && (
+            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
+              <Pencil className="h-3 w-3 mr-1" /> Editar em massa
+            </Button>
+          )}
+          {userCanDelete && (
+            <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
+              <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
+            </Button>
+          )}
           <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
             Limpar seleção
           </Button>
@@ -246,12 +256,16 @@ export default function LeadsPage() {
                     <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
                   </a>
                 )}
-                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {userCanEdit && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+                {userCanDelete && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
