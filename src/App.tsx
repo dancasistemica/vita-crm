@@ -23,6 +23,7 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
 import NotFound from "@/pages/NotFound";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
+import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,8 @@ const App = () => (
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<CRMLayout />}>
-                <Route path="/superadmin" element={<SuperadminDashboard />} />
+              <Route path="/superadmin" element={<SuperadminDashboard />} />
+                <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
                 <Route path="/import-wizard" element={<ImportLeadsWizard />} />
