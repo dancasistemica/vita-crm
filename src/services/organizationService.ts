@@ -27,6 +27,42 @@ function slugify(text: string): string {
     .substring(0, 60);
 }
 
+async function extractFunctionErrorMessage(error: unknown): Promise<string> {
+  if (!error || typeof error !== 'object') return 'Erro ao criar organização';
+
+  const withContext = error as { context?: Response; message?: string };
+
+  if (withContext.context) {
+    try {
+      const payload = await withContext.context.clone().json();
+      if (payload?.error && typeof payload.error === 'string') {
+        return payload.error;
+      }
+    } catch {
+      // ignore parse errors and fallback to message parsing
+    }
+  }
+
+  const rawMessage = withContext.message;
+  if (rawMessage) {
+    const jsonMatch = rawMessage.match(/\{[\s\S]*\}$/);
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0]);
+        if (parsed?.error && typeof parsed.error === 'string') {
+          return parsed.error;
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+
+    return rawMessage;
+  }
+
+  return 'Erro ao criar organização';
+}
+
 export async function createOrganization(data: CreateOrgData): Promise<CreateOrgResult> {
   console.log('[OrganizationService] Criando organização:', data.name);
 
@@ -48,7 +84,7 @@ export async function createOrganization(data: CreateOrgData): Promise<CreateOrg
 
   if (error) {
     console.error('[OrganizationService] Edge function error:', error);
-    throw new Error(error.message || 'Erro ao criar organização');
+    throw new Error(await extractFunctionErrorMessage(error));
   }
 
   if (!result?.success) {
