@@ -6,6 +6,7 @@ import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import UserRolesManager from "@/components/settings/UserRolesManager";
 import CustomRolesTab from "@/components/settings/CustomRolesTab";
 import OrganizationPage from "@/pages/OrganizationPage";
+import AIContextTab from "@/components/settings/AIContextTab";
 import { useUserRole } from "@/hooks/useUserRole";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
