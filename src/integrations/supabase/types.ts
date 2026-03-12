@@ -49,6 +49,59 @@ export type Database = {
           },
         ]
       }
+      brand_settings: {
+        Row: {
+          accent_color: string
+          created_at: string
+          favicon_url: string | null
+          font_family: string
+          id: string
+          logo_url: string | null
+          org_display_name: string | null
+          organization_id: string
+          primary_color: string
+          secondary_color: string
+          sidebar_color: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          created_at?: string
+          favicon_url?: string | null
+          font_family?: string
+          id?: string
+          logo_url?: string | null
+          org_display_name?: string | null
+          organization_id: string
+          primary_color?: string
+          secondary_color?: string
+          sidebar_color?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          created_at?: string
+          favicon_url?: string | null
+          font_family?: string
+          id?: string
+          logo_url?: string | null
+          org_display_name?: string | null
+          organization_id?: string
+          primary_color?: string
+          secondary_color?: string
+          sidebar_color?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       interactions: {
         Row: {
           created_at: string
