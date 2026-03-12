@@ -4,9 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
+import { validateCNPJ, formatCNPJ } from '@/utils/cnpjValidator';
+import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
+import { Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -15,34 +22,61 @@ interface EditOrganizationModalProps {
   onSuccess: () => void;
 }
 
+const UF_OPTIONS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','TO'];
+
 export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: EditOrganizationModalProps) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadingCEP, setLoadingCEP] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
+
   const [form, setForm] = useState({
     name: '',
     contact_email: '',
     phone: '',
     website: '',
     description: '',
+    cnpj: '',
+    cep: '',
+    rua: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    municipio: '',
+    estado: '',
+    senhaAdmin: '',
+    senhaManual: false,
   });
 
   useEffect(() => {
     if (!open || !orgId) return;
     setLoading(true);
+    setPasswordStrength(null);
     (async () => {
       try {
         const { data, error } = await supabase
           .from('organizations')
-          .select('name, contact_email, phone, website, description')
+          .select('name, contact_email, phone, website, description, cnpj, cep, rua, numero, complemento, bairro, municipio, estado')
           .eq('id', orgId)
           .single();
         if (error) throw error;
         setForm({
-          name: data.name || '',
-          contact_email: data.contact_email || '',
-          phone: data.phone || '',
-          website: data.website || '',
-          description: data.description || '',
+          name: (data as any).name || '',
+          contact_email: (data as any).contact_email || '',
+          phone: (data as any).phone || '',
+          website: (data as any).website || '',
+          description: (data as any).description || '',
+          cnpj: (data as any).cnpj || '',
+          cep: (data as any).cep || '',
+          rua: (data as any).rua || '',
+          numero: (data as any).numero || '',
+          complemento: (data as any).complemento || '',
+          bairro: (data as any).bairro || '',
+          municipio: (data as any).municipio || '',
+          estado: (data as any).estado || '',
+          senhaAdmin: '',
+          senhaManual: false,
         });
       } catch (err) {
         console.error('[EditOrganizationModal] Load error:', err);
@@ -54,15 +88,68 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
     })();
   }, [open, orgId]);
 
-  const handleSave = async () => {
-    if (!form.name.trim()) {
-      toast.error('Nome é obrigatório');
-      return;
+  const handleCEPBlur = async () => {
+    const cleanCEP = form.cep.replace(/\D/g, '');
+    if (cleanCEP.length !== 8) return;
+    setLoadingCEP(true);
+    try {
+      const address = await fetchAddressByCEP(form.cep);
+      if (address) {
+        setForm(prev => ({
+          ...prev,
+          rua: address.logradouro || prev.rua,
+          bairro: address.bairro || prev.bairro,
+          municipio: address.localidade || prev.municipio,
+          estado: address.uf || prev.estado,
+        }));
+      }
+    } finally {
+      setLoadingCEP(false);
     }
+  };
+
+  const handleGeneratePassword = () => {
+    const pwd = generatePassword();
+    setForm(prev => ({ ...prev, senhaAdmin: pwd }));
+    setPasswordStrength(evaluatePasswordStrength(pwd));
+    toast.success('Senha gerada');
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setForm(prev => ({ ...prev, senhaAdmin: value }));
+    setPasswordStrength(value ? evaluatePasswordStrength(value) : null);
+  };
+
+  const handleSave = async () => {
+    if (!form.name.trim()) { toast.error('Nome é obrigatório'); return; }
+    if (form.cnpj && !validateCNPJ(form.cnpj)) { toast.error('CNPJ inválido'); return; }
     if (!orgId) return;
+
     setSaving(true);
     try {
-      await updateOrganization(orgId, form);
+      const updateData: Record<string, any> = {
+        name: form.name,
+        contact_email: form.contact_email || null,
+        phone: form.phone || null,
+        website: form.website || null,
+        description: form.description || null,
+        cnpj: form.cnpj || null,
+        cep: form.cep || null,
+        rua: form.rua || null,
+        numero: form.numero || null,
+        complemento: form.complemento || null,
+        bairro: form.bairro || null,
+        municipio: form.municipio || null,
+        estado: form.estado || null,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { error } = await supabase
+        .from('organizations')
+        .update(updateData as any)
+        .eq('id', orgId);
+
+      if (error) throw error;
       toast.success('Organização atualizada');
       onSuccess();
       onOpenChange(false);
@@ -74,9 +161,12 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
     }
   };
 
+  const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(prev => ({ ...prev, [field]: e.target.value }));
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar Organização</DialogTitle>
         </DialogHeader>
@@ -84,28 +174,142 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         {loading ? (
           <div className="flex items-center justify-center py-8 text-muted-foreground">Carregando...</div>
         ) : (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="org-name">Nome *</Label>
-              <Input id="org-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="org-email">Email de Contato</Label>
-              <Input id="org-email" type="email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="org-phone">Telefone</Label>
-                <Input id="org-phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          <div className="space-y-6">
+            {/* Dados Básicos */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Dados Básicos</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Nome *</Label>
+                  <Input value={form.name} onChange={set('name')} />
+                </div>
+                <div className="space-y-2">
+                  <Label>CNPJ</Label>
+                  <Input
+                    value={form.cnpj}
+                    onChange={(e) => setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }))}
+                    placeholder="00.000.000/0000-00"
+                    maxLength={18}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Email de Contato</Label>
+                  <Input type="email" value={form.contact_email} onChange={set('contact_email')} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Telefone</Label>
+                  <Input value={form.phone} onChange={set('phone')} placeholder="(11) 98765-4321" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Website</Label>
+                  <Input value={form.website} onChange={set('website')} placeholder="https://empresa.com" />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="org-website">Website</Label>
-                <Input id="org-website" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
+                <Label>Descrição</Label>
+                <Textarea rows={2} value={form.description} onChange={set('description')} />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="org-desc">Descrição</Label>
-              <Textarea id="org-desc" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+
+            <Separator />
+
+            {/* Endereço */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Endereço</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>
+                    CEP {loadingCEP && <Loader2 className="inline h-3 w-3 animate-spin ml-1" />}
+                  </Label>
+                  <Input
+                    value={form.cep}
+                    onChange={(e) => setForm(prev => ({ ...prev, cep: formatCEP(e.target.value) }))}
+                    onBlur={handleCEPBlur}
+                    placeholder="00000-000"
+                    maxLength={9}
+                    disabled={loadingCEP}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Rua/Avenida</Label>
+                  <Input value={form.rua} onChange={set('rua')} disabled={loadingCEP} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Número</Label>
+                  <Input value={form.numero} onChange={set('numero')} placeholder="123" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Complemento</Label>
+                  <Input value={form.complemento} onChange={set('complemento')} placeholder="Apto 101" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Bairro</Label>
+                  <Input value={form.bairro} onChange={set('bairro')} disabled={loadingCEP} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Município</Label>
+                  <Input value={form.municipio} onChange={set('municipio')} disabled={loadingCEP} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Estado (UF)</Label>
+                  <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ ...prev, estado: v }))}>
+                    <SelectTrigger disabled={loadingCEP}>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {UF_OPTIONS.map(uf => (
+                        <SelectItem key={uf} value={uf}>{uf}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Senha do Admin */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Senha do Admin</h3>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      value={form.senhaAdmin}
+                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      placeholder="Mínimo 8 caracteres"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <Button type="button" variant="outline" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                    <RefreshCw className="h-4 w-4" /> Gerar
+                  </Button>
+                </div>
+
+                {passwordStrength && (
+                  <div className="flex items-center gap-2">
+                    <div className={`h-1.5 flex-1 rounded-full ${passwordStrength.color}`} />
+                    <span className="text-xs font-medium text-muted-foreground">{passwordStrength.label}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="manual-pwd"
+                    checked={form.senhaManual}
+                    onCheckedChange={(v) => setForm(prev => ({ ...prev, senhaManual: !!v }))}
+                  />
+                  <Label htmlFor="manual-pwd" className="text-sm cursor-pointer">Definir senha manualmente</Label>
+                </div>
+              </div>
             </div>
           </div>
         )}

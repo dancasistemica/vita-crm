@@ -286,60 +286,84 @@ export type Database = {
       organizations: {
         Row: {
           active: boolean
+          bairro: string | null
+          cep: string | null
+          cnpj: string | null
+          complemento: string | null
           contact_email: string | null
           created_at: string
           description: string | null
+          estado: string | null
           id: string
           logo_url: string | null
           max_leads: number
           max_users: number
+          municipio: string | null
           name: string
+          numero: string | null
           owner_id: string | null
           phone: string | null
           plan: Database["public"]["Enums"]["org_plan"]
           plan_expires_at: string | null
           plan_id: string | null
           primary_color: string | null
+          rua: string | null
           slug: string
           updated_at: string
           website: string | null
         }
         Insert: {
           active?: boolean
+          bairro?: string | null
+          cep?: string | null
+          cnpj?: string | null
+          complemento?: string | null
           contact_email?: string | null
           created_at?: string
           description?: string | null
+          estado?: string | null
           id?: string
           logo_url?: string | null
           max_leads?: number
           max_users?: number
+          municipio?: string | null
           name: string
+          numero?: string | null
           owner_id?: string | null
           phone?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
           plan_id?: string | null
           primary_color?: string | null
+          rua?: string | null
           slug: string
           updated_at?: string
           website?: string | null
         }
         Update: {
           active?: boolean
+          bairro?: string | null
+          cep?: string | null
+          cnpj?: string | null
+          complemento?: string | null
           contact_email?: string | null
           created_at?: string
           description?: string | null
+          estado?: string | null
           id?: string
           logo_url?: string | null
           max_leads?: number
           max_users?: number
+          municipio?: string | null
           name?: string
+          numero?: string | null
           owner_id?: string | null
           phone?: string | null
           plan?: Database["public"]["Enums"]["org_plan"]
           plan_expires_at?: string | null
           plan_id?: string | null
           primary_color?: string | null
+          rua?: string | null
           slug?: string
           updated_at?: string
           website?: string | null

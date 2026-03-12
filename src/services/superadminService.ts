@@ -129,23 +129,10 @@ export async function removeSuperadmin(roleId: string) {
 }
 
 // Update organization details
-export async function updateOrganization(orgId: string, data: {
-  name: string;
-  contact_email: string;
-  phone: string;
-  website: string;
-  description: string;
-}) {
+export async function updateOrganization(orgId: string, data: Record<string, any>) {
   const { error } = await supabase
     .from('organizations')
-    .update({
-      name: data.name,
-      contact_email: data.contact_email || null,
-      phone: data.phone || null,
-      website: data.website || null,
-      description: data.description || null,
-      updated_at: new Date().toISOString(),
-    })
+    .update(data as any)
     .eq('id', orgId);
 
   if (error) throw error;
