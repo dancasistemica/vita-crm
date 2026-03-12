@@ -36,6 +36,7 @@ const App = () => (
             {/* Public routes */}
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/setup" element={<FirstSuperadminSetup />} />
 
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
