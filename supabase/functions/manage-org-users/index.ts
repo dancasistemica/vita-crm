@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
           .maybeSingle();
 
         if (existingMember) {
-          return new Response(JSON.stringify({ error: 'Usuário já é membro desta organização' }), {
+          return new Response(JSON.stringify({ error: 'Usuário já pertence a esta organização' }), {
             status: 409,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
           .insert({ organization_id, user_id: existingUser.id, role: userRole });
 
         if (memberError) {
-          return new Response(JSON.stringify({ error: 'Erro ao adicionar membro: ' + memberError.message }), {
+          return new Response(JSON.stringify({ error: 'Erro ao adicionar usuário: ' + memberError.message }), {
             status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
 
       if (memberError) {
         await adminClient.auth.admin.deleteUser(newUserId);
-        return new Response(JSON.stringify({ error: 'Erro ao criar membro: ' + memberError.message }), {
+        return new Response(JSON.stringify({ error: 'Erro ao criar usuário: ' + memberError.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

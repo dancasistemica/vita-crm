@@ -37,7 +37,7 @@ const roleLabels: Record<string, string> = {
   owner: "Proprietário",
   admin: "Administrador",
   vendedor: "Vendedor",
-  member: "Membro",
+  member: "Usuário",
 };
 
 const roleBadgeVariant = (role: string) => {
@@ -336,7 +336,7 @@ export default function UsersTab() {
               <SelectItem value="owner">Proprietário</SelectItem>
               <SelectItem value="admin">Administrador</SelectItem>
               <SelectItem value="vendedor">Vendedor</SelectItem>
-              <SelectItem value="member">Membro</SelectItem>
+              <SelectItem value="member">Usuário</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -533,7 +533,7 @@ export default function UsersTab() {
                   <SelectContent>
                     <SelectItem value="admin">Administrador</SelectItem>
                     <SelectItem value="vendedor">Vendedor</SelectItem>
-                    <SelectItem value="member">Membro</SelectItem>
+                    <SelectItem value="member">Usuário</SelectItem>
                     {customRoleOptions.length > 0 && (
                       <>
                         <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t mt-1 pt-1">Roles Customizadas</div>

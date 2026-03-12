@@ -210,7 +210,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
               <TableHead>Email</TableHead>
               <TableHead>Plano Atual</TableHead>
               <TableHead>Alterar Plano</TableHead>
-              <TableHead>Membros</TableHead>
+              <TableHead>Usuários</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Criada em</TableHead>
               <TableHead>Ações</TableHead>
