@@ -1,0 +1,6 @@
+
+ALTER TABLE public.organizations
+ADD COLUMN IF NOT EXISTS ai_context TEXT DEFAULT '',
+ADD COLUMN IF NOT EXISTS ai_services JSONB DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS ai_target_audience TEXT DEFAULT '',
+ADD COLUMN IF NOT EXISTS ai_business_model TEXT DEFAULT '';

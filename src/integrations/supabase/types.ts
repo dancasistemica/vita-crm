@@ -412,6 +412,10 @@ export type Database = {
       organizations: {
         Row: {
           active: boolean
+          ai_business_model: string | null
+          ai_context: string | null
+          ai_services: Json | null
+          ai_target_audience: string | null
           bairro: string | null
           cep: string | null
           cnpj: string | null
@@ -440,6 +444,10 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          ai_business_model?: string | null
+          ai_context?: string | null
+          ai_services?: Json | null
+          ai_target_audience?: string | null
           bairro?: string | null
           cep?: string | null
           cnpj?: string | null
@@ -468,6 +476,10 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          ai_business_model?: string | null
+          ai_context?: string | null
+          ai_services?: Json | null
+          ai_target_audience?: string | null
           bairro?: string | null
           cep?: string | null
           cnpj?: string | null
