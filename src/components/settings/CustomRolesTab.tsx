@@ -22,7 +22,11 @@ interface CustomRole {
   created_at: string;
 }
 
-export default function CustomRolesTab() {
+interface CustomRolesTabProps {
+  onRoleCreated?: (roleName: string) => void;
+}
+
+export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   const { organizationId } = useOrganization();
   const { role, canAccessSettings } = useUserRole();
   const [roles, setRoles] = useState<CustomRole[]>([]);
