@@ -23,6 +23,7 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
 import NotFound from "@/pages/NotFound";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
+import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 
 const queryClient = new QueryClient();
 
