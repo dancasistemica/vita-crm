@@ -1,8 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
-import TagsTab from "@/components/settings/TagsTab";
-import FunnelStagesTab from "@/components/settings/FunnelStagesTab";
 import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import UserRolesManager from "@/components/settings/UserRolesManager";
 import OrganizationPage from "@/pages/OrganizationPage";
@@ -20,8 +18,6 @@ export default function ConfiguracoesPage() {
           <TabsList className="inline-flex w-max min-w-full">
             <TabsTrigger value="usuarios">👥 Usuários</TabsTrigger>
             <TabsTrigger value="campos">📋 Campos do CRM</TabsTrigger>
-            <TabsTrigger value="tags">🏷️ Tags</TabsTrigger>
-            <TabsTrigger value="funil">📈 Funil de Vendas</TabsTrigger>
             <TabsTrigger value="pagamento">💳 Pagamento</TabsTrigger>
             {canAccessSettings && <TabsTrigger value="permissoes">🔐 Permissões</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="organizacao">🏢 Organização</TabsTrigger>}
@@ -30,8 +26,6 @@ export default function ConfiguracoesPage() {
         </ScrollArea>
         <TabsContent value="usuarios"><UsersTab /></TabsContent>
         <TabsContent value="campos"><CRMFieldsTab /></TabsContent>
-        <TabsContent value="tags"><TagsTab /></TabsContent>
-        <TabsContent value="funil"><FunnelStagesTab /></TabsContent>
         <TabsContent value="pagamento"><PaymentMethodsTab /></TabsContent>
         {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager /></TabsContent>}
         {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}
