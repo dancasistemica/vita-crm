@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
 import { toast } from "sonner";
+import AIResponseSuggestion from "@/components/ai/AIResponseSuggestion";
 
 export default function InteracoesPage() {
   const { leads, interactions, addInteraction } = useCRMStore();
