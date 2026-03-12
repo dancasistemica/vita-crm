@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
           .maybeSingle();
 
         if (existingMember) {
-          return new Response(JSON.stringify({ error: 'Usuário já é membro desta organização' }), {
+          return new Response(JSON.stringify({ error: 'Usuário já pertence a esta organização' }), {
             status: 409,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
