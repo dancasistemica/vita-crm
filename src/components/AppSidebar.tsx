@@ -42,7 +42,7 @@ export function AppSidebar() {
         <div className="p-4 pb-2">
           {!collapsed ?
           <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm bg-yellow-600">
+              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center text-sm bg-yellow-600 text-yellow-600">
                 💃
               </div>
               <h1 className="text-base font-display tracking-wide text-yellow-600">
