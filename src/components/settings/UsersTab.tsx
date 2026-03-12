@@ -459,6 +459,57 @@ export default function UsersTab() {
                 <Label>Telefone</Label>
                 <Input value={formPhone} onChange={(e) => setFormPhone(e.target.value)} placeholder="(11) 99999-9999" />
               </div>
+              {/* Organization select - superadmin only, create mode only */}
+              {isSuperadmin && !editing && (
+                <div className="space-y-1">
+                  <Label>Organização *</Label>
+                  <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={orgSelectOpen}
+                        className="w-full justify-between font-normal"
+                      >
+                        {formOrgId
+                          ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
+                          : "Selecione uma organização"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Buscar organização..." />
+                        <CommandList>
+                          <CommandEmpty>
+                            {orgsLoading ? "Carregando..." : "Nenhuma organização encontrada."}
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {orgOptions.map((org) => (
+                              <CommandItem
+                                key={org.id}
+                                value={`${org.name} ${org.cnpj || ""}`}
+                                onSelect={() => {
+                                  setFormOrgId(org.id);
+                                  setOrgSelectOpen(false);
+                                }}
+                              >
+                                <Check className={cn("mr-2 h-4 w-4", formOrgId === org.id ? "opacity-100" : "opacity-0")} />
+                                <div className="flex flex-col">
+                                  <span>{org.name}</span>
+                                  {org.cnpj && (
+                                    <span className="text-xs text-muted-foreground">{org.cnpj}</span>
+                                  )}
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
               <div className="space-y-1">
                 <Label>Função</Label>
                 <Select value={formRole} onValueChange={setFormRole}>
