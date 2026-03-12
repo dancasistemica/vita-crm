@@ -11,9 +11,9 @@ import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { validateCNPJ, formatCNPJ } from '@/utils/cnpjValidator';
+import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
-import { Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
 
 interface EditOrganizationModalProps {
   open: boolean;

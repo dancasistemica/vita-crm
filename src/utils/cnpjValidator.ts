@@ -1,10 +1,23 @@
-export function validateCNPJ(cnpj: string): boolean {
+export interface CNPJValidationResult {
+  valid: boolean;
+  error?: string;
+}
+
+export function validateCNPJWithResult(cnpj: string): CNPJValidationResult {
   const clean = cnpj.replace(/\D/g, '');
 
-  if (clean.length !== 14) return false;
-  if (/^(\d)\1{13}$/.test(clean)) return false;
+  if (!clean || clean.length === 0) {
+    return { valid: false, error: 'CNPJ é obrigatório' };
+  }
 
-  // First check digit
+  if (clean.length !== 14) {
+    return { valid: false, error: 'CNPJ deve ter 14 dígitos' };
+  }
+
+  if (/^(\d)\1{13}$/.test(clean)) {
+    return { valid: false, error: 'CNPJ inválido' };
+  }
+
   let sum = 0;
   const w1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   for (let i = 0; i < 12; i++) {
@@ -13,7 +26,6 @@ export function validateCNPJ(cnpj: string): boolean {
   let remainder = sum % 11;
   const digit1 = remainder < 2 ? 0 : 11 - remainder;
 
-  // Second check digit
   sum = 0;
   const w2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   for (let i = 0; i < 13; i++) {
@@ -22,7 +34,15 @@ export function validateCNPJ(cnpj: string): boolean {
   remainder = sum % 11;
   const digit2 = remainder < 2 ? 0 : 11 - remainder;
 
-  return digit1 === parseInt(clean[12]) && digit2 === parseInt(clean[13]);
+  if (digit1 !== parseInt(clean[12]) || digit2 !== parseInt(clean[13])) {
+    return { valid: false, error: 'CNPJ inválido' };
+  }
+
+  return { valid: true };
+}
+
+export function validateCNPJ(cnpj: string): boolean {
+  return validateCNPJWithResult(cnpj).valid;
 }
 
 export function formatCNPJ(value: string): string {
