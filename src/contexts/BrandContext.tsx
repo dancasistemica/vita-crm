@@ -101,47 +101,71 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchBrand = useCallback(async () => {
-    // Wait for org context to finish loading before deciding
-    if (orgLoading) return;
+    console.log('[BrandContext] 1️⃣ fetchBrand start', { orgLoading, organizationId });
+
+    if (orgLoading) {
+      setLoading(true);
+      console.log('[BrandContext] ⏳ OrganizationContext ainda carregando');
+      return;
+    }
 
     if (!organizationId) {
-      console.log('[BrandContext] No organizationId, using defaults');
+      console.warn('[BrandContext] ⚠️ organizationId ausente, aplicando tema padrão');
+      setBrand(DEFAULT_BRAND);
+      applyBrandCSS(DEFAULT_BRAND);
       setLoading(false);
       return;
     }
 
+    setLoading(true);
+
     try {
-      console.log('[BrandContext] Fetching brand for org:', organizationId);
-      const { data } = await supabase
+      console.log('[BrandContext] 2️⃣ Buscando brand_settings para org:', organizationId);
+      const { data, error } = await supabase
         .from('brand_settings')
         .select('*')
         .eq('organization_id', organizationId)
         .maybeSingle();
 
-      const settings: BrandSettings = data ? {
-        primary_color: data.primary_color,
-        secondary_color: data.secondary_color,
-        accent_color: data.accent_color,
-        sidebar_color: data.sidebar_color,
-        logo_url: data.logo_url,
-        favicon_url: data.favicon_url,
-        org_display_name: data.org_display_name,
-        font_family: data.font_family,
-      } : DEFAULT_BRAND;
+      console.log('[BrandContext] 3️⃣ Resposta da query:', { data, error });
 
-      console.log('[BrandContext] Applying brand:', settings.primary_color, settings.org_display_name);
+      if (error) throw error;
+
+      const settings: BrandSettings = data
+        ? {
+            primary_color: data.primary_color,
+            secondary_color: data.secondary_color,
+            accent_color: data.accent_color,
+            sidebar_color: data.sidebar_color,
+            logo_url: data.logo_url,
+            favicon_url: data.favicon_url,
+            org_display_name: data.org_display_name,
+            font_family: data.font_family,
+          }
+        : DEFAULT_BRAND;
+
+      console.log('[BrandContext] 4️⃣ Aplicando tema:', {
+        primary_color: settings.primary_color,
+        org_display_name: settings.org_display_name,
+      });
+
       setBrand(settings);
       applyBrandCSS(settings);
+      console.log('[BrandContext] ✅ Tema aplicado com sucesso');
     } catch (e) {
-      console.error('[BrandContext] Error:', e);
+      console.error('[BrandContext] ❌ Erro ao carregar/aplicar tema:', e);
     } finally {
       setLoading(false);
+      console.log('[BrandContext] 5️⃣ fetchBrand finalizado');
     }
   }, [organizationId, orgLoading]);
 
-  useEffect(() => { fetchBrand(); }, [fetchBrand]);
+  useEffect(() => {
+    fetchBrand();
+  }, [fetchBrand]);
 
   const updateLocalBrand = useCallback((partial: Partial<BrandSettings>) => {
+    console.log('[BrandContext] updateLocalBrand:', partial);
     setBrand(prev => {
       const next = { ...prev, ...partial };
       applyBrandCSS(next);
@@ -150,22 +174,44 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const saveBrand = useCallback(async (partial: Partial<BrandSettings>) => {
-    if (!organizationId) return;
+    console.log('[BrandContext] saveBrand start:', partial);
+
+    if (!organizationId) {
+      console.error('[BrandContext] ❌ Não foi possível salvar: organizationId ausente');
+      throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
+    }
+
     const updated = { ...brand, ...partial };
+
     const { error } = await supabase
       .from('brand_settings')
-      .upsert({
-        organization_id: organizationId,
-        ...updated,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'organization_id' });
-    if (error) throw error;
+      .upsert(
+        {
+          organization_id: organizationId,
+          ...updated,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'organization_id' }
+      );
+
+    if (error) {
+      console.error('[BrandContext] ❌ Erro ao salvar brand_settings:', error);
+      throw error;
+    }
+
     setBrand(updated);
     applyBrandCSS(updated);
+    console.log('[BrandContext] ✅ brand_settings salvo e aplicado');
   }, [organizationId, brand]);
 
   const resetBrand = useCallback(async () => {
-    if (!organizationId) return;
+    console.log('[BrandContext] resetBrand');
+
+    if (!organizationId) {
+      console.error('[BrandContext] ❌ Não foi possível resetar: organizationId ausente');
+      throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
+    }
+
     await saveBrand(DEFAULT_BRAND);
   }, [organizationId, saveBrand]);
 
