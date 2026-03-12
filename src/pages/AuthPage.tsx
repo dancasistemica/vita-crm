@@ -37,6 +37,17 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
+  const [checkingBootstrap, setCheckingBootstrap] = useState(true);
+
+  useEffect(() => {
+    hasSuperadmin().then((exists) => {
+      if (!exists) {
+        navigate('/setup', { replace: true });
+      } else {
+        setCheckingBootstrap(false);
+      }
+    });
+  }, [navigate]);
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
