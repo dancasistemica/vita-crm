@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,138 +32,156 @@ interface Plan {
   description: string | null;
 }
 
-export function OrganizationsTab() {
-  const [orgs, setOrgs] = useState<Org[]>([]);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [createOpen, setCreateOpen] = useState(false);
-
-  const fetchData = async () => {
-    try {
-      const [orgsData, plansData] = await Promise.all([getAllOrganizations(), getAllPlans()]);
-      setOrgs(orgsData as any);
-      setPlans(plansData as any);
-    } catch (err) {
-      console.error('[OrganizationsTab]', err);
-      toast.error('Erro ao carregar organizações');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { fetchData(); }, []);
-
-  const handleToggleStatus = async (org: Org) => {
-    try {
-      await updateOrgStatus(org.id, !org.active);
-      toast.success(`Organização ${!org.active ? 'ativada' : 'suspensa'}`);
-      fetchData();
-    } catch (err) {
-      console.error('[OrganizationsTab] toggle status:', err);
-      toast.error('Erro ao alterar status');
-    }
-  };
-
-  const handlePlanChange = async (orgId: string, planId: string) => {
-    try {
-      await updateOrgPlan(orgId, planId === 'none' ? null : planId);
-      toast.success('Plano atualizado');
-      fetchData();
-    } catch (err) {
-      console.error('[OrganizationsTab] plan change:', err);
-      toast.error('Erro ao alterar plano');
-    }
-  };
-
-  if (loading) {
-    return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
-          <Building2 className="h-4 w-4" />
-          <span>{orgs.length} organização(ões) cadastrada(s)</span>
-        </div>
-        <Button onClick={() => setCreateOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" /> Nova Organização
-        </Button>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Plano Atual</TableHead>
-            <TableHead>Alterar Plano</TableHead>
-            <TableHead>Membros</TableHead>
-            <TableHead>Limites</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Criada em</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orgs.map((org) => (
-            <TableRow key={org.id}>
-              <TableCell className="font-medium">{org.name}</TableCell>
-              <TableCell>
-                <Badge variant="outline">{org.plan}</Badge>
-              </TableCell>
-              <TableCell>
-                <Select
-                  value={org.plan_id || 'none'}
-                  onValueChange={(v) => handlePlanChange(org.id, v)}
-                >
-                  <SelectTrigger className="w-[160px]">
-                    <SelectValue placeholder="Selecionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Nenhum</SelectItem>
-                    {plans.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {org.organization_members?.length || 0}
-                </div>
-              </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
-                {org.max_users} usuários / {org.max_leads} leads
-              </TableCell>
-              <TableCell>
-                <Badge variant={org.active ? 'default' : 'destructive'}>
-                  {org.active ? 'Ativa' : 'Suspensa'}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-sm text-muted-foreground">
-                {new Date(org.created_at).toLocaleDateString('pt-BR')}
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant={org.active ? 'destructive' : 'default'}
-                  size="sm"
-                  onClick={() => handleToggleStatus(org)}
-                >
-                  {org.active ? 'Suspender' : 'Ativar'}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <CreateOrganizationModal
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-        onSuccess={fetchData}
-        plans={plans}
-      />
-    </div>
-  );
+interface OrganizationsTabProps {
+  onStatsChange?: () => void;
 }
+
+export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, OrganizationsTabProps>(
+  ({ onStatsChange }, ref) => {
+    const [orgs, setOrgs] = useState<Org[]>([]);
+    const [plans, setPlans] = useState<Plan[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [createOpen, setCreateOpen] = useState(false);
+
+    useImperativeHandle(ref, () => ({
+      openCreateModal: () => setCreateOpen(true),
+    }));
+
+    const fetchData = async () => {
+      try {
+        const [orgsData, plansData] = await Promise.all([getAllOrganizations(), getAllPlans()]);
+        setOrgs(orgsData as any);
+        setPlans(plansData as any);
+      } catch (err) {
+        console.error('[OrganizationsTab]', err);
+        toast.error('Erro ao carregar organizações');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => { fetchData(); }, []);
+
+    const handleToggleStatus = async (org: Org) => {
+      try {
+        await updateOrgStatus(org.id, !org.active);
+        toast.success(`Organização ${!org.active ? 'ativada' : 'suspensa'}`);
+        fetchData();
+        onStatsChange?.();
+      } catch (err) {
+        console.error('[OrganizationsTab] toggle status:', err);
+        toast.error('Erro ao alterar status');
+      }
+    };
+
+    const handlePlanChange = async (orgId: string, planId: string) => {
+      try {
+        await updateOrgPlan(orgId, planId === 'none' ? null : planId);
+        toast.success('Plano atualizado');
+        fetchData();
+      } catch (err) {
+        console.error('[OrganizationsTab] plan change:', err);
+        toast.error('Erro ao alterar plano');
+      }
+    };
+
+    const handleCreateSuccess = () => {
+      fetchData();
+      onStatsChange?.();
+    };
+
+    if (loading) {
+      return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+    }
+
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Building2 className="h-4 w-4" />
+            <span>{orgs.length} organização(ões) cadastrada(s)</span>
+          </div>
+          <Button onClick={() => setCreateOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" /> Nova Organização
+          </Button>
+        </div>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Plano Atual</TableHead>
+              <TableHead>Alterar Plano</TableHead>
+              <TableHead>Membros</TableHead>
+              <TableHead>Limites</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Criada em</TableHead>
+              <TableHead>Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orgs.map((org) => (
+              <TableRow key={org.id}>
+                <TableCell className="font-medium">{org.name}</TableCell>
+                <TableCell>
+                  <Badge variant="outline">{org.plan}</Badge>
+                </TableCell>
+                <TableCell>
+                  <Select
+                    value={org.plan_id || 'none'}
+                    onValueChange={(v) => handlePlanChange(org.id, v)}
+                  >
+                    <SelectTrigger className="w-[160px]">
+                      <SelectValue placeholder="Selecionar" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Nenhum</SelectItem>
+                      {plans.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {org.organization_members?.length || 0}
+                  </div>
+                </TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {org.max_users} usuários / {org.max_leads} leads
+                </TableCell>
+                <TableCell>
+                  <Badge variant={org.active ? 'default' : 'destructive'}>
+                    {org.active ? 'Ativa' : 'Suspensa'}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {new Date(org.created_at).toLocaleDateString('pt-BR')}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant={org.active ? 'destructive' : 'default'}
+                    size="sm"
+                    onClick={() => handleToggleStatus(org)}
+                  >
+                    {org.active ? 'Suspender' : 'Ativar'}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+        <CreateOrganizationModal
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+          onSuccess={handleCreateSuccess}
+          plans={plans}
+        />
+      </div>
+    );
+  }
+);
+
+OrganizationsTab.displayName = 'OrganizationsTab';
