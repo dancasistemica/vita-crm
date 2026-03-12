@@ -27,6 +27,12 @@ interface OrgUser {
   created_at: string;
 }
 
+interface OrgOption {
+  id: string;
+  name: string;
+  cnpj: string | null;
+}
+
 const roleLabels: Record<string, string> = {
   owner: "Proprietário",
   admin: "Administrador",
