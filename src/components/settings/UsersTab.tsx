@@ -124,6 +124,24 @@ export default function UsersTab() {
     fetchUsers();
   }, [organizationId]);
 
+  // Fetch organizations for superadmin
+  const fetchOrgs = async () => {
+    setOrgsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("organizations")
+        .select("id, name, cnpj")
+        .eq("active", true)
+        .order("name");
+      if (error) throw error;
+      setOrgOptions(data || []);
+    } catch (err) {
+      console.error("[UsersTab] fetch orgs error:", err);
+    } finally {
+      setOrgsLoading(false);
+    }
+  };
+
   const filtered = useMemo(() => {
     let list = users;
     if (roleFilter !== "all") {
@@ -149,6 +167,9 @@ export default function UsersTab() {
     setFormEmail("");
     setFormPhone("");
     setFormRole("member");
+    setFormOrgId("");
+    setOrgSelectOpen(false);
+    if (isSuperadmin) fetchOrgs();
     setFormOpen(true);
   };
 
