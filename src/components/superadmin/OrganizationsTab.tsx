@@ -142,6 +142,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {orgs.map((org) => (
               <TableRow key={org.id}>
                 <TableCell className="font-medium">{org.name}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
                 <TableCell>
                   <Badge variant="outline">{org.plan}</Badge>
                 </TableCell>
