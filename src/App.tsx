@@ -20,6 +20,7 @@ import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import NotFound from "@/pages/NotFound";
+import SuperadminDashboard from "@/pages/SuperadminDashboard";
 
 const queryClient = new QueryClient();
 
