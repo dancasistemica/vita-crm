@@ -457,8 +457,31 @@ export default function AdminUsersPage() {
             </div>
             <div className="space-y-1">
               <Label>Email</Label>
-              <Input value={editUser?.email || ""} disabled />
-              <p className="text-xs text-muted-foreground">O email não pode ser alterado.</p>
+              <Input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} type="email" />
+              {editEmail !== editUser?.email && (
+                <p className="text-xs text-amber-600">O email será atualizado na autenticação e no perfil.</p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label>Nova Senha</Label>
+              <div className="relative">
+                <Input
+                  value={editPassword}
+                  onChange={(e) => setEditPassword(e.target.value)}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Deixe em branco para não alterar"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">Mínimo 6 caracteres. Deixe em branco para não alterar.</p>
             </div>
             <div className="space-y-1">
               <Label>Telefone</Label>
