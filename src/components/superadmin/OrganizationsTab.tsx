@@ -275,7 +275,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             ))}
           </TableBody>
         </Table>
-
+        )}
         <CreateOrganizationModal
           open={createOpen}
           onOpenChange={setCreateOpen}
