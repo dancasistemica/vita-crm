@@ -25,6 +25,7 @@ const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-
 export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
+  const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
   const [filterInterest, setFilterInterest] = useState("all");
