@@ -1,25 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { Mail, Phone, MapPin, User, AlertCircle, CheckCircle } from 'lucide-react';
+import { formatCPF, validateCPF } from '@/services/cpfValidator';
+import { Mail, Phone, MapPin, User, Camera } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function ProfilePage() {
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
     phone: '',
     avatar_url: '',
+    cpf: '',
     cep: '',
     street: '',
     neighborhood: '',
@@ -46,11 +58,12 @@ export default function ProfilePage() {
           email: data.email || '',
           phone: data.phone || '',
           avatar_url: data.avatar_url || '',
-          cep: (data as any).cep || '',
-          street: (data as any).street || '',
-          neighborhood: (data as any).neighborhood || '',
-          city: (data as any).city || '',
-          state: (data as any).state || '',
+          cpf: (data as any).cpf ? formatCPF((data as any).cpf) : '',
+          cep: data.cep || '',
+          street: data.street || '',
+          neighborhood: data.neighborhood || '',
+          city: data.city || '',
+          state: data.state || '',
         });
       } catch {
         toast.error('Erro ao carregar dados do perfil');
@@ -84,6 +97,61 @@ export default function ProfilePage() {
     }
   };
 
+  const handleCPFChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, cpf: formatCPF(value) }));
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      toast.error('Formato inválido. Use JPG, PNG ou WebP.');
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error('Arquivo muito grande. Máximo 5MB.');
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const uploadAvatar = async (): Promise<string | null> => {
+    if (!selectedFile || !user?.id) return null;
+
+    setUploading(true);
+    setUploadProgress(30);
+
+    const ext = selectedFile.name.split('.').pop();
+    const path = `${user.id}/avatar.${ext}`;
+
+    setUploadProgress(60);
+
+    const { error } = await supabase.storage
+      .from('profile-avatars')
+      .upload(path, selectedFile, { upsert: true });
+
+    if (error) {
+      setUploading(false);
+      setUploadProgress(0);
+      throw new Error('Erro ao fazer upload da foto');
+    }
+
+    setUploadProgress(90);
+
+    const { data: urlData } = supabase.storage
+      .from('profile-avatars')
+      .getPublicUrl(path);
+
+    setUploadProgress(100);
+    setUploading(false);
+
+    return `${urlData.publicUrl}?t=${Date.now()}`;
+  };
+
   const handleSave = async () => {
     if (!formData.full_name.trim()) {
       toast.error('Nome completo é obrigatório');
@@ -96,6 +164,12 @@ export default function ProfilePage() {
       return;
     }
 
+    const cleanCpf = formData.cpf.replace(/\D/g, '');
+    if (cleanCpf && !validateCPF(cleanCpf)) {
+      toast.error('CPF inválido');
+      return;
+    }
+
     const cleanCep = formData.cep.replace(/\D/g, '');
     if (cleanCep && cleanCep.length !== 8) {
       toast.error('CEP deve ter 8 dígitos');
@@ -105,13 +179,20 @@ export default function ProfilePage() {
     try {
       setSaving(true);
 
+      let avatarUrl = formData.avatar_url;
+      if (selectedFile) {
+        const uploaded = await uploadAvatar();
+        if (uploaded) avatarUrl = uploaded;
+      }
+
       const { error } = await supabase
         .from('profiles')
         .update({
           full_name: formData.full_name,
           email: formData.email,
           phone: formData.phone,
-          avatar_url: formData.avatar_url,
+          avatar_url: avatarUrl,
+          cpf: cleanCpf || null,
           updated_at: new Date().toISOString(),
           cep: cleanCep || null,
           street: formData.street || null,
@@ -123,9 +204,13 @@ export default function ProfilePage() {
 
       if (error) throw error;
 
+      setFormData((prev) => ({ ...prev, avatar_url: avatarUrl }));
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setUploadProgress(0);
       toast.success('Perfil atualizado com sucesso!');
-    } catch {
-      toast.error('Erro ao salvar perfil');
+    } catch (err: any) {
+      toast.error(err.message || 'Erro ao salvar perfil');
     } finally {
       setSaving(false);
     }
@@ -139,6 +224,8 @@ export default function ProfilePage() {
     );
   }
 
+  const displayAvatar = previewUrl || formData.avatar_url;
+
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
@@ -147,6 +234,43 @@ export default function ProfilePage() {
         </h1>
         <p className="text-muted-foreground text-sm mt-1">Edite suas informações pessoais</p>
       </div>
+
+      {/* Avatar Section */}
+      <Card>
+        <CardContent className="flex flex-col items-center gap-4 pt-6">
+          <div className="relative group">
+            <Avatar className="h-24 w-24">
+              {displayAvatar ? (
+                <AvatarImage src={displayAvatar} alt="Avatar" />
+              ) : null}
+              <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+                {formData.full_name?.charAt(0)?.toUpperCase() || <User className="h-8 w-8" />}
+              </AvatarFallback>
+            </Avatar>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              <Camera className="h-6 w-6 text-white" />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+          </div>
+          <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+            <Camera className="h-4 w-4 mr-1" /> Alterar Foto
+          </Button>
+          {previewUrl && (
+            <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>
+          )}
+          {uploading && <Progress value={uploadProgress} className="w-48 h-2" />}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -184,6 +308,16 @@ export default function ProfilePage() {
               value={formData.phone}
               onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
               placeholder="(11) 99999-9999"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>CPF</Label>
+            <Input
+              value={formData.cpf}
+              onChange={(e) => handleCPFChange(e.target.value)}
+              placeholder="000.000.000-00"
+              maxLength={14}
             />
           </div>
         </CardContent>
@@ -236,7 +370,7 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
+      <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
       </Button>
     </div>
