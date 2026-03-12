@@ -20,8 +20,6 @@ export default function ConfiguracoesPage() {
           <TabsList className="inline-flex w-max min-w-full">
             <TabsTrigger value="usuarios">👥 Usuários</TabsTrigger>
             <TabsTrigger value="campos">📋 Campos do CRM</TabsTrigger>
-            <TabsTrigger value="tags">🏷️ Tags</TabsTrigger>
-            <TabsTrigger value="funil">📈 Funil de Vendas</TabsTrigger>
             <TabsTrigger value="pagamento">💳 Pagamento</TabsTrigger>
             {canAccessSettings && <TabsTrigger value="permissoes">🔐 Permissões</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="organizacao">🏢 Organização</TabsTrigger>}
