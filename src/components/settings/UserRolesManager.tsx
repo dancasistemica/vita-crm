@@ -237,11 +237,14 @@ export default function UserRolesManager() {
   return (
     <div className="space-y-4">
       <Tabs value={selectedRole} onValueChange={setSelectedRole}>
-        <TabsList className="grid w-full grid-cols-3">
-          {ROLES.map(r => (
-            <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
-          ))}
-        </TabsList>
+        <ScrollArea className="w-full">
+          <TabsList className="inline-flex w-max min-w-full">
+            {ROLES.map(r => (
+              <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
+            ))}
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         {ROLES.map(r => (
           <TabsContent key={r.value} value={r.value}>
