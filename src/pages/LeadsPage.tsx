@@ -17,6 +17,7 @@ import RecordCounter from "@/components/common/RecordCounter";
 import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
