@@ -26,7 +26,7 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
-  const { savePosition } = useScrollPosition('leads-page');
+  const { savePosition, restorePosition } = useScrollPosition('leads-page');
   const [search, setSearch] = useState("");
   const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
@@ -135,9 +135,9 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
+            <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) { restorePosition(); setEditingLead(null); } setDialogOpen(o); }}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+                <Button size="sm" onClick={() => { savePosition(); setEditingLead(null); }}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
