@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCRMStore } from "@/store/crmStore";
-import { Lead } from "@/types/crm";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil } from "lucide-react";
+import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
@@ -24,16 +23,16 @@ const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-
 
 export default function LeadsPage() {
   const navigate = useNavigate();
-  const { leads, origins, pipelineStages, tags, interestLevels, addLead, deleteLead, updateLead } = useCRMStore();
+  const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
   const [search, setSearch] = useState("");
   const [filterOrigin, setFilterOrigin] = useState("all");
   const [filterInterest, setFilterInterest] = useState("all");
   const [filterStage, setFilterStage] = useState("all");
   const [filterTag, setFilterTag] = useState("all");
-  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  
+
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
@@ -54,43 +53,25 @@ export default function LeadsPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
-  // Reset page when filters change
   const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
     setter(value);
     resetPage();
   };
 
-  const handleSave = (data: Partial<Lead>) => {
-    if (editingLead) {
-      updateLead(editingLead.id, data);
-      toast.success("Lead atualizado!");
-    } else {
-      const newLead: Lead = {
-        id: crypto.randomUUID(),
-        name: data.name || '',
-        phone: data.phone || '',
-        email: data.email || '',
-        instagram: data.instagram || '',
-        city: data.city || '',
-        rg: data.rg || '',
-        cpf: data.cpf || '',
-        entryDate: data.entryDate || new Date().toISOString().split('T')[0],
-        origin: data.origin || origins[0],
-        interestLevel: data.interestLevel || 'frio',
-        mainInterest: data.mainInterest || '',
-        tags: data.tags || [],
-        painPoint: data.painPoint || '',
-        bodyTensionArea: data.bodyTensionArea || '',
-        emotionalGoal: data.emotionalGoal || '',
-        pipelineStage: data.pipelineStage || '1',
-        responsible: data.responsible || '',
-        notes: data.notes || '',
-      };
-      addLead(newLead);
-      toast.success("Lead adicionado!");
+  const handleSave = async (data: Partial<LeadView>) => {
+    try {
+      if (editingLead) {
+        await updateLead(editingLead.id, data);
+        toast.success("Lead atualizado!");
+      } else {
+        await addLead(data);
+        toast.success("Lead adicionado!");
+      }
+      setDialogOpen(false);
+      setEditingLead(null);
+    } catch (err) {
+      toast.error("Erro ao salvar lead");
     }
-    setDialogOpen(false);
-    setEditingLead(null);
   };
 
   const getStageName = (id: string) => pipelineStages.find(s => s.id === id)?.name || '';
@@ -107,6 +88,24 @@ export default function LeadsPage() {
       setSelectedIds(paginated.map(l => l.id));
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground">Carregando leads...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <p className="text-destructive font-medium">Erro ao carregar leads</p>
+        <p className="text-sm text-muted-foreground mt-1">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -173,7 +172,6 @@ export default function LeadsPage() {
         </Select>
       </div>
 
-      {/* Record counter */}
       <RecordCounter
         totalCount={leads.length}
         filteredCount={filtered.length}
@@ -181,7 +179,6 @@ export default function LeadsPage() {
         onPerPageChange={setPerPage}
       />
 
-      {/* Bulk actions bar */}
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
@@ -204,7 +201,6 @@ export default function LeadsPage() {
       <div className="space-y-2">
         {paginated.length === 0 && <p className="text-muted-foreground text-center py-12 text-sm">Nenhum lead encontrado.</p>}
 
-        {/* Select all header */}
         {paginated.length > 0 && (
           <div className="flex items-center gap-2 px-4 py-1">
             <Checkbox
@@ -217,7 +213,6 @@ export default function LeadsPage() {
 
         {paginated.map((lead, idx) => (
           <Card key={lead.id} className="hover-lift shadow-card border-border/60 relative overflow-hidden animate-slide-up" style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'backwards' }}>
-            {/* Interest level bar */}
             <div className={`interest-bar ${interestBarColors[lead.interestLevel] || 'bg-muted'}`} />
             <CardContent className="py-3 px-4 pl-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -262,7 +257,14 @@ export default function LeadsPage() {
                   </Button>
                 )}
                 {userCanDelete && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => { deleteLead(lead.id); toast.success("Lead removido"); }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={async () => {
+                    try {
+                      await deleteLead(lead.id);
+                      toast.success("Lead removido");
+                    } catch {
+                      toast.error("Erro ao remover lead");
+                    }
+                  }}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
@@ -272,7 +274,6 @@ export default function LeadsPage() {
         ))}
       </div>
 
-      {/* Pagination */}
       {filtered.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
