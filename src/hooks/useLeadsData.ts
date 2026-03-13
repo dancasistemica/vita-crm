@@ -90,6 +90,9 @@ export function useLeadsData() {
 
   const fetchAll = useCallback(async () => {
     if (!dataAccess) return;
+
+    console.log('[useLeadsData] fetchAll iniciado');
+
     try {
       setLoading(true);
       setError(null);
@@ -103,8 +106,10 @@ export function useLeadsData() {
       ]);
 
       if (leadsData.status === 'fulfilled') {
-        setLeads((leadsData.value as DbLead[]).map(toLeadView));
-        console.log('[useLeadsData] Leads carregados:', leadsData.value.length);
+        const mappedLeads = (leadsData.value as DbLead[]).map(toLeadView);
+        console.log('[useLeadsData] Leads carregados:', mappedLeads.length);
+        setLeads(mappedLeads);
+        console.log('[useLeadsData] Estado local atualizado:', mappedLeads.length, 'leads');
       } else {
         console.error('[useLeadsData] Erro leads:', leadsData.reason);
         setError('Erro ao carregar leads');
@@ -114,11 +119,13 @@ export function useLeadsData() {
         setOrigins((originsData.value as OriginView[]).map(o => o.name));
       }
       if (stagesData.status === 'fulfilled') {
-        setPipelineStages((stagesData.value as any[]).map(s => ({
+        const mappedStages = (stagesData.value as any[]).map(s => ({
           id: s.id,
           name: s.name,
           order: s.sort_order ?? 0,
-        })));
+        }));
+        console.log('[useLeadsData] Stages carregados:', mappedStages.length);
+        setPipelineStages(mappedStages);
       }
       if (tagsData.status === 'fulfilled') {
         setTags((tagsData.value as any[]).map(t => ({
@@ -135,28 +142,13 @@ export function useLeadsData() {
         })));
       }
     } catch (err) {
-      console.error('[useLeadsData] Erro inesperado:', err);
+      console.error('[useLeadsData] Erro em fetchAll:', err);
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
   }, [dataAccess]);
-
-  useEffect(() => {
-    fetchAll();
-  }, [fetchAll]);
-
-  const deleteLead = useCallback(async (leadId: string) => {
-    if (!dataAccess) return;
-    try {
-      await dataAccess.deleteLead(leadId);
-      setLeads(prev => prev.filter(l => l.id !== leadId));
-    } catch (err) {
-      console.error('[useLeadsData] Erro ao deletar:', err);
-      throw err;
-    }
-  }, [dataAccess]);
-
+...
   const updateLead = useCallback(async (leadId: string, updates: Partial<LeadView>) => {
     if (!dataAccess) {
       console.warn('[useLeadsData] updateLead ignorado: dataAccess indisponível', { leadId, updates });
@@ -186,22 +178,22 @@ export function useLeadsData() {
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
 
-      // Optimistic update
-      setLeads(prev => prev.map(l => (l.id === leadId ? { ...l, ...updates } : l)));
+      console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
 
-      // Persist to DB
-      await dataAccess.updateLead(leadId, dbUpdates);
-      console.log('[useLeadsData] Lead atualizado no banco:', { leadId });
+      const result = await dataAccess.updateLead(leadId, dbUpdates);
+      console.log('[useLeadsData] Lead atualizado no banco:', result);
 
-      // Refetch to sync all consumers (e.g. ClientesPage)
+      console.log('[useLeadsData] 🔄 Chamando fetchAll() para sincronizar...');
       await fetchAll();
-      console.log('[useLeadsData] ✅ Dados recarregados após update');
+      console.log('[useLeadsData] ✅ fetchAll() completado - dados sincronizados');
+
+      return result;
     } catch (err) {
-      console.error('[useLeadsData] Erro ao atualizar lead:', { leadId, updates, err });
-      await fetchAll(); // rollback optimistic
+      console.error('[useLeadsData] ❌ Erro ao atualizar lead:', err);
+      await fetchAll();
       throw err;
     }
-  }, [dataAccess]);
+  }, [dataAccess, fetchAll]);
 
   const addLead = useCallback(async (leadData: Partial<LeadView>) => {
     if (!dataAccess) return;
