@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,14 +12,16 @@ import { CalendarIcon, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useCRMStore } from '@/store/crmStore';
-import { Lead, Sale } from '@/types/crm';
 import { toast } from 'sonner';
+import { useDataAccess } from '@/hooks/useDataAccess';
+import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
 
-const PAYMENT_METHODS = [
-  'Dinheiro', 'Cartão Crédito', 'Cartão Débito', 'Pix',
-  'Transferência Bancária', 'Boleto', 'Outro',
-];
+const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
+
+interface ProductView {
+  id: string;
+  name: string;
+}
 
 interface NewSaleModalProps {
   open: boolean;
@@ -28,29 +30,60 @@ interface NewSaleModalProps {
 }
 
 export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: NewSaleModalProps) {
-  const store = useCRMStore();
+  const dataAccess = useDataAccess();
+  const { leads, pipelineStages, updateLead, refetch: refetchLeads } = useLeadsData();
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<LeadView | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [products, setProducts] = useState<ProductView[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
+  const [sales, setSales] = useState<{ lead_id: string }[]>([]);
 
   // Form state
   const [productId, setProductId] = useState('');
   const [value, setValue] = useState('');
   const [saleDate, setSaleDate] = useState<Date>(new Date());
   const [paymentMethod, setPaymentMethod] = useState('Pix');
-  const [status, setStatus] = useState<Sale['status']>('ativo');
+  const [status, setStatus] = useState<string>('ativo');
   const [observations, setObservations] = useState('');
   const [customPayment, setCustomPayment] = useState('');
 
-  // Pre-select lead when modal opens
-  useMemo(() => {
+  // Fetch products, payment methods, and sales from DB
+  useEffect(() => {
+    if (!dataAccess || !open) return;
+    const load = async () => {
+      try {
+        const [prods, methods, salesData] = await Promise.allSettled([
+          dataAccess.getProducts(),
+          dataAccess.getPaymentMethods(),
+          dataAccess.getSales(),
+        ]);
+        if (prods.status === 'fulfilled') {
+          setProducts((prods.value as any[]).map(p => ({ id: p.id, name: p.name })));
+        }
+        if (methods.status === 'fulfilled') {
+          const names = (methods.value as any[]).map(m => m.name);
+          setPaymentMethods(names.length > 0 ? [...names, 'Outro'] : ['Dinheiro', 'Cartão Crédito', 'Cartão Débito', 'Pix', 'Transferência Bancária', 'Boleto', 'Outro']);
+        }
+        if (salesData.status === 'fulfilled') {
+          setSales((salesData.value as any[]).map(s => ({ lead_id: s.lead_id })));
+        }
+      } catch (err) {
+        console.error('[NewSaleModal] Erro ao carregar dados:', err);
+      }
+    };
+    load();
+  }, [dataAccess, open]);
+
+  // Pre-select lead / reset form
+  useEffect(() => {
     if (open && preSelectedLeadId) {
-      const lead = store.leads.find(l => l.id === preSelectedLeadId);
+      const lead = leads.find(l => l.id === preSelectedLeadId);
       if (lead) setSelectedLead(lead);
     }
     if (!open) {
-      // Reset form
       setSearchQuery('');
       setSelectedLead(null);
       setShowResults(false);
@@ -62,23 +95,21 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
       setObservations('');
       setCustomPayment('');
     }
-  }, [open, preSelectedLeadId]);
+  }, [open, preSelectedLeadId, leads]);
 
-  // Determine if a lead is a "client" (has sales)
-  const isClient = (leadId: string) => store.sales.some(s => s.leadId === leadId);
+  const isClient = useCallback((leadId: string) => sales.some(s => s.lead_id === leadId), [sales]);
 
-  // Search leads
   const searchResults = useMemo(() => {
     if (searchQuery.length < 2) return [];
     const q = searchQuery.toLowerCase();
-    return store.leads.filter(l =>
+    return leads.filter(l =>
       l.name.toLowerCase().includes(q) ||
       l.email.toLowerCase().includes(q) ||
       l.phone.includes(q)
     ).slice(0, 10);
-  }, [searchQuery, store.leads]);
+  }, [searchQuery, leads]);
 
-  const handleSelectLead = (lead: Lead) => {
+  const handleSelectLead = (lead: LeadView) => {
     setSelectedLead(lead);
     setSearchQuery('');
     setShowResults(false);
@@ -102,37 +133,46 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
     return parseFloat(formatted.replace(/\./g, '').replace(',', '.'));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedLead) { toast.error('Selecione um lead ou cliente'); return; }
     if (!productId) { toast.error('Selecione um produto'); return; }
     if (!value || parseValue(value) <= 0) { toast.error('Informe um valor válido'); return; }
+    if (!dataAccess) { toast.error('Erro de conexão'); return; }
 
     setSaving(true);
+    console.log('[NewSaleModal] Iniciando criação de venda:', { leadId: selectedLead.id });
 
-    const clientStage = store.pipelineStages.find(s => s.name === 'Cliente');
+    try {
+      // 1. Create sale in database
+      const saleData: Record<string, unknown> = {
+        lead_id: selectedLead.id,
+        product_id: productId,
+        value: parseValue(value),
+        sale_date: format(saleDate, 'yyyy-MM-dd'),
+        payment_method: paymentMethod === 'Outro' ? customPayment || 'Outro' : paymentMethod,
+        status,
+        notes: observations || '',
+      };
 
-    const sale: Sale = {
-      id: crypto.randomUUID(),
-      leadId: selectedLead.id,
-      productId,
-      value: parseValue(value),
-      date: format(saleDate, 'yyyy-MM-dd'),
-      paymentMethod: paymentMethod === 'Outro' ? customPayment || 'Outro' : paymentMethod,
-      status,
-    };
+      const result = await dataAccess.createSale(saleData);
+      console.log('[NewSaleModal] ✅ Venda criada no banco:', result?.id);
 
-    store.addSale(sale);
-    console.log('[NewSaleModal] Venda criada:', sale.id);
+      // 2. Move lead to "Cliente" stage if not already
+      const clienteStage = pipelineStages.find(s => s.name === 'Cliente');
+      if (clienteStage && selectedLead.pipelineStage !== clienteStage.id) {
+        await updateLead(selectedLead.id, { pipelineStage: clienteStage.id });
+        console.log('[NewSaleModal] ✅ Lead movido para etapa Cliente:', { leadId: selectedLead.id, stageId: clienteStage.id });
+      }
 
-    // Move lead to "Cliente" stage if not already
-    if (clientStage && selectedLead.pipelineStage !== clientStage.id) {
-      store.moveLead(selectedLead.id, clientStage.id);
-      console.log('[NewSaleModal] Lead movido para etapa Cliente');
+      toast.success('Venda registrada com sucesso!');
+      await refetchLeads();
+      onOpenChange(false);
+    } catch (error) {
+      console.error('[NewSaleModal] ❌ Erro ao criar venda:', error);
+      toast.error('Erro ao registrar venda. Tente novamente.');
+    } finally {
+      setSaving(false);
     }
-
-    toast.success('Venda registrada com sucesso!');
-    setSaving(false);
-    onOpenChange(false);
   };
 
   return (
@@ -204,7 +244,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
                   <SelectValue placeholder="Selecione um produto" />
                 </SelectTrigger>
                 <SelectContent>
-                  {store.products.map(p => (
+                  {products.map(p => (
                     <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -256,7 +296,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {PAYMENT_METHODS.map(m => (
+                  {paymentMethods.map(m => (
                     <SelectItem key={m} value={m}>{m}</SelectItem>
                   ))}
                 </SelectContent>
@@ -274,12 +314,12 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
             {/* Status */}
             <div className="space-y-2">
               <Label>Status da Venda *</Label>
-              <Select value={status} onValueChange={v => setStatus(v as Sale['status'])}>
+              <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {store.saleStatuses.map(s => (
+                  {SALE_STATUSES.map(s => (
                     <SelectItem key={s} value={s}>{s}</SelectItem>
                   ))}
                 </SelectContent>
