@@ -32,7 +32,6 @@ export default function LeadsPage() {
   const [filterStages, setFilterStages] = useState<string[]>([]);
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
-  const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [exportOpen, setExportOpen] = useState(false);
@@ -41,24 +40,26 @@ export default function LeadsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
+  const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
+
+  const clearAllFilters = () => {
+    setFilterOrigins([]);
+    setFilterInterests([]);
+    setFilterStages([]);
+    setFilterTags([]);
+    resetPage();
+  };
+
   const filtered = useMemo(() => {
     return leads.filter(l => {
       const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
-      const matchOrigin = filterOrigin === "all" || l.origin === filterOrigin;
-      const matchInterest = filterInterest === "all" || l.interestLevel === filterInterest;
-      const matchStage = filterStage === "all" || l.pipelineStage === filterStage;
-      const matchTag = filterTag === "all" || l.tags.includes(filterTag);
+      const matchOrigin = filterOrigins.length === 0 || filterOrigins.includes(l.origin);
+      const matchInterest = filterInterests.length === 0 || filterInterests.includes(l.interestLevel);
+      const matchStage = filterStages.length === 0 || filterStages.includes(l.pipelineStage);
+      const matchTag = filterTags.length === 0 || l.tags.some(t => filterTags.includes(t));
       return matchSearch && matchOrigin && matchInterest && matchStage && matchTag;
     });
-  }, [leads, search, filterOrigin, filterInterest, filterStage, filterTag]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
-
-  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
-    setter(value);
-    resetPage();
-  };
+  }, [leads, search, filterOrigins, filterInterests, filterStages, filterTags]);
 
   const handleSave = async (data: Partial<LeadView>) => {
     try {
