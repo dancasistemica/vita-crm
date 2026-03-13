@@ -40,91 +40,71 @@ export default function LeadsPage() {
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
-  const isForceCleaningRef = useRef(false);
+  const scrollPositionRef = useRef(0);
+  const isBlockingScrollRef = useRef(false);
+  const originalScrollToRef = useRef<typeof window.scrollTo | null>(null);
 
-  const forceBodyCleanup = useCallback((targetScroll: number, reason: string) => {
-    if (isForceCleaningRef.current) return;
-
-    isForceCleaningRef.current = true;
-    console.log(`[LeadsPage] 🧹 FORÇANDO LIMPEZA DO BODY (${reason})`);
-
-    document.body.removeAttribute('style');
-    document.body.removeAttribute('data-scroll-locked');
-    document.body.classList.remove('dialog-open');
-    document.documentElement.style.overflow = '';
-    document.documentElement.style.height = '';
-
-    window.scrollTo(0, targetScroll);
-    console.log(`[LeadsPage] ✅ Body limpo, scroll restaurado para: ${targetScroll}`);
-
-    requestAnimationFrame(() => {
-      isForceCleaningRef.current = false;
-    });
-  }, []);
-
+  // Intercept window.scrollTo to block Radix Dialog's scroll reset
   useEffect(() => {
-    if (dialogOpen) {
-      const currentScroll = scrollPosition || window.scrollY;
-      document.body.style.top = `-${currentScroll}px`;
-      document.body.classList.add('dialog-open');
-      console.log(`[LeadsPage] Dialog aberto - scroll salvo: ${currentScroll}px`);
-      return;
-    }
+    const originalScrollTo = window.scrollTo.bind(window);
+    originalScrollToRef.current = originalScrollTo;
 
-    forceBodyCleanup(scrollPosition, 'dialog fechado');
-
-    const timeoutId = window.setTimeout(() => {
-      const hasBodyLocks = Boolean(
-        document.body.getAttribute('style') ||
-        document.body.hasAttribute('data-scroll-locked') ||
-        document.body.classList.contains('dialog-open')
-      );
-
-      if (hasBodyLocks) {
-        console.log('[LeadsPage] ⚠️ Body foi modificado novamente! Limpando...');
-        forceBodyCleanup(scrollPosition, 'verificação pós-fechamento');
+    window.scrollTo = function (...args: any[]) {
+      if (isBlockingScrollRef.current) {
+        // Block scrollTo(0,0) calls from Radix Dialog
+        const isScrollToZero =
+          (args.length === 2 && args[0] === 0 && args[1] === 0) ||
+          (args.length === 1 && typeof args[0] === 'object' && args[0]?.top === 0 && (args[0]?.left === 0 || args[0]?.left === undefined));
+        if (isScrollToZero) {
+          console.log('[LeadsPage] 🚫 Bloqueando scrollTo(0,0)');
+          return;
+        }
       }
-    }, 100);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [dialogOpen, scrollPosition, forceBodyCleanup]);
-
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      if (dialogOpen || isForceCleaningRef.current) return;
-
-      const shouldForceCleanup = mutations.some((mutation) => {
-        if (mutation.attributeName === 'style') {
-          return document.body.style.top !== '' || document.body.style.pointerEvents !== '';
-        }
-
-        if (mutation.attributeName === 'data-scroll-locked') {
-          return document.body.hasAttribute('data-scroll-locked');
-        }
-
-        if (mutation.attributeName === 'class') {
-          return document.body.classList.contains('dialog-open');
-        }
-
-        return false;
-      });
-
-      if (shouldForceCleanup) {
-        console.log('[LeadsPage] 🚨 Radix Dialog tentou resetar o scroll! Bloqueando...');
-        forceBodyCleanup(scrollPosition, 'mutation observer');
-      }
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['style', 'data-scroll-locked', 'class'],
-    });
+      originalScrollTo.apply(window, args as any);
+    } as typeof window.scrollTo;
 
     return () => {
-      observer.disconnect();
+      window.scrollTo = originalScrollTo;
     };
-  }, [dialogOpen, scrollPosition, forceBodyCleanup]);
+  }, []);
 
+  // Handle dialog open/close: body fixed technique + scroll intercept
+  useEffect(() => {
+    if (dialogOpen) {
+      const scrollY = scrollPosition || window.scrollY;
+      scrollPositionRef.current = scrollY;
+      document.body.style.top = `-${scrollY}px`;
+      document.body.classList.add('dialog-open');
+      console.log(`[LeadsPage] Dialog aberto - scroll salvo: ${scrollY}px`);
+    } else {
+      const savedScroll = scrollPositionRef.current;
+
+      // Start blocking scrollTo before cleaning body
+      isBlockingScrollRef.current = true;
+
+      // Clean body
+      document.body.classList.remove('dialog-open');
+      document.body.removeAttribute('style');
+      document.body.removeAttribute('data-scroll-locked');
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.height = '';
+
+      // Restore scroll using the original function
+      if (savedScroll > 0 && originalScrollToRef.current) {
+        console.log(`[LeadsPage] ✅ Restaurando scroll para: ${savedScroll}px`);
+        originalScrollToRef.current(0, savedScroll);
+      }
+
+      // Stop blocking after Radix has finished its cleanup
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          isBlockingScrollRef.current = false;
+        }, 150);
+      });
+    }
+  }, [dialogOpen, scrollPosition]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       document.body.removeAttribute('style');
