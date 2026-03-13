@@ -137,7 +137,7 @@ export default function LeadsPage() {
           {userCanCreate && (
             <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) { restorePosition(); setEditingLead(null); } setDialogOpen(o); }}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+                <Button size="sm" onClick={() => { savePosition(); setEditingLead(null); }}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
