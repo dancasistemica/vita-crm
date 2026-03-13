@@ -18,9 +18,16 @@ import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
 
 const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
 
+interface SalesStageView {
+  id: string;
+  name: string;
+  value: number;
+}
+
 interface ProductView {
   id: string;
   name: string;
+  stages: SalesStageView[];
 }
 
 interface NewSaleModalProps {
