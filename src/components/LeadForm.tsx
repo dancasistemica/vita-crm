@@ -96,12 +96,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         </div>
         <div>
           <Label>Responsável</Label>
-          <Select value={form.responsible || ''} onValueChange={v => set('responsible', v)}>
-            <SelectTrigger><SelectValue placeholder="Selecionar" /></SelectTrigger>
-            <SelectContent>
-              {activeUsers.map(u => <SelectItem key={u.id} value={u.name}>{u.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
+          <Input value={form.responsible || ''} onChange={e => set('responsible', e.target.value)} placeholder="Nome do responsável" />
         </div>
       </div>
       <div><Label>Interesse principal</Label><Input value={form.mainInterest || ''} onChange={e => set('mainInterest', e.target.value)} /></div>
