@@ -61,6 +61,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
   // Fetch products, payment methods, and sales from DB
   useEffect(() => {
     if (!dataAccess || !open) return;
+    console.log('[NewSaleModal] 🔄 Carregando dados (dataAccess disponível)');
     const load = async () => {
       try {
         const [prods, methods, salesData] = await Promise.allSettled([
@@ -68,15 +69,23 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
           dataAccess.getPaymentMethods(),
           dataAccess.getSales(),
         ]);
+        
+        console.log('[NewSaleModal] Products result:', prods.status, prods.status === 'fulfilled' ? (prods.value as any[])?.length : (prods as any).reason);
+        
         if (prods.status === 'fulfilled') {
-          setProducts((prods.value as any[]).map(p => ({
+          const mapped = (prods.value as any[]).map(p => ({
             id: p.id,
             name: p.name,
             stages: (p.product_sales_stages || []).map((s: any) => ({
               id: s.id, name: s.name, value: Number(s.value) || 0,
             })),
-          })));
+          }));
+          console.log('[NewSaleModal] ✅ Produtos mapeados:', mapped.length, mapped);
+          setProducts(mapped);
+        } else {
+          console.error('[NewSaleModal] ❌ Erro ao carregar produtos:', (prods as any).reason);
         }
+        
         if (methods.status === 'fulfilled') {
           const names = (methods.value as any[]).map(m => m.name);
           setPaymentMethods(names.length > 0 ? [...names, 'Outro'] : ['Dinheiro', 'Cartão Crédito', 'Cartão Débito', 'Pix', 'Transferência Bancária', 'Boleto', 'Outro']);
