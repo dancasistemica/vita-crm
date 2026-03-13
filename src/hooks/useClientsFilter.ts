@@ -156,7 +156,7 @@ export function useClientsFilter() {
   }, [interactions]);
 
   const saleStatuses = ['ativo', 'concluído', 'cancelado', 'pendência'];
-  const users: string[] = []; // TODO: fetch from org members if needed
+  const users: { id: string; name: string }[] = []; // TODO: fetch from org members if needed
 
   const filteredClients = useMemo(() => {
     let result = clients;

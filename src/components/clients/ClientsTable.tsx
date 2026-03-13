@@ -78,9 +78,9 @@ function relativeDate(dateStr: string) {
 }
 
 interface Props {
-  clients: Lead[];
-  getClientSales: (id: string) => Sale[];
-  getLastInteraction: (id: string) => Interaction | null;
+  clients: ClientLead[];
+  getClientSales: (id: string) => ClientSale[];
+  getLastInteraction: (id: string) => ClientInteraction | null;
   sortField: SortField;
   sortDir: SortDir;
   toggleSort: (field: SortField) => void;
@@ -95,6 +95,7 @@ interface Props {
   totalFiltered: number;
   loading?: boolean;
   onNewSale?: (leadId?: string) => void;
+  products?: SimpleProduct[];
 }
 
 function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
@@ -107,10 +108,9 @@ export default function ClientsTable({
   sortField, sortDir, toggleSort,
   selectedIds, toggleSelect, toggleSelectAll,
   page, setPage, perPage, setPerPage, totalPages, totalFiltered,
-  loading, onNewSale,
+  loading, onNewSale, products = [],
 }: Props) {
   const navigate = useNavigate();
-  const { products } = useCRMStore();
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || '—';
 
   if (loading) {
