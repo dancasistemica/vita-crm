@@ -63,7 +63,7 @@ export default function PipelinePage() {
                         </div>
                       )}
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-muted-foreground">Última: {getLastInteraction(lead.id)}</span>
+                        <span className="text-xs text-muted-foreground">Última: —</span>
                         <div className="flex items-center gap-1">
                           <AIPipelineTip lead={lead} stageName={stage.name} />
                           {lead.responsible && <span className="text-xs text-primary">{lead.responsible}</span>}
