@@ -44,27 +44,19 @@ export default function LeadsPage() {
   useEffect(() => {
     if (dialogOpen) {
       const scrollY = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
       document.body.style.top = `-${scrollY}px`;
-      console.log(`[LeadsPage] Body locked at ${scrollY}px`);
+      document.body.classList.add('dialog-open');
     } else {
       const top = document.body.style.top;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.classList.remove('dialog-open');
       document.body.style.top = '';
       if (top) {
         const scrollY = parseInt(top, 10) * -1;
         window.scrollTo(0, scrollY);
-        console.log(`[LeadsPage] Body unlocked, scroll restored to ${scrollY}px`);
       }
     }
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.classList.remove('dialog-open');
       document.body.style.top = '';
     };
   }, [dialogOpen]);
