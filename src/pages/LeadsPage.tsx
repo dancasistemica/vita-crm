@@ -27,9 +27,10 @@ export default function LeadsPage() {
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
   const [search, setSearch] = useState("");
-  const [filterOrigin, setFilterOrigin] = useState("all");
-  const [filterInterest, setFilterInterest] = useState("all");
-  const [filterStage, setFilterStage] = useState("all");
+  const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
+  const [filterInterests, setFilterInterests] = useState<string[]>([]);
+  const [filterStages, setFilterStages] = useState<string[]>([]);
+  const [filterTags, setFilterTags] = useState<string[]>([]);
   const [filterTag, setFilterTag] = useState("all");
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
