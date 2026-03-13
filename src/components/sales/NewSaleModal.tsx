@@ -69,7 +69,13 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
           dataAccess.getSales(),
         ]);
         if (prods.status === 'fulfilled') {
-          setProducts((prods.value as any[]).map(p => ({ id: p.id, name: p.name })));
+          setProducts((prods.value as any[]).map(p => ({
+            id: p.id,
+            name: p.name,
+            stages: (p.product_sales_stages || []).map((s: any) => ({
+              id: s.id, name: s.name, value: Number(s.value) || 0,
+            })),
+          })));
         }
         if (methods.status === 'fulfilled') {
           const names = (methods.value as any[]).map(m => m.name);
