@@ -1,31 +1,32 @@
 import { useState } from "react";
-import { useCRMStore } from "@/store/crmStore";
+import { useLeadsData } from "@/hooks/useLeadsData";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
+import { toast } from "sonner";
 
-const interestColors = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' } as const;
+const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 
 export default function PipelinePage() {
-  const { leads, pipelineStages, interactions, moveLead } = useCRMStore();
+  const { leads, pipelineStages, updateLead, loading } = useLeadsData();
   const [dragging, setDragging] = useState<string | null>(null);
-
-  const getLastInteraction = (leadId: string) => {
-    const li = interactions.filter(i => i.leadId === leadId).sort((a, b) => b.date.localeCompare(a.date));
-    return li[0]?.date || '—';
-  };
 
   const handleDragStart = (e: React.DragEvent, leadId: string) => {
     setDragging(leadId);
     e.dataTransfer.setData('text/plain', leadId);
   };
 
-  const handleDrop = (e: React.DragEvent, stageId: string) => {
+  const handleDrop = async (e: React.DragEvent, stageId: string) => {
     e.preventDefault();
     const leadId = e.dataTransfer.getData('text/plain');
-    if (leadId) moveLead(leadId, stageId);
     setDragging(null);
+    if (!leadId) return;
+    try {
+      await updateLead(leadId, { pipelineStage: stageId });
+    } catch (err) {
+      toast.error('Erro ao mover lead no pipeline');
+    }
   };
 
   return (
