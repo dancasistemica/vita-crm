@@ -122,9 +122,18 @@ export default function LeadsPage() {
 
     return () => {
       observer.disconnect();
-      forceBodyCleanup(scrollPosition, 'desmontagem');
     };
   }, [dialogOpen, scrollPosition, forceBodyCleanup]);
+
+  useEffect(() => {
+    return () => {
+      document.body.removeAttribute('style');
+      document.body.removeAttribute('data-scroll-locked');
+      document.body.classList.remove('dialog-open');
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.height = '';
+    };
+  }, []);
 
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
 
