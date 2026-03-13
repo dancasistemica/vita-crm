@@ -303,7 +303,7 @@ export default function LeadsPage() {
                   </a>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { savePosition(); setEditingLead(lead); setDialogOpen(true); }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
