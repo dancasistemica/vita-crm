@@ -4,11 +4,21 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pi
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOrganization } from "@/contexts/OrganizationContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const { organization, organizationId } = useOrganization();
   const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
+
+  // DEBUG LOGS
+  console.log('[DashboardPage] User:', user?.email);
+  console.log('[DashboardPage] Organization:', organizationId, organization?.name);
+  console.log('[DashboardPage] Total Leads:', totalLeads);
+  console.log('[DashboardPage] Leads by Stage:', leadsByStage);
 
   const metrics = [
     { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
