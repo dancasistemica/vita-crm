@@ -69,6 +69,36 @@ export default function LeadsPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
+  const closeDialog = () => {
+    console.log('[LeadsPage] Dialog fechando, restaurando scroll...');
+    restorePosition();
+    setEditingLead(null);
+    setDialogOpen(false);
+  };
+
+  const handleDialogOpenChange = (open: boolean) => {
+    console.log(`[LeadsPage] Dialog openChange: ${open}`);
+    if (!open) {
+      closeDialog();
+      return;
+    }
+    setDialogOpen(true);
+  };
+
+  const handleNewLead = () => {
+    console.log('[LeadsPage] Novo lead clicado');
+    savePosition();
+    setEditingLead(null);
+    setDialogOpen(true);
+  };
+
+  const handleEditLead = (lead: LeadView) => {
+    console.log(`[LeadsPage] Editar lead: ${lead.id}`);
+    savePosition();
+    setEditingLead(lead);
+    setDialogOpen(true);
+  };
+
   const handleSave = async (data: Partial<LeadView>) => {
     try {
       if (editingLead) {
@@ -78,8 +108,7 @@ export default function LeadsPage() {
         await addLead(data);
         toast.success("Lead adicionado!");
       }
-      setDialogOpen(false);
-      setEditingLead(null);
+      closeDialog();
     } catch (err) {
       toast.error("Erro ao salvar lead");
     }
