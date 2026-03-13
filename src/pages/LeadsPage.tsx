@@ -8,13 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
+import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2, FilterX } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
+import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
 
