@@ -97,7 +97,6 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       const opts = getNewOptions(results, dbOrigins, dbInterestLevels, dbTags);
 
       // Re-run duplicate detection with full lead objects
-      const { detectDuplicates } = require('@/services/duplicateDetectionService');
       const { duplicates } = detectDuplicates(results, mappedLeads);
 
       update({ validationResults: results, newOptions: opts, duplicates });
