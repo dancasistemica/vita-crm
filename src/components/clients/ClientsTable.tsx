@@ -8,11 +8,32 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Lead, Sale } from '@/types/crm';
-import { Interaction } from '@/types/crm';
-import { Product } from '@/types/crm';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
-import { useCRMStore } from '@/store/crmStore';
+
+interface ClientLead {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface ClientSale {
+  id: string;
+  productId: string;
+  value: number;
+  date: string;
+  status: string;
+}
+
+interface ClientInteraction {
+  id: string;
+  date: string;
+}
+
+interface SimpleProduct {
+  id: string;
+  name: string;
+}
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success border-success/30',
@@ -57,9 +78,9 @@ function relativeDate(dateStr: string) {
 }
 
 interface Props {
-  clients: Lead[];
-  getClientSales: (id: string) => Sale[];
-  getLastInteraction: (id: string) => Interaction | null;
+  clients: ClientLead[];
+  getClientSales: (id: string) => ClientSale[];
+  getLastInteraction: (id: string) => ClientInteraction | null;
   sortField: SortField;
   sortDir: SortDir;
   toggleSort: (field: SortField) => void;
@@ -74,6 +95,7 @@ interface Props {
   totalFiltered: number;
   loading?: boolean;
   onNewSale?: (leadId?: string) => void;
+  products?: SimpleProduct[];
 }
 
 function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
@@ -86,10 +108,9 @@ export default function ClientsTable({
   sortField, sortDir, toggleSort,
   selectedIds, toggleSelect, toggleSelectAll,
   page, setPage, perPage, setPerPage, totalPages, totalFiltered,
-  loading, onNewSale,
+  loading, onNewSale, products = [],
 }: Props) {
   const navigate = useNavigate();
-  const { products } = useCRMStore();
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || '—';
 
   if (loading) {
