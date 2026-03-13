@@ -20,7 +20,7 @@ interface Props {
   activeFilterCount: number;
   products: SimpleProduct[];
   origins: string[];
-  users: string[];
+  users: { id: string; name: string }[];
   saleStatuses: string[];
 }
 
