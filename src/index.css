@@ -128,3 +128,14 @@
     @apply bg-muted-foreground/30;
   }
 }
+
+/* Prevent Radix Dialog from resetting scroll */
+body.dialog-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+html, body {
+  scroll-behavior: auto !important;
+}
