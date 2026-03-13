@@ -34,9 +34,10 @@ interface NewSaleModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   preSelectedLeadId?: string;
+  onSaleCreated?: () => void;
 }
 
-export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: NewSaleModalProps) {
+export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, onSaleCreated }: NewSaleModalProps) {
   const dataAccess = useDataAccess();
   const { leads, pipelineStages, updateLead, refetch: refetchLeads } = useLeadsData();
 
@@ -190,6 +191,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
 
       toast.success('Venda registrada com sucesso!');
       await refetchLeads();
+      onSaleCreated?.();
       onOpenChange(false);
     } catch (error) {
       console.error('[NewSaleModal] ❌ Erro ao criar venda:', error);

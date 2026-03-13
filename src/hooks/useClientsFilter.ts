@@ -76,42 +76,45 @@ export function useClientsFilter() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // Fetch sales, interactions, products from Supabase
-  useEffect(() => {
+  const fetchSupportData = useCallback(async () => {
     if (!dataAccess) return;
-    Promise.allSettled([
+    const [salesRes, intRes, prodRes] = await Promise.allSettled([
       dataAccess.getSales(),
       dataAccess.getInteractions(),
       dataAccess.getProducts(),
-    ]).then(([salesRes, intRes, prodRes]) => {
-      if (salesRes.status === 'fulfilled') {
-        setSales((salesRes.value as any[]).map(s => ({
-          id: s.id,
-          leadId: s.lead_id,
-          productId: s.product_id || '',
-          value: Number(s.value) || 0,
-          date: s.sale_date || '',
-          paymentMethod: s.payment_method || '',
-          status: s.status || 'ativo',
-        })));
-      }
-      if (intRes.status === 'fulfilled') {
-        setInteractions((intRes.value as any[]).map(i => ({
-          id: i.id,
-          leadId: i.lead_id,
-          date: i.interaction_date || '',
-          type: i.type,
-          note: i.note || '',
-        })));
-      }
-      if (prodRes.status === 'fulfilled') {
-        setProducts((prodRes.value as any[]).map(p => ({
-          id: p.id,
-          name: p.name,
-          type: p.type || '',
-        })));
-      }
-    });
+    ]);
+    if (salesRes.status === 'fulfilled') {
+      setSales((salesRes.value as any[]).map(s => ({
+        id: s.id,
+        leadId: s.lead_id,
+        productId: s.product_id || '',
+        value: Number(s.value) || 0,
+        date: s.sale_date || '',
+        paymentMethod: s.payment_method || '',
+        status: s.status || 'ativo',
+      })));
+    }
+    if (intRes.status === 'fulfilled') {
+      setInteractions((intRes.value as any[]).map(i => ({
+        id: i.id,
+        leadId: i.lead_id,
+        date: i.interaction_date || '',
+        type: i.type,
+        note: i.note || '',
+      })));
+    }
+    if (prodRes.status === 'fulfilled') {
+      setProducts((prodRes.value as any[]).map(p => ({
+        id: p.id,
+        name: p.name,
+        type: p.type || '',
+      })));
+    }
   }, [dataAccess]);
+
+  useEffect(() => {
+    fetchSupportData();
+  }, [fetchSupportData]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
@@ -370,5 +373,6 @@ export function useClientsFilter() {
     getClientSales, getLastInteraction,
     products, origins: originsList, users, saleStatuses,
     loading,
+    refetchData: fetchSupportData,
   };
 }
