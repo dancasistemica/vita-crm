@@ -47,17 +47,32 @@ export default function LeadsPage() {
       document.body.style.top = `-${scrollY}px`;
       document.body.classList.add('dialog-open');
     } else {
+      // Capture saved position before cleaning
       const top = document.body.style.top;
+      const savedScroll = top ? parseInt(top, 10) * -1 : 0;
+
+      // Remove ALL styles Radix Dialog may have set
       document.body.classList.remove('dialog-open');
       document.body.style.top = '';
-      if (top) {
-        const scrollY = parseInt(top, 10) * -1;
-        window.scrollTo(0, scrollY);
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      document.body.style.pointerEvents = '';
+      document.body.removeAttribute('data-scroll-locked');
+
+      // Restore scroll position
+      if (savedScroll > 0) {
+        window.scrollTo(0, savedScroll);
       }
     }
     return () => {
       document.body.classList.remove('dialog-open');
       document.body.style.top = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      document.body.style.pointerEvents = '';
+      document.body.removeAttribute('data-scroll-locked');
     };
   }, [dialogOpen]);
 
