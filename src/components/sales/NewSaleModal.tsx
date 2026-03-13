@@ -34,6 +34,7 @@ interface NewSaleModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   preSelectedLeadId?: string;
+  onSaleCreated?: () => void;
 }
 
 export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: NewSaleModalProps) {
