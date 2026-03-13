@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
