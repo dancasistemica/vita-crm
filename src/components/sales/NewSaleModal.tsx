@@ -254,7 +254,11 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
             {/* Product */}
             <div className="space-y-2 sm:col-span-2">
               <Label>Produto/Serviço *</Label>
-              <Select value={productId} onValueChange={setProductId}>
+              <Select value={productId} onValueChange={(pid) => {
+                setProductId(pid);
+                setSelectedStageId('');
+                // Don't auto-fill value here, let stage selection do it
+              }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione um produto" />
                 </SelectTrigger>
@@ -265,6 +269,33 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Sales Stage (if product has stages) */}
+            {productId && (products.find(p => p.id === productId)?.stages?.length ?? 0) > 0 && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label>Fase / Lote</Label>
+                <Select value={selectedStageId} onValueChange={(stageId) => {
+                  setSelectedStageId(stageId);
+                  const product = products.find(p => p.id === productId);
+                  const stage = product?.stages.find(s => s.id === stageId);
+                  if (stage && stage.value > 0) {
+                    const formatted = stage.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    setValue(formatted);
+                  }
+                }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma fase..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.find(p => p.id === productId)?.stages.map(s => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name} — R$ {s.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             {/* Value */}
             <div className="space-y-2">
