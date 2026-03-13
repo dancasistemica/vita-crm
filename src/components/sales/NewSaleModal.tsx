@@ -37,7 +37,7 @@ interface NewSaleModalProps {
   onSaleCreated?: () => void;
 }
 
-export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: NewSaleModalProps) {
+export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, onSaleCreated }: NewSaleModalProps) {
   const dataAccess = useDataAccess();
   const { leads, pipelineStages, updateLead, refetch: refetchLeads } = useLeadsData();
 
