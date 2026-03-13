@@ -202,6 +202,7 @@ export default function LeadsPage() {
 
   const handleSave = async (data: Partial<LeadView>) => {
     try {
+      console.log('[LeadsPage] 💾 Salvando lead...');
       if (editingLead) {
         await updateLead(editingLead.id, data);
         toast.success("Lead atualizado!");
@@ -211,6 +212,7 @@ export default function LeadsPage() {
       }
       closeDialog();
     } catch (err) {
+      console.error('[LeadsPage] ❌ Erro ao salvar lead:', err);
       toast.error("Erro ao salvar lead");
     }
   };
