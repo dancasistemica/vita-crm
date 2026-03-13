@@ -2,12 +2,17 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCRMStore } from '@/store/crmStore';
 
 type DeletableType = 'leads' | 'clients';
+
+interface ItemSummary {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+}
 
 interface Props {
   open: boolean;
@@ -15,23 +20,26 @@ interface Props {
   selectedIds: string[];
   type: DeletableType;
   onSuccess: () => void;
+  items?: ItemSummary[];
+  onDelete?: (id: string) => Promise<void>;
 }
 
-export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type, onSuccess }: Props) {
+export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type, onSuccess, items = [], onDelete }: Props) {
   const [confirmed, setConfirmed] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const { leads, deleteLead } = useCRMStore();
 
-  const selectedItems = leads.filter(l => selectedIds.includes(l.id));
+  const selectedItems = items.filter(l => selectedIds.includes(l.id));
   const label = type === 'leads' ? 'lead' : 'cliente';
   const labelPlural = type === 'leads' ? 'leads' : 'clientes';
 
   const handleDelete = async () => {
-    if (!confirmed) return;
+    if (!confirmed || !onDelete) return;
     setDeleting(true);
     try {
       console.log(`[BulkDeleteModal] Deletando ${selectedIds.length} ${labelPlural}`);
-      selectedIds.forEach(id => deleteLead(id));
+      for (const id of selectedIds) {
+        await onDelete(id);
+      }
       toast.success(`${selectedIds.length} ${selectedIds.length > 1 ? labelPlural : label} deletado(s) com sucesso`);
       setConfirmed(false);
       onOpenChange(false);

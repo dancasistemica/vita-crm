@@ -156,6 +156,7 @@ export default function ClientesPage() {
         onSuccess={() => {
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
+        items={hook.filteredClients.map((c: any) => ({ id: c.id, name: c.name, email: c.email, phone: c.phone }))}
       />
       <BulkEditModal
         open={bulkEditOpen}
