@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,6 +40,35 @@ export default function LeadsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
+  // Lock body scroll when dialog opens, restore position when it closes
+  useEffect(() => {
+    if (dialogOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY}px`;
+      console.log(`[LeadsPage] Body locked at ${scrollY}px`);
+    } else {
+      const top = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (top) {
+        const scrollY = parseInt(top, 10) * -1;
+        window.scrollTo(0, scrollY);
+        console.log(`[LeadsPage] Body unlocked, scroll restored to ${scrollY}px`);
+      }
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [dialogOpen]);
+
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
 
   const clearAllFilters = () => {
@@ -70,14 +99,11 @@ export default function LeadsPage() {
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   const closeDialog = () => {
-    console.log('[LeadsPage] Dialog fechando, restaurando scroll...');
-    restorePosition();
     setEditingLead(null);
     setDialogOpen(false);
   };
 
   const handleDialogOpenChange = (open: boolean) => {
-    console.log(`[LeadsPage] Dialog openChange: ${open}`);
     if (!open) {
       closeDialog();
       return;
