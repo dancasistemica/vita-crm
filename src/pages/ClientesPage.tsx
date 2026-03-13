@@ -171,6 +171,7 @@ export default function ClientesPage() {
         open={saleModalOpen}
         onOpenChange={setSaleModalOpen}
         preSelectedLeadId={saleLeadId}
+        onSaleCreated={() => hook.refetchData()}
       />
     </div>
   );

@@ -191,6 +191,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
       toast.success('Venda registrada com sucesso!');
       await refetchLeads();
+      onSaleCreated?.();
       onOpenChange(false);
     } catch (error) {
       console.error('[NewSaleModal] ❌ Erro ao criar venda:', error);

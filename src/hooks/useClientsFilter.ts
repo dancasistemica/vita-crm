@@ -373,5 +373,6 @@ export function useClientsFilter() {
     getClientSales, getLastInteraction,
     products, origins: originsList, users, saleStatuses,
     loading,
+    refetchData: fetchSupportData,
   };
 }
