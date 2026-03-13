@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,47 +34,97 @@ export default function LeadsPage() {
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
+  const isForceCleaningRef = useRef(false);
 
-  // Lock body scroll when dialog opens, restore position when it closes
+  const forceBodyCleanup = useCallback((targetScroll: number, reason: string) => {
+    if (isForceCleaningRef.current) return;
+
+    isForceCleaningRef.current = true;
+    console.log(`[LeadsPage] 🧹 FORÇANDO LIMPEZA DO BODY (${reason})`);
+
+    document.body.removeAttribute('style');
+    document.body.removeAttribute('data-scroll-locked');
+    document.body.classList.remove('dialog-open');
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.height = '';
+
+    window.scrollTo(0, targetScroll);
+    console.log(`[LeadsPage] ✅ Body limpo, scroll restaurado para: ${targetScroll}`);
+
+    requestAnimationFrame(() => {
+      isForceCleaningRef.current = false;
+    });
+  }, []);
+
   useEffect(() => {
     if (dialogOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.top = `-${scrollY}px`;
+      const currentScroll = scrollPosition || window.scrollY;
+      document.body.style.top = `-${currentScroll}px`;
       document.body.classList.add('dialog-open');
-    } else {
-      // Capture saved position before cleaning
-      const top = document.body.style.top;
-      const savedScroll = top ? parseInt(top, 10) * -1 : 0;
-
-      // Remove ALL styles Radix Dialog may have set
-      document.body.classList.remove('dialog-open');
-      document.body.style.top = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      document.body.style.pointerEvents = '';
-      document.body.removeAttribute('data-scroll-locked');
-
-      // Restore scroll position
-      if (savedScroll > 0) {
-        window.scrollTo(0, savedScroll);
-      }
+      console.log(`[LeadsPage] Dialog aberto - scroll salvo: ${currentScroll}px`);
+      return;
     }
+
+    forceBodyCleanup(scrollPosition, 'dialog fechado');
+
+    const timeoutId = window.setTimeout(() => {
+      const hasBodyLocks = Boolean(
+        document.body.getAttribute('style') ||
+        document.body.hasAttribute('data-scroll-locked') ||
+        document.body.classList.contains('dialog-open')
+      );
+
+      if (hasBodyLocks) {
+        console.log('[LeadsPage] ⚠️ Body foi modificado novamente! Limpando...');
+        forceBodyCleanup(scrollPosition, 'verificação pós-fechamento');
+      }
+    }, 100);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [dialogOpen, scrollPosition, forceBodyCleanup]);
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      if (dialogOpen || isForceCleaningRef.current) return;
+
+      const shouldForceCleanup = mutations.some((mutation) => {
+        if (mutation.attributeName === 'style') {
+          return document.body.style.top !== '' || document.body.style.pointerEvents !== '';
+        }
+
+        if (mutation.attributeName === 'data-scroll-locked') {
+          return document.body.hasAttribute('data-scroll-locked');
+        }
+
+        if (mutation.attributeName === 'class') {
+          return document.body.classList.contains('dialog-open');
+        }
+
+        return false;
+      });
+
+      if (shouldForceCleanup) {
+        console.log('[LeadsPage] 🚨 Radix Dialog tentou resetar o scroll! Bloqueando...');
+        forceBodyCleanup(scrollPosition, 'mutation observer');
+      }
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['style', 'data-scroll-locked', 'class'],
+    });
+
     return () => {
-      document.body.classList.remove('dialog-open');
-      document.body.style.top = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      document.body.style.pointerEvents = '';
-      document.body.removeAttribute('data-scroll-locked');
+      observer.disconnect();
+      forceBodyCleanup(scrollPosition, 'desmontagem');
     };
-  }, [dialogOpen]);
+  }, [dialogOpen, scrollPosition, forceBodyCleanup]);
 
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
 
@@ -106,24 +156,37 @@ export default function LeadsPage() {
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   const closeDialog = () => {
+    console.log('[LeadsPage] Dialog fechando');
     setEditingLead(null);
     setDialogOpen(false);
   };
 
   const handleDialogOpenChange = (open: boolean) => {
+    console.log(`[LeadsPage] Dialog onOpenChange: ${open}`);
+
     if (!open) {
       closeDialog();
       return;
     }
+
+    const currentScroll = window.scrollY;
+    setScrollPosition(currentScroll);
+    console.log(`[LeadsPage] Dialog abrindo - scroll salvo: ${currentScroll}px`);
     setDialogOpen(true);
   };
 
   const handleNewLead = () => {
+    const currentScroll = window.scrollY;
+    console.log(`[LeadsPage] Novo lead - scroll salvo: ${currentScroll}px`);
+    setScrollPosition(currentScroll);
     setEditingLead(null);
     setDialogOpen(true);
   };
 
   const handleEditLead = (lead: LeadView) => {
+    const currentScroll = window.scrollY;
+    console.log(`[LeadsPage] ✏️ Editar lead: ${lead.id} | scroll salvo: ${currentScroll}px`);
+    setScrollPosition(currentScroll);
     setEditingLead(lead);
     setDialogOpen(true);
   };
