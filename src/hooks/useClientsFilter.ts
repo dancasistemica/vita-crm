@@ -143,10 +143,28 @@ export function useClientsFilter() {
 
   // Clients = leads at pipeline stage named "Cliente"
   const clients = useMemo(() => {
-    return leads.filter(l => {
+    console.log('[useClientsFilter] Filtrando clientes...');
+    console.log('[useClientsFilter] Total de leads:', leads.length);
+    console.log('[useClientsFilter] Total de stages:', pipelineStages.length);
+
+    const filtered = leads.filter(l => {
       const stage = pipelineStages.find(s => s.id === l.pipelineStage);
-      return stage?.name === 'Cliente';
+      const isClient = stage?.name === 'Cliente';
+
+      if (isClient) {
+        console.log('[useClientsFilter] Lead é cliente:', {
+          id: l.id,
+          name: l.name,
+          pipelineStage: l.pipelineStage,
+          stageName: stage?.name,
+        });
+      }
+
+      return isClient;
     });
+
+    console.log('[useClientsFilter] Total de clientes filtrados:', filtered.length);
+    return filtered;
   }, [leads, pipelineStages]);
 
   const getClientSales = useCallback((leadId: string) => sales.filter(s => s.leadId === leadId), [sales]);

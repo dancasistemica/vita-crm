@@ -158,8 +158,14 @@ export function useLeadsData() {
   }, [dataAccess]);
 
   const updateLead = useCallback(async (leadId: string, updates: Partial<LeadView>) => {
-    if (!dataAccess) return;
+    if (!dataAccess) {
+      console.warn('[useLeadsData] updateLead ignorado: dataAccess indisponível', { leadId, updates });
+      return;
+    }
+
     try {
+      console.log('[useLeadsData] updateLead chamado:', { leadId, updates });
+
       const dbUpdates: Record<string, unknown> = {};
       if (updates.name !== undefined) dbUpdates.name = updates.name;
       if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
@@ -180,10 +186,20 @@ export function useLeadsData() {
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
 
+      console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
       await dataAccess.updateLead(leadId, dbUpdates);
-      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, ...updates } : l));
+      console.log('[useLeadsData] Lead atualizado no banco:', { leadId });
+
+      setLeads(prev => {
+        const next = prev.map(l => (l.id === leadId ? { ...l, ...updates } : l));
+        console.log('[useLeadsData] Estado local atualizado:', {
+          leadId,
+          lead: next.find(l => l.id === leadId),
+        });
+        return next;
+      });
     } catch (err) {
-      console.error('[useLeadsData] Erro ao atualizar:', err);
+      console.error('[useLeadsData] Erro ao atualizar lead:', { leadId, updates, err });
       throw err;
     }
   }, [dataAccess]);
