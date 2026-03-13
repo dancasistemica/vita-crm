@@ -62,7 +62,7 @@ export type SortField = 'name' | 'value' | 'date' | 'status' | 'lastInteraction'
 export type SortDir = 'asc' | 'desc';
 
 export function useClientsFilter() {
-  const { leads, pipelineStages, origins: originsList, loading } = useLeadsData();
+  const { leads, pipelineStages, origins: originsList, loading, refetch: refetchLeads } = useLeadsData();
   const dataAccess = useDataAccess();
 
   const [sales, setSales] = useState<SaleView[]>([]);
