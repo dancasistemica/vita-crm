@@ -47,6 +47,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
   const [products, setProducts] = useState<ProductView[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [sales, setSales] = useState<{ lead_id: string }[]>([]);
+  const [selectedStageId, setSelectedStageId] = useState('');
 
   // Form state
   const [productId, setProductId] = useState('');
