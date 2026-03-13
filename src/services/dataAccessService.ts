@@ -255,6 +255,32 @@ export class DataAccessService {
     return true;
   }
 
+  // ── PRODUCT SALES STAGES ──────────────────────────────
+  async upsertProductStages(productId: string, stages: { id?: string; name: string; value: number; link?: string }[]) {
+    // Delete existing stages for this product
+    const { error: deleteError } = await supabase
+      .from('product_sales_stages')
+      .delete()
+      .eq('product_id', productId);
+    if (deleteError) { console.error('[DataAccessService] deleteProductStages error:', deleteError); throw deleteError; }
+
+    if (stages.length === 0) return [];
+
+    const rows = stages.map(s => ({
+      product_id: productId,
+      name: s.name,
+      value: s.value,
+      link: s.link || '',
+    }));
+
+    const { data, error } = await supabase
+      .from('product_sales_stages')
+      .insert(rows as any)
+      .select();
+    if (error) { console.error('[DataAccessService] insertProductStages error:', error); throw error; }
+    return data || [];
+  }
+
   // ── TAGS ───────────────────────────────────────────────
   async getTags() {
     const { data, error } = await supabase
