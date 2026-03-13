@@ -1,6 +1,30 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useCRMStore } from '@/store/crmStore';
-import { Lead, Sale } from '@/types/crm';
+import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
+import { useDataAccess } from '@/hooks/useDataAccess';
+
+interface SaleView {
+  id: string;
+  leadId: string;
+  productId: string;
+  value: number;
+  date: string;
+  paymentMethod: string;
+  status: string;
+}
+
+interface InteractionView {
+  id: string;
+  leadId: string;
+  date: string;
+  type: string;
+  note: string;
+}
+
+interface ProductView {
+  id: string;
+  name: string;
+  type: string;
+}
 
 export interface ClientsFilterState {
   search: string;
@@ -38,13 +62,56 @@ export type SortField = 'name' | 'value' | 'date' | 'status' | 'lastInteraction'
 export type SortDir = 'asc' | 'desc';
 
 export function useClientsFilter() {
-  const { leads, sales, products, interactions, origins, users, saleStatuses } = useCRMStore();
+  const { leads, pipelineStages, origins: originsList, loading } = useLeadsData();
+  const dataAccess = useDataAccess();
+
+  const [sales, setSales] = useState<SaleView[]>([]);
+  const [interactions, setInteractions] = useState<InteractionView[]>([]);
+  const [products, setProducts] = useState<ProductView[]>([]);
   const [filters, setFilters] = useState<ClientsFilterState>(loadFilters);
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  // Fetch sales, interactions, products from Supabase
+  useEffect(() => {
+    if (!dataAccess) return;
+    Promise.allSettled([
+      dataAccess.getSales(),
+      dataAccess.getInteractions(),
+      dataAccess.getProducts(),
+    ]).then(([salesRes, intRes, prodRes]) => {
+      if (salesRes.status === 'fulfilled') {
+        setSales((salesRes.value as any[]).map(s => ({
+          id: s.id,
+          leadId: s.lead_id,
+          productId: s.product_id || '',
+          value: Number(s.value) || 0,
+          date: s.sale_date || '',
+          paymentMethod: s.payment_method || '',
+          status: s.status || 'ativo',
+        })));
+      }
+      if (intRes.status === 'fulfilled') {
+        setInteractions((intRes.value as any[]).map(i => ({
+          id: i.id,
+          leadId: i.lead_id,
+          date: i.interaction_date || '',
+          type: i.type,
+          note: i.note || '',
+        })));
+      }
+      if (prodRes.status === 'fulfilled') {
+        setProducts((prodRes.value as any[]).map(p => ({
+          id: p.id,
+          name: p.name,
+          type: p.type || '',
+        })));
+      }
+    });
+  }, [dataAccess]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
@@ -74,8 +141,13 @@ export function useClientsFilter() {
     return c;
   }, [filters]);
 
-  // Clients = leads at pipeline stage 7 (Cliente)
-  const clients = useMemo(() => leads.filter(l => l.pipelineStage === '7'), [leads]);
+  // Clients = leads at pipeline stage named "Cliente"
+  const clients = useMemo(() => {
+    return leads.filter(l => {
+      const stage = pipelineStages.find(s => s.id === l.pipelineStage);
+      return stage?.name === 'Cliente';
+    });
+  }, [leads, pipelineStages]);
 
   const getClientSales = useCallback((leadId: string) => sales.filter(s => s.leadId === leadId), [sales]);
   const getLastInteraction = useCallback((leadId: string) => {
@@ -83,16 +155,17 @@ export function useClientsFilter() {
     return li[0] || null;
   }, [interactions]);
 
+  const saleStatuses = ['ativo', 'concluído', 'cancelado', 'pendência'];
+  const users: string[] = []; // TODO: fetch from org members if needed
+
   const filteredClients = useMemo(() => {
     let result = clients;
 
-    // Search
     if (filters.search) {
       const q = filters.search.toLowerCase();
       result = result.filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q));
     }
 
-    // Products
     if (filters.products.ids.length) {
       result = result.filter(c => {
         const clientProductIds = getClientSales(c.id).map(s => s.productId);
@@ -103,7 +176,6 @@ export function useClientsFilter() {
       });
     }
 
-    // Value range
     if (filters.valueRange.min > 0 || filters.valueRange.max < 10000) {
       result = result.filter(c => {
         const clientSales = getClientSales(c.id);
@@ -111,7 +183,6 @@ export function useClientsFilter() {
       });
     }
 
-    // Date range
     if (filters.dateRange.from || filters.dateRange.to) {
       result = result.filter(c => {
         const clientSales = getClientSales(c.id);
@@ -123,18 +194,16 @@ export function useClientsFilter() {
       });
     }
 
-    // Sale statuses
     if (filters.saleStatuses.values.length) {
       result = result.filter(c => {
         const statuses = getClientSales(c.id).map(s => s.status);
         if (filters.saleStatuses.logic === 'AND') {
-          return filters.saleStatuses.values.every(st => statuses.includes(st as Sale['status']));
+          return filters.saleStatuses.values.every(st => statuses.includes(st));
         }
-        return filters.saleStatuses.values.some(st => statuses.includes(st as Sale['status']));
+        return filters.saleStatuses.values.some(st => statuses.includes(st));
       });
     }
 
-    // Origins
     if (filters.origins.values.length) {
       result = result.filter(c => {
         if (filters.origins.logic === 'AND') {
@@ -144,7 +213,6 @@ export function useClientsFilter() {
       });
     }
 
-    // Responsibles
     if (filters.responsibles.ids.length) {
       result = result.filter(c => {
         if (filters.responsibles.logic === 'AND') {
@@ -154,7 +222,6 @@ export function useClientsFilter() {
       });
     }
 
-    // Last interaction
     if (filters.lastInteraction.from || filters.lastInteraction.to || filters.lastInteraction.preset) {
       result = result.filter(c => {
         const li = getLastInteraction(c.id);
@@ -180,7 +247,6 @@ export function useClientsFilter() {
       });
     }
 
-    // Sorting
     result = [...result].sort((a, b) => {
       let cmp = 0;
       switch (sortField) {
@@ -284,6 +350,7 @@ export function useClientsFilter() {
     selectedIds, toggleSelect, toggleSelectAll,
     getActiveFilterChips, removeFilterChip,
     getClientSales, getLastInteraction,
-    products, origins, users, saleStatuses,
+    products, origins: originsList, users, saleStatuses,
+    loading,
   };
 }

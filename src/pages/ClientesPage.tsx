@@ -7,7 +7,6 @@ import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import { FilterChip } from '@/components/clients/FilterChip';
 import { useClientsFilter } from '@/hooks/useClientsFilter';
-import { useCRMStore } from '@/store/crmStore';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -16,7 +15,6 @@ import NewSaleModal from '@/components/sales/NewSaleModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
-  const store = useCRMStore();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
@@ -29,13 +27,7 @@ export default function ClientesPage() {
     setSaleModalOpen(true);
   };
 
-  // All clients (leads in "Cliente" stage)
-  const allClients = store.leads.filter(l => {
-    const stage = store.pipelineStages.find(s => s.id === l.pipelineStage);
-    return stage?.name === 'Cliente';
-  });
-
-  const totalClientsCount = allClients.length;
+  const totalClientsCount = hook.totalFiltered;
 
   const filterPanel = (
     <ClientsAdvancedFilter
@@ -143,6 +135,8 @@ export default function ClientesPage() {
             totalPages={hook.totalPages}
             totalFiltered={hook.totalFiltered}
             onNewSale={handleNewSale}
+            loading={hook.loading}
+            products={hook.products}
           />
         </div>
       </div>
@@ -151,7 +145,7 @@ export default function ClientesPage() {
         open={exportOpen}
         onOpenChange={setExportOpen}
         type="clients"
-        allData={allClients}
+        allData={hook.filteredClients}
         filteredData={hook.filteredClients}
       />
       <BulkDeleteModal
