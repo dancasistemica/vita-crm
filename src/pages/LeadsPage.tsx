@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,7 +17,7 @@ import RecordCounter from "@/components/common/RecordCounter";
 import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
+
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
@@ -26,7 +26,7 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
-  const { savePosition, restorePosition } = useScrollPosition('leads-page');
+  
   const [search, setSearch] = useState("");
   const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
@@ -44,27 +44,19 @@ export default function LeadsPage() {
   useEffect(() => {
     if (dialogOpen) {
       const scrollY = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
       document.body.style.top = `-${scrollY}px`;
-      console.log(`[LeadsPage] Body locked at ${scrollY}px`);
+      document.body.classList.add('dialog-open');
     } else {
       const top = document.body.style.top;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.classList.remove('dialog-open');
       document.body.style.top = '';
       if (top) {
         const scrollY = parseInt(top, 10) * -1;
         window.scrollTo(0, scrollY);
-        console.log(`[LeadsPage] Body unlocked, scroll restored to ${scrollY}px`);
       }
     }
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.classList.remove('dialog-open');
       document.body.style.top = '';
     };
   }, [dialogOpen]);
@@ -112,15 +104,11 @@ export default function LeadsPage() {
   };
 
   const handleNewLead = () => {
-    console.log('[LeadsPage] Novo lead clicado');
-    savePosition();
     setEditingLead(null);
     setDialogOpen(true);
   };
 
   const handleEditLead = (lead: LeadView) => {
-    console.log(`[LeadsPage] Editar lead: ${lead.id}`);
-    savePosition();
     setEditingLead(lead);
     setDialogOpen(true);
   };
