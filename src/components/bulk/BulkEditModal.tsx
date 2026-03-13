@@ -3,12 +3,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCRMStore } from '@/store/crmStore';
+import { useLeadsData } from '@/hooks/useLeadsData';
 
 type EditableType = 'leads' | 'clients';
 
@@ -35,7 +34,7 @@ const CLIENT_FIELDS = [
 ];
 
 export default function BulkEditModal({ open, onOpenChange, selectedIds, type, onSuccess }: Props) {
-  const store = useCRMStore();
+  const { origins, interestLevels, pipelineStages, tags, updateLead } = useLeadsData();
   const [selectedField, setSelectedField] = useState('');
   const [value, setValue] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -49,9 +48,8 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
   const getDisplayValue = () => {
     if (selectedField === 'tags') return selectedTags.join(', ');
     if (selectedField === 'origin') return value;
-    if (selectedField === 'interestLevel') return store.interestLevels.find(l => l.value === value)?.label || value;
-    if (selectedField === 'pipelineStage') return store.pipelineStages.find(s => s.id === value)?.name || value;
-    if (selectedField === 'responsible') return store.users.find(u => u.name === value)?.name || value;
+    if (selectedField === 'interestLevel') return interestLevels.find(l => l.value === value)?.label || value;
+    if (selectedField === 'pipelineStage') return pipelineStages.find(s => s.id === value)?.name || value;
     return value;
   };
 
@@ -60,23 +58,15 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
     setLoading(true);
 
     try {
-      if (type === 'leads') {
-        for (const id of selectedIds) {
-          const updateData: Record<string, any> = {};
-          if (selectedField === 'tags') {
-            updateData.tags = selectedTags;
-          } else {
-            updateData[selectedField] = value;
-          }
-          store.updateLead(id, updateData);
-        }
-      } else {
-        // For clients, update the lead
-        for (const id of selectedIds) {
-          const updateData: Record<string, any> = {};
+      for (const id of selectedIds) {
+        const updateData: Record<string, any> = {};
+        if (selectedField === 'tags') {
+          updateData.tags = selectedTags;
+        } else {
           updateData[selectedField] = value;
-          store.updateLead(id, updateData);
         }
+        console.log('[BulkEditModal] Atualizando lead:', { id, updateData });
+        await updateLead(id, updateData);
       }
 
       toast.success(`${selectedIds.length} registros atualizados!`);
@@ -86,6 +76,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
       setValue('');
       setSelectedTags([]);
     } catch (error) {
+      console.error('[BulkEditModal] Erro:', error);
       toast.error('Erro ao atualizar registros');
     } finally {
       setLoading(false);
@@ -128,7 +119,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
                   <SelectContent>
-                    {store.origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+                    {origins.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               )}
@@ -136,7 +127,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
                   <SelectContent>
-                    {store.interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
+                    {interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
               )}
@@ -144,7 +135,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
                   <SelectContent>
-                    {store.pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+                    {pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               )}
@@ -152,13 +143,13 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
                   <SelectContent>
-                    {store.users.filter(u => u.active).map(u => <SelectItem key={u.id} value={u.name}>{u.name}</SelectItem>)}
+                    <SelectItem value={value || 'none'}>{value || 'Selecionar'}</SelectItem>
                   </SelectContent>
                 </Select>
               )}
               {currentFieldDef.inputType === 'multi' && selectedField === 'tags' && (
                 <div className="mt-1 space-y-2 max-h-[200px] overflow-y-auto border rounded-md p-2">
-                  {store.tags.map(tag => (
+                  {tags.map(tag => (
                     <div key={tag.id} className="flex items-center gap-2">
                       <Checkbox
                         checked={selectedTags.includes(tag.name)}
