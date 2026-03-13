@@ -112,8 +112,6 @@ export default function LeadsPage() {
   };
 
   const handleNewLead = () => {
-    console.log('[LeadsPage] Novo lead clicado');
-    savePosition();
     setEditingLead(null);
     setDialogOpen(true);
   };
