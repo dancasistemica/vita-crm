@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useCRMStore } from "@/store/crmStore";
-import { Lead } from "@/types/crm";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,17 +10,19 @@ import { X } from "lucide-react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
 
 interface LeadFormProps {
-  lead: Lead | null;
-  onSave: (data: Partial<Lead>) => void;
+  lead: LeadView | null;
+  onSave: (data: Partial<LeadView>) => void;
 }
 
 export default function LeadForm({ lead, onSave }: LeadFormProps) {
-  const { origins, pipelineStages, users, tags, interestLevels } = useCRMStore();
-  const activeUsers = users.filter(u => u.active);
-  const defaultResponsible = activeUsers[0]?.name || '';
+  const { origins, pipelineStages, tags, interestLevels } = useLeadsData();
 
-  const [form, setForm] = useState<Partial<Lead>>(
-    lead || { interestLevel: interestLevels[0]?.value || 'frio', pipelineStage: '1', tags: [], entryDate: new Date().toISOString().split('T')[0], responsible: defaultResponsible }
+  const defaultStageId = pipelineStages.length > 0
+    ? pipelineStages.sort((a, b) => a.order - b.order)[0].id
+    : '';
+
+  const [form, setForm] = useState<Partial<LeadView>>(
+    lead || { interestLevel: interestLevels[0]?.value || 'frio', pipelineStage: defaultStageId, tags: [], entryDate: new Date().toISOString().split('T')[0], responsible: '' }
   );
 
   const [cpfWarning, setCpfWarning] = useState(false);
