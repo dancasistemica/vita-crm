@@ -148,7 +148,22 @@ export function useLeadsData() {
       setLoading(false);
     }
   }, [dataAccess]);
-...
+
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
+
+  const deleteLead = useCallback(async (leadId: string) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.deleteLead(leadId);
+      setLeads(prev => prev.filter(l => l.id !== leadId));
+    } catch (err) {
+      console.error('[useLeadsData] Erro ao deletar:', err);
+      throw err;
+    }
+  }, [dataAccess]);
+
   const updateLead = useCallback(async (leadId: string, updates: Partial<LeadView>) => {
     if (!dataAccess) {
       console.warn('[useLeadsData] updateLead ignorado: dataAccess indisponível', { leadId, updates });
