@@ -18,9 +18,16 @@ import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
 
 const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
 
+interface SalesStageView {
+  id: string;
+  name: string;
+  value: number;
+}
+
 interface ProductView {
   id: string;
   name: string;
+  stages: SalesStageView[];
 }
 
 interface NewSaleModalProps {
@@ -40,6 +47,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
   const [products, setProducts] = useState<ProductView[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [sales, setSales] = useState<{ lead_id: string }[]>([]);
+  const [selectedStageId, setSelectedStageId] = useState('');
 
   // Form state
   const [productId, setProductId] = useState('');
@@ -61,7 +69,13 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
           dataAccess.getSales(),
         ]);
         if (prods.status === 'fulfilled') {
-          setProducts((prods.value as any[]).map(p => ({ id: p.id, name: p.name })));
+          setProducts((prods.value as any[]).map(p => ({
+            id: p.id,
+            name: p.name,
+            stages: (p.product_sales_stages || []).map((s: any) => ({
+              id: s.id, name: s.name, value: Number(s.value) || 0,
+            })),
+          })));
         }
         if (methods.status === 'fulfilled') {
           const names = (methods.value as any[]).map(m => m.name);
@@ -88,6 +102,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
       setSelectedLead(null);
       setShowResults(false);
       setProductId('');
+      setSelectedStageId('');
       setValue('');
       setSaleDate(new Date());
       setPaymentMethod('Pix');
@@ -239,7 +254,11 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
             {/* Product */}
             <div className="space-y-2 sm:col-span-2">
               <Label>Produto/Serviço *</Label>
-              <Select value={productId} onValueChange={setProductId}>
+              <Select value={productId} onValueChange={(pid) => {
+                setProductId(pid);
+                setSelectedStageId('');
+                // Don't auto-fill value here, let stage selection do it
+              }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione um produto" />
                 </SelectTrigger>
@@ -250,6 +269,33 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Sales Stage (if product has stages) */}
+            {productId && (products.find(p => p.id === productId)?.stages?.length ?? 0) > 0 && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label>Fase / Lote</Label>
+                <Select value={selectedStageId} onValueChange={(stageId) => {
+                  setSelectedStageId(stageId);
+                  const product = products.find(p => p.id === productId);
+                  const stage = product?.stages.find(s => s.id === stageId);
+                  if (stage && stage.value > 0) {
+                    const formatted = stage.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    setValue(formatted);
+                  }
+                }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma fase..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.find(p => p.id === productId)?.stages.map(s => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name} — R$ {s.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             {/* Value */}
             <div className="space-y-2">
