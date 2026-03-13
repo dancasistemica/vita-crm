@@ -102,6 +102,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId }: 
       setSelectedLead(null);
       setShowResults(false);
       setProductId('');
+      setSelectedStageId('');
       setValue('');
       setSaleDate(new Date());
       setPaymentMethod('Pix');
