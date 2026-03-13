@@ -1,12 +1,12 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Check, X, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useCRMStore } from '@/store/crmStore';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import { validateRows, getNewOptions } from '@/services/importService';
-import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
 
@@ -17,20 +17,91 @@ interface Props {
   onBack: () => void;
 }
 
-export default function Step5Import({ state, update, onNext, onBack }: Props) {
-  const store = useCRMStore();
+/** Map camelCase lead data to snake_case DB columns */
+function toDbRecord(data: Partial<Lead>, organizationId: string) {
+  return {
+    organization_id: organizationId,
+    name: data.name || '',
+    phone: data.phone || '',
+    email: data.email || '',
+    instagram: data.instagram || '',
+    city: data.city || '',
+    rg: data.rg || '',
+    cpf: data.cpf || '',
+    entry_date: data.entryDate || new Date().toISOString().split('T')[0],
+    origin: data.origin || '',
+    interest_level: data.interestLevel || 'frio',
+    main_interest: data.mainInterest || '',
+    tags: data.tags || [],
+    pain_point: data.painPoint || '',
+    body_tension_area: data.bodyTensionArea || '',
+    emotional_goal: data.emotionalGoal || '',
+    pipeline_stage: data.pipelineStage || '1',
+    responsible: data.responsible || '',
+    notes: data.notes || '',
+  };
+}
 
-  // Run validation on mount
+export default function Step5Import({ state, update, onNext, onBack }: Props) {
+  const { organizationId } = useOrganization();
+  const [existingLeads, setExistingLeads] = useState<any[]>([]);
+
+  // Fetch existing leads from DB for duplicate detection
   useEffect(() => {
-    if (state.validationResults.length === 0 && state.csvRows.length > 0) {
+    if (!organizationId) return;
+    const fetchLeads = async () => {
+      const { data } = await supabase
+        .from('leads')
+        .select('id, name, email, phone')
+        .eq('organization_id', organizationId);
+      setExistingLeads(data || []);
+      console.log('[Step5Import] Existing leads from DB:', data?.length);
+    };
+    fetchLeads();
+  }, [organizationId]);
+
+  // Fetch existing origins, interest levels, tags from DB
+  const [dbOrigins, setDbOrigins] = useState<string[]>([]);
+  const [dbInterestLevels, setDbInterestLevels] = useState<{ value: string }[]>([]);
+  const [dbTags, setDbTags] = useState<{ name: string }[]>([]);
+
+  useEffect(() => {
+    if (!organizationId) return;
+    const fetch = async () => {
+      const [originsRes, levelsRes, tagsRes] = await Promise.all([
+        supabase.from('lead_origins').select('name').eq('organization_id', organizationId),
+        supabase.from('interest_levels').select('value').eq('organization_id', organizationId),
+        supabase.from('tags').select('name').eq('organization_id', organizationId),
+      ]);
+      setDbOrigins((originsRes.data || []).map(o => o.name));
+      setDbInterestLevels(levelsRes.data || []);
+      setDbTags(tagsRes.data || []);
+    };
+    fetch();
+  }, [organizationId]);
+
+  // Run validation when we have existing leads and csv data
+  useEffect(() => {
+    if (state.validationResults.length === 0 && state.csvRows.length > 0 && existingLeads !== null) {
       console.log('[Step5Import] Running validation...');
-      const results = validateRows(state.csvRows, state.mapping, []);
-      const opts = getNewOptions(results, store.origins, store.interestLevels, store.tags);
-      const successResults = results.filter(r => r.status === 'success');
-      const { clean, duplicates } = detectDuplicates(results, store.leads);
+      // Map DB leads to Lead-like objects for duplicate detection
+      const mappedLeads = existingLeads.map((l: any) => ({
+        id: l.id,
+        name: l.name,
+        email: l.email || '',
+        phone: l.phone || '',
+      })) as Lead[];
+
+      const results = validateRows(state.csvRows, state.mapping, mappedLeads);
+      const opts = getNewOptions(results, dbOrigins, dbInterestLevels, dbTags);
+
+      // Re-run duplicate detection with full lead objects
+      const { detectDuplicates } = require('@/services/duplicateDetectionService');
+      const { duplicates } = detectDuplicates(results, mappedLeads);
+
       update({ validationResults: results, newOptions: opts, duplicates });
     }
-  }, []);
+  }, [existingLeads, dbOrigins, dbInterestLevels, dbTags]);
 
   const successCount = useMemo(() => state.validationResults.filter(r => r.status === 'success').length - state.duplicates.length, [state.validationResults, state.duplicates]);
   const errorCount = useMemo(() => state.validationResults.filter(r => r.status === 'error').length, [state.validationResults]);
@@ -43,19 +114,33 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
   };
 
   const handleImport = async () => {
+    if (!organizationId) {
+      console.error('[Step5Import] No organizationId!');
+      return;
+    }
+
     update({ importing: true, importProgress: 0 });
 
-    // Auto-create missing options
-    for (const origin of state.newOptions.newOrigins) store.addOrigin(origin);
+    // Auto-create missing options in DB
+    for (const origin of state.newOptions.newOrigins) {
+      await supabase.from('lead_origins').insert({ name: origin, organization_id: organizationId });
+    }
     for (const level of state.newOptions.newInterestLevels) {
-      store.addInterestLevel({ id: crypto.randomUUID(), value: level.toLowerCase(), label: level });
+      await supabase.from('interest_levels').insert({
+        value: level.toLowerCase(),
+        label: level,
+        organization_id: organizationId,
+      });
     }
     for (const tagName of state.newOptions.newTags) {
-      store.addTag({ id: crypto.randomUUID(), name: tagName, color: 'hsl(var(--primary))' });
+      await supabase.from('tags').insert({
+        name: tagName,
+        color: 'hsl(var(--primary))',
+        organization_id: organizationId,
+      });
     }
 
     const toImport = state.validationResults.filter(r => r.status === 'success' && r.data);
-    // Remove duplicates from toImport (they're handled separately)
     const dupRows = new Set(state.duplicates.map(d => d.rowIndex));
     const cleanToImport = toImport.filter(r => !dupRows.has(r.row));
 
@@ -63,28 +148,22 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
     const total = cleanToImport.length + state.duplicates.filter(d => d.action !== 'skip').length;
     let processed = 0;
 
-    // Import clean leads
-    for (const item of cleanToImport) {
-      try {
-        const data = item.data!;
-        const newLead: Lead = {
-          id: crypto.randomUUID(),
-          name: data.name || '', phone: data.phone || '', email: data.email || '',
-          instagram: data.instagram || '', city: data.city || '',
-          rg: data.rg || '', cpf: data.cpf || '',
-          entryDate: data.entryDate || new Date().toISOString().split('T')[0],
-          origin: data.origin || store.origins[0] || '',
-          interestLevel: data.interestLevel || 'frio',
-          mainInterest: data.mainInterest || '', tags: data.tags || [],
-          painPoint: data.painPoint || '', bodyTensionArea: data.bodyTensionArea || '',
-          emotionalGoal: data.emotionalGoal || '',
-          pipelineStage: data.pipelineStage || '1',
-          responsible: data.responsible || '', notes: data.notes || '',
-        };
-        store.addLead(newLead);
-        created++;
-      } catch { errors++; }
-      processed++;
+    // Batch insert clean leads (chunks of 50)
+    const BATCH_SIZE = 50;
+    for (let i = 0; i < cleanToImport.length; i += BATCH_SIZE) {
+      const batch = cleanToImport.slice(i, i + BATCH_SIZE);
+      const records = batch.map(item => toDbRecord(item.data!, organizationId));
+
+      const { data, error } = await supabase.from('leads').insert(records).select('id');
+
+      if (error) {
+        console.error('[Step5Import] Batch insert error:', error);
+        errors += batch.length;
+      } else {
+        created += data?.length || batch.length;
+      }
+
+      processed += batch.length;
       update({ importProgress: Math.round((processed / Math.max(total, 1)) * 100) });
     }
 
@@ -93,26 +172,20 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       if (dup.action === 'skip') continue;
       try {
         if (dup.action === 'update') {
-          store.updateLead(dup.existingLeadId, dup.newData);
-          updated++;
+          const updateData = toDbRecord(dup.newData as Partial<Lead>, organizationId);
+          delete (updateData as any).organization_id; // Don't update org_id
+          const { error } = await supabase
+            .from('leads')
+            .update(updateData)
+            .eq('id', dup.existingLeadId)
+            .eq('organization_id', organizationId);
+          if (error) { console.error('[Step5Import] Update error:', error); errors++; }
+          else updated++;
         } else if (dup.action === 'duplicate') {
-          const newLead: Lead = {
-            id: crypto.randomUUID(),
-            name: (dup.newData.name as string) || '', phone: (dup.newData.phone as string) || '',
-            email: (dup.newData.email as string) || '', instagram: (dup.newData.instagram as string) || '',
-            city: (dup.newData.city as string) || '',
-            rg: (dup.newData.rg as string) || '', cpf: (dup.newData.cpf as string) || '',
-            entryDate: (dup.newData.entryDate as string) || new Date().toISOString().split('T')[0],
-            origin: (dup.newData.origin as string) || store.origins[0] || '',
-            interestLevel: (dup.newData.interestLevel as string) || 'frio',
-            mainInterest: (dup.newData.mainInterest as string) || '', tags: (dup.newData.tags as string[]) || [],
-            painPoint: (dup.newData.painPoint as string) || '', bodyTensionArea: (dup.newData.bodyTensionArea as string) || '',
-            emotionalGoal: (dup.newData.emotionalGoal as string) || '',
-            pipelineStage: (dup.newData.pipelineStage as string) || '1',
-            responsible: (dup.newData.responsible as string) || '', notes: (dup.newData.notes as string) || '',
-          };
-          store.addLead(newLead);
-          duplicated++;
+          const record = toDbRecord(dup.newData as Partial<Lead>, organizationId);
+          const { error } = await supabase.from('leads').insert(record);
+          if (error) { console.error('[Step5Import] Duplicate insert error:', error); errors++; }
+          else duplicated++;
         }
       } catch { errors++; }
       processed++;
@@ -120,7 +193,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
     }
 
     update({ importResult: { created, updated, duplicated, errors }, importing: false });
-    console.log('[Step5Import] Import done:', { created, updated, duplicated, errors });
+    console.log('[Step5Import] ✅ Import done (Supabase):', { created, updated, duplicated, errors });
     onNext();
   };
 
@@ -128,7 +201,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
     return (
       <div className="text-center py-10 space-y-4">
         <div className="h-12 w-12 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm text-muted-foreground">Importando leads...</p>
+        <p className="text-sm text-muted-foreground">Salvando leads no banco de dados...</p>
         <Progress value={state.importProgress} className="w-full max-w-sm mx-auto" />
         <p className="text-xs text-muted-foreground">{state.importProgress}%</p>
       </div>
@@ -220,7 +293,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>Voltar</Button>
-        <Button onClick={handleImport} disabled={successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0}>
+        <Button onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
         </Button>
       </div>
