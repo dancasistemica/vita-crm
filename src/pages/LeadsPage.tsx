@@ -26,6 +26,7 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
+  const { savePosition } = useScrollPosition('leads-page');
   const [search, setSearch] = useState("");
   const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
