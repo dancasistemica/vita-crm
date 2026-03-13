@@ -159,7 +159,7 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
               <DialogTrigger asChild>
                 <Button size="sm" onClick={handleNewLead}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
