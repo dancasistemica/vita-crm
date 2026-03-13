@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +18,6 @@ import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
 
-
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
 
@@ -26,7 +25,7 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
-  
+
   const [search, setSearch] = useState("");
   const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
@@ -34,86 +33,11 @@ export default function LeadsPage() {
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
-  const scrollPositionRef = useRef(0);
-  const isBlockingScrollRef = useRef(false);
-  const originalScrollToRef = useRef<typeof window.scrollTo | null>(null);
-
-  // Intercept window.scrollTo to block Radix Dialog's scroll reset
-  useEffect(() => {
-    const originalScrollTo = window.scrollTo.bind(window);
-    originalScrollToRef.current = originalScrollTo;
-
-    window.scrollTo = function (...args: any[]) {
-      if (isBlockingScrollRef.current) {
-        // Block scrollTo(0,0) calls from Radix Dialog
-        const isScrollToZero =
-          (args.length === 2 && args[0] === 0 && args[1] === 0) ||
-          (args.length === 1 && typeof args[0] === 'object' && args[0]?.top === 0 && (args[0]?.left === 0 || args[0]?.left === undefined));
-        if (isScrollToZero) {
-          console.log('[LeadsPage] 🚫 Bloqueando scrollTo(0,0)');
-          return;
-        }
-      }
-      originalScrollTo.apply(window, args as any);
-    } as typeof window.scrollTo;
-
-    return () => {
-      window.scrollTo = originalScrollTo;
-    };
-  }, []);
-
-  // Handle dialog open/close: body fixed technique + scroll intercept
-  useEffect(() => {
-    if (dialogOpen) {
-      const scrollY = scrollPosition || window.scrollY;
-      scrollPositionRef.current = scrollY;
-      document.body.style.top = `-${scrollY}px`;
-      document.body.classList.add('dialog-open');
-      console.log(`[LeadsPage] Dialog aberto - scroll salvo: ${scrollY}px`);
-    } else {
-      const savedScroll = scrollPositionRef.current;
-
-      // Start blocking scrollTo before cleaning body
-      isBlockingScrollRef.current = true;
-
-      // Clean body
-      document.body.classList.remove('dialog-open');
-      document.body.removeAttribute('style');
-      document.body.removeAttribute('data-scroll-locked');
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.height = '';
-
-      // Restore scroll using the original function
-      if (savedScroll > 0 && originalScrollToRef.current) {
-        console.log(`[LeadsPage] ✅ Restaurando scroll para: ${savedScroll}px`);
-        originalScrollToRef.current(0, savedScroll);
-      }
-
-      // Stop blocking after Radix has finished its cleanup
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          isBlockingScrollRef.current = false;
-        }, 150);
-      });
-    }
-  }, [dialogOpen, scrollPosition]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      document.body.removeAttribute('style');
-      document.body.removeAttribute('data-scroll-locked');
-      document.body.classList.remove('dialog-open');
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.height = '';
-    };
-  }, []);
 
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
 
@@ -145,37 +69,25 @@ export default function LeadsPage() {
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   const closeDialog = () => {
-    console.log('[LeadsPage] Dialog fechando');
     setEditingLead(null);
     setDialogOpen(false);
   };
 
   const handleDialogOpenChange = (open: boolean) => {
-    console.log(`[LeadsPage] Dialog onOpenChange: ${open}`);
-
     if (!open) {
       closeDialog();
       return;
     }
 
-    const currentScroll = window.scrollY;
-    setScrollPosition(currentScroll);
-    console.log(`[LeadsPage] Dialog abrindo - scroll salvo: ${currentScroll}px`);
     setDialogOpen(true);
   };
 
   const handleNewLead = () => {
-    const currentScroll = window.scrollY;
-    console.log(`[LeadsPage] Novo lead - scroll salvo: ${currentScroll}px`);
-    setScrollPosition(currentScroll);
     setEditingLead(null);
     setDialogOpen(true);
   };
 
   const handleEditLead = (lead: LeadView) => {
-    const currentScroll = window.scrollY;
-    console.log(`[LeadsPage] ✏️ Editar lead: ${lead.id} | scroll salvo: ${currentScroll}px`);
-    setScrollPosition(currentScroll);
     setEditingLead(lead);
     setDialogOpen(true);
   };
@@ -247,7 +159,7 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
               <DialogTrigger asChild>
                 <Button size="sm" onClick={handleNewLead}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
