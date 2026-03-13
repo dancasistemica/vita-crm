@@ -119,7 +119,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
                   <SelectContent>
-                    {origins.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
+                    {origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
                   </SelectContent>
                 </Select>
               )}
