@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2, FilterX } from "lucide-react";
 import { toast } from "sonner";
@@ -33,7 +32,6 @@ export default function LeadsPage() {
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
@@ -50,6 +48,11 @@ export default function LeadsPage() {
     resetPage();
   };
 
+  const handleMultiFilterChange = (setter: (v: string[]) => void) => (values: string[]) => {
+    setter(values);
+    resetPage();
+  };
+
   const filtered = useMemo(() => {
     return leads.filter(l => {
       const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
@@ -60,6 +63,9 @@ export default function LeadsPage() {
       return matchSearch && matchOrigin && matchInterest && matchStage && matchTag;
     });
   }, [leads, search, filterOrigins, filterInterests, filterStages, filterTags]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   const handleSave = async (data: Partial<LeadView>) => {
     try {
@@ -113,8 +119,10 @@ export default function LeadsPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <h1 className="text-2xl font-display text-foreground">Leads</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
+        <div>
+          <h1 className="text-2xl font-display text-foreground">Leads</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
+        </div>
         <div className="flex items-center gap-2 flex-wrap">
           {userCanCreate && (
             <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
@@ -140,39 +148,48 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
-        <div className="relative flex-1 min-w-[200px]">
+      {/* Search + Multi-Select Filters */}
+      <div className="space-y-3 p-4 rounded-lg bg-muted/30 border border-border/40">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por nome, email ou telefone..." value={search} onChange={e => { setSearch(e.target.value); resetPage(); }} className="pl-9" />
         </div>
-        <Select value={filterOrigin} onValueChange={handleFilterChange(setFilterOrigin)}>
-          <SelectTrigger className="w-[180px]"><SelectValue placeholder="Origem" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas origens</SelectItem>
-            {origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={filterInterest} onValueChange={handleFilterChange(setFilterInterest)}>
-          <SelectTrigger className="w-[140px]"><SelectValue placeholder="Nível" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos níveis</SelectItem>
-            {interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={filterStage} onValueChange={handleFilterChange(setFilterStage)}>
-          <SelectTrigger className="w-[180px]"><SelectValue placeholder="Etapa" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas etapas</SelectItem>
-            {pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={filterTag} onValueChange={handleFilterChange(setFilterTag)}>
-          <SelectTrigger className="w-[180px]"><SelectValue placeholder="Tag" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas tags</SelectItem>
-            {tags.map(t => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <MultiSelectFilter
+            label="Origem"
+            options={origins.map(o => ({ value: o, label: o }))}
+            selected={filterOrigins}
+            onChange={handleMultiFilterChange(setFilterOrigins)}
+          />
+          <MultiSelectFilter
+            label="Nível de Interesse"
+            options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+            selected={filterInterests}
+            onChange={handleMultiFilterChange(setFilterInterests)}
+          />
+          <MultiSelectFilter
+            label="Etapa do Pipeline"
+            options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+            selected={filterStages}
+            onChange={handleMultiFilterChange(setFilterStages)}
+          />
+          <MultiSelectFilter
+            label="Tags"
+            options={tags.map(t => ({ value: t.name, label: t.name }))}
+            selected={filterTags}
+            onChange={handleMultiFilterChange(setFilterTags)}
+          />
+        </div>
+
+        {activeFiltersCount > 0 && (
+          <div className="flex items-center gap-2 pt-1">
+            <Badge variant="secondary" className="text-xs">{activeFiltersCount} filtro(s) ativo(s)</Badge>
+            <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground" onClick={clearAllFilters}>
+              <FilterX className="h-3 w-3 mr-1" /> Limpar todos
+            </Button>
+          </div>
+        )}
       </div>
 
       <RecordCounter
@@ -288,27 +305,9 @@ export default function LeadsPage() {
         </div>
       )}
 
-      <BulkEditModal
-        open={bulkEditOpen}
-        onOpenChange={setBulkEditOpen}
-        selectedIds={selectedIds}
-        type="leads"
-        onSuccess={() => setSelectedIds([])}
-      />
-      <BulkDeleteModal
-        open={bulkDeleteOpen}
-        onOpenChange={setBulkDeleteOpen}
-        selectedIds={selectedIds}
-        type="leads"
-        onSuccess={() => setSelectedIds([])}
-      />
-      <ExportModal
-        open={exportOpen}
-        onOpenChange={setExportOpen}
-        type="leads"
-        allData={leads}
-        filteredData={filtered}
-      />
+      <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
+      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
+      <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
     </div>
   );
 }
