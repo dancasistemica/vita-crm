@@ -69,6 +69,36 @@ export default function LeadsPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
+  const closeDialog = () => {
+    console.log('[LeadsPage] Dialog fechando, restaurando scroll...');
+    restorePosition();
+    setEditingLead(null);
+    setDialogOpen(false);
+  };
+
+  const handleDialogOpenChange = (open: boolean) => {
+    console.log(`[LeadsPage] Dialog openChange: ${open}`);
+    if (!open) {
+      closeDialog();
+      return;
+    }
+    setDialogOpen(true);
+  };
+
+  const handleNewLead = () => {
+    console.log('[LeadsPage] Novo lead clicado');
+    savePosition();
+    setEditingLead(null);
+    setDialogOpen(true);
+  };
+
+  const handleEditLead = (lead: LeadView) => {
+    console.log(`[LeadsPage] Editar lead: ${lead.id}`);
+    savePosition();
+    setEditingLead(lead);
+    setDialogOpen(true);
+  };
+
   const handleSave = async (data: Partial<LeadView>) => {
     try {
       if (editingLead) {
@@ -78,8 +108,7 @@ export default function LeadsPage() {
         await addLead(data);
         toast.success("Lead adicionado!");
       }
-      setDialogOpen(false);
-      setEditingLead(null);
+      closeDialog();
     } catch (err) {
       toast.error("Erro ao salvar lead");
     }
@@ -135,9 +164,9 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) { restorePosition(); setEditingLead(null); } setDialogOpen(o); }}>
+            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={() => { savePosition(); setEditingLead(null); }}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+                <Button size="sm" onClick={handleNewLead}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
@@ -274,7 +303,7 @@ export default function LeadsPage() {
                   </a>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { savePosition(); setEditingLead(lead); setDialogOpen(true); }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
