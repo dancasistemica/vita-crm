@@ -117,8 +117,6 @@ export default function LeadsPage() {
   };
 
   const handleEditLead = (lead: LeadView) => {
-    console.log(`[LeadsPage] Editar lead: ${lead.id}`);
-    savePosition();
     setEditingLead(lead);
     setDialogOpen(true);
   };
