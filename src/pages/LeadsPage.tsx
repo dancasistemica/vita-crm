@@ -31,7 +31,7 @@ export default function LeadsPage() {
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
   const [filterStages, setFilterStages] = useState<string[]>([]);
   const [filterTags, setFilterTags] = useState<string[]>([]);
-  const [filterTag, setFilterTag] = useState("all");
+  const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
