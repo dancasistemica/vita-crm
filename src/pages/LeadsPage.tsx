@@ -135,7 +135,7 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditingLead(null); }}>
+            <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) { restorePosition(); setEditingLead(null); } setDialogOpen(o); }}>
               <DialogTrigger asChild>
                 <Button size="sm" onClick={() => setEditingLead(null)}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
               </DialogTrigger>
