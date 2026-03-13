@@ -8,17 +8,19 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';
-import { Product } from '@/types/crm';
-import { CRMUser } from '@/store/crmStore';
+interface SimpleProduct {
+  id: string;
+  name: string;
+}
 
 interface Props {
   filters: ClientsFilterState;
   updateFilter: <K extends keyof ClientsFilterState>(key: K, value: ClientsFilterState[K]) => void;
   resetFilters: () => void;
   activeFilterCount: number;
-  products: Product[];
+  products: SimpleProduct[];
   origins: string[];
-  users: CRMUser[];
+  users: string[];
   saleStatuses: string[];
 }
 

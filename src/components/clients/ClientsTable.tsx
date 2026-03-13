@@ -8,11 +8,32 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Lead, Sale } from '@/types/crm';
-import { Interaction } from '@/types/crm';
-import { Product } from '@/types/crm';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
-import { useCRMStore } from '@/store/crmStore';
+
+interface ClientLead {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface ClientSale {
+  id: string;
+  productId: string;
+  value: number;
+  date: string;
+  status: string;
+}
+
+interface ClientInteraction {
+  id: string;
+  date: string;
+}
+
+interface SimpleProduct {
+  id: string;
+  name: string;
+}
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success border-success/30',
