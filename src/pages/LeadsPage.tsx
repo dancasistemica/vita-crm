@@ -17,6 +17,7 @@ import RecordCounter from "@/components/common/RecordCounter";
 import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
@@ -25,6 +26,7 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
+  const { savePosition } = useScrollPosition('leads-page');
   const [search, setSearch] = useState("");
   const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
   const [filterInterests, setFilterInterests] = useState<string[]>([]);
@@ -272,7 +274,7 @@ export default function LeadsPage() {
                   </a>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { setEditingLead(lead); setDialogOpen(true); }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => { savePosition(); setEditingLead(lead); setDialogOpen(true); }}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
