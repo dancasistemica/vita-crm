@@ -186,20 +186,19 @@ export function useLeadsData() {
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
 
-      console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
+      // Optimistic update
+      setLeads(prev => prev.map(l => (l.id === leadId ? { ...l, ...updates } : l)));
+
+      // Persist to DB
       await dataAccess.updateLead(leadId, dbUpdates);
       console.log('[useLeadsData] Lead atualizado no banco:', { leadId });
 
-      setLeads(prev => {
-        const next = prev.map(l => (l.id === leadId ? { ...l, ...updates } : l));
-        console.log('[useLeadsData] Estado local atualizado:', {
-          leadId,
-          lead: next.find(l => l.id === leadId),
-        });
-        return next;
-      });
+      // Refetch to sync all consumers (e.g. ClientesPage)
+      await fetchAll();
+      console.log('[useLeadsData] ✅ Dados recarregados após update');
     } catch (err) {
       console.error('[useLeadsData] Erro ao atualizar lead:', { leadId, updates, err });
+      await fetchAll(); // rollback optimistic
       throw err;
     }
   }, [dataAccess]);
