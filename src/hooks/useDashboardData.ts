@@ -422,18 +422,25 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           const orgsBelow = topOrgs.filter(o => o.conversionRate < overallRate).length;
 
           // Funnel analysis
-          const funnelByStage = stageMetrics.map(sm => {
+          const funnelByStage = stageMetrics.map((sm, idx) => {
             const converted = clients > 0 && sm.leadCount > 0
               ? Math.round((sm.conversionRate / 100) * sm.leadCount)
               : 0;
-            const abandonmentRate = sm.leadCount > 0 ? ((sm.leadCount - converted) / sm.leadCount) * 100 : 0;
+            const isFinalStage = idx === stageMetrics.length - 1 || sm.name.toLowerCase() === 'cliente';
+            // Progression rate: leads in later stages / leads in this stage
+            let progressionRate = 0;
+            if (!isFinalStage && sm.leadCount > 0) {
+              const laterLeads = stageMetrics.slice(idx + 1).reduce((sum, s) => sum + s.leadCount, 0);
+              progressionRate = Math.min((laterLeads / sm.leadCount) * 100, 100);
+            }
             return {
               stage: sm.name,
               leads: sm.leadCount,
               converted,
               conversionRate: sm.conversionRate,
+              progressionRate,
               avgDaysInStage: sm.avgDaysInStage,
-              abandonmentRate,
+              isFinalStage,
             };
           });
 

@@ -185,17 +185,20 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
               </div>
             </div>
 
-            {/* Taxa de Abandono */}
-            <div className="mt-6 p-4 bg-warning/5 rounded-lg border border-warning/20">
-              <h4 className="font-semibold text-foreground mb-3">📉 Taxa de Abandono por Etapa</h4>
+            {/* Taxa de Progresso por Stage */}
+            <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <h4 className="font-semibold text-foreground mb-2">📈 Taxa de Progresso por Etapa</h4>
+              <p className="text-xs text-muted-foreground mb-3">% de leads que avançam para o próximo estágio (não aplica ao estágio final)</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {insights.funnelAnalysis.byStage.map((stage) => (
-                  <div key={stage.stage} className="bg-card rounded-lg p-3 border border-border/40">
-                    <p className="text-xs text-muted-foreground mb-1">{stage.stage}</p>
-                    <p className="text-2xl font-bold text-warning">{stage.abandonmentRate.toFixed(0)}%</p>
-                    <p className="text-xs text-muted-foreground mt-1">saem sem converter</p>
-                  </div>
-                ))}
+                {insights.funnelAnalysis.byStage
+                  .filter((stage) => !stage.isFinalStage)
+                  .map((stage) => (
+                    <div key={stage.stage} className="bg-card rounded-lg p-3 border border-border/40">
+                      <p className="text-xs text-muted-foreground mb-1">{stage.stage}</p>
+                      <p className="text-2xl font-bold text-primary">{stage.progressionRate.toFixed(0)}%</p>
+                      <p className="text-xs text-muted-foreground mt-1">avançam</p>
+                    </div>
+                  ))}
               </div>
             </div>
           </CardContent>
