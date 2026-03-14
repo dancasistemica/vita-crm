@@ -34,7 +34,7 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
   revenueByProduct: [],
 };
 
-export function useDashboardData(): DashboardData {
+export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
   const [data, setData] = useState<Omit<DashboardData, 'loading'>>(EMPTY_DATA);
@@ -79,13 +79,21 @@ export function useDashboardData(): DashboardData {
         ]);
 
         const leads = leadsRes.data || [];
-        const sales = salesRes.data || [];
+        const allSales = salesRes.data || [];
         const products = productsRes.data || [];
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];
 
+        // Filter sales by dateRange if provided
+        const sales = dateRange
+          ? allSales.filter((s) => {
+              const d = new Date(s.created_at || '');
+              return d >= dateRange.start && d <= dateRange.end;
+            })
+          : allSales;
+
         console.log('[useDashboardData] 📊 Resultado leads:', { count: leads.length, error: leadsRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado sales:', { count: sales.length, error: salesRes.error?.message || null });
+        console.log('[useDashboardData] 📊 Resultado sales:', { count: sales.length, total: allSales.length, error: salesRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado products:', { count: products.length, error: productsRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado pipeline_stages:', { count: stages.length, error: stagesRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado lead_origins:', { count: origins.length, error: originsRes.error?.message || null });
@@ -120,13 +128,12 @@ export function useDashboardData(): DashboardData {
           .sort((a, b) => b.revenue - a.revenue)
           .slice(0, 5);
 
-        // Sales by day (last 30 days)
-        const last30 = new Date();
-        last30.setDate(last30.getDate() - 30);
+        // Sales by day (within selected period or last 30 days)
+        const periodStart = dateRange?.start || (() => { const d = new Date(); d.setDate(d.getDate() - 30); return d; })();
         const salesByDayMap: Record<string, number> = {};
         sales.forEach((s) => {
           const d = new Date(s.created_at || '');
-          if (d >= last30) {
+          if (d >= periodStart) {
             const key = d.toLocaleDateString('pt-BR');
             salesByDayMap[key] = (salesByDayMap[key] || 0) + (s.value || 0);
           }
@@ -185,7 +192,7 @@ export function useDashboardData(): DashboardData {
     return () => {
       active = false;
     };
-  }, [organizationId, orgLoading, isSuperadmin, superadminLoading]);
+  }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
   return { ...data, loading };
 }
