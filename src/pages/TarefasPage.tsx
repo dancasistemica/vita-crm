@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
+import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
 import AIFollowUpGenerator from "@/components/ai/AIFollowUpGenerator";
@@ -364,9 +365,7 @@ export default function TarefasPage() {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const formatCreatedDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
-  };
+  const formatCreatedDate = (dateStr: string) => formatDateToBR(dateStr);
 
   const TaskItem = ({ task }: { task: TaskRow }) => {
     const assignedName = getMemberName(task.assigned_to);
@@ -381,7 +380,7 @@ export default function TarefasPage() {
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
               <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
-              {task.due_date && <span className="text-xs text-muted-foreground">{task.due_date}</span>}
+              {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
                 <Badge variant="secondary" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
