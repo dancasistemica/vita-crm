@@ -31,9 +31,19 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
 
   const handlePresetClick = (preset: typeof PRESET_PERIODS[0]) => {
     const now = new Date();
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - preset.days, 0, 0, 0, 0);
-    onPeriodChange({ start, end, label: preset.label });
+    // Toggle: if already selected, revert to default (30 dias)
+    if (selectedLabel === preset.label && !isCustom) {
+      const defaultPreset = PRESET_PERIODS.find(p => p.label === '30 dias')!;
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - defaultPreset.days, 0, 0, 0, 0);
+      console.log('[FilterPeriod] Toggle off, voltando para 30 dias');
+      onPeriodChange({ start, end, label: defaultPreset.label });
+    } else {
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - preset.days, 0, 0, 0, 0);
+      console.log('[FilterPeriod] Toggle on:', preset.label);
+      onPeriodChange({ start, end, label: preset.label });
+    }
     setIsCustom(false);
   };
 
