@@ -63,6 +63,9 @@ interface DashboardData {
   loading: boolean;
   isConsolidated: boolean;
   consolidatedData: ConsolidatedData | null;
+}
+
+interface DashboardReturn extends DashboardData {
   productInsights: ProductInsightsData | null;
 }
 
