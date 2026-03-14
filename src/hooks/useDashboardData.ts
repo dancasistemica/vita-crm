@@ -49,6 +49,8 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
   leadsByStage: [],
   leadsByOrigin: [],
   revenueByProduct: [],
+  stuckLeads: [],
+  stageMetrics: [],
 };
 
 export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
