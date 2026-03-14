@@ -30,9 +30,9 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
   const [customEnd, setCustomEnd] = useState('');
 
   const handlePresetClick = (preset: typeof PRESET_PERIODS[0]) => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - preset.days);
+    const now = new Date();
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - preset.days, 0, 0, 0, 0);
     onPeriodChange({ start, end, label: preset.label });
     setIsCustom(false);
   };
