@@ -2,13 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, DollarSign, TrendingUp, Target, Globe } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, Building2, Globe, ArrowLeft } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOrganization } from "@/contexts/OrganizationContext";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
@@ -17,20 +14,10 @@ import ProductInsights from "@/components/dashboard/ProductInsights";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
-export default function DashboardPage() {
-  const { user } = useAuth();
-  const { isSuperadmin, loading: roleLoading } = useUserRole();
+export default function ConsolidatedDashboardPage() {
   const navigate = useNavigate();
-  const { organization, organizationId } = useOrganization();
+  const { isSuperadmin, loading: roleLoading } = useUserRole();
 
-  // Redirect superadmin to consolidated dashboard
-  useEffect(() => {
-    if (!roleLoading && isSuperadmin) {
-      console.log('[DashboardPage] Redirecionando superadmin para /dashboard/consolidado');
-      navigate('/dashboard/consolidado', { replace: true });
-    }
-  }, [isSuperadmin, roleLoading, navigate]);
-  
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const end = new Date();
     const start = new Date();
@@ -38,35 +25,32 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, isConsolidated, consolidatedData, productInsights } = useDashboardData(dateRange);
+  // Redirect non-superadmin to individual dashboard
+  useEffect(() => {
+    if (!roleLoading && !isSuperadmin) {
+      console.log('[ConsolidatedDashboardPage] Redirecionando non-superadmin para /');
+      navigate('/');
+    }
+  }, [isSuperadmin, roleLoading, navigate]);
 
-  console.log('[DashboardPage] User:', user?.email);
-  console.log('[DashboardPage] Organization:', organizationId, organization?.name);
-  console.log('[DashboardPage] Total Leads:', totalLeads);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, consolidatedData, productInsights } = useDashboardData(dateRange);
 
-  const metrics = [
-    { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
-    { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
-    { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
-    { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
-    { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
-    { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
-    { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
-  ];
-
-  if (loading) {
+  if (roleLoading || loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-display text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
+        <div className="bg-gradient-to-r from-purple-600/90 to-purple-400/60 rounded-xl p-5 text-white">
+          <div className="flex items-center gap-3">
+            <Globe className="h-7 w-7" />
+            <div>
+              <h1 className="text-2xl font-display">Dashboard Consolidado</h1>
+              <p className="text-sm opacity-80 mt-0.5">Carregando...</p>
+            </div>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
             <Card key={i} className="shadow-card border-border/60">
-              <CardContent className="pt-5 pb-4">
-                <Skeleton className="h-16 w-full" />
-              </CardContent>
+              <CardContent className="pt-5 pb-4"><Skeleton className="h-16 w-full" /></CardContent>
             </Card>
           ))}
         </div>
@@ -74,22 +58,43 @@ export default function DashboardPage() {
     );
   }
 
+  if (!isSuperadmin) return null;
+
+  const metrics = [
+    { icon: Building2, label: "Organizações", value: consolidatedData?.totalOrganizations ?? 0, color: 'bg-info/10 text-info' },
+    { icon: Users, label: "Total de Leads", value: totalLeads, color: 'bg-primary/10 text-primary' },
+    { icon: Target, label: "Clientes", value: clients, color: 'bg-success/10 text-success' },
+    { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate}%`, color: 'bg-info/10 text-info' },
+    { icon: DollarSign, label: "Receita Total", value: `R$ ${totalRevenue.toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Total de Vendas", value: totalSales, color: 'bg-primary/10 text-primary' },
+    { icon: Users, label: "Clientes Recorrentes", value: recurringClients, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Ticket Médio", value: `R$ ${ticketMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-display text-foreground">📊 Dashboard Individual</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Dados de <strong>{organization?.name || 'sua organização'}</strong>
-          </p>
-        </div>
-        {isSuperadmin && (
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/consolidado')} className="gap-1.5">
-            <Globe className="h-4 w-4" />
-            Ver Consolidado
+      <div className="bg-gradient-to-r from-purple-600/90 to-purple-400/60 rounded-xl p-5 text-white">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <Globe className="h-7 w-7" />
+            <div>
+              <h1 className="text-2xl font-display">Dashboard Consolidado</h1>
+              <p className="text-sm opacity-80 mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
+            </div>
+          </div>
+          <Button variant="secondary" size="sm" onClick={() => navigate('/')} className="gap-1.5">
+            <ArrowLeft className="h-4 w-4" />
+            Dashboard Individual
           </Button>
-        )}
+        </div>
+      </div>
+
+      {/* Warning banner */}
+      <div className="p-3 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+        <p className="text-xs text-yellow-800 dark:text-yellow-200">
+          ⚠️ <strong>Modo Consolidado Ativo:</strong> Os dados abaixo representam o agregado de todas as organizações.
+        </p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
@@ -112,8 +117,8 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Consolidated: Top Organizations */}
-      {isConsolidated && consolidatedData && consolidatedData.topOrganizations.length > 0 && (
+      {/* Top Organizations */}
+      {consolidatedData && consolidatedData.topOrganizations.length > 0 && (
         <Card className="shadow-card border-border/60">
           <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top Organizações por Receita</CardTitle></CardHeader>
           <CardContent>
@@ -135,10 +140,8 @@ export default function DashboardPage() {
         </Card>
       )}
 
-      {/* Stuck Leads Alert */}
-      <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
+      <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={() => navigate('/leads')} />
 
-      {/* Stage Metrics */}
       {stageMetrics.length > 0 && (
         <>
           <h2 className="text-lg font-display text-foreground">Métricas por Etapa</h2>
@@ -155,19 +158,19 @@ export default function DashboardPage() {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
                 <YAxis allowDecimals={false} />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)', boxShadow: '0 4px 12px -2px rgb(0 0 0 / 0.06)' }} />
-                <Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">{isConsolidated ? 'Leads por Organização' : 'Leads por Origem'}</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Organização</CardTitle></CardHeader>
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={isConsolidated && consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                  {(isConsolidated && consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                  {(consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
                 <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
               </PieChart>
@@ -222,7 +225,7 @@ export default function DashboardPage() {
                   <div key={day.day} className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground w-24">{day.day}</span>
                     <div className="flex-1 bg-muted rounded-full h-2">
-                      <div className="bg-primary h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
+                      <div className="bg-purple-500 h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
                     </div>
                     <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
@@ -231,13 +234,10 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
-
-        {!isConsolidated && <AIWeeklySummary />}
       </div>
 
-      {/* Product Insights */}
       {productInsights && (
-        <ProductInsights insights={productInsights} isSuperadmin={isSuperadmin} />
+        <ProductInsights insights={productInsights} isSuperadmin={true} />
       )}
     </div>
   );
