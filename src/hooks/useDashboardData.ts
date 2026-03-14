@@ -8,6 +8,11 @@ interface DashboardData {
   clients: number;
   conversionRate: string;
   totalRevenue: number;
+  totalSales: number;
+  recurringClients: number;
+  ticketMedio: number;
+  topProducts: { name: string; count: number; revenue: number }[];
+  salesByDay: { day: string; value: number }[];
   leadsByStage: { name: string; value: number }[];
   leadsByOrigin: { name: string; value: number }[];
   revenueByProduct: { name: string; value: number }[];
@@ -19,6 +24,11 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
   clients: 0,
   conversionRate: '0',
   totalRevenue: 0,
+  totalSales: 0,
+  recurringClients: 0,
+  ticketMedio: 0,
+  topProducts: [],
+  salesByDay: [],
   leadsByStage: [],
   leadsByOrigin: [],
   revenueByProduct: [],
