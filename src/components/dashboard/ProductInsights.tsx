@@ -149,7 +149,10 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                   <tbody>
                     {insights.funnelAnalysis.byStage.map((stage) => (
                       <tr key={stage.stage} className="border-b border-border/50 hover:bg-muted/30">
-                        <td className="p-2 font-semibold text-foreground">{stage.stage}</td>
+                        <td className="p-2 font-semibold text-foreground">
+                          {stage.stage}
+                          {stage.isFinalStage && <span className="text-xs text-success ml-1">✓ Final</span>}
+                        </td>
                         <td className="p-2 text-center text-muted-foreground">{stage.leads}</td>
                         <td className="p-2 text-center text-success font-semibold">{stage.converted}</td>
                         <td className="p-2 text-center">
