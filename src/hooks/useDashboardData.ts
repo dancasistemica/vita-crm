@@ -463,8 +463,9 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           console.log('[useDashboardData] ✅ Product Insights calculados');
         }
 
-        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics, productInsights: pInsights });
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
         setConsolidatedData(consolidatedExtra);
+        setProductInsights(pInsights);
       } catch (err) {
         console.error('[useDashboardData] ❌ Erro:', err);
         if (active) {
