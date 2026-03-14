@@ -366,7 +366,6 @@ export default function TarefasPage() {
   };
 
   const formatCreatedDate = (dateStr: string) => formatDateToBR(dateStr);
-  };
 
   const TaskItem = ({ task }: { task: TaskRow }) => {
     const assignedName = getMemberName(task.assigned_to);
