@@ -446,8 +446,9 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
             };
           });
 
-          const bottleneckStage = funnelByStage.length > 0
-            ? funnelByStage.reduce((prev, cur) => (cur.leads > 0 && cur.conversionRate < prev.conversionRate) ? cur : prev).stage
+          const nonFinalStages = funnelByStage.filter(s => !s.isFinalStage && s.leads > 0);
+          const bottleneckStage = nonFinalStages.length > 0
+            ? nonFinalStages.reduce((prev, cur) => cur.progressionRate < prev.progressionRate ? cur : prev).stage
             : null;
 
           const recommendedOptimization = bottleneckStage
@@ -456,15 +457,30 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
 
           // Usage patterns
           const periodDays = dateRange ? Math.max(1, Math.ceil((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24))) : 30;
-          const leadsPerDay = Math.round(totalLeads / periodDays);
-          const conversionPerDay = Math.round(clients / periodDays);
+          const leadsPerDay = periodDays > 0 ? Math.round((totalLeads / periodDays) * 10) / 10 : 0;
+          const conversionPerDay = periodDays > 0 ? Math.round((clients / periodDays) * 10) / 10 : 0;
+          
+          // Tempo médio: dias entre created_at e updated_at dos leads convertidos (último stage)
+          let avgTimeToConvert = 0;
+          if (clients > 0) {
+            const convertedLeadsList = leads.filter((l: any) => allLastStageIds.has(l.pipeline_stage));
+            if (convertedLeadsList.length > 0) {
+              const totalDays = convertedLeadsList.reduce((sum: number, l: any) => {
+                const created = new Date(l.created_at);
+                const updated = new Date(l.updated_at || l.created_at);
+                return sum + Math.max(0, (updated.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+              }, 0);
+              avgTimeToConvert = Math.round((totalDays / convertedLeadsList.length) * 10) / 10;
+            }
+          }
+          
           const seasonality = leadsPerDay > 10 ? 'high' : leadsPerDay > 5 ? 'medium' : 'low';
 
           pInsights = {
             topProducts: topProdsInsights,
             conversionBenchmark: { overallRate, byStage: benchmarkByStage },
             funnelAnalysis: { totalLeads, byStage: funnelByStage, bottleneckStage, recommendedOptimization },
-            usagePatterns: { leadsPerDay, conversionPerDay, avgTimeToConvert: 0, seasonality },
+            usagePatterns: { leadsPerDay, conversionPerDay, avgTimeToConvert, seasonality },
           };
           console.log('[useDashboardData] ✅ Product Insights calculados');
         }
