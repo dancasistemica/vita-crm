@@ -26,7 +26,7 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading } = useDashboardData(dateRange);
 
   // DEBUG LOGS
   console.log('[DashboardPage] User:', user?.email);
