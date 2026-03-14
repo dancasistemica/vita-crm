@@ -69,7 +69,7 @@ interface DashboardReturn extends DashboardData {
   productInsights: ProductInsightsData | null;
 }
 
-const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> & { productInsights: null } = {
+const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> = {
   totalLeads: 0,
   clients: 0,
   conversionRate: '0',
@@ -84,7 +84,6 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   revenueByProduct: [],
   stuckLeads: [],
   stageMetrics: [],
-  productInsights: null,
 };
 
 export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardReturn {
