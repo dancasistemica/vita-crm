@@ -172,7 +172,7 @@ export default function DashboardPage() {
         {/* Vendas por Dia */}
         {salesByDay.length > 0 && (
           <Card className="shadow-card border-border/60">
-            <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes (30 dias)</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-2">
                 {salesByDay.slice(-7).map((day) => (
