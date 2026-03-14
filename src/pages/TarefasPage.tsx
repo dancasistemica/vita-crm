@@ -8,16 +8,20 @@ import { Label } from "@/components/ui/label";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActionButtons from "@/components/tasks/TaskActionButtons";
 import TaskFilters from "@/components/tasks/TaskFilters";
+import TaskStatusManager from "@/components/tasks/TaskStatusManager";
+import NotificationCenter from "@/components/tasks/NotificationCenter";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle } from "lucide-react";
+import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
 import AIFollowUpGenerator from "@/components/ai/AIFollowUpGenerator";
 import { useDataAccess } from "@/hooks/useDataAccess";
 import { useLeadsData } from "@/hooks/useLeadsData";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface TaskRow {
   id: string;
@@ -27,9 +31,26 @@ interface TaskRow {
   completed: boolean;
   type: string | null;
   assigned_to: string | null;
+  status_id: string | null;
   organization_id: string;
   created_at: string;
   leads?: { name: string } | null;
+}
+
+interface TaskStatus {
+  id: string;
+  name: string;
+  color: string;
+  order_index: number;
+  organization_id: string;
+}
+
+interface TaskNotification {
+  id: string;
+  message: string;
+  type: string;
+  read: boolean;
+  created_at: string;
 }
 
 interface OrgMember {
@@ -40,12 +61,16 @@ interface OrgMember {
 
 export default function TarefasPage() {
   const dataAccess = useDataAccess();
+  const { user } = useAuth();
   const { leads, pipelineStages } = useLeadsData();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<TaskStatus[]>([]);
+  const [notifications, setNotifications] = useState<TaskNotification[]>([]);
   const [orgMembers, setOrgMembers] = useState<OrgMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskRow | null>(null);
+  const [showStatusManager, setShowStatusManager] = useState(false);
 
   // Filter state
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,10 +102,43 @@ export default function TarefasPage() {
     }
   }, [dataAccess]);
 
+  const fetchTaskStatuses = useCallback(async () => {
+    if (!dataAccess) return;
+    try {
+      const { data, error } = await supabase
+        .from('task_statuses')
+        .select('*')
+        .eq('organization_id', (dataAccess as any).orgId)
+        .order('order_index');
+      if (error) throw error;
+      setTaskStatuses((data || []) as TaskStatus[]);
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao carregar status:', err);
+    }
+  }, [dataAccess]);
+
+  const fetchNotifications = useCallback(async () => {
+    if (!user?.id || !dataAccess) return;
+    try {
+      const { data, error } = await supabase
+        .from('task_notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      setNotifications((data || []) as TaskNotification[]);
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao carregar notificações:', err);
+    }
+  }, [user?.id, dataAccess]);
+
   useEffect(() => {
     fetchTasks();
     fetchOrgMembers();
-  }, [fetchTasks, fetchOrgMembers]);
+    fetchTaskStatuses();
+    fetchNotifications();
+  }, [fetchTasks, fetchOrgMembers, fetchTaskStatuses, fetchNotifications]);
 
   // Client-side filtering
   const filteredTasks = useMemo(() => {
@@ -123,8 +181,12 @@ export default function TarefasPage() {
     const m = orgMembers.find(m => m.user_id === userId);
     return m?.profiles?.full_name || m?.profiles?.email || null;
   };
+  const getStatusById = (statusId: string | null) => {
+    if (!statusId) return null;
+    return taskStatuses.find(s => s.id === statusId) || null;
+  };
 
-  const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => {
+  const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
     if (!dataAccess) return;
     try {
       await dataAccess.createTask({
@@ -133,6 +195,7 @@ export default function TarefasPage() {
         due_date: data.dueDate || null,
         type: data.type || 'outro',
         assigned_to: data.assignedTo || null,
+        status_id: data.statusId || null,
       });
       toast.success("Tarefa criada!");
       setDialogOpen(false);
@@ -152,7 +215,7 @@ export default function TarefasPage() {
     }
   };
 
-  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => {
+  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
     if (!dataAccess || !editingTask) return;
     try {
       await dataAccess.updateTask(editingTask.id, {
@@ -161,6 +224,7 @@ export default function TarefasPage() {
         due_date: data.dueDate || null,
         type: data.type || 'outro',
         assigned_to: data.assignedTo || null,
+        status_id: data.statusId || null,
       });
       toast.success("Tarefa atualizada!");
       setDialogOpen(false);
@@ -183,6 +247,7 @@ export default function TarefasPage() {
         due_date: task.due_date,
         type: task.type,
         assigned_to: task.assigned_to,
+        status_id: task.status_id,
       });
       toast.success("Tarefa duplicada!");
       await fetchTasks();
@@ -220,9 +285,46 @@ export default function TarefasPage() {
       await dataAccess.updateTask(taskId, { assigned_to: userId });
       setTasks(prev => prev.map(t => t.id === taskId ? { ...t, assigned_to: userId } : t));
       toast.success(userId ? "Tarefa designada!" : "Designação removida");
+
+      // Create notification if assigning to someone
+      if (userId && user?.id && userId !== user.id) {
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+          await supabase.from('task_notifications').insert({
+            organization_id: task.organization_id,
+            task_id: taskId,
+            user_id: userId,
+            type: 'assigned',
+            message: `Você foi designado(a) para a tarefa "${task.title}"`,
+          } as any);
+        }
+      }
     } catch (err) {
       console.error('[TarefasPage] Erro ao designar tarefa:', err);
       toast.error("Erro ao designar tarefa");
+    }
+  };
+
+  const handleStatusChange = async (taskId: string, statusId: string | null) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.updateTask(taskId, { status_id: statusId });
+      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status_id: statusId } : t));
+
+      const task = tasks.find(t => t.id === taskId);
+      const newStatus = taskStatuses.find(s => s.id === statusId);
+      if (task?.assigned_to && user?.id && task.assigned_to !== user.id && newStatus) {
+        await supabase.from('task_notifications').insert({
+          organization_id: task.organization_id,
+          task_id: taskId,
+          user_id: task.assigned_to,
+          type: 'status_changed',
+          message: `Tarefa "${task.title}" foi movida para "${newStatus.name}"`,
+        } as any);
+      }
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao alterar status:', err);
+      toast.error("Erro ao alterar status");
     }
   };
 
@@ -231,8 +333,44 @@ export default function TarefasPage() {
     if (!open) setEditingTask(null);
   };
 
+  // Status management handlers
+  const handleCreateStatus = async (data: { name: string; color: string; order_index: number }) => {
+    if (!dataAccess) return;
+    await supabase.from('task_statuses').insert({
+      ...data,
+      organization_id: (dataAccess as any).orgId,
+    } as any);
+    await fetchTaskStatuses();
+  };
+
+  const handleUpdateStatus = async (id: string, data: { name: string; color: string }) => {
+    await supabase.from('task_statuses').update(data).eq('id', id);
+    await fetchTaskStatuses();
+  };
+
+  const handleDeleteStatus = async (id: string) => {
+    await supabase.from('task_statuses').delete().eq('id', id);
+    await fetchTaskStatuses();
+  };
+
+  const handleMarkNotificationRead = async (id: string) => {
+    await supabase.from('task_notifications').update({ read: true }).eq('id', id);
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const handleMarkAllRead = async () => {
+    if (!user?.id) return;
+    await supabase.from('task_notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const formatCreatedDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  };
+
   const TaskItem = ({ task }: { task: TaskRow }) => {
     const assignedName = getMemberName(task.assigned_to);
+    const status = getStatusById(task.status_id);
 
     return (
       <Card className={task.completed ? 'opacity-50' : ''}>
@@ -250,8 +388,38 @@ export default function TarefasPage() {
                   {assignedName}
                 </Badge>
               )}
+              {status && (
+                <Badge className="text-xs text-white" style={{ backgroundColor: status.color }}>
+                  {status.name}
+                </Badge>
+              )}
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                {formatCreatedDate(task.created_at)}
+              </span>
             </div>
           </div>
+
+          {/* Status selector */}
+          {taskStatuses.length > 0 && (
+            <Select value={task.status_id || 'none'} onValueChange={v => handleStatusChange(task.id, v === 'none' ? null : v)}>
+              <SelectTrigger className="w-32 h-8 text-xs">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Sem status</SelectItem>
+                {taskStatuses.map(s => (
+                  <SelectItem key={s.id} value={s.id}>
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: s.color }} />
+                      {s.name}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
           <AssignPopover taskId={task.id} assignedTo={task.assigned_to} orgMembers={orgMembers} onAssign={handleAssign} />
           <TaskActionButtons
             taskId={task.id}
@@ -277,20 +445,40 @@ export default function TarefasPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
-        <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
-          <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</Button></DialogTrigger>
-          <DialogContent>
-            <DialogHeader><DialogTitle className="font-display">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle></DialogHeader>
-            <TaskForm
-              leads={leads}
-              pipelineStages={pipelineStages}
-              orgMembers={orgMembers}
-              onSave={editingTask ? handleSaveEdit : handleAdd}
-              initialData={editingTask}
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-2">
+          <NotificationCenter
+            notifications={notifications}
+            onMarkAsRead={handleMarkNotificationRead}
+            onMarkAllAsRead={handleMarkAllRead}
+          />
+          <Button variant="outline" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+            <Settings className="h-4 w-4 mr-1" /> Status
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
+            <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</Button></DialogTrigger>
+            <DialogContent>
+              <DialogHeader><DialogTitle className="font-display">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle></DialogHeader>
+              <TaskForm
+                leads={leads}
+                pipelineStages={pipelineStages}
+                orgMembers={orgMembers}
+                taskStatuses={taskStatuses}
+                onSave={editingTask ? handleSaveEdit : handleAdd}
+                initialData={editingTask}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
+      {showStatusManager && (
+        <TaskStatusManager
+          statuses={taskStatuses}
+          onCreateStatus={handleCreateStatus}
+          onUpdateStatus={handleUpdateStatus}
+          onDeleteStatus={handleDeleteStatus}
+        />
+      )}
 
       <TaskFilters
         searchTerm={searchTerm}
@@ -374,11 +562,12 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
 }
 
 // ── Task Form ──
-function TaskForm({ leads, pipelineStages, orgMembers, onSave, initialData }: {
+function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, initialData }: {
   leads: any[];
   pipelineStages: any[];
   orgMembers: OrgMember[];
-  onSave: (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => void;
+  taskStatuses: TaskStatus[];
+  onSave: (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => void;
   initialData?: TaskRow | null;
 }) {
   const [form, setForm] = useState({
@@ -387,6 +576,7 @@ function TaskForm({ leads, pipelineStages, orgMembers, onSave, initialData }: {
     dueDate: initialData?.due_date || new Date().toISOString().split('T')[0],
     type: initialData?.type || 'follow_up',
     assignedTo: initialData?.assigned_to || '',
+    statusId: initialData?.status_id || '',
   });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
@@ -411,19 +601,35 @@ function TaskForm({ leads, pipelineStages, orgMembers, onSave, initialData }: {
         <div><Label>Data</Label><Input type="date" value={form.dueDate} onChange={e => set('dueDate', e.target.value)} /></div>
       </div>
 
-      <div>
-        <Label>Responsável</Label>
-        <Select value={form.assignedTo || 'none'} onValueChange={v => set('assignedTo', v === 'none' ? '' : v)}>
-          <SelectTrigger><SelectValue placeholder="Selecionar responsável" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">Sem responsável</SelectItem>
-            {orgMembers.map(m => (
-              <SelectItem key={m.user_id} value={m.user_id}>
-                {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Responsável</Label>
+          <Select value={form.assignedTo || 'none'} onValueChange={v => set('assignedTo', v === 'none' ? '' : v)}>
+            <SelectTrigger><SelectValue placeholder="Selecionar responsável" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sem responsável</SelectItem>
+              {orgMembers.map(m => (
+                <SelectItem key={m.user_id} value={m.user_id}>
+                  {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {taskStatuses.length > 0 && (
+          <div>
+            <Label>Status</Label>
+            <Select value={form.statusId || 'none'} onValueChange={v => set('statusId', v === 'none' ? '' : v)}>
+              <SelectTrigger><SelectValue placeholder="Selecionar status" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Sem status</SelectItem>
+                {taskStatuses.map(s => (
+                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {form.type === 'follow_up' && selectedLead && (
