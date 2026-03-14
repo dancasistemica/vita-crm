@@ -128,13 +128,12 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           .sort((a, b) => b.revenue - a.revenue)
           .slice(0, 5);
 
-        // Sales by day (last 30 days)
-        const last30 = new Date();
-        last30.setDate(last30.getDate() - 30);
+        // Sales by day (within selected period or last 30 days)
+        const periodStart = dateRange?.start || (() => { const d = new Date(); d.setDate(d.getDate() - 30); return d; })();
         const salesByDayMap: Record<string, number> = {};
         sales.forEach((s) => {
           const d = new Date(s.created_at || '');
-          if (d >= last30) {
+          if (d >= periodStart) {
             const key = d.toLocaleDateString('pt-BR');
             salesByDayMap[key] = (salesByDayMap[key] || 0) + (s.value || 0);
           }
