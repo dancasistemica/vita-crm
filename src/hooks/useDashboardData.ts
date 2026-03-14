@@ -69,7 +69,7 @@ interface DashboardReturn extends DashboardData {
   productInsights: ProductInsightsData | null;
 }
 
-const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> = {
+const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> & { productInsights: null } = {
   totalLeads: 0,
   clients: 0,
   conversionRate: '0',
