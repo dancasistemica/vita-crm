@@ -54,6 +54,7 @@ const App = () => (
                 <Route path="/admin/users" element={<AdminUsersPage />} />
                 <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
+                <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
                 <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                 <Route path="/pipeline" element={<PipelinePage />} />

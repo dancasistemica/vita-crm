@@ -232,7 +232,7 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {!isConsolidated && <AIWeeklySummary />}
+        <AIWeeklySummary />
       </div>
 
       {/* Product Insights */}
