@@ -417,7 +417,7 @@ export class DataAccessService {
   async getOrgMembers() {
     const { data, error } = await supabase
       .from('organization_members')
-      .select('*, profiles(full_name, email, phone, avatar_url)')
+      .select('id, user_id, organization_id, role, created_at')
       .eq('organization_id', this.orgId);
     if (error) { console.error('[DataAccessService] getOrgMembers error:', error); throw error; }
     return data || [];
