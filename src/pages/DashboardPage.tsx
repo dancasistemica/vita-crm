@@ -12,7 +12,7 @@ const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(1
 export default function DashboardPage() {
   const { user } = useAuth();
   const { organization, organizationId } = useOrganization();
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
 
   // DEBUG LOGS
   console.log('[DashboardPage] User:', user?.email);
@@ -25,6 +25,9 @@ export default function DashboardPage() {
     { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
     { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
+    { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
   ];
 
   if (loading) {
@@ -113,6 +116,49 @@ export default function DashboardPage() {
                   <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Top Produtos */}
+        {topProducts.length > 0 && (
+          <Card className="shadow-card border-border/60">
+            <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top 5 Produtos</CardTitle></CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {topProducts.map((product, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                      <div>
+                        <p className="font-semibold text-foreground">{product.name}</p>
+                        <p className="text-sm text-muted-foreground">{product.count} vendas</p>
+                      </div>
+                    </div>
+                    <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Vendas por Dia */}
+        {salesByDay.length > 0 && (
+          <Card className="shadow-card border-border/60">
+            <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes (30 dias)</CardTitle></CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {salesByDay.slice(-7).map((day) => (
+                  <div key={day.day} className="flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground w-24">{day.day}</span>
+                    <div className="flex-1 bg-muted rounded-full h-2">
+                      <div className="bg-primary h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
+                    </div>
+                    <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         )}

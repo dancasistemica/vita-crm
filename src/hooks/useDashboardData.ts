@@ -8,6 +8,11 @@ interface DashboardData {
   clients: number;
   conversionRate: string;
   totalRevenue: number;
+  totalSales: number;
+  recurringClients: number;
+  ticketMedio: number;
+  topProducts: { name: string; count: number; revenue: number }[];
+  salesByDay: { day: string; value: number }[];
   leadsByStage: { name: string; value: number }[];
   leadsByOrigin: { name: string; value: number }[];
   revenueByProduct: { name: string; value: number }[];
@@ -19,6 +24,11 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
   clients: 0,
   conversionRate: '0',
   totalRevenue: 0,
+  totalSales: 0,
+  recurringClients: 0,
+  ticketMedio: 0,
+  topProducts: [],
+  salesByDay: [],
   leadsByStage: [],
   leadsByOrigin: [],
   revenueByProduct: [],
@@ -62,7 +72,7 @@ export function useDashboardData(): DashboardData {
       try {
         const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all([
           supabase.from('leads').select('id, pipeline_stage, origin').eq('organization_id', organizationId),
-          supabase.from('sales').select('id, value, product_id').eq('organization_id', organizationId),
+          supabase.from('sales').select('id, value, product_id, lead_id, created_at').eq('organization_id', organizationId),
           supabase.from('products').select('id, name').eq('organization_id', organizationId),
           supabase.from('pipeline_stages').select('id, name, sort_order').eq('organization_id', organizationId).eq('active', true).order('sort_order'),
           supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId).eq('active', true),
@@ -85,6 +95,43 @@ export function useDashboardData(): DashboardData {
         const clients = lastStage ? leads.filter((l) => l.pipeline_stage === lastStage.id).length : 0;
         const conversionRate = totalLeads ? ((clients / totalLeads) * 100).toFixed(1) : '0';
         const totalRevenue = sales.reduce((sum, s) => sum + (s.value || 0), 0);
+        const totalSales = sales.length;
+        const ticketMedio = totalSales > 0 ? totalRevenue / totalSales : 0;
+
+        // Recurring clients: leads with more than 1 sale
+        const leadSalesCount: Record<string, number> = {};
+        sales.forEach((s) => {
+          leadSalesCount[s.lead_id] = (leadSalesCount[s.lead_id] || 0) + 1;
+        });
+        const recurringClients = Object.values(leadSalesCount).filter((c) => c > 1).length;
+
+        // Top products by revenue
+        const productRevenueMap: Record<string, { name: string; count: number; revenue: number }> = {};
+        sales.forEach((s) => {
+          if (!s.product_id) return;
+          if (!productRevenueMap[s.product_id]) {
+            const prod = products.find((p) => p.id === s.product_id);
+            productRevenueMap[s.product_id] = { name: prod?.name || 'Sem nome', count: 0, revenue: 0 };
+          }
+          productRevenueMap[s.product_id].count += 1;
+          productRevenueMap[s.product_id].revenue += s.value || 0;
+        });
+        const topProducts = Object.values(productRevenueMap)
+          .sort((a, b) => b.revenue - a.revenue)
+          .slice(0, 5);
+
+        // Sales by day (last 30 days)
+        const last30 = new Date();
+        last30.setDate(last30.getDate() - 30);
+        const salesByDayMap: Record<string, number> = {};
+        sales.forEach((s) => {
+          const d = new Date(s.created_at || '');
+          if (d >= last30) {
+            const key = d.toLocaleDateString('pt-BR');
+            salesByDayMap[key] = (salesByDayMap[key] || 0) + (s.value || 0);
+          }
+        });
+        const salesByDay = Object.entries(salesByDayMap).map(([day, value]) => ({ day, value }));
 
         const leadsByStage = stages.map((s) => ({
           name: s.name.length > 12 ? `${s.name.slice(0, 12)}…` : s.name,
@@ -120,15 +167,11 @@ export function useDashboardData(): DashboardData {
         }
 
         console.log('[useDashboardData] ✅ Dados calculados:', {
-          totalLeads,
-          clients,
-          totalRevenue,
-          stages: stages.length,
-          origins: origins.length,
+          totalLeads, clients, totalRevenue, totalSales, recurringClients, topProducts: topProducts.length,
         });
 
         if (!active) return;
-        setData({ totalLeads, clients, conversionRate, totalRevenue, leadsByStage, leadsByOrigin, revenueByProduct });
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct });
       } catch (err) {
         console.error('[useDashboardData] ❌ Erro:', err);
         if (active) setData(EMPTY_DATA);
