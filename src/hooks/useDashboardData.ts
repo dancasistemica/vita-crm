@@ -23,6 +23,28 @@ export interface ConsolidatedData {
   topOrganizations: { id: string; name: string; leads: number; revenue: number; conversionRate: number }[];
 }
 
+export interface ProductInsightsData {
+  topProducts: { name: string; sales: number; revenue: number; percentOfTotal: number }[];
+  conversionBenchmark: {
+    overallRate: number;
+    byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
+    orgsAboveAverage: number;
+    orgsBelowAverage: number;
+  };
+  funnelAnalysis: {
+    totalLeads: number;
+    byStage: { stage: string; leads: number; converted: number; conversionRate: number; avgDaysInStage: number; abandonmentRate: number }[];
+    bottleneckStage: string | null;
+    recommendedOptimization: string;
+  };
+  usagePatterns: {
+    leadsPerDay: number;
+    conversionPerDay: number;
+    avgTimeToConvert: number;
+    seasonality: string;
+  };
+}
+
 interface DashboardData {
   totalLeads: number;
   clients: number;
@@ -43,6 +65,10 @@ interface DashboardData {
   consolidatedData: ConsolidatedData | null;
 }
 
+interface DashboardReturn extends DashboardData {
+  productInsights: ProductInsightsData | null;
+}
+
 const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> = {
   totalLeads: 0,
   clients: 0,
@@ -60,12 +86,13 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   stageMetrics: [],
 };
 
-export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
+export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardReturn {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
   const [data, setData] = useState<Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'>>(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
   const [consolidatedData, setConsolidatedData] = useState<ConsolidatedData | null>(null);
+  const [productInsights, setProductInsights] = useState<ProductInsightsData | null>(null);
 
   const isConsolidated = organizationId === CONSOLIDATED_ORG_ID;
 
@@ -371,8 +398,73 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
         });
 
         if (!active) return;
+
+        // Calculate product insights for consolidated mode
+        let pInsights: ProductInsightsData | null = null;
+        if (consolidated) {
+          const totalRev = sales.reduce((sum: number, s: any) => sum + (s.value || 0), 0);
+          // Top products with percent
+          const topProdsInsights = Object.values(productRevenueMap)
+            .sort((a, b) => b.revenue - a.revenue)
+            .slice(0, 5)
+            .map(p => ({ name: p.name, sales: p.count, revenue: p.revenue, percentOfTotal: totalRev > 0 ? (p.revenue / totalRev) * 100 : 0 }));
+
+          // Conversion benchmark by stage
+          const overallRate = totalLeads > 0 ? (clients / totalLeads) * 100 : 0;
+          const benchmarkByStage = stageMetrics.map(sm => ({
+            stage: sm.name,
+            rate: sm.conversionRate,
+            leadsCount: sm.leadCount,
+            isBottleneck: sm.conversionRate < overallRate * 0.7 && sm.leadCount > 0,
+          }));
+
+          // Org benchmark
+          const topOrgs = consolidatedExtra?.topOrganizations || [];
+          const orgsAbove = topOrgs.filter(o => o.conversionRate >= overallRate).length;
+          const orgsBelow = topOrgs.filter(o => o.conversionRate < overallRate).length;
+
+          // Funnel analysis
+          const funnelByStage = stageMetrics.map(sm => {
+            const converted = clients > 0 && sm.leadCount > 0
+              ? Math.round((sm.conversionRate / 100) * sm.leadCount)
+              : 0;
+            const abandonmentRate = sm.leadCount > 0 ? ((sm.leadCount - converted) / sm.leadCount) * 100 : 0;
+            return {
+              stage: sm.name,
+              leads: sm.leadCount,
+              converted,
+              conversionRate: sm.conversionRate,
+              avgDaysInStage: sm.avgDaysInStage,
+              abandonmentRate,
+            };
+          });
+
+          const bottleneckStage = funnelByStage.length > 0
+            ? funnelByStage.reduce((prev, cur) => (cur.leads > 0 && cur.conversionRate < prev.conversionRate) ? cur : prev).stage
+            : null;
+
+          const recommendedOptimization = bottleneckStage
+            ? `Otimizar etapa "${bottleneckStage}" pode aumentar conversão geral em ~${((overallRate * 0.15)).toFixed(1)}%`
+            : 'Funil otimizado';
+
+          // Usage patterns
+          const periodDays = dateRange ? Math.max(1, Math.ceil((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24))) : 30;
+          const leadsPerDay = Math.round(totalLeads / periodDays);
+          const conversionPerDay = Math.round(clients / periodDays);
+          const seasonality = leadsPerDay > 10 ? 'high' : leadsPerDay > 5 ? 'medium' : 'low';
+
+          pInsights = {
+            topProducts: topProdsInsights,
+            conversionBenchmark: { overallRate, byStage: benchmarkByStage, orgsAboveAverage: orgsAbove, orgsBelowAverage: orgsBelow },
+            funnelAnalysis: { totalLeads, byStage: funnelByStage, bottleneckStage, recommendedOptimization },
+            usagePatterns: { leadsPerDay, conversionPerDay, avgTimeToConvert: 0, seasonality },
+          };
+          console.log('[useDashboardData] ✅ Product Insights calculados');
+        }
+
         setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
         setConsolidatedData(consolidatedExtra);
+        setProductInsights(pInsights);
       } catch (err) {
         console.error('[useDashboardData] ❌ Erro:', err);
         if (active) {
@@ -391,5 +483,5 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
     };
   }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
-  return { ...data, loading, isConsolidated, consolidatedData };
+  return { ...data, loading, isConsolidated, consolidatedData, productInsights };
 }

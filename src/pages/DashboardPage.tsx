@@ -8,14 +8,17 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useAuth } from "@/hooks/useAuth";
+import { useSuperadmin } from "@/hooks/useSuperadmin";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";
+import ProductInsights from "@/components/dashboard/ProductInsights";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { isSuperadmin } = useSuperadmin();
   const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
   
@@ -26,7 +29,7 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, isConsolidated, consolidatedData } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, isConsolidated, consolidatedData, productInsights } = useDashboardData(dateRange);
 
   console.log('[DashboardPage] User:', user?.email);
   console.log('[DashboardPage] Organization:', organizationId, organization?.name);
@@ -229,6 +232,11 @@ export default function DashboardPage() {
 
         {!isConsolidated && <AIWeeklySummary />}
       </div>
+
+      {/* Product Insights - Consolidated Only */}
+      {isConsolidated && productInsights && (
+        <ProductInsights insights={productInsights} isSuperadmin={isSuperadmin} />
+      )}
     </div>
   );
 }
