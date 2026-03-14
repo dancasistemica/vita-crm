@@ -3,6 +3,21 @@ import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 
+export interface StuckLead {
+  id: string;
+  name: string;
+  email: string;
+  stage: string;
+  daysInStage: number;
+}
+
+export interface StageMetric {
+  name: string;
+  leadCount: number;
+  conversionRate: number;
+  avgDaysInStage: number;
+}
+
 interface DashboardData {
   totalLeads: number;
   clients: number;
@@ -16,6 +31,8 @@ interface DashboardData {
   leadsByStage: { name: string; value: number }[];
   leadsByOrigin: { name: string; value: number }[];
   revenueByProduct: { name: string; value: number }[];
+  stuckLeads: StuckLead[];
+  stageMetrics: StageMetric[];
   loading: boolean;
 }
 
