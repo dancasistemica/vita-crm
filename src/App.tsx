@@ -8,6 +8,7 @@ import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
+import ConsolidatedDashboardPage from "@/pages/ConsolidatedDashboardPage";
 import LeadsPage from "@/pages/LeadsPage";
 import PipelinePage from "@/pages/PipelinePage";
 import ClientesPage from "@/pages/ClientesPage";
