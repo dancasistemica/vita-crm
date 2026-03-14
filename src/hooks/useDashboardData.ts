@@ -192,7 +192,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
     return () => {
       active = false;
     };
-  }, [organizationId, orgLoading, isSuperadmin, superadminLoading]);
+  }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
   return { ...data, loading };
 }
