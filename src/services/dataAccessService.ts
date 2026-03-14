@@ -6,11 +6,15 @@ interface DataAccessOptions {
 }
 
 export class DataAccessService {
-  private orgId: string;
+  private _orgId: string;
   private userId: string;
 
+  get orgId(): string {
+    return this._orgId;
+  }
+
   constructor(options: DataAccessOptions) {
-    this.orgId = options.organizationId;
+    this._orgId = options.organizationId;
     this.userId = options.userId;
     console.log('[DataAccessService] Inicializado para org:', this.orgId);
   }
@@ -324,7 +328,50 @@ export class DataAccessService {
     return true;
   }
 
-  // ── CONFIG TABLES ──────────────────────────────────────
+  // ── TASK STATUSES ───────────────────────────────────────
+  async getTaskStatuses() {
+    const { data, error } = await supabase
+      .from('task_statuses')
+      .select('*')
+      .eq('organization_id', this.orgId)
+      .order('order_index');
+    if (error) { console.error('[DataAccessService] getTaskStatuses error:', error); throw error; }
+    return data || [];
+  }
+
+  async createTaskStatus(statusData: Record<string, unknown>) {
+    const { data, error } = await supabase
+      .from('task_statuses')
+      .insert({ ...statusData, organization_id: this.orgId } as any)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] createTaskStatus error:', error); throw error; }
+    return data;
+  }
+
+  async updateTaskStatus(statusId: string, statusData: Record<string, unknown>) {
+    const { data, error } = await supabase
+      .from('task_statuses')
+      .update(statusData)
+      .eq('id', statusId)
+      .eq('organization_id', this.orgId)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] updateTaskStatus error:', error); throw error; }
+    return data;
+  }
+
+  async deleteTaskStatus(statusId: string) {
+    const { error } = await supabase
+      .from('task_statuses')
+      .delete()
+      .eq('id', statusId)
+      .eq('organization_id', this.orgId);
+    if (error) { console.error('[DataAccessService] deleteTaskStatus error:', error); throw error; }
+    return true;
+  }
+
+
   async getPipelineStages() {
     const { data, error } = await supabase
       .from('pipeline_stages')
