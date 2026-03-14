@@ -67,6 +67,8 @@ export default function DashboardPage() {
         <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
       </div>
 
+      <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
           <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
