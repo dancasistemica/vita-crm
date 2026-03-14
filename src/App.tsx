@@ -8,6 +8,7 @@ import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
+import ConsolidatedDashboardPage from "@/pages/ConsolidatedDashboardPage";
 import LeadsPage from "@/pages/LeadsPage";
 import PipelinePage from "@/pages/PipelinePage";
 import ClientesPage from "@/pages/ClientesPage";
@@ -53,6 +54,7 @@ const App = () => (
                 <Route path="/admin/users" element={<AdminUsersPage />} />
                 <Route path="/debug" element={<DebugMultiTenantPage />} />
                 <Route path="/" element={<DashboardPage />} />
+                <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
                 <Route path="/leads" element={<LeadsPage />} />
                 <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                 <Route path="/pipeline" element={<PipelinePage />} />
