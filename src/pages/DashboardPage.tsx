@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
@@ -8,11 +9,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useAuth } from "@/hooks/useAuth";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
+import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
+import StageMetrics from "@/components/dashboard/StageMetrics";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
   
   const [dateRange, setDateRange] = useState<DateRange>(() => {
@@ -22,7 +26,7 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading } = useDashboardData(dateRange);
 
   // DEBUG LOGS
   console.log('[DashboardPage] User:', user?.email);
@@ -86,6 +90,16 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
+      {/* Stuck Leads Alert */}
+      <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
+
+      {/* Stage Metrics */}
+      {stageMetrics.length > 0 && (
+        <>
+          <h2 className="text-lg font-display text-foreground">Métricas por Etapa</h2>
+          <StageMetrics metrics={stageMetrics} />
+        </>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-card border-border/60">
