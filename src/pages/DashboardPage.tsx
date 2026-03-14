@@ -232,6 +232,11 @@ export default function DashboardPage() {
 
         {!isConsolidated && <AIWeeklySummary />}
       </div>
+
+      {/* Product Insights - Consolidated Only */}
+      {isConsolidated && productInsights && (
+        <ProductInsights insights={productInsights} isSuperadmin={isSuperadmin} />
+      )}
     </div>
   );
 }
