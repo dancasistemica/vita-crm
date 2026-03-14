@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface Organization {
+export const CONSOLIDATED_ORG_ID = 'consolidado';
+
+export interface Organization {
   id: string;
   name: string;
   slug: string;
@@ -12,6 +14,18 @@ interface Organization {
   max_leads: number;
   active: boolean;
 }
+
+const CONSOLIDATED_ORG: Organization = {
+  id: CONSOLIDATED_ORG_ID,
+  name: '🌐 Consolidado (Todas as Orgs)',
+  slug: 'consolidado',
+  logo_url: null,
+  primary_color: '#3B82F6',
+  plan: 'agency',
+  max_users: 9999,
+  max_leads: 9999,
+  active: true,
+};
 
 interface OrganizationContextType {
   organization: Organization | null;
