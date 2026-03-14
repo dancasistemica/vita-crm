@@ -483,5 +483,5 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
     };
   }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
-  return { ...data, loading, isConsolidated, consolidatedData };
+  return { ...data, loading, isConsolidated, consolidatedData, productInsights: data.productInsights };
 }
