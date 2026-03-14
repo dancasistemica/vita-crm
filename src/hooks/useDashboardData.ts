@@ -28,10 +28,6 @@ export interface ProductInsightsData {
   conversionBenchmark: {
     overallRate: number;
     byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
-    orgsAboveAverage: number;
-    orgsBelowAverage: number;
-    benchmarkMessage: string;
-    isAboveAverage: boolean;
   };
   funnelAnalysis: {
     totalLeads: number;
@@ -455,23 +451,9 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           const conversionPerDay = Math.round(clients / periodDays);
           const seasonality = leadsPerDay > 10 ? 'high' : leadsPerDay > 5 ? 'medium' : 'low';
 
-          // Benchmark context
-          const saasAvgBenchmark = 17.5;
-          let benchmarkMessage: string;
-          let isAboveAverage: boolean;
-          if (consolidated) {
-            benchmarkMessage = `${orgsAbove} orgs acima da média, ${orgsBelow} abaixo`;
-            isAboveAverage = orgsAbove >= orgsBelow;
-          } else {
-            isAboveAverage = overallRate >= saasAvgBenchmark;
-            benchmarkMessage = isAboveAverage
-              ? `Sua taxa (${overallRate.toFixed(1)}%) está acima da média SaaS (${saasAvgBenchmark}%)`
-              : `Sua taxa (${overallRate.toFixed(1)}%) está abaixo da média SaaS (${saasAvgBenchmark}%)`;
-          }
-
           pInsights = {
             topProducts: topProdsInsights,
-            conversionBenchmark: { overallRate, byStage: benchmarkByStage, orgsAboveAverage: orgsAbove, orgsBelowAverage: orgsBelow, benchmarkMessage, isAboveAverage },
+            conversionBenchmark: { overallRate, byStage: benchmarkByStage },
             funnelAnalysis: { totalLeads, byStage: funnelByStage, bottleneckStage, recommendedOptimization },
             usagePatterns: { leadsPerDay, conversionPerDay, avgTimeToConvert: 0, seasonality },
           };

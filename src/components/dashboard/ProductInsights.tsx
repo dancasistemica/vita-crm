@@ -7,10 +7,6 @@ export interface ProductInsightsData {
   conversionBenchmark: {
     overallRate: number;
     byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
-    orgsAboveAverage: number;
-    orgsBelowAverage: number;
-    benchmarkMessage: string;
-    isAboveAverage: boolean;
   };
   funnelAnalysis: {
     totalLeads: number;
@@ -76,52 +72,22 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
         </Card>
       )}
 
-      {/* TIER 2: BENCHMARK DE CONVERSÃO */}
+      {/* TIER 2: TAXA DE CONVERSÃO (ISOLADA) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className={`shadow-card border-border/60 bg-gradient-to-br ${
-          insights.conversionBenchmark.isAboveAverage
-            ? 'from-success/5 to-success/10'
-            : 'from-warning/5 to-warning/10'
-        }`}>
+        <Card className="shadow-card border-border/60 bg-gradient-to-br from-success/5 to-success/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-display">📊 Taxa de Conversão</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={`text-5xl font-bold mb-2 ${
-              insights.conversionBenchmark.isAboveAverage ? 'text-success' : 'text-warning'
-            }`}>
+            <p className="text-5xl font-bold text-success mb-2">
               {insights.conversionBenchmark.overallRate.toFixed(1)}%
             </p>
-            <p className={`text-sm mb-4 ${
-              insights.conversionBenchmark.isAboveAverage ? 'text-success' : 'text-warning'
-            }`}>
-              {insights.conversionBenchmark.benchmarkMessage}
+            <p className="text-sm text-muted-foreground">
+              {insights.conversionBenchmark.overallRate > 0
+                ? `${Math.round(insights.conversionBenchmark.overallRate * insights.funnelAnalysis.totalLeads / 100)} conversões de ${insights.funnelAnalysis.totalLeads} leads`
+                : 'Nenhum lead neste período'
+              }
             </p>
-            <div className={`space-y-2 p-3 rounded-lg bg-card border ${
-              insights.conversionBenchmark.isAboveAverage ? 'border-success/20' : 'border-warning/20'
-            }`}>
-              {insights.conversionBenchmark.isAboveAverage ? (
-                <>
-                  <p className="text-sm font-semibold text-success">✅ Desempenho Acima da Média</p>
-                  <p className="text-xs text-muted-foreground">Sua taxa de conversão está acima do benchmark. Continue otimizando!</p>
-                </>
-              ) : (
-                <>
-                  <p className="text-sm font-semibold text-warning">⚠️ Oportunidade de Melhoria</p>
-                  <p className="text-xs text-muted-foreground">Sua taxa está abaixo da média. Foque em otimizar o funil para aumentar conversão.</p>
-                </>
-              )}
-            </div>
-            {isSuperadmin && (insights.conversionBenchmark.orgsAboveAverage > 0 || insights.conversionBenchmark.orgsBelowAverage > 0) && (
-              <div className="space-y-2 mt-4">
-                <p className="text-sm">
-                  <span className="font-semibold text-success">✅ {insights.conversionBenchmark.orgsAboveAverage}</span> orgs acima da média
-                </p>
-                <p className="text-sm">
-                  <span className="font-semibold text-warning">⚠️ {insights.conversionBenchmark.orgsBelowAverage}</span> orgs abaixo da média
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
 
