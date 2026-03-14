@@ -89,6 +89,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
   const [data, setData] = useState<Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'>>(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
   const [consolidatedData, setConsolidatedData] = useState<ConsolidatedData | null>(null);
+  const [productInsights, setProductInsights] = useState<ProductInsightsData | null>(null);
 
   const isConsolidated = organizationId === CONSOLIDATED_ORG_ID;
 
