@@ -71,7 +71,7 @@ export default function TarefasPage() {
     if (!dataAccess) return;
     try {
       const data = await dataAccess.getOrgMembers();
-      setOrgMembers(data as OrgMember[]);
+      setOrgMembers((data as unknown as OrgMember[]) || []);
     } catch (err) {
       console.error('[TarefasPage] Erro ao carregar membros:', err);
     }
