@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
+import { useOrganization, CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 
 export interface StuckLead {
@@ -16,6 +16,11 @@ export interface StageMetric {
   leadCount: number;
   conversionRate: number;
   avgDaysInStage: number;
+}
+
+export interface ConsolidatedData {
+  totalOrganizations: number;
+  topOrganizations: { id: string; name: string; leads: number; revenue: number; conversionRate: number }[];
 }
 
 interface DashboardData {
@@ -34,9 +39,11 @@ interface DashboardData {
   stuckLeads: StuckLead[];
   stageMetrics: StageMetric[];
   loading: boolean;
+  isConsolidated: boolean;
+  consolidatedData: ConsolidatedData | null;
 }
 
-const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
+const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> = {
   totalLeads: 0,
   clients: 0,
   conversionRate: '0',
@@ -56,8 +63,11 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
 export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
-  const [data, setData] = useState<Omit<DashboardData, 'loading'>>(EMPTY_DATA);
+  const [data, setData] = useState<Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'>>(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
+  const [consolidatedData, setConsolidatedData] = useState<ConsolidatedData | null>(null);
+
+  const isConsolidated = organizationId === CONSOLIDATED_ORG_ID;
 
   useEffect(() => {
     console.log('[useDashboardData] 🔍 Estado atual:', {
@@ -65,6 +75,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
       superadminLoading,
       organizationId,
       isSuperadmin,
+      isConsolidated: organizationId === CONSOLIDATED_ORG_ID,
     });
 
     if (orgLoading || superadminLoading) {
@@ -75,6 +86,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
     if (!organizationId) {
       console.warn('[useDashboardData] ⚠️ Sem organizationId');
       setData(EMPTY_DATA);
+      setConsolidatedData(null);
       setLoading(false);
       return;
     }
@@ -83,19 +95,45 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
 
     const fetchData = async () => {
       setLoading(true);
-      console.log('[useDashboardData] 🚀 Iniciando carregamento de dados', {
+      const consolidated = organizationId === CONSOLIDATED_ORG_ID;
+      console.log('[useDashboardData] 🚀 Iniciando carregamento', {
         organizationId,
         isSuperadmin,
+        mode: consolidated ? 'CONSOLIDADO' : 'ORGANIZAÇÃO',
       });
 
       try {
-        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all([
-          supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at').eq('organization_id', organizationId),
-          supabase.from('sales').select('id, value, product_id, lead_id, created_at').eq('organization_id', organizationId),
-          supabase.from('products').select('id, name').eq('organization_id', organizationId),
-          supabase.from('pipeline_stages').select('id, name, sort_order').eq('organization_id', organizationId).eq('active', true).order('sort_order'),
-          supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId).eq('active', true),
-        ]);
+        // Build queries: consolidated mode queries ALL data (superadmin RLS allows it)
+        const leadsQ = consolidated
+          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id')
+          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id').eq('organization_id', organizationId);
+
+        const salesQ = consolidated
+          ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
+          : supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id').eq('organization_id', organizationId);
+
+        const productsQ = consolidated
+          ? supabase.from('products').select('id, name, organization_id')
+          : supabase.from('products').select('id, name, organization_id').eq('organization_id', organizationId);
+
+        const stagesQ = consolidated
+          ? supabase.from('pipeline_stages').select('id, name, sort_order, organization_id').eq('active', true).order('sort_order')
+          : supabase.from('pipeline_stages').select('id, name, sort_order, organization_id').eq('active', true).eq('organization_id', organizationId).order('sort_order');
+
+        const originsQ = consolidated
+          ? supabase.from('lead_origins').select('id, name, organization_id').eq('active', true)
+          : supabase.from('lead_origins').select('id, name, organization_id').eq('active', true).eq('organization_id', organizationId);
+
+        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ] as const;
+
+        let orgsData: { id: string; name: string }[] = [];
+
+        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all(basePromises);
+
+        if (consolidated) {
+          const orgsRes = await supabase.from('organizations').select('id, name').order('name');
+          orgsData = orgsRes.data || [];
+        }
 
         const allLeads = leadsRes.data || [];
         const allSales = salesRes.data || [];
@@ -103,48 +141,71 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];
 
-        // Filter leads and sales by dateRange if provided
+        // Filter by dateRange
         const leads = dateRange
-          ? allLeads.filter((l) => {
+          ? allLeads.filter((l: any) => {
               const d = new Date(l.created_at || '');
               return d >= dateRange.start && d <= dateRange.end;
             })
           : allLeads;
 
         const sales = dateRange
-          ? allSales.filter((s) => {
+          ? allSales.filter((s: any) => {
               const d = new Date(s.created_at || '');
               return d >= dateRange.start && d <= dateRange.end;
             })
           : allSales;
 
-        console.log('[useDashboardData] 📊 Resultado leads:', { count: leads.length, error: leadsRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado sales:', { count: sales.length, total: allSales.length, error: salesRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado products:', { count: products.length, error: productsRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado pipeline_stages:', { count: stages.length, error: stagesRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado lead_origins:', { count: origins.length, error: originsRes.error?.message || null });
+        console.log('[useDashboardData] 📊 Resultado:', {
+          leads: leads.length,
+          sales: sales.length,
+          products: products.length,
+          stages: stages.length,
+          mode: consolidated ? 'CONSOLIDADO' : 'ORG',
+        });
 
         const totalLeads = leads.length;
-        const lastStage = stages.length > 0 ? stages[stages.length - 1] : null;
-        const clients = lastStage ? leads.filter((l) => l.pipeline_stage === lastStage.id).length : 0;
-        const conversionRate = totalLeads ? ((clients / totalLeads) * 100).toFixed(1) : '0';
-        const totalRevenue = sales.reduce((sum, s) => sum + (s.value || 0), 0);
-        const totalSales = sales.length;
-        const ticketMedio = totalSales > 0 ? totalRevenue / totalSales : 0;
 
-        // Recurring clients: leads with more than 1 sale
+        // For consolidated, use stages from all orgs; for single org, use org stages
+        // "Client" stage = last stage per org
+        let clients = 0;
+        if (consolidated) {
+          // Group stages by org, find last stage per org, count leads in those stages
+          const orgStageMap = new Map<string, typeof stages>();
+          stages.forEach((s: any) => {
+            const arr = orgStageMap.get(s.organization_id) || [];
+            arr.push(s);
+            orgStageMap.set(s.organization_id, arr);
+          });
+          const lastStageIds = new Set<string>();
+          orgStageMap.forEach((orgStages) => {
+            const sorted = orgStages.sort((a: any, b: any) => a.sort_order - b.sort_order);
+            if (sorted.length > 0) lastStageIds.add(sorted[sorted.length - 1].id);
+          });
+          clients = leads.filter((l: any) => lastStageIds.has(l.pipeline_stage)).length;
+        } else {
+          const lastStage = stages.length > 0 ? stages[stages.length - 1] : null;
+          clients = lastStage ? leads.filter((l: any) => l.pipeline_stage === lastStage.id).length : 0;
+        }
+
+        const conversionRate = totalLeads ? ((clients / totalLeads) * 100).toFixed(1) : '0';
+        const totalRevenue = sales.reduce((sum: number, s: any) => sum + (s.value || 0), 0);
+        const totalSalesCount = sales.length;
+        const ticketMedio = totalSalesCount > 0 ? totalRevenue / totalSalesCount : 0;
+
+        // Recurring clients
         const leadSalesCount: Record<string, number> = {};
-        sales.forEach((s) => {
+        sales.forEach((s: any) => {
           leadSalesCount[s.lead_id] = (leadSalesCount[s.lead_id] || 0) + 1;
         });
         const recurringClients = Object.values(leadSalesCount).filter((c) => c > 1).length;
 
-        // Top products by revenue
+        // Top products
         const productRevenueMap: Record<string, { name: string; count: number; revenue: number }> = {};
-        sales.forEach((s) => {
+        sales.forEach((s: any) => {
           if (!s.product_id) return;
           if (!productRevenueMap[s.product_id]) {
-            const prod = products.find((p) => p.id === s.product_id);
+            const prod = products.find((p: any) => p.id === s.product_id);
             productRevenueMap[s.product_id] = { name: prod?.name || 'Sem nome', count: 0, revenue: 0 };
           }
           productRevenueMap[s.product_id].count += 1;
@@ -154,10 +215,10 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           .sort((a, b) => b.revenue - a.revenue)
           .slice(0, 5);
 
-        // Sales by day (within selected period or last 30 days)
+        // Sales by day
         const periodStart = dateRange?.start || (() => { const d = new Date(); d.setDate(d.getDate() - 30); return d; })();
         const salesByDayMap: Record<string, number> = {};
-        sales.forEach((s) => {
+        sales.forEach((s: any) => {
           const d = new Date(s.created_at || '');
           if (d >= periodStart) {
             const key = d.toLocaleDateString('pt-BR');
@@ -166,37 +227,76 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
         });
         const salesByDay = Object.entries(salesByDayMap).map(([day, value]) => ({ day, value }));
 
-        const leadsByStage = stages.map((s) => ({
-          name: s.name.length > 12 ? `${s.name.slice(0, 12)}…` : s.name,
-          value: leads.filter((l) => l.pipeline_stage === s.id).length,
-        }));
+        // For consolidated, aggregate stages across all orgs by name
+        let leadsByStage: { name: string; value: number }[];
+        if (consolidated) {
+          const stageNameMap = new Map<string, Set<string>>();
+          stages.forEach((s: any) => {
+            if (!stageNameMap.has(s.name)) stageNameMap.set(s.name, new Set());
+            stageNameMap.get(s.name)!.add(s.id);
+          });
+          leadsByStage = Array.from(stageNameMap.entries()).map(([name, ids]) => ({
+            name: name.length > 12 ? `${name.slice(0, 12)}…` : name,
+            value: leads.filter((l: any) => ids.has(l.pipeline_stage)).length,
+          }));
+        } else {
+          leadsByStage = stages.map((s: any) => ({
+            name: s.name.length > 12 ? `${s.name.slice(0, 12)}…` : s.name,
+            value: leads.filter((l: any) => l.pipeline_stage === s.id).length,
+          }));
+        }
 
-        const leadsByOrigin = origins
-          .map((o) => ({
-            name: o.name.length > 15 ? `${o.name.slice(0, 15)}…` : o.name,
-            value: leads.filter((l) => l.origin === o.name).length,
+        // Leads by origin — deduplicate origin names for consolidated
+        const uniqueOriginNames = [...new Set(origins.map((o: any) => o.name))];
+        const leadsByOrigin = uniqueOriginNames
+          .map((name: string) => ({
+            name: name.length > 15 ? `${name.slice(0, 15)}…` : name,
+            value: leads.filter((l: any) => l.origin === name).length,
           }))
           .filter((x) => x.value > 0);
 
-        const revenueByProduct = products
-          .map((p) => ({
-            name: p.name.length > 15 ? `${p.name.slice(0, 15)}…` : p.name,
-            value: sales.filter((s) => s.product_id === p.id).reduce((sum, s) => sum + (s.value || 0), 0),
-          }))
+        // Revenue by product — deduplicate product names
+        const uniqueProductNames = [...new Set(products.map((p: any) => p.name))];
+        const revenueByProduct = uniqueProductNames
+          .map((name: string) => {
+            const productIds = products.filter((p: any) => p.name === name).map((p: any) => p.id);
+            return {
+              name: name.length > 15 ? `${name.slice(0, 15)}…` : name,
+              value: sales.filter((s: any) => productIds.includes(s.product_id)).reduce((sum: number, s: any) => sum + (s.value || 0), 0),
+            };
+          })
           .filter((x) => x.value > 0);
 
-        // Stuck leads: leads >7 days without moving stage (based on updated_at)
+        // Stuck leads
         const STUCK_THRESHOLD_DAYS = 7;
         const now = new Date();
+        // Gather last stage IDs
+        const allLastStageIds = new Set<string>();
+        if (consolidated) {
+          const orgStageMap = new Map<string, any[]>();
+          stages.forEach((s: any) => {
+            const arr = orgStageMap.get(s.organization_id) || [];
+            arr.push(s);
+            orgStageMap.set(s.organization_id, arr);
+          });
+          orgStageMap.forEach((orgStages) => {
+            const sorted = orgStages.sort((a: any, b: any) => a.sort_order - b.sort_order);
+            if (sorted.length > 0) allLastStageIds.add(sorted[sorted.length - 1].id);
+          });
+        } else {
+          const lastStage = stages.length > 0 ? stages[stages.length - 1] : null;
+          if (lastStage) allLastStageIds.add(lastStage.id);
+        }
+
         const stuckLeads: StuckLead[] = leads
-          .filter((l) => {
-            if (!l.pipeline_stage || l.pipeline_stage === lastStage?.id) return false;
+          .filter((l: any) => {
+            if (!l.pipeline_stage || allLastStageIds.has(l.pipeline_stage)) return false;
             const updatedAt = new Date(l.updated_at || l.created_at);
             const days = Math.floor((now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24));
             return days >= STUCK_THRESHOLD_DAYS;
           })
-          .map((l) => {
-            const stageName = stages.find((s) => s.id === l.pipeline_stage)?.name || 'Desconhecido';
+          .map((l: any) => {
+            const stageName = stages.find((s: any) => s.id === l.pipeline_stage)?.name || 'Desconhecido';
             const updatedAt = new Date(l.updated_at || l.created_at);
             const days = Math.floor((now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24));
             return { id: l.id, name: l.name, email: l.email || '', stage: stageName, daysInStage: days };
@@ -204,48 +304,81 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           .sort((a, b) => b.daysInStage - a.daysInStage)
           .slice(0, 10);
 
-        // Stage metrics — use created_at to measure true age in stage
-        const stageMetrics: StageMetric[] = stages.map((s) => {
-          const stageLeads = leads.filter((l) => l.pipeline_stage === s.id);
-          const avgDays = stageLeads.length > 0
-            ? stageLeads.reduce((sum, l) => {
-                const created = new Date(l.created_at);
-                const diffMs = now.getTime() - created.getTime();
-                const diffDays = diffMs / (1000 * 60 * 60 * 24);
-                return sum + diffDays;
-              }, 0) / stageLeads.length
-            : 0;
-          return {
-            name: s.name,
-            leadCount: stageLeads.length,
-            conversionRate: totalLeads > 0 ? (stageLeads.length / totalLeads) * 100 : 0,
-            avgDaysInStage: Math.max(0, Math.round(avgDays)),
-          };
-        });
-
-        if (isSuperadmin && totalLeads === 0 && sales.length === 0 && products.length === 0) {
-          const [allLeadsRes, allSalesRes] = await Promise.all([
-            supabase.from('leads').select('id', { head: true, count: 'exact' }),
-            supabase.from('sales').select('id', { head: true, count: 'exact' }),
-          ]);
-
-          console.log('[useDashboardData] 🧪 Diagnóstico SuperAdmin (global):', {
-            visibleLeadsGlobal: allLeadsRes.count ?? 0,
-            visibleSalesGlobal: allSalesRes.count ?? 0,
-            leadsError: allLeadsRes.error?.message || null,
-            salesError: allSalesRes.error?.message || null,
+        // Stage metrics
+        let stageMetrics: StageMetric[];
+        if (consolidated) {
+          const stageNameMap = new Map<string, Set<string>>();
+          stages.forEach((s: any) => {
+            if (!stageNameMap.has(s.name)) stageNameMap.set(s.name, new Set());
+            stageNameMap.get(s.name)!.add(s.id);
+          });
+          stageMetrics = Array.from(stageNameMap.entries()).map(([name, ids]) => {
+            const stageLeads = leads.filter((l: any) => ids.has(l.pipeline_stage));
+            const avgDays = stageLeads.length > 0
+              ? stageLeads.reduce((sum: number, l: any) => {
+                  const diffMs = now.getTime() - new Date(l.created_at).getTime();
+                  return sum + diffMs / (1000 * 60 * 60 * 24);
+                }, 0) / stageLeads.length
+              : 0;
+            return {
+              name,
+              leadCount: stageLeads.length,
+              conversionRate: totalLeads > 0 ? (stageLeads.length / totalLeads) * 100 : 0,
+              avgDaysInStage: Math.max(0, Math.round(avgDays)),
+            };
+          });
+        } else {
+          stageMetrics = stages.map((s: any) => {
+            const stageLeads = leads.filter((l: any) => l.pipeline_stage === s.id);
+            const avgDays = stageLeads.length > 0
+              ? stageLeads.reduce((sum: number, l: any) => {
+                  const diffMs = now.getTime() - new Date(l.created_at).getTime();
+                  return sum + diffMs / (1000 * 60 * 60 * 24);
+                }, 0) / stageLeads.length
+              : 0;
+            return {
+              name: s.name,
+              leadCount: stageLeads.length,
+              conversionRate: totalLeads > 0 ? (stageLeads.length / totalLeads) * 100 : 0,
+              avgDaysInStage: Math.max(0, Math.round(avgDays)),
+            };
           });
         }
 
+        // Consolidated extra data
+        let consolidatedExtra: ConsolidatedData | null = null;
+        if (consolidated) {
+          const topOrgs = orgsData.map((org) => {
+            const orgLeads = leads.filter((l: any) => l.organization_id === org.id);
+            const orgSales = sales.filter((s: any) => s.organization_id === org.id);
+            const orgRevenue = orgSales.reduce((sum: number, s: any) => sum + (s.value || 0), 0);
+            // Find last stage for this org
+            const orgStages = stages.filter((s: any) => s.organization_id === org.id).sort((a: any, b: any) => a.sort_order - b.sort_order);
+            const lastStageId = orgStages.length > 0 ? orgStages[orgStages.length - 1].id : null;
+            const orgClients = lastStageId ? orgLeads.filter((l: any) => l.pipeline_stage === lastStageId).length : 0;
+            const rate = orgLeads.length > 0 ? (orgClients / orgLeads.length) * 100 : 0;
+            return { id: org.id, name: org.name, leads: orgLeads.length, revenue: orgRevenue, conversionRate: rate };
+          }).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+          consolidatedExtra = {
+            totalOrganizations: orgsData.length,
+            topOrganizations: topOrgs,
+          };
+        }
+
         console.log('[useDashboardData] ✅ Dados calculados:', {
-          totalLeads, clients, totalRevenue, totalSales, recurringClients, topProducts: topProducts.length, stuckLeads: stuckLeads.length,
+          totalLeads, clients, totalRevenue, totalSales: totalSalesCount, mode: consolidated ? 'CONSOLIDADO' : 'ORG',
         });
 
         if (!active) return;
-        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
+        setConsolidatedData(consolidatedExtra);
       } catch (err) {
         console.error('[useDashboardData] ❌ Erro:', err);
-        if (active) setData(EMPTY_DATA);
+        if (active) {
+          setData(EMPTY_DATA);
+          setConsolidatedData(null);
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -258,5 +391,5 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
     };
   }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
-  return { ...data, loading };
+  return { ...data, loading, isConsolidated, consolidatedData };
 }
