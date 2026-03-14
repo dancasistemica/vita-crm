@@ -87,7 +87,7 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   productInsights: null,
 };
 
-export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
+export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardReturn {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
   const [data, setData] = useState<Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'>>(EMPTY_DATA);
