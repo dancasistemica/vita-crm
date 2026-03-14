@@ -332,21 +332,35 @@ export default function TarefasPage() {
   // Status management handlers
   const handleCreateStatus = async (data: { name: string; color: string; order_index: number }) => {
     if (!dataAccess) return;
-    await supabase.from('task_statuses').insert({
-      ...data,
-      organization_id: (dataAccess as any).orgId,
-    } as any);
-    await fetchTaskStatuses();
+    try {
+      await dataAccess.createTaskStatus(data);
+      await fetchTaskStatuses();
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao criar status:', err);
+      toast.error("Erro ao criar status");
+    }
   };
 
   const handleUpdateStatus = async (id: string, data: { name: string; color: string }) => {
-    await supabase.from('task_statuses').update(data).eq('id', id);
-    await fetchTaskStatuses();
+    if (!dataAccess) return;
+    try {
+      await dataAccess.updateTaskStatus(id, data);
+      await fetchTaskStatuses();
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao atualizar status:', err);
+      toast.error("Erro ao atualizar status");
+    }
   };
 
   const handleDeleteStatus = async (id: string) => {
-    await supabase.from('task_statuses').delete().eq('id', id);
-    await fetchTaskStatuses();
+    if (!dataAccess) return;
+    try {
+      await dataAccess.deleteTaskStatus(id);
+      await fetchTaskStatuses();
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao deletar status:', err);
+      toast.error("Erro ao deletar status");
+    }
   };
 
   const handleMarkNotificationRead = async (id: string) => {
