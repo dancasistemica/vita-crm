@@ -31,7 +31,7 @@ export interface ProductInsightsData {
   };
   funnelAnalysis: {
     totalLeads: number;
-    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; avgDaysInStage: number; isFinalStage: boolean }[];
+    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; nextStageName: string | null; avgDaysInStage: number; isFinalStage: boolean }[];
     bottleneckStage: string | null;
     recommendedOptimization: string;
   };
