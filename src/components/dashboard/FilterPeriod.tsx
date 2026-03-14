@@ -38,8 +38,11 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
 
   const handleCustomApply = () => {
     if (!customStart || !customEnd) return;
-    const start = new Date(customStart);
-    const end = new Date(customEnd);
+    // Parse YYYY-MM-DD as local timezone to avoid d-1 UTC bug
+    const [sy, sm, sd] = customStart.split('-').map(Number);
+    const [ey, em, ed] = customEnd.split('-').map(Number);
+    const start = new Date(sy, sm - 1, sd, 0, 0, 0, 0);
+    const end = new Date(ey, em - 1, ed, 23, 59, 59, 999);
     if (start > end) return;
     onPeriodChange({ start, end, label: `${start.toLocaleDateString('pt-BR')} - ${end.toLocaleDateString('pt-BR')}` });
   };
