@@ -399,9 +399,9 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
 
         if (!active) return;
 
-        // Calculate product insights for consolidated mode
+        // Calculate product insights for both consolidated and individual org
         let pInsights: ProductInsightsData | null = null;
-        if (consolidated) {
+        {
           const totalRev = sales.reduce((sum: number, s: any) => sum + (s.value || 0), 0);
           // Top products with percent
           const topProdsInsights = Object.values(productRevenueMap)
