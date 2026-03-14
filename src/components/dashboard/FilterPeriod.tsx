@@ -17,6 +17,7 @@ interface FilterPeriodProps {
 }
 
 const PRESET_PERIODS = [
+  { label: 'Hoje', days: 0 },
   { label: '7 dias', days: 7 },
   { label: '15 dias', days: 15 },
   { label: '30 dias', days: 30 },
