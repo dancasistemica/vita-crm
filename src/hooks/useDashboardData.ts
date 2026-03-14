@@ -104,32 +104,35 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
 
       try {
         // Build queries: consolidated mode queries ALL data (superadmin RLS allows it)
-        const leadsQuery = supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id');
-        const salesQuery = supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id');
-        const productsQuery = supabase.from('products').select('id, name, organization_id');
-        const stagesQuery = supabase.from('pipeline_stages').select('id, name, sort_order, organization_id').eq('active', true).order('sort_order');
-        const originsQuery = supabase.from('lead_origins').select('id, name, organization_id').eq('active', true);
+        const leadsQ = consolidated
+          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id')
+          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id').eq('organization_id', organizationId);
 
-        if (!consolidated) {
-          leadsQuery.eq('organization_id', organizationId);
-          salesQuery.eq('organization_id', organizationId);
-          productsQuery.eq('organization_id', organizationId);
-          stagesQuery.eq('organization_id', organizationId);
-          originsQuery.eq('organization_id', organizationId);
-        }
+        const salesQ = consolidated
+          ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
+          : supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id').eq('organization_id', organizationId);
+
+        const productsQ = consolidated
+          ? supabase.from('products').select('id, name, organization_id')
+          : supabase.from('products').select('id, name, organization_id').eq('organization_id', organizationId);
+
+        const stagesQ = consolidated
+          ? supabase.from('pipeline_stages').select('id, name, sort_order, organization_id').eq('active', true).order('sort_order')
+          : supabase.from('pipeline_stages').select('id, name, sort_order, organization_id').eq('active', true).eq('organization_id', organizationId).order('sort_order');
+
+        const originsQ = consolidated
+          ? supabase.from('lead_origins').select('id, name, organization_id').eq('active', true)
+          : supabase.from('lead_origins').select('id, name, organization_id').eq('active', true).eq('organization_id', organizationId);
+
+        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ] as const;
 
         let orgsData: { id: string; name: string }[] = [];
-        const promises: Promise<any>[] = [leadsQuery, salesQuery, productsQuery, stagesQuery, originsQuery];
+
+        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all(basePromises);
 
         if (consolidated) {
-          promises.push(supabase.from('organizations').select('id, name').order('name'));
-        }
-
-        const results = await Promise.all(promises);
-
-        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = results;
-        if (consolidated && results[5]) {
-          orgsData = results[5].data || [];
+          const orgsRes = await supabase.from('organizations').select('id, name').order('name');
+          orgsData = orgsRes.data || [];
         }
 
         const allLeads = leadsRes.data || [];
