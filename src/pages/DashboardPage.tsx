@@ -19,9 +19,17 @@ const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(1
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const { isSuperadmin } = useSuperadmin();
+  const { isSuperadmin, loading: roleLoading } = useUserRole();
   const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
+
+  // Redirect superadmin to consolidated dashboard
+  useEffect(() => {
+    if (!roleLoading && isSuperadmin) {
+      console.log('[DashboardPage] Redirecionando superadmin para /dashboard/consolidado');
+      navigate('/dashboard/consolidado', { replace: true });
+    }
+  }, [isSuperadmin, roleLoading, navigate]);
   
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const end = new Date();
