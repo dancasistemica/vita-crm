@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
+import TaskActionButtons from "@/components/tasks/TaskActionButtons";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,6 +35,7 @@ export default function TarefasPage() {
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<TaskRow | null>(null);
 
   const fetchTasks = useCallback(async () => {
     if (!dataAccess) return;
@@ -75,10 +77,57 @@ export default function TarefasPage() {
       });
       toast.success("Tarefa criada!");
       setDialogOpen(false);
+      setEditingTask(null);
       await fetchTasks();
     } catch (err) {
       console.error('[TarefasPage] Erro ao criar tarefa:', err);
       toast.error("Erro ao criar tarefa");
+    }
+  };
+
+  const handleEdit = (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      setEditingTask(task);
+      setDialogOpen(true);
+    }
+  };
+
+  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string }) => {
+    if (!dataAccess || !editingTask) return;
+    try {
+      await dataAccess.updateTask(editingTask.id, {
+        title: data.title,
+        lead_id: data.leadId || null,
+        due_date: data.dueDate || null,
+        type: data.type || 'outro',
+      });
+      toast.success("Tarefa atualizada!");
+      setDialogOpen(false);
+      setEditingTask(null);
+      await fetchTasks();
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao atualizar tarefa:', err);
+      toast.error("Erro ao atualizar tarefa");
+    }
+  };
+
+  const handleDuplicate = async (taskId: string) => {
+    if (!dataAccess) return;
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    try {
+      await dataAccess.createTask({
+        title: `${task.title} (Cópia)`,
+        lead_id: task.lead_id,
+        due_date: task.due_date,
+        type: task.type,
+      });
+      toast.success("Tarefa duplicada!");
+      await fetchTasks();
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao duplicar tarefa:', err);
+      toast.error("Erro ao duplicar tarefa");
     }
   };
 
@@ -104,6 +153,11 @@ export default function TarefasPage() {
     }
   };
 
+  const handleDialogChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) setEditingTask(null);
+  };
+
   const TaskItem = ({ task }: { task: TaskRow }) => (
     <Card className={task.completed ? 'opacity-50' : ''}>
       <CardContent className="py-3 px-4 flex items-center gap-3">
@@ -116,7 +170,12 @@ export default function TarefasPage() {
             {task.due_date && <span className="text-xs text-muted-foreground">{task.due_date}</span>}
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="text-destructive text-xs" onClick={() => handleDelete(task.id)}>Remover</Button>
+        <TaskActionButtons
+          taskId={task.id}
+          onEdit={handleEdit}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+        />
       </CardContent>
     </Card>
   );
@@ -134,11 +193,16 @@ export default function TarefasPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</Button></DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle className="font-display">Nova Tarefa</DialogTitle></DialogHeader>
-            <TaskForm leads={leads} pipelineStages={pipelineStages} onSave={handleAdd} />
+            <DialogHeader><DialogTitle className="font-display">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle></DialogHeader>
+            <TaskForm
+              leads={leads}
+              pipelineStages={pipelineStages}
+              onSave={editingTask ? handleSaveEdit : handleAdd}
+              initialData={editingTask}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -174,8 +238,18 @@ export default function TarefasPage() {
   );
 }
 
-function TaskForm({ leads, pipelineStages, onSave }: { leads: any[]; pipelineStages: any[]; onSave: (data: { title: string; leadId: string; dueDate: string; type: string }) => void }) {
-  const [form, setForm] = useState({ title: '', leadId: '', dueDate: new Date().toISOString().split('T')[0], type: 'follow_up' });
+function TaskForm({ leads, pipelineStages, onSave, initialData }: {
+  leads: any[];
+  pipelineStages: any[];
+  onSave: (data: { title: string; leadId: string; dueDate: string; type: string }) => void;
+  initialData?: TaskRow | null;
+}) {
+  const [form, setForm] = useState({
+    title: initialData?.title || '',
+    leadId: initialData?.lead_id || '',
+    dueDate: initialData?.due_date || new Date().toISOString().split('T')[0],
+    type: initialData?.type || 'follow_up',
+  });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
   const selectedLead = leads.find((l: any) => l.id === form.leadId);
@@ -203,7 +277,9 @@ function TaskForm({ leads, pipelineStages, onSave }: { leads: any[]; pipelineSta
         <AIFollowUpGenerator lead={selectedLead} stageName={stageName} />
       )}
 
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>Salvar</Button>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
+        {initialData ? 'Salvar Alterações' : 'Salvar'}
+      </Button>
     </div>
   );
 }
