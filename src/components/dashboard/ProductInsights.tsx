@@ -10,7 +10,7 @@ export interface ProductInsightsData {
   };
   funnelAnalysis: {
     totalLeads: number;
-    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; avgDaysInStage: number; isFinalStage: boolean }[];
+    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; nextStageName: string | null; avgDaysInStage: number; isFinalStage: boolean }[];
     bottleneckStage: string | null;
     recommendedOptimization: string;
   };
@@ -185,18 +185,44 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
               </div>
             </div>
 
-            {/* Taxa de Progresso por Stage */}
+            {/* Taxa de Progresso Sequencial */}
             <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
-              <h4 className="font-semibold text-foreground mb-2">📈 Taxa de Progresso por Etapa</h4>
-              <p className="text-xs text-muted-foreground mb-3">% de leads que avançam para o próximo estágio (não aplica ao estágio final)</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <h4 className="font-semibold text-foreground mb-2">📊 Taxa de Progresso Sequencial</h4>
+              <p className="text-xs text-muted-foreground mb-3">De 100% dos leads em cada etapa, quantos % avançam para a próxima?</p>
+              <div className="space-y-3">
                 {insights.funnelAnalysis.byStage
                   .filter((stage) => !stage.isFinalStage)
                   .map((stage) => (
                     <div key={stage.stage} className="bg-card rounded-lg p-3 border border-border/40">
-                      <p className="text-xs text-muted-foreground mb-1">{stage.stage}</p>
-                      <p className="text-2xl font-bold text-primary">{stage.progressionRate.toFixed(0)}%</p>
-                      <p className="text-xs text-muted-foreground mt-1">avançam</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <p className="font-semibold text-foreground text-sm">{stage.stage} → {stage.nextStageName}</p>
+                          <p className="text-xs text-muted-foreground">De {stage.leads} leads</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-primary">{stage.progressionRate.toFixed(0)}%</p>
+                          <p className="text-xs text-muted-foreground">{Math.round((stage.progressionRate / 100) * stage.leads)} avançam</p>
+                        </div>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all ${
+                            stage.progressionRate >= 50 ? 'bg-success' :
+                            stage.progressionRate >= 25 ? 'bg-warning' :
+                            'bg-destructive'
+                          }`}
+                          style={{ width: `${Math.min(stage.progressionRate, 100)}%` }}
+                        />
+                      </div>
+                      <div className="mt-1">
+                        {stage.progressionRate >= 50 ? (
+                          <span className="text-xs text-success font-semibold">✅ Saudável</span>
+                        ) : stage.progressionRate >= 25 ? (
+                          <span className="text-xs text-warning font-semibold">⚠️ Atenção</span>
+                        ) : (
+                          <span className="text-xs text-destructive font-semibold">🚨 Crítico</span>
+                        )}
+                      </div>
                     </div>
                   ))}
               </div>

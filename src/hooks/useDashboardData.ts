@@ -31,7 +31,7 @@ export interface ProductInsightsData {
   };
   funnelAnalysis: {
     totalLeads: number;
-    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; avgDaysInStage: number; isFinalStage: boolean }[];
+    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; nextStageName: string | null; avgDaysInStage: number; isFinalStage: boolean }[];
     bottleneckStage: string | null;
     recommendedOptimization: string;
   };
@@ -427,11 +427,12 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
               ? Math.round((sm.conversionRate / 100) * sm.leadCount)
               : 0;
             const isFinalStage = idx === stageMetrics.length - 1 || sm.name.toLowerCase() === 'cliente';
-            // Progression rate: leads in later stages / leads in this stage
+            // Sequential progression: leads in NEXT stage / leads in THIS stage
             let progressionRate = 0;
-            if (!isFinalStage && sm.leadCount > 0) {
-              const laterLeads = stageMetrics.slice(idx + 1).reduce((sum, s) => sum + s.leadCount, 0);
-              progressionRate = Math.min((laterLeads / sm.leadCount) * 100, 100);
+            const nextStageName = !isFinalStage && idx < stageMetrics.length - 1 ? stageMetrics[idx + 1].name : null;
+            if (!isFinalStage && sm.leadCount > 0 && idx < stageMetrics.length - 1) {
+              const nextStageLeads = stageMetrics[idx + 1].leadCount;
+              progressionRate = Math.min((nextStageLeads / sm.leadCount) * 100, 100);
             }
             return {
               stage: sm.name,
@@ -439,6 +440,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
               converted,
               conversionRate: sm.conversionRate,
               progressionRate,
+              nextStageName,
               avgDaysInStage: sm.avgDaysInStage,
               isFinalStage,
             };
