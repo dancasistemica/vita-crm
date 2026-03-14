@@ -12,7 +12,7 @@ const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(1
 export default function DashboardPage() {
   const { user } = useAuth();
   const { organization, organizationId } = useOrganization();
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], loading } = useDashboardData();
 
   // DEBUG LOGS
   console.log('[DashboardPage] User:', user?.email);
