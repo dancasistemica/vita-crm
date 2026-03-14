@@ -6,8 +6,12 @@ interface DataAccessOptions {
 }
 
 export class DataAccessService {
-  private orgId: string;
+  private _orgId: string;
   private userId: string;
+
+  get orgId(): string {
+    return this._orgId;
+  }
 
   constructor(options: DataAccessOptions) {
     this.orgId = options.organizationId;
