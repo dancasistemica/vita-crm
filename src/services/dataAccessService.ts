@@ -415,12 +415,26 @@ export class DataAccessService {
   }
 
   async getOrgMembers() {
-    const { data, error } = await supabase
+    const { data: members, error } = await supabase
       .from('organization_members')
       .select('id, user_id, organization_id, role, created_at')
       .eq('organization_id', this.orgId);
     if (error) { console.error('[DataAccessService] getOrgMembers error:', error); throw error; }
-    return data || [];
+    if (!members || members.length === 0) return [];
+
+    // Fetch profiles for these members
+    const userIds = members.map(m => m.user_id);
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, full_name, email')
+      .in('id', userIds);
+
+    const profileMap = new Map((profiles || []).map(p => [p.id, p]));
+
+    return members.map(m => ({
+      ...m,
+      profiles: profileMap.get(m.user_id) || null,
+    }));
   }
 
   async getRolePermissions() {
