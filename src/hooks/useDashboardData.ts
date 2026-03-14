@@ -446,8 +446,9 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
             };
           });
 
-          const bottleneckStage = funnelByStage.length > 0
-            ? funnelByStage.reduce((prev, cur) => (cur.leads > 0 && cur.conversionRate < prev.conversionRate) ? cur : prev).stage
+          const nonFinalStages = funnelByStage.filter(s => !s.isFinalStage && s.leads > 0);
+          const bottleneckStage = nonFinalStages.length > 0
+            ? nonFinalStages.reduce((prev, cur) => cur.progressionRate < prev.progressionRate ? cur : prev).stage
             : null;
 
           const recommendedOptimization = bottleneckStage
