@@ -84,6 +84,7 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   revenueByProduct: [],
   stuckLeads: [],
   stageMetrics: [],
+  productInsights: null,
 };
 
 export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
