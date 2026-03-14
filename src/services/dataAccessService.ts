@@ -14,7 +14,7 @@ export class DataAccessService {
   }
 
   constructor(options: DataAccessOptions) {
-    this.orgId = options.organizationId;
+    this._orgId = options.organizationId;
     this.userId = options.userId;
     console.log('[DataAccessService] Inicializado para org:', this.orgId);
   }
