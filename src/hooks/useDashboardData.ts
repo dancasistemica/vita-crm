@@ -23,6 +23,28 @@ export interface ConsolidatedData {
   topOrganizations: { id: string; name: string; leads: number; revenue: number; conversionRate: number }[];
 }
 
+export interface ProductInsightsData {
+  topProducts: { name: string; sales: number; revenue: number; percentOfTotal: number }[];
+  conversionBenchmark: {
+    overallRate: number;
+    byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
+    orgsAboveAverage: number;
+    orgsBelowAverage: number;
+  };
+  funnelAnalysis: {
+    totalLeads: number;
+    byStage: { stage: string; leads: number; converted: number; conversionRate: number; avgDaysInStage: number; abandonmentRate: number }[];
+    bottleneckStage: string | null;
+    recommendedOptimization: string;
+  };
+  usagePatterns: {
+    leadsPerDay: number;
+    conversionPerDay: number;
+    avgTimeToConvert: number;
+    seasonality: string;
+  };
+}
+
 interface DashboardData {
   totalLeads: number;
   clients: number;
