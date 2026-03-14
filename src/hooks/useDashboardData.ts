@@ -178,6 +178,42 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           }))
           .filter((x) => x.value > 0);
 
+        // Stuck leads: leads >7 days without moving stage (based on updated_at)
+        const STUCK_THRESHOLD_DAYS = 7;
+        const now = new Date();
+        const stuckLeads: StuckLead[] = leads
+          .filter((l) => {
+            if (!l.pipeline_stage || l.pipeline_stage === lastStage?.id) return false;
+            const updatedAt = new Date(l.updated_at || l.created_at);
+            const days = Math.floor((now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+            return days >= STUCK_THRESHOLD_DAYS;
+          })
+          .map((l) => {
+            const stageName = stages.find((s) => s.id === l.pipeline_stage)?.name || 'Desconhecido';
+            const updatedAt = new Date(l.updated_at || l.created_at);
+            const days = Math.floor((now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+            return { id: l.id, name: l.name, email: l.email || '', stage: stageName, daysInStage: days };
+          })
+          .sort((a, b) => b.daysInStage - a.daysInStage)
+          .slice(0, 10);
+
+        // Stage metrics
+        const stageMetrics: StageMetric[] = stages.map((s) => {
+          const stageLeads = leads.filter((l) => l.pipeline_stage === s.id);
+          const avgDays = stageLeads.length > 0
+            ? stageLeads.reduce((sum, l) => {
+                const created = new Date(l.updated_at || l.created_at);
+                return sum + Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+              }, 0) / stageLeads.length
+            : 0;
+          return {
+            name: s.name,
+            leadCount: stageLeads.length,
+            conversionRate: totalLeads > 0 ? (stageLeads.length / totalLeads) * 100 : 0,
+            avgDaysInStage: Math.round(avgDays),
+          };
+        });
+
         if (isSuperadmin && totalLeads === 0 && sales.length === 0 && products.length === 0) {
           const [allLeadsRes, allSalesRes] = await Promise.all([
             supabase.from('leads').select('id', { head: true, count: 'exact' }),
@@ -193,11 +229,11 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
         }
 
         console.log('[useDashboardData] ✅ Dados calculados:', {
-          totalLeads, clients, totalRevenue, totalSales, recurringClients, topProducts: topProducts.length,
+          totalLeads, clients, totalRevenue, totalSales, recurringClients, topProducts: topProducts.length, stuckLeads: stuckLeads.length,
         });
 
         if (!active) return;
-        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct });
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
       } catch (err) {
         console.error('[useDashboardData] ❌ Erro:', err);
         if (active) setData(EMPTY_DATA);
