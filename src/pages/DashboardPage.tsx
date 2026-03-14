@@ -112,28 +112,8 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Consolidated: Top Organizations */}
-      {isConsolidated && consolidatedData && consolidatedData.topOrganizations.length > 0 && (
-        <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top Organizações por Receita</CardTitle></CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {consolidatedData.topOrganizations.map((org, index) => (
-                <div key={org.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
-                    <div>
-                      <p className="font-semibold text-foreground">{org.name}</p>
-                      <p className="text-sm text-muted-foreground">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
-                    </div>
-                  </div>
-                  <p className="font-bold text-success">R$ {org.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+
+
 
       {/* Stuck Leads Alert */}
       <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
