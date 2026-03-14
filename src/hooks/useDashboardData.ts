@@ -34,7 +34,7 @@ const EMPTY_DATA: Omit<DashboardData, 'loading'> = {
   revenueByProduct: [],
 };
 
-export function useDashboardData(): DashboardData {
+export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardData {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
   const [data, setData] = useState<Omit<DashboardData, 'loading'>>(EMPTY_DATA);
