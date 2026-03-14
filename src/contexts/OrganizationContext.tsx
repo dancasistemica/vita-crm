@@ -89,7 +89,12 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
       let targetOrgId: string | null = null;
 
-      if (superadminOrgId) {
+      if (superadminOrgId === CONSOLIDATED_ORG_ID) {
+        console.log('[OrganizationContext] ✅ Restaurando modo CONSOLIDADO do localStorage');
+        setOrganization(CONSOLIDATED_ORG);
+        setLoading(false);
+        return;
+      } else if (superadminOrgId) {
         targetOrgId = superadminOrgId;
       } else if (isSuperadmin) {
         const { data: firstOrg } = await supabase
