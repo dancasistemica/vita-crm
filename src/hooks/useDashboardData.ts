@@ -197,20 +197,22 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           .sort((a, b) => b.daysInStage - a.daysInStage)
           .slice(0, 10);
 
-        // Stage metrics
+        // Stage metrics — use created_at to measure true age in stage
         const stageMetrics: StageMetric[] = stages.map((s) => {
           const stageLeads = leads.filter((l) => l.pipeline_stage === s.id);
           const avgDays = stageLeads.length > 0
             ? stageLeads.reduce((sum, l) => {
-                const created = new Date(l.updated_at || l.created_at);
-                return sum + Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+                const created = new Date(l.created_at);
+                const diffMs = now.getTime() - created.getTime();
+                const diffDays = diffMs / (1000 * 60 * 60 * 24);
+                return sum + diffDays;
               }, 0) / stageLeads.length
             : 0;
           return {
             name: s.name,
             leadCount: stageLeads.length,
             conversionRate: totalLeads > 0 ? (stageLeads.length / totalLeads) * 100 : 0,
-            avgDaysInStage: Math.round(avgDays),
+            avgDaysInStage: Math.max(0, Math.round(avgDays)),
           };
         });
 

@@ -30,7 +30,9 @@ export default function StageMetrics({ metrics }: StageMetricsProps) {
                 <span className="text-success font-semibold">{metric.conversionRate.toFixed(0)}%</span>
                 <span className="text-muted-foreground">·</span>
                 <span className="text-accent font-semibold">{metric.avgDaysInStage}d</span>
-                <span className="text-xs text-muted-foreground">média</span>
+                <span className="text-xs text-muted-foreground">
+                  {metric.avgDaysInStage === 0 ? 'hoje' : 'média'}
+                </span>
               </div>
             </div>
           </CardContent>
