@@ -90,7 +90,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
 
       try {
         const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all([
-          supabase.from('leads').select('id, pipeline_stage, origin').eq('organization_id', organizationId),
+          supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at').eq('organization_id', organizationId),
           supabase.from('sales').select('id, value, product_id, lead_id, created_at').eq('organization_id', organizationId),
           supabase.from('products').select('id, name').eq('organization_id', organizationId),
           supabase.from('pipeline_stages').select('id, name, sort_order').eq('organization_id', organizationId).eq('active', true).order('sort_order'),
