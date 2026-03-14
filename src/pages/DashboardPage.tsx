@@ -120,6 +120,49 @@ export default function DashboardPage() {
           </Card>
         )}
 
+        {/* Top Produtos */}
+        {topProducts.length > 0 && (
+          <Card className="shadow-card border-border/60">
+            <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top 5 Produtos</CardTitle></CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {topProducts.map((product, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                      <div>
+                        <p className="font-semibold text-foreground">{product.name}</p>
+                        <p className="text-sm text-muted-foreground">{product.count} vendas</p>
+                      </div>
+                    </div>
+                    <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Vendas por Dia */}
+        {salesByDay.length > 0 && (
+          <Card className="shadow-card border-border/60">
+            <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes (30 dias)</CardTitle></CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {salesByDay.slice(-7).map((day) => (
+                  <div key={day.day} className="flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground w-24">{day.day}</span>
+                    <div className="flex-1 bg-muted rounded-full h-2">
+                      <div className="bg-primary h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
+                    </div>
+                    <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* AI Weekly Summary */}
         <AIWeeklySummary />
       </div>
