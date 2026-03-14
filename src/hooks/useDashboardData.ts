@@ -63,6 +63,7 @@ interface DashboardData {
   loading: boolean;
   isConsolidated: boolean;
   consolidatedData: ConsolidatedData | null;
+  productInsights: ProductInsightsData | null;
 }
 
 const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'> = {
