@@ -79,13 +79,21 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
         ]);
 
         const leads = leadsRes.data || [];
-        const sales = salesRes.data || [];
+        const allSales = salesRes.data || [];
         const products = productsRes.data || [];
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];
 
+        // Filter sales by dateRange if provided
+        const sales = dateRange
+          ? allSales.filter((s) => {
+              const d = new Date(s.created_at || '');
+              return d >= dateRange.start && d <= dateRange.end;
+            })
+          : allSales;
+
         console.log('[useDashboardData] 📊 Resultado leads:', { count: leads.length, error: leadsRes.error?.message || null });
-        console.log('[useDashboardData] 📊 Resultado sales:', { count: sales.length, error: salesRes.error?.message || null });
+        console.log('[useDashboardData] 📊 Resultado sales:', { count: sales.length, total: allSales.length, error: salesRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado products:', { count: products.length, error: productsRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado pipeline_stages:', { count: stages.length, error: stagesRes.error?.message || null });
         console.log('[useDashboardData] 📊 Resultado lead_origins:', { count: origins.length, error: originsRes.error?.message || null });
