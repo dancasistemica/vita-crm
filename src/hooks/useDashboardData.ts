@@ -97,13 +97,20 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
           supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId).eq('active', true),
         ]);
 
-        const leads = leadsRes.data || [];
+        const allLeads = leadsRes.data || [];
         const allSales = salesRes.data || [];
         const products = productsRes.data || [];
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];
 
-        // Filter sales by dateRange if provided
+        // Filter leads and sales by dateRange if provided
+        const leads = dateRange
+          ? allLeads.filter((l) => {
+              const d = new Date(l.created_at || '');
+              return d >= dateRange.start && d <= dateRange.end;
+            })
+          : allLeads;
+
         const sales = dateRange
           ? allSales.filter((s) => {
               const d = new Date(s.created_at || '');
