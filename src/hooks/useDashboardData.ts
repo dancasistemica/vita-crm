@@ -30,6 +30,8 @@ export interface ProductInsightsData {
     byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
     orgsAboveAverage: number;
     orgsBelowAverage: number;
+    benchmarkMessage: string;
+    isAboveAverage: boolean;
   };
   funnelAnalysis: {
     totalLeads: number;
