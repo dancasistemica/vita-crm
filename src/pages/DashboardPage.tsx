@@ -90,6 +90,16 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
+      {/* Stuck Leads Alert */}
+      <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
+
+      {/* Stage Metrics */}
+      {stageMetrics.length > 0 && (
+        <>
+          <h2 className="text-lg font-display text-foreground">Métricas por Etapa</h2>
+          <StageMetrics metrics={stageMetrics} />
+        </>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-card border-border/60">
