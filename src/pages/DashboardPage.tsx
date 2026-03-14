@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, Building2, Globe } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -26,13 +26,12 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, isConsolidated, consolidatedData } = useDashboardData(dateRange);
 
-  // DEBUG LOGS
   console.log('[DashboardPage] User:', user?.email);
   console.log('[DashboardPage] Organization:', organizationId, organization?.name);
+  console.log('[DashboardPage] Mode:', isConsolidated ? 'CONSOLIDADO' : 'ORGANIZAÇÃO');
   console.log('[DashboardPage] Total Leads:', totalLeads);
-  console.log('[DashboardPage] Leads by Stage:', leadsByStage);
 
   const metrics = [
     { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
@@ -43,6 +42,10 @@ export default function DashboardPage() {
     { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
   ];
+
+  if (isConsolidated) {
+    metrics.unshift({ icon: Building2, label: "Organizações", value: consolidatedData?.totalOrganizations ?? 0, color: 'bg-info/10 text-info' });
+  }
 
   if (loading) {
     return (
@@ -66,10 +69,23 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-display text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
-      </div>
+      {/* Header */}
+      {isConsolidated ? (
+        <div className="bg-gradient-to-r from-primary/90 to-primary/60 rounded-xl p-5 text-primary-foreground">
+          <div className="flex items-center gap-3">
+            <Globe className="h-7 w-7" />
+            <div>
+              <h1 className="text-2xl font-display">Dashboard Consolidado</h1>
+              <p className="text-sm opacity-80 mt-0.5">Visão 360° de todas as suas organizações</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <h1 className="text-2xl font-display text-foreground">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
+        </div>
+      )}
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
 
@@ -90,6 +106,30 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {/* Consolidated: Top Organizations */}
+      {isConsolidated && consolidatedData && consolidatedData.topOrganizations.length > 0 && (
+        <Card className="shadow-card border-border/60">
+          <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top Organizações por Receita</CardTitle></CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {consolidatedData.topOrganizations.map((org, index) => (
+                <div key={org.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                    <div>
+                      <p className="font-semibold text-foreground">{org.name}</p>
+                      <p className="text-sm text-muted-foreground">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-success">R$ {org.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Stuck Leads Alert */}
       <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
 
@@ -117,12 +157,12 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Origem</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-base font-display">{isConsolidated ? 'Leads por Organização' : 'Leads por Origem'}</CardTitle></CardHeader>
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                  {leadsByOrigin.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                <Pie data={isConsolidated && consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                  {(isConsolidated && consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
                 <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
               </PieChart>
@@ -146,7 +186,6 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* Top Produtos */}
         {topProducts.length > 0 && (
           <Card className="shadow-card border-border/60">
             <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top 5 Produtos</CardTitle></CardHeader>
@@ -169,7 +208,6 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* Vendas por Dia */}
         {salesByDay.length > 0 && (
           <Card className="shadow-card border-border/60">
             <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
@@ -189,8 +227,7 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* AI Weekly Summary */}
-        <AIWeeklySummary />
+        {!isConsolidated && <AIWeeklySummary />}
       </div>
     </div>
   );
