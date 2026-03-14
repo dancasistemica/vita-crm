@@ -106,12 +106,7 @@ export default function TarefasPage() {
   const fetchTaskStatuses = useCallback(async () => {
     if (!dataAccess) return;
     try {
-      const { data, error } = await supabase
-        .from('task_statuses')
-        .select('*')
-        .eq('organization_id', (dataAccess as any).orgId)
-        .order('order_index');
-      if (error) throw error;
+      const data = await dataAccess.getTaskStatuses();
       setTaskStatuses((data || []) as TaskStatus[]);
     } catch (err) {
       console.error('[TarefasPage] Erro ao carregar status:', err);
