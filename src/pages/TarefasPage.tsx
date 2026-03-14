@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActionButtons from "@/components/tasks/TaskActionButtons";
+import TaskFilters from "@/components/tasks/TaskFilters";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
 import AIFollowUpGenerator from "@/components/ai/AIFollowUpGenerator";
@@ -24,18 +26,33 @@ interface TaskRow {
   due_date: string | null;
   completed: boolean;
   type: string | null;
+  assigned_to: string | null;
   organization_id: string;
   created_at: string;
   leads?: { name: string } | null;
+}
+
+interface OrgMember {
+  user_id: string;
+  role: string;
+  profiles?: { full_name: string; email: string | null } | null;
 }
 
 export default function TarefasPage() {
   const dataAccess = useDataAccess();
   const { leads, pipelineStages } = useLeadsData();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
+  const [orgMembers, setOrgMembers] = useState<OrgMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskRow | null>(null);
+
+  // Filter state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [assignedFilter, setAssignedFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   const fetchTasks = useCallback(async () => {
     if (!dataAccess) return;
@@ -50,23 +67,64 @@ export default function TarefasPage() {
     }
   }, [dataAccess]);
 
+  const fetchOrgMembers = useCallback(async () => {
+    if (!dataAccess) return;
+    try {
+      const data = await dataAccess.getOrgMembers();
+      setOrgMembers(data as OrgMember[]);
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao carregar membros:', err);
+    }
+  }, [dataAccess]);
+
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]);
+    fetchOrgMembers();
+  }, [fetchTasks, fetchOrgMembers]);
+
+  // Client-side filtering
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(t => {
+      if (searchTerm) {
+        const search = searchTerm.toLowerCase();
+        const leadName = leads.find(l => l.id === t.lead_id)?.name?.toLowerCase() || '';
+        if (!t.title.toLowerCase().includes(search) && !leadName.includes(search)) return false;
+      }
+      if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+      if (assignedFilter === 'unassigned' && t.assigned_to) return false;
+      if (assignedFilter !== 'all' && assignedFilter !== 'unassigned' && t.assigned_to !== assignedFilter) return false;
+      if (dateFrom && t.due_date && t.due_date < dateFrom) return false;
+      if (dateTo && t.due_date && t.due_date > dateTo) return false;
+      return true;
+    });
+  }, [tasks, searchTerm, typeFilter, assignedFilter, dateFrom, dateTo, leads]);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setTypeFilter('all');
+    setAssignedFilter('all');
+    setDateFrom('');
+    setDateTo('');
+  };
 
   const today = new Date().toISOString().split('T')[0];
-  const overdue = tasks.filter(t => !t.completed && t.due_date && t.due_date < today);
-  const todayTasks = tasks.filter(t => !t.completed && t.due_date === today);
-  const upcoming = tasks.filter(t => !t.completed && (!t.due_date || t.due_date > today));
-  const completed = tasks.filter(t => t.completed);
+  const overdue = filteredTasks.filter(t => !t.completed && t.due_date && t.due_date < today);
+  const todayTasks = filteredTasks.filter(t => !t.completed && t.due_date === today);
+  const upcoming = filteredTasks.filter(t => !t.completed && (!t.due_date || t.due_date > today));
+  const completed = filteredTasks.filter(t => t.completed);
 
   const getLeadName = (id: string | null) => {
     if (!id) return '—';
     return leads.find(l => l.id === id)?.name || '—';
   };
   const getTypeLabel = (type: string | null) => TASK_TYPES.find(t => t.value === type)?.label || type || 'Outro';
+  const getMemberName = (userId: string | null) => {
+    if (!userId) return null;
+    const m = orgMembers.find(m => m.user_id === userId);
+    return m?.profiles?.full_name || m?.profiles?.email || null;
+  };
 
-  const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string }) => {
+  const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => {
     if (!dataAccess) return;
     try {
       await dataAccess.createTask({
@@ -74,6 +132,7 @@ export default function TarefasPage() {
         lead_id: data.leadId || null,
         due_date: data.dueDate || null,
         type: data.type || 'outro',
+        assigned_to: data.assignedTo || null,
       });
       toast.success("Tarefa criada!");
       setDialogOpen(false);
@@ -93,7 +152,7 @@ export default function TarefasPage() {
     }
   };
 
-  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string }) => {
+  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => {
     if (!dataAccess || !editingTask) return;
     try {
       await dataAccess.updateTask(editingTask.id, {
@@ -101,6 +160,7 @@ export default function TarefasPage() {
         lead_id: data.leadId || null,
         due_date: data.dueDate || null,
         type: data.type || 'outro',
+        assigned_to: data.assignedTo || null,
       });
       toast.success("Tarefa atualizada!");
       setDialogOpen(false);
@@ -122,6 +182,7 @@ export default function TarefasPage() {
         lead_id: task.lead_id,
         due_date: task.due_date,
         type: task.type,
+        assigned_to: task.assigned_to,
       });
       toast.success("Tarefa duplicada!");
       await fetchTasks();
@@ -153,32 +214,55 @@ export default function TarefasPage() {
     }
   };
 
+  const handleAssign = async (taskId: string, userId: string | null) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.updateTask(taskId, { assigned_to: userId });
+      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, assigned_to: userId } : t));
+      toast.success(userId ? "Tarefa designada!" : "Designação removida");
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao designar tarefa:', err);
+      toast.error("Erro ao designar tarefa");
+    }
+  };
+
   const handleDialogChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) setEditingTask(null);
   };
 
-  const TaskItem = ({ task }: { task: TaskRow }) => (
-    <Card className={task.completed ? 'opacity-50' : ''}>
-      <CardContent className="py-3 px-4 flex items-center gap-3">
-        <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task)} />
-        <div className="flex-1">
-          <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
-            <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
-            {task.due_date && <span className="text-xs text-muted-foreground">{task.due_date}</span>}
+  const TaskItem = ({ task }: { task: TaskRow }) => {
+    const assignedName = getMemberName(task.assigned_to);
+
+    return (
+      <Card className={task.completed ? 'opacity-50' : ''}>
+        <CardContent className="py-3 px-4 flex items-center gap-3">
+          <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task)} />
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
+              <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
+              {task.due_date && <span className="text-xs text-muted-foreground">{task.due_date}</span>}
+              {assignedName && (
+                <Badge variant="secondary" className="text-xs gap-1">
+                  <UserCircle className="h-3 w-3" />
+                  {assignedName}
+                </Badge>
+              )}
+            </div>
           </div>
-        </div>
-        <TaskActionButtons
-          taskId={task.id}
-          onEdit={handleEdit}
-          onDuplicate={handleDuplicate}
-          onDelete={handleDelete}
-        />
-      </CardContent>
-    </Card>
-  );
+          <AssignPopover taskId={task.id} assignedTo={task.assigned_to} orgMembers={orgMembers} onAssign={handleAssign} />
+          <TaskActionButtons
+            taskId={task.id}
+            onEdit={handleEdit}
+            onDuplicate={handleDuplicate}
+            onDelete={handleDelete}
+          />
+        </CardContent>
+      </Card>
+    );
+  };
 
   if (loading) {
     return (
@@ -200,12 +284,28 @@ export default function TarefasPage() {
             <TaskForm
               leads={leads}
               pipelineStages={pipelineStages}
+              orgMembers={orgMembers}
               onSave={editingTask ? handleSaveEdit : handleAdd}
               initialData={editingTask}
             />
           </DialogContent>
         </Dialog>
       </div>
+
+      <TaskFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        typeFilter={typeFilter}
+        onTypeChange={setTypeFilter}
+        assignedFilter={assignedFilter}
+        onAssignedChange={setAssignedFilter}
+        dateFrom={dateFrom}
+        onDateFromChange={setDateFrom}
+        dateTo={dateTo}
+        onDateToChange={setDateTo}
+        onClear={clearFilters}
+        orgMembers={orgMembers}
+      />
 
       {overdue.length > 0 && (
         <section>
@@ -238,10 +338,47 @@ export default function TarefasPage() {
   );
 }
 
-function TaskForm({ leads, pipelineStages, onSave, initialData }: {
+// ── Assign Popover ──
+function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
+  taskId: string;
+  assignedTo: string | null;
+  orgMembers: OrgMember[];
+  onAssign: (taskId: string, userId: string | null) => void;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
+          <UserCircle className="h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-48 p-1" align="end">
+        <button
+          onClick={() => onAssign(taskId, null)}
+          className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
+        >
+          Sem responsável
+        </button>
+        {orgMembers.map(m => (
+          <button
+            key={m.user_id}
+            onClick={() => onAssign(taskId, m.user_id)}
+            className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
+          >
+            {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// ── Task Form ──
+function TaskForm({ leads, pipelineStages, orgMembers, onSave, initialData }: {
   leads: any[];
   pipelineStages: any[];
-  onSave: (data: { title: string; leadId: string; dueDate: string; type: string }) => void;
+  orgMembers: OrgMember[];
+  onSave: (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string }) => void;
   initialData?: TaskRow | null;
 }) {
   const [form, setForm] = useState({
@@ -249,6 +386,7 @@ function TaskForm({ leads, pipelineStages, onSave, initialData }: {
     leadId: initialData?.lead_id || '',
     dueDate: initialData?.due_date || new Date().toISOString().split('T')[0],
     type: initialData?.type || 'follow_up',
+    assignedTo: initialData?.assigned_to || '',
   });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
@@ -271,6 +409,21 @@ function TaskForm({ leads, pipelineStages, onSave, initialData }: {
           </Select>
         </div>
         <div><Label>Data</Label><Input type="date" value={form.dueDate} onChange={e => set('dueDate', e.target.value)} /></div>
+      </div>
+
+      <div>
+        <Label>Responsável</Label>
+        <Select value={form.assignedTo || 'none'} onValueChange={v => set('assignedTo', v === 'none' ? '' : v)}>
+          <SelectTrigger><SelectValue placeholder="Selecionar responsável" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">Sem responsável</SelectItem>
+            {orgMembers.map(m => (
+              <SelectItem key={m.user_id} value={m.user_id}>
+                {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {form.type === 'follow_up' && selectedLead && (
