@@ -134,7 +134,13 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   const switchOrg = useCallback(async (orgId: string) => {
     console.log('[OrganizationContext] 🔄 switchOrg chamado:', orgId);
     localStorage.setItem('superadmin_current_org', orgId);
-    await loadOrgById(orgId);
+    if (orgId === CONSOLIDATED_ORG_ID) {
+      console.log('[OrganizationContext] ✅ Modo CONSOLIDADO ativado');
+      setOrganization(CONSOLIDATED_ORG);
+      setLoading(false);
+    } else {
+      await loadOrgById(orgId);
+    }
   }, [loadOrgById]);
 
   useEffect(() => {
