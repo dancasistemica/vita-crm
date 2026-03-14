@@ -236,21 +236,21 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
         <Card className="shadow-card border-border/60 border-l-4 border-l-info">
           <CardContent className="pt-5 pb-4">
             <p className="text-xs text-muted-foreground mb-1">📅 Leads por Dia</p>
-            <p className="text-2xl font-bold text-info">{insights.usagePatterns.leadsPerDay}</p>
+            <p className="text-2xl font-bold text-info">{Number(insights.usagePatterns.leadsPerDay).toFixed(1)}</p>
             <p className="text-xs text-muted-foreground mt-1">Média do período</p>
           </CardContent>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-success">
           <CardContent className="pt-5 pb-4">
             <p className="text-xs text-muted-foreground mb-1">✅ Conversões/Dia</p>
-            <p className="text-2xl font-bold text-success">{insights.usagePatterns.conversionPerDay}</p>
+            <p className="text-2xl font-bold text-success">{Number(insights.usagePatterns.conversionPerDay).toFixed(1)}</p>
             <p className="text-xs text-muted-foreground mt-1">Média do período</p>
           </CardContent>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-primary">
           <CardContent className="pt-5 pb-4">
             <p className="text-xs text-muted-foreground mb-1">⏱️ Tempo Médio</p>
-            <p className="text-2xl font-bold text-primary">{insights.usagePatterns.avgTimeToConvert}d</p>
+            <p className="text-2xl font-bold text-primary">{Number(insights.usagePatterns.avgTimeToConvert).toFixed(1)}d</p>
             <p className="text-xs text-muted-foreground mt-1">Lead → Conversão</p>
           </CardContent>
         </Card>
