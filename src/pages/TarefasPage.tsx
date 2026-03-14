@@ -365,8 +365,7 @@ export default function TarefasPage() {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const formatCreatedDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  const formatCreatedDate = (dateStr: string) => formatDateToBR(dateStr);
   };
 
   const TaskItem = ({ task }: { task: TaskRow }) => {
