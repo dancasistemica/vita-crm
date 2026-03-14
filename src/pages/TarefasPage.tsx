@@ -381,7 +381,7 @@ export default function TarefasPage() {
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
               <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
-              {task.due_date && <span className="text-xs text-muted-foreground">{task.due_date}</span>}
+              {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
                 <Badge variant="secondary" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
