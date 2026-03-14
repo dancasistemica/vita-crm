@@ -42,7 +42,6 @@ export default function DashboardPage() {
 
   console.log('[DashboardPage] User:', user?.email);
   console.log('[DashboardPage] Organization:', organizationId, organization?.name);
-  console.log('[DashboardPage] Mode:', isConsolidated ? 'CONSOLIDADO' : 'ORGANIZAÇÃO');
   console.log('[DashboardPage] Total Leads:', totalLeads);
 
   const metrics = [
@@ -54,10 +53,6 @@ export default function DashboardPage() {
     { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
   ];
-
-  if (isConsolidated) {
-    metrics.unshift({ icon: Building2, label: "Organizações", value: consolidatedData?.totalOrganizations ?? 0, color: 'bg-info/10 text-info' });
-  }
 
   if (loading) {
     return (
