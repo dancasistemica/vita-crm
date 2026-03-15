@@ -317,7 +317,8 @@ export default function CRMFieldsTab() {
       setNewStage('');
       toast.success("Etapa adicionada");
       await loadStages();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddStage error:', err);
       toast.error("Erro ao adicionar etapa");
     } finally {
       setStagesSaving(false);
