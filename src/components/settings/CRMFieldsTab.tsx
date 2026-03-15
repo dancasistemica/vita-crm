@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
 
 interface DBPipelineStage {
   id: string;
