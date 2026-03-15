@@ -504,7 +504,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
     return () => {
       active = false;
     };
-  }, [organizationId, orgLoading, isSuperadmin, superadminLoading, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
+  }, [organizationId, orgLoading, isSuperadmin, superadminLoading, forceConsolidated, dateRange?.start?.getTime(), dateRange?.end?.getTime()]);
 
   return { ...data, loading, isConsolidated, consolidatedData, productInsights };
 }
