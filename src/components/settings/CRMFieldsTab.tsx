@@ -147,7 +147,8 @@ export default function CRMFieldsTab() {
       setNewOrigin('');
       toast.success("Origem adicionada");
       await loadOrigins();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddOrigin error:', err);
       toast.error("Erro ao adicionar origem");
     } finally {
       setOriginsSaving(false);
