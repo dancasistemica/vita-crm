@@ -309,7 +309,42 @@ export default function CRMFieldsTab() {
 
   useEffect(() => { loadStages(); }, [loadStages]);
 
-  const handleAddStage = async () => {
+  // ── Realtime subscriptions ──
+  useEffect(() => {
+    if (!dataAccess) return;
+    const orgId = dataAccess.orgId;
+
+    const originsChannel = supabase
+      .channel(`lead_origins:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'lead_origins', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: lead_origins changed');
+        loadOrigins();
+      })
+      .subscribe();
+
+    const levelsChannel = supabase
+      .channel(`interest_levels:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'interest_levels', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: interest_levels changed');
+        loadLevels();
+      })
+      .subscribe();
+
+    const stagesChannel = supabase
+      .channel(`pipeline_stages:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline_stages', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: pipeline_stages changed');
+        loadStages();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(originsChannel);
+      supabase.removeChannel(levelsChannel);
+      supabase.removeChannel(stagesChannel);
+    };
+  }, [dataAccess, loadOrigins, loadLevels, loadStages]);
+
     if (!newStage.trim()) return;
     if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
