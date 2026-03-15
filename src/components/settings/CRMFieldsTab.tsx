@@ -58,6 +58,7 @@ export default function CRMFieldsTab() {
   const [stagesSaving, setStagesSaving] = useState(false);
   const [newStage, setNewStage] = useState('');
   const [editingStage, setEditingStage] = useState<DBPipelineStage | null>(null);
+  const [draggedStageId, setDraggedStageId] = useState<string | null>(null);
 
   // ── Load tab order from DB ──
   useEffect(() => {
