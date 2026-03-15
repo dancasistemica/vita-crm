@@ -695,7 +695,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => { removeTag(t.id); toast.success("Tag removida"); }}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => openDeleteConfirm(t.id, t.name, 'tag')}><Trash2 className="h-3 w-3" /></Button>
               </div>
             ))}
           </div>
