@@ -1,31 +1,103 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useCRMStore, InterestLevel, CRMTag } from "@/store/crmStore";
-import { PipelineStage } from "@/types/crm";
+import { useDataAccess } from "@/hooks/useDataAccess";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
+import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
+interface DBPipelineStage {
+  id: string;
+  name: string;
+  sort_order: number;
+  active: boolean;
+}
 
 export default function CRMFieldsTab() {
   const {
     origins, addOrigin, removeOrigin, updateOrigin,
     interestLevels, addInterestLevel, updateInterestLevel, removeInterestLevel,
     tags, addTag, updateTag, removeTag,
-    pipelineStages, addPipelineStage, updatePipelineStage, removePipelineStage,
   } = useCRMStore();
 
+  const dataAccess = useDataAccess();
+
+  // ── Zustand-based state (origins, levels, tags) ──
   const [newOrigin, setNewOrigin] = useState('');
   const [editingOrigin, setEditingOrigin] = useState<{ old: string; new: string } | null>(null);
   const [newLevel, setNewLevel] = useState({ value: '', label: '' });
   const [editingLevel, setEditingLevel] = useState<InterestLevel | null>(null);
   const [newTag, setNewTag] = useState('');
   const [editingTag, setEditingTag] = useState<CRMTag | null>(null);
-  const [newStage, setNewStage] = useState('');
-  const [editingStage, setEditingStage] = useState<PipelineStage | null>(null);
 
-  const sortedStages = [...pipelineStages].sort((a, b) => a.order - b.order);
+  // ── DB-based pipeline stages state ──
+  const [stages, setStages] = useState<DBPipelineStage[]>([]);
+  const [stagesLoading, setStagesLoading] = useState(true);
+  const [stagesSaving, setStagesSaving] = useState(false);
+  const [newStage, setNewStage] = useState('');
+  const [editingStage, setEditingStage] = useState<DBPipelineStage | null>(null);
+
+  const loadStages = useCallback(async () => {
+    if (!dataAccess) return;
+    try {
+      setStagesLoading(true);
+      const data = await dataAccess.getPipelineStages();
+      setStages(data as DBPipelineStage[]);
+    } catch (err) {
+      console.error('[CRMFieldsTab] Erro ao carregar stages:', err);
+    } finally {
+      setStagesLoading(false);
+    }
+  }, [dataAccess]);
+
+  useEffect(() => { loadStages(); }, [loadStages]);
+
+  const handleAddStage = async () => {
+    if (!newStage.trim() || !dataAccess) return;
+    try {
+      setStagesSaving(true);
+      const nextOrder = stages.length > 0 ? Math.max(...stages.map(s => s.sort_order)) + 1 : 0;
+      await dataAccess.createPipelineStage(newStage.trim(), nextOrder);
+      setNewStage('');
+      toast.success("Etapa adicionada");
+      await loadStages();
+    } catch {
+      toast.error("Erro ao adicionar etapa");
+    } finally {
+      setStagesSaving(false);
+    }
+  };
+
+  const handleUpdateStage = async () => {
+    if (!editingStage || !dataAccess) return;
+    try {
+      setStagesSaving(true);
+      await dataAccess.updatePipelineStage(editingStage.id, { name: editingStage.name });
+      toast.success("Etapa atualizada");
+      setEditingStage(null);
+      await loadStages();
+    } catch {
+      toast.error("Erro ao atualizar etapa");
+    } finally {
+      setStagesSaving(false);
+    }
+  };
+
+  const handleDeleteStage = async (id: string) => {
+    if (!dataAccess) return;
+    try {
+      setStagesSaving(true);
+      await dataAccess.deletePipelineStage(id);
+      toast.success("Etapa removida");
+      await loadStages();
+    } catch {
+      toast.error("Erro ao remover etapa");
+    } finally {
+      setStagesSaving(false);
+    }
+  };
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
@@ -117,33 +189,48 @@ export default function CRMFieldsTab() {
         </CardContent>
       </Card>
 
-      {/* Funil de Vendas */}
+      {/* Funil de Vendas — agora do banco */}
       <Card>
         <CardHeader><CardTitle className="text-lg">📈 Etapas do Funil de Vendas</CardTitle></CardHeader>
         <CardContent className="space-y-2">
-          {sortedStages.map((s, i) => (
-            <div key={s.id} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-              <GripVertical className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-muted-foreground w-6">{i + 1}.</span>
-              {editingStage?.id === s.id ? (
-                <Input value={editingStage.name} onChange={e => setEditingStage({ ...editingStage, name: e.target.value })} className="h-8 flex-1" />
-              ) : (
-                <span className="flex-1 text-foreground">{s.name}</span>
-              )}
-              <div className="flex gap-1">
-                {editingStage?.id === s.id ? (
-                  <Button size="sm" variant="ghost" onClick={() => { updatePipelineStage(s.id, editingStage); toast.success("Etapa atualizada"); setEditingStage(null); }}>✓</Button>
-                ) : (
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
-                )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => { removePipelineStage(s.id); toast.success("Etapa removida"); }}><Trash2 className="h-3 w-3" /></Button>
-              </div>
+          {stagesLoading ? (
+            <div className="flex items-center justify-center py-6">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <span className="ml-2 text-sm text-muted-foreground">Carregando etapas...</span>
             </div>
-          ))}
-          <div className="flex gap-2 mt-3">
-            <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} />
-            <Button onClick={() => { if (newStage.trim()) { addPipelineStage({ id: crypto.randomUUID(), name: newStage.trim(), order: pipelineStages.length + 1 }); setNewStage(''); toast.success("Etapa adicionada"); } }} disabled={!newStage.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
-          </div>
+          ) : (
+            <>
+              {stages.map((s, i) => (
+                <div key={s.id} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                  <GripVertical className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground w-6">{i + 1}.</span>
+                  {editingStage?.id === s.id ? (
+                    <Input value={editingStage.name} onChange={e => setEditingStage({ ...editingStage, name: e.target.value })} className="h-8 flex-1" />
+                  ) : (
+                    <span className="flex-1 text-foreground">{s.name}</span>
+                  )}
+                  <div className="flex gap-1">
+                    {editingStage?.id === s.id ? (
+                      <Button size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</Button>
+                    ) : (
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
+                    )}
+                    <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStage(s.id)} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
+                  </div>
+                </div>
+              ))}
+              {stages.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">Nenhuma etapa cadastrada.</p>
+              )}
+              <div className="flex gap-2 mt-3">
+                <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddStage()} />
+                <Button onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
+                  {stagesSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+                  Adicionar
+                </Button>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
