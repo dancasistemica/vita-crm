@@ -232,7 +232,8 @@ export default function CRMFieldsTab() {
       setNewLevel({ value: '', label: '' });
       toast.success("Nível adicionado");
       await loadLevels();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddLevel error:', err);
       toast.error("Erro ao adicionar nível");
     } finally {
       setLevelsSaving(false);
