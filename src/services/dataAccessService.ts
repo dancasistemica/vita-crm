@@ -436,7 +436,8 @@ export class DataAccessService {
       .from('interest_levels')
       .select('*')
       .eq('organization_id', this.orgId)
-      .eq('active', true);
+      .eq('active', true)
+      .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getInterestLevels error:', error); throw error; }
     return data || [];
   }
@@ -447,9 +448,100 @@ export class DataAccessService {
       .select('*')
       .eq('organization_id', this.orgId)
       .eq('active', true)
-      .order('name');
+      .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getLeadOrigins error:', error); throw error; }
     return data || [];
+  }
+
+  async createLeadOrigin(name: string, sortOrder: number) {
+    const { data, error } = await supabase
+      .from('lead_origins')
+      .insert({ name, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] createLeadOrigin error:', error); throw error; }
+    return data;
+  }
+
+  async updateLeadOrigin(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
+    const { data, error } = await supabase
+      .from('lead_origins')
+      .update(updates)
+      .eq('id', id)
+      .eq('organization_id', this.orgId)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] updateLeadOrigin error:', error); throw error; }
+    return data;
+  }
+
+  async deleteLeadOrigin(id: string) {
+    const { error } = await supabase
+      .from('lead_origins')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', this.orgId);
+    if (error) { console.error('[DataAccessService] deleteLeadOrigin error:', error); throw error; }
+    return true;
+  }
+
+  async reorderLeadOrigins(origins: Array<{ id: string; sort_order: number }>) {
+    const promises = origins.map(o =>
+      supabase
+        .from('lead_origins')
+        .update({ sort_order: o.sort_order })
+        .eq('id', o.id)
+        .eq('organization_id', this.orgId)
+    );
+    const results = await Promise.all(promises);
+    const errors = results.filter(r => r.error);
+    if (errors.length > 0) throw errors[0].error;
+  }
+
+  // ── INTEREST LEVELS CRUD ──────────────────────────────────
+  async createInterestLevel(value: string, label: string, sortOrder: number) {
+    const { data, error } = await supabase
+      .from('interest_levels')
+      .insert({ value, label, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] createInterestLevel error:', error); throw error; }
+    return data;
+  }
+
+  async updateInterestLevel(id: string, updates: { value?: string; label?: string; sort_order?: number; active?: boolean }) {
+    const { data, error } = await supabase
+      .from('interest_levels')
+      .update(updates)
+      .eq('id', id)
+      .eq('organization_id', this.orgId)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] updateInterestLevel error:', error); throw error; }
+    return data;
+  }
+
+  async deleteInterestLevel(id: string) {
+    const { error } = await supabase
+      .from('interest_levels')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', this.orgId);
+    if (error) { console.error('[DataAccessService] deleteInterestLevel error:', error); throw error; }
+    return true;
+  }
+
+  async reorderInterestLevels(levels: Array<{ id: string; sort_order: number }>) {
+    const promises = levels.map(l =>
+      supabase
+        .from('interest_levels')
+        .update({ sort_order: l.sort_order })
+        .eq('id', l.id)
+        .eq('organization_id', this.orgId)
+    );
+    const results = await Promise.all(promises);
+    const errors = results.filter(r => r.error);
+    if (errors.length > 0) throw errors[0].error;
   }
 
   async getPaymentMethods() {
