@@ -120,7 +120,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
 
     const fetchData = async () => {
       setLoading(true);
-      const consolidated = organizationId === CONSOLIDATED_ORG_ID;
+      const consolidated = forceConsolidated === true || organizationId === CONSOLIDATED_ORG_ID;
       console.log('[useDashboardData] 🚀 Iniciando carregamento', {
         organizationId,
         isSuperadmin,
