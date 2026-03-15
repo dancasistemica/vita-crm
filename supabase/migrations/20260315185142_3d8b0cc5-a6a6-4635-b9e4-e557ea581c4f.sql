@@ -1,0 +1,3 @@
+ALTER TABLE public.lead_origins REPLICA IDENTITY FULL;
+ALTER TABLE public.interest_levels REPLICA IDENTITY FULL;
+ALTER TABLE public.pipeline_stages REPLICA IDENTITY FULL;
