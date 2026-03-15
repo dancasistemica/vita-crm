@@ -227,6 +227,7 @@ export type Database = {
           id: string
           label: string
           organization_id: string
+          sort_order: number
           value: string
         }
         Insert: {
@@ -235,6 +236,7 @@ export type Database = {
           id?: string
           label: string
           organization_id: string
+          sort_order?: number
           value: string
         }
         Update: {
@@ -243,6 +245,7 @@ export type Database = {
           id?: string
           label?: string
           organization_id?: string
+          sort_order?: number
           value?: string
         }
         Relationships: [
@@ -262,6 +265,7 @@ export type Database = {
           id: string
           name: string
           organization_id: string
+          sort_order: number
         }
         Insert: {
           active?: boolean
@@ -269,6 +273,7 @@ export type Database = {
           id?: string
           name: string
           organization_id: string
+          sort_order?: number
         }
         Update: {
           active?: boolean
@@ -276,6 +281,7 @@ export type Database = {
           id?: string
           name?: string
           organization_id?: string
+          sort_order?: number
         }
         Relationships: [
           {
