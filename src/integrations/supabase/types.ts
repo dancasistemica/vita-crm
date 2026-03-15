@@ -102,6 +102,41 @@ export type Database = {
           },
         ]
       }
+      crm_field_order: {
+        Row: {
+          created_at: string
+          field_name: string
+          id: string
+          organization_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          field_name: string
+          id?: string
+          organization_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          field_name?: string
+          id?: string
+          organization_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_field_order_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_roles: {
         Row: {
           created_at: string
