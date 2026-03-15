@@ -138,7 +138,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadOrigins(); }, [loadOrigins]);
 
   const handleAddOrigin = async () => {
-    if (!newOrigin.trim() || !dataAccess) return;
+    if (!newOrigin.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setOriginsSaving(true);
       const nextOrder = origins.length > 0 ? Math.max(...origins.map(o => o.sort_order)) + 1 : 0;
@@ -146,7 +147,8 @@ export default function CRMFieldsTab() {
       setNewOrigin('');
       toast.success("Origem adicionada");
       await loadOrigins();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddOrigin error:', err);
       toast.error("Erro ao adicionar origem");
     } finally {
       setOriginsSaving(false);
@@ -221,7 +223,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadLevels(); }, [loadLevels]);
 
   const handleAddLevel = async () => {
-    if (!newLevel.value.trim() || !newLevel.label.trim() || !dataAccess) return;
+    if (!newLevel.value.trim() || !newLevel.label.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setLevelsSaving(true);
       const nextOrder = levels.length > 0 ? Math.max(...levels.map(l => l.sort_order)) + 1 : 0;
@@ -229,7 +232,8 @@ export default function CRMFieldsTab() {
       setNewLevel({ value: '', label: '' });
       toast.success("Nível adicionado");
       await loadLevels();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddLevel error:', err);
       toast.error("Erro ao adicionar nível");
     } finally {
       setLevelsSaving(false);
@@ -304,7 +308,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadStages(); }, [loadStages]);
 
   const handleAddStage = async () => {
-    if (!newStage.trim() || !dataAccess) return;
+    if (!newStage.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setStagesSaving(true);
       const nextOrder = stages.length > 0 ? Math.max(...stages.map(s => s.sort_order)) + 1 : 0;
@@ -312,7 +317,8 @@ export default function CRMFieldsTab() {
       setNewStage('');
       toast.success("Etapa adicionada");
       await loadStages();
-    } catch {
+    } catch (err) {
+      console.error('[CRMFieldsTab] handleAddStage error:', err);
       toast.error("Erro ao adicionar etapa");
     } finally {
       setStagesSaving(false);
