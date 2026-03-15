@@ -345,6 +345,7 @@ export default function CRMFieldsTab() {
     };
   }, [dataAccess, loadOrigins, loadLevels, loadStages]);
 
+  const handleAddStage = async () => {
     if (!newStage.trim()) return;
     if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
