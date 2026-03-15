@@ -296,6 +296,8 @@ export default function CRMFieldsTab() {
                 Adicionar
               </Button>
             </div>
+            {stagesSaving && <p className="text-xs text-muted-foreground mt-2">💾 Salvando...</p>}
+            <p className="text-xs text-muted-foreground mt-2">💡 Arraste as etapas para reordenar. A ordem é salva automaticamente.</p>
           </>
         )}
       </CardContent>
