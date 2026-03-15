@@ -643,6 +643,14 @@ export default function CRMFieldsTab() {
 
   return (
     <div className="space-y-6">
+      <ConfirmDeleteDialog
+        isOpen={deleteConfirm.isOpen}
+        itemName={deleteConfirm.name}
+        itemType={deleteConfirm.type}
+        onConfirm={confirmAndDelete}
+        onCancel={closeDeleteConfirm}
+        isLoading={originsSaving || levelsSaving || stagesSaving}
+      />
       {/* Draggable Tabs */}
       <div className="border-b border-border">
         <div className="flex gap-1 overflow-x-auto pb-0">
