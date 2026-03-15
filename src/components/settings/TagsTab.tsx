@@ -6,16 +6,25 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
 
 export default function TagsTab() {
   const { tags, addTag, updateTag, removeTag } = useCRMStore();
   const [newTag, setNewTag] = useState('');
   const [editingTag, setEditingTag] = useState<CRMTag | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
 
   return (
     <Card>
       <CardHeader><CardTitle className="text-lg">Tags Personalizadas</CardTitle></CardHeader>
       <CardContent className="space-y-2">
+        <ConfirmDeleteDialog
+          isOpen={deleteConfirm.isOpen}
+          itemName={deleteConfirm.name}
+          itemType="tag"
+          onConfirm={() => { removeTag(deleteConfirm.id); toast.success("Tag removida"); setDeleteConfirm({ isOpen: false, id: '', name: '' }); }}
+          onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
+        />
         <div className="flex flex-wrap gap-2 mb-4">
           {tags.map(t => (
             <div key={t.id} className="flex items-center gap-1 bg-muted/50 rounded-full px-3 py-1">
@@ -29,7 +38,7 @@ export default function TagsTab() {
               ) : (
                 <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></Button>
               )}
-              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => { removeTag(t.id); toast.success("Tag removida"); }}><Trash2 className="h-3 w-3" /></Button>
+              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: t.id, name: t.name })}><Trash2 className="h-3 w-3" /></Button>
             </div>
           ))}
         </div>

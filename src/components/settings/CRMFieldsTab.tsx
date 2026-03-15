@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
 
 interface DBPipelineStage {
   id: string;
@@ -83,7 +84,33 @@ export default function CRMFieldsTab() {
   const [editingStage, setEditingStage] = useState<DBPipelineStage | null>(null);
   const [draggedStageId, setDraggedStageId] = useState<string | null>(null);
 
-  // ── Load tab order from DB ──
+  // ── Delete confirmation state ──
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    isOpen: boolean;
+    id: string;
+    name: string;
+    type: 'origem' | 'nível de interesse' | 'etapa do funil' | 'tag';
+  }>({ isOpen: false, id: '', name: '', type: 'origem' });
+
+  const openDeleteConfirm = (id: string, name: string, type: typeof deleteConfirm.type) => {
+    setDeleteConfirm({ isOpen: true, id, name, type });
+  };
+
+  const closeDeleteConfirm = () => {
+    setDeleteConfirm({ isOpen: false, id: '', name: '', type: 'origem' });
+  };
+
+  const confirmAndDelete = async () => {
+    const { id, type } = deleteConfirm;
+    if (!id) return;
+    closeDeleteConfirm();
+    if (type === 'origem') await handleDeleteOrigin(id);
+    else if (type === 'nível de interesse') await handleDeleteLevel(id);
+    else if (type === 'etapa do funil') await handleDeleteStage(id);
+    else if (type === 'tag') { removeTag(id); toast.success("Tag removida"); }
+  };
+
+
   useEffect(() => {
     if (!dataAccess) { setOrderLoading(false); return; }
     (async () => {
@@ -494,7 +521,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDeleteOrigin(o.id)} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
@@ -539,7 +566,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingLevel(l)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDeleteLevel(l.id)} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
@@ -581,7 +608,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStage(s.id)} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
@@ -616,6 +643,14 @@ export default function CRMFieldsTab() {
 
   return (
     <div className="space-y-6">
+      <ConfirmDeleteDialog
+        isOpen={deleteConfirm.isOpen}
+        itemName={deleteConfirm.name}
+        itemType={deleteConfirm.type}
+        onConfirm={confirmAndDelete}
+        onCancel={closeDeleteConfirm}
+        isLoading={originsSaving || levelsSaving || stagesSaving}
+      />
       {/* Draggable Tabs */}
       <div className="border-b border-border">
         <div className="flex gap-1 overflow-x-auto pb-0">
@@ -668,7 +703,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => { removeTag(t.id); toast.success("Tag removida"); }}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => openDeleteConfirm(t.id, t.name, 'tag')}><Trash2 className="h-3 w-3" /></Button>
               </div>
             ))}
           </div>

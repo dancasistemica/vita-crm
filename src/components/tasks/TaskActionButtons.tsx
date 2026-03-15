@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { Edit2, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface TaskActionButtonsProps {
   taskId: string;
+  taskTitle?: string;
   onEdit: (taskId: string) => void;
   onDuplicate: (taskId: string) => void;
   onDelete: (taskId: string) => void;
@@ -10,12 +13,23 @@ interface TaskActionButtonsProps {
 
 export default function TaskActionButtons({
   taskId,
+  taskTitle = 'esta tarefa',
   onEdit,
   onDuplicate,
   onDelete,
 }: TaskActionButtonsProps) {
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
     <div className="flex gap-1">
+      <ConfirmDeleteDialog
+        isOpen={showConfirm}
+        itemName={taskTitle}
+        itemType="tarefa"
+        onConfirm={() => { onDelete(taskId); setShowConfirm(false); }}
+        onCancel={() => setShowConfirm(false)}
+      />
+
       <Button
         variant="ghost"
         size="sm"
@@ -39,11 +53,7 @@ export default function TaskActionButtons({
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => {
-          if (confirm('Tem certeza que deseja remover esta tarefa?')) {
-            onDelete(taskId);
-          }
-        }}
+        onClick={() => setShowConfirm(true)}
         title="Remover tarefa"
         className="text-destructive hover:text-destructive/80 h-8 w-8 p-0"
       >
