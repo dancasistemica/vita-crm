@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { useDataAccess } from "@/hooks/useDataAccess";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
