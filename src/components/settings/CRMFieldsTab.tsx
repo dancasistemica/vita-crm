@@ -608,7 +608,7 @@ export default function CRMFieldsTab() {
                 ) : (
                   <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStage(s.id)} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
