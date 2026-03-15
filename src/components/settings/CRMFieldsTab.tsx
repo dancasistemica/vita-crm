@@ -306,7 +306,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadStages(); }, [loadStages]);
 
   const handleAddStage = async () => {
-    if (!newStage.trim() || !dataAccess) return;
+    if (!newStage.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setStagesSaving(true);
       const nextOrder = stages.length > 0 ? Math.max(...stages.map(s => s.sort_order)) + 1 : 0;
