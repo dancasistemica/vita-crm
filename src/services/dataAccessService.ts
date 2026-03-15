@@ -477,6 +477,32 @@ export class DataAccessService {
     if (error) { console.error('[DataAccessService] getRolePermissions error:', error); throw error; }
     return data || [];
   }
+
+  // ── CRM FIELD ORDER ──────────────────────────────────────
+  async getCRMFieldOrder() {
+    const { data, error } = await supabase
+      .from('crm_field_order')
+      .select('field_name, sort_order')
+      .eq('organization_id', this.orgId)
+      .order('sort_order', { ascending: true });
+    if (error) { console.error('[DataAccessService] getCRMFieldOrder error:', error); throw error; }
+    return data || [];
+  }
+
+  async reorderCRMFields(fields: Array<{ name: string; order: number }>) {
+    const promises = fields.map(f =>
+      supabase
+        .from('crm_field_order')
+        .upsert({
+          organization_id: this.orgId,
+          field_name: f.name,
+          sort_order: f.order,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'organization_id,field_name' })
+    );
+    await Promise.all(promises);
+    console.log('[DataAccessService] reorderCRMFields:', fields.length);
+  }
 }
 
 // Hook-friendly factory
