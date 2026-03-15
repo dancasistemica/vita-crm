@@ -84,7 +84,33 @@ export default function CRMFieldsTab() {
   const [editingStage, setEditingStage] = useState<DBPipelineStage | null>(null);
   const [draggedStageId, setDraggedStageId] = useState<string | null>(null);
 
-  // ── Load tab order from DB ──
+  // ── Delete confirmation state ──
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    isOpen: boolean;
+    id: string;
+    name: string;
+    type: 'origem' | 'nível de interesse' | 'etapa do funil' | 'tag';
+  }>({ isOpen: false, id: '', name: '', type: 'origem' });
+
+  const openDeleteConfirm = (id: string, name: string, type: typeof deleteConfirm.type) => {
+    setDeleteConfirm({ isOpen: true, id, name, type });
+  };
+
+  const closeDeleteConfirm = () => {
+    setDeleteConfirm({ isOpen: false, id: '', name: '', type: 'origem' });
+  };
+
+  const confirmAndDelete = async () => {
+    const { id, type } = deleteConfirm;
+    if (!id) return;
+    closeDeleteConfirm();
+    if (type === 'origem') await handleDeleteOrigin(id);
+    else if (type === 'nível de interesse') await handleDeleteLevel(id);
+    else if (type === 'etapa do funil') await handleDeleteStage(id);
+    else if (type === 'tag') { removeTag(id); toast.success("Tag removida"); }
+  };
+
+
   useEffect(() => {
     if (!dataAccess) { setOrderLoading(false); return; }
     (async () => {
