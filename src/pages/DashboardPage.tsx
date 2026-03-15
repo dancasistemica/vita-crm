@@ -66,19 +66,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-display text-foreground">📊 Dashboard Individual</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Dados de <strong>{organization?.name || 'sua organização'}</strong>
-          </p>
-        </div>
-        {isSuperadmin && (
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/consolidado')} className="gap-1.5">
-            <Globe className="h-4 w-4" />
-            Ver Consolidado
-          </Button>
-        )}
+      <div>
+        <h1 className="text-2xl font-display text-foreground">📊 Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          Dados de <strong>{organization?.name || 'sua organização'}</strong>
+        </p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
