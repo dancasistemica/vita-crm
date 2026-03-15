@@ -58,6 +58,7 @@ export default function CRMFieldsTab() {
   const [stagesSaving, setStagesSaving] = useState(false);
   const [newStage, setNewStage] = useState('');
   const [editingStage, setEditingStage] = useState<DBPipelineStage | null>(null);
+  const [draggedStageId, setDraggedStageId] = useState<string | null>(null);
 
   // ── Load tab order from DB ──
   useEffect(() => {
@@ -157,7 +158,26 @@ export default function CRMFieldsTab() {
     }
   };
 
-  // ── Render section content ──
+  const handleReorderStages = async (fromIdx: number, toIdx: number) => {
+    if (!dataAccess) return;
+    const next = [...stages];
+    const [moved] = next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, moved);
+    const reordered = next.map((s, i) => ({ ...s, sort_order: i }));
+    setStages(reordered);
+    setDraggedStageId(null);
+    try {
+      setStagesSaving(true);
+      await dataAccess.reorderPipelineStages(reordered.map(s => ({ id: s.id, sort_order: s.sort_order })));
+      toast.success("Ordem salva");
+    } catch {
+      toast.error("Erro ao reordenar");
+      await loadStages();
+    } finally {
+      setStagesSaving(false);
+    }
+  };
+
   const renderOriginSection = () => (
     <Card>
       <CardHeader><CardTitle className="text-lg">🌐 Origem do Lead</CardTitle></CardHeader>
@@ -232,8 +252,24 @@ export default function CRMFieldsTab() {
         ) : (
           <>
             {stages.map((s, i) => (
-              <div key={s.id} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                <GripVertical className="h-4 w-4 text-muted-foreground" />
+              <div
+                key={s.id}
+                draggable
+                onDragStart={() => setDraggedStageId(s.id)}
+                onDragOver={e => e.preventDefault()}
+                onDrop={() => {
+                  const fromIdx = stages.findIndex(st => st.id === draggedStageId);
+                  if (fromIdx !== -1 && fromIdx !== i) handleReorderStages(fromIdx, i);
+                  setDraggedStageId(null);
+                }}
+                onDragEnd={() => setDraggedStageId(null)}
+                className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing ${
+                  draggedStageId === s.id
+                    ? 'opacity-40 border-muted bg-muted/30'
+                    : 'border-transparent bg-muted/50 hover:border-primary/20'
+                }`}
+              >
+                <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                 <span className="text-sm font-medium text-muted-foreground w-6">{i + 1}.</span>
                 {editingStage?.id === s.id ? (
                   <Input value={editingStage.name} onChange={e => setEditingStage({ ...editingStage, name: e.target.value })} className="h-8 flex-1" />
@@ -260,6 +296,8 @@ export default function CRMFieldsTab() {
                 Adicionar
               </Button>
             </div>
+            {stagesSaving && <p className="text-xs text-muted-foreground mt-2">💾 Salvando...</p>}
+            <p className="text-xs text-muted-foreground mt-2">💡 Arraste as etapas para reordenar. A ordem é salva automaticamente.</p>
           </>
         )}
       </CardContent>

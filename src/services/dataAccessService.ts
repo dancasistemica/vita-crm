@@ -414,6 +414,23 @@ export class DataAccessService {
     return true;
   }
 
+  async reorderPipelineStages(stages: Array<{ id: string; sort_order: number }>) {
+    const promises = stages.map(s =>
+      supabase
+        .from('pipeline_stages')
+        .update({ sort_order: s.sort_order })
+        .eq('id', s.id)
+        .eq('organization_id', this.orgId)
+    );
+    const results = await Promise.all(promises);
+    const errors = results.filter(r => r.error);
+    if (errors.length > 0) {
+      console.error('[DataAccessService] reorderPipelineStages errors:', errors);
+      throw errors[0].error;
+    }
+    console.log('[DataAccessService] reorderPipelineStages: reordered', stages.length, 'stages');
+  }
+
   async getInterestLevels() {
     const { data, error } = await supabase
       .from('interest_levels')
