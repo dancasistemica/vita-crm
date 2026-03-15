@@ -138,7 +138,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadOrigins(); }, [loadOrigins]);
 
   const handleAddOrigin = async () => {
-    if (!newOrigin.trim() || !dataAccess) return;
+    if (!newOrigin.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setOriginsSaving(true);
       const nextOrder = origins.length > 0 ? Math.max(...origins.map(o => o.sort_order)) + 1 : 0;
