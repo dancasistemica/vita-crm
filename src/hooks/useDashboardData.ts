@@ -84,7 +84,7 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   stageMetrics: [],
 };
 
-export function useDashboardData(dateRange?: { start: Date; end: Date }): DashboardReturn {
+export function useDashboardData(dateRange?: { start: Date; end: Date }, forceConsolidated?: boolean): DashboardReturn {
   const { organizationId, loading: orgLoading } = useOrganization();
   const { isSuperadmin, loading: superadminLoading } = useSuperadmin();
   const [data, setData] = useState<Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidatedData'>>(EMPTY_DATA);
@@ -92,7 +92,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }): Dashbo
   const [consolidatedData, setConsolidatedData] = useState<ConsolidatedData | null>(null);
   const [productInsights, setProductInsights] = useState<ProductInsightsData | null>(null);
 
-  const isConsolidated = organizationId === CONSOLIDATED_ORG_ID;
+  const isConsolidated = forceConsolidated === true || organizationId === CONSOLIDATED_ORG_ID;
 
   useEffect(() => {
     console.log('[useDashboardData] 🔍 Estado atual:', {
