@@ -56,22 +56,10 @@ export default function ConsolidatedDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600/90 to-purple-400/60 rounded-xl p-5 text-white">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3">
-            <Globe className="h-7 w-7" />
-            <div>
-              <h1 className="text-2xl font-display">Dashboard Consolidado</h1>
-              <p className="text-sm opacity-80 mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
-            </div>
-          </div>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/')} className="gap-1.5">
-            <ArrowLeft className="h-4 w-4" />
-            Dashboard Individual
-          </Button>
-        </div>
+      <div>
+        <h1 className="text-2xl font-display text-foreground">📊 Dashboard Consolidado</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
-
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
 
