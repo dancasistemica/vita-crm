@@ -90,12 +90,6 @@ export default function ConsolidatedDashboardPage() {
         </div>
       </div>
 
-      {/* Warning banner */}
-      <div className="p-3 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-        <p className="text-xs text-yellow-800 dark:text-yellow-200">
-          ⚠️ <strong>Modo Consolidado Ativo:</strong> Os dados abaixo representam o agregado de todas as organizações.
-        </p>
-      </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
 
