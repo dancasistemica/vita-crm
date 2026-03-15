@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Users, DollarSign, TrendingUp, Target, Building2, Globe, ArrowLeft } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, Building2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserRole } from "@/hooks/useUserRole";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";
@@ -16,7 +14,6 @@ const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(1
 
 export default function ConsolidatedDashboardPage() {
   const navigate = useNavigate();
-  const { isSuperadmin, loading: roleLoading } = useUserRole();
 
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const end = new Date();
@@ -25,27 +22,14 @@ export default function ConsolidatedDashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  // Redirect non-superadmin to individual dashboard
-  useEffect(() => {
-    if (!roleLoading && !isSuperadmin) {
-      console.log('[ConsolidatedDashboardPage] Redirecionando non-superadmin para /');
-      navigate('/');
-    }
-  }, [isSuperadmin, roleLoading, navigate]);
-
   const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, consolidatedData, productInsights } = useDashboardData(dateRange);
 
-  if (roleLoading || loading) {
+  if (loading) {
     return (
       <div className="space-y-6">
-        <div className="bg-gradient-to-r from-purple-600/90 to-purple-400/60 rounded-xl p-5 text-white">
-          <div className="flex items-center gap-3">
-            <Globe className="h-7 w-7" />
-            <div>
-              <h1 className="text-2xl font-display">Dashboard Consolidado</h1>
-              <p className="text-sm opacity-80 mt-0.5">Carregando...</p>
-            </div>
-          </div>
+        <div>
+          <h1 className="text-2xl font-display text-foreground">📊 Dashboard Consolidado</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Carregando...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
@@ -57,8 +41,6 @@ export default function ConsolidatedDashboardPage() {
       </div>
     );
   }
-
-  if (!isSuperadmin) return null;
 
   const metrics = [
     { icon: Building2, label: "Organizações", value: consolidatedData?.totalOrganizations ?? 0, color: 'bg-info/10 text-info' },
