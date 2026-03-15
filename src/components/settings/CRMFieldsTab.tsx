@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { useDataAccess } from "@/hooks/useDataAccess";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -102,6 +103,7 @@ export default function CRMFieldsTab() {
       }
     })();
   }, [dataAccess]);
+
 
   // ── Handle tab drag-and-drop reorder ──
   const handleTabReorder = async (fromIdx: number, toIdx: number) => {
@@ -306,6 +308,42 @@ export default function CRMFieldsTab() {
   }, [dataAccess]);
 
   useEffect(() => { loadStages(); }, [loadStages]);
+
+  // ── Realtime subscriptions ──
+  useEffect(() => {
+    if (!dataAccess) return;
+    const orgId = dataAccess.orgId;
+
+    const originsChannel = supabase
+      .channel(`lead_origins:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'lead_origins', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: lead_origins changed');
+        loadOrigins();
+      })
+      .subscribe();
+
+    const levelsChannel = supabase
+      .channel(`interest_levels:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'interest_levels', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: interest_levels changed');
+        loadLevels();
+      })
+      .subscribe();
+
+    const stagesChannel = supabase
+      .channel(`pipeline_stages:org:${orgId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline_stages', filter: `organization_id=eq.${orgId}` }, () => {
+        console.log('[CRMFieldsTab] Realtime: pipeline_stages changed');
+        loadStages();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(originsChannel);
+      supabase.removeChannel(levelsChannel);
+      supabase.removeChannel(stagesChannel);
+    };
+  }, [dataAccess, loadOrigins, loadLevels, loadStages]);
 
   const handleAddStage = async () => {
     if (!newStage.trim()) return;
