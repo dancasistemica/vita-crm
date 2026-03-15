@@ -158,7 +158,26 @@ export default function CRMFieldsTab() {
     }
   };
 
-  // ── Render section content ──
+  const handleReorderStages = async (fromIdx: number, toIdx: number) => {
+    if (!dataAccess) return;
+    const next = [...stages];
+    const [moved] = next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, moved);
+    const reordered = next.map((s, i) => ({ ...s, sort_order: i }));
+    setStages(reordered);
+    setDraggedStageId(null);
+    try {
+      setStagesSaving(true);
+      await dataAccess.reorderPipelineStages(reordered.map(s => ({ id: s.id, sort_order: s.sort_order })));
+      toast.success("Ordem salva");
+    } catch {
+      toast.error("Erro ao reordenar");
+      await loadStages();
+    } finally {
+      setStagesSaving(false);
+    }
+  };
+
   const renderOriginSection = () => (
     <Card>
       <CardHeader><CardTitle className="text-lg">🌐 Origem do Lead</CardTitle></CardHeader>
