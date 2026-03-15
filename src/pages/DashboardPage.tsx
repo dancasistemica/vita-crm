@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Users, DollarSign, TrendingUp, Target, Globe } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";
@@ -19,17 +17,8 @@ const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(1
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const { isSuperadmin, loading: roleLoading } = useUserRole();
   const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
-
-  // Redirect superadmin to consolidated dashboard
-  useEffect(() => {
-    if (!roleLoading && isSuperadmin) {
-      console.log('[DashboardPage] Redirecionando superadmin para /dashboard/consolidado');
-      navigate('/dashboard/consolidado', { replace: true });
-    }
-  }, [isSuperadmin, roleLoading, navigate]);
   
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const end = new Date();
@@ -77,19 +66,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-display text-foreground">📊 Dashboard Individual</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Dados de <strong>{organization?.name || 'sua organização'}</strong>
-          </p>
-        </div>
-        {isSuperadmin && (
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/consolidado')} className="gap-1.5">
-            <Globe className="h-4 w-4" />
-            Ver Consolidado
-          </Button>
-        )}
+      <div>
+        <h1 className="text-2xl font-display text-foreground">📊 Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          Dados de <strong>{organization?.name || 'sua organização'}</strong>
+        </p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
@@ -217,7 +198,7 @@ export default function DashboardPage() {
 
       {/* Product Insights */}
       {productInsights && (
-        <ProductInsights insights={productInsights} isSuperadmin={isSuperadmin} />
+        <ProductInsights insights={productInsights} isSuperadmin={false} />
       )}
     </div>
   );
