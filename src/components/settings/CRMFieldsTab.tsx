@@ -222,7 +222,8 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadLevels(); }, [loadLevels]);
 
   const handleAddLevel = async () => {
-    if (!newLevel.value.trim() || !newLevel.label.trim() || !dataAccess) return;
+    if (!newLevel.value.trim() || !newLevel.label.trim()) return;
+    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setLevelsSaving(true);
       const nextOrder = levels.length > 0 ? Math.max(...levels.map(l => l.sort_order)) + 1 : 0;
