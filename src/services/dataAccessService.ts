@@ -436,7 +436,8 @@ export class DataAccessService {
       .from('interest_levels')
       .select('*')
       .eq('organization_id', this.orgId)
-      .eq('active', true);
+      .eq('active', true)
+      .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getInterestLevels error:', error); throw error; }
     return data || [];
   }
