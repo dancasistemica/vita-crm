@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
 import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
 
 export default function FunnelStagesTab() {
   const { pipelineStages, addPipelineStage, updatePipelineStage, removePipelineStage } = useCRMStore();
   const [newStage, setNewStage] = useState('');
   const [editingStage, setEditingStage] = useState<PipelineStage | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
 
   const sorted = [...pipelineStages].sort((a, b) => a.order - b.order);
 
@@ -18,6 +20,13 @@ export default function FunnelStagesTab() {
     <Card>
       <CardHeader><CardTitle className="text-lg">Etapas do Funil de Vendas</CardTitle></CardHeader>
       <CardContent className="space-y-2">
+        <ConfirmDeleteDialog
+          isOpen={deleteConfirm.isOpen}
+          itemName={deleteConfirm.name}
+          itemType="etapa do funil"
+          onConfirm={() => { removePipelineStage(deleteConfirm.id); toast.success("Etapa removida"); setDeleteConfirm({ isOpen: false, id: '', name: '' }); }}
+          onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
+        />
         {sorted.map((s, i) => (
           <div key={s.id} className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
             <GripVertical className="h-4 w-4 text-muted-foreground" />
@@ -33,7 +42,7 @@ export default function FunnelStagesTab() {
               ) : (
                 <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
               )}
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => { removePipelineStage(s.id); toast.success("Etapa removida"); }}><Trash2 className="h-3 w-3" /></Button>
+              <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: s.id, name: s.name })}><Trash2 className="h-3 w-3" /></Button>
             </div>
           </div>
         ))}
