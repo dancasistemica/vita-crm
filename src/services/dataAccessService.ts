@@ -382,6 +382,38 @@ export class DataAccessService {
     return data || [];
   }
 
+  async createPipelineStage(name: string, sortOrder: number) {
+    const { data, error } = await supabase
+      .from('pipeline_stages')
+      .insert({ name, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] createPipelineStage error:', error); throw error; }
+    return data;
+  }
+
+  async updatePipelineStage(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
+    const { data, error } = await supabase
+      .from('pipeline_stages')
+      .update(updates)
+      .eq('id', id)
+      .eq('organization_id', this.orgId)
+      .select()
+      .single();
+    if (error) { console.error('[DataAccessService] updatePipelineStage error:', error); throw error; }
+    return data;
+  }
+
+  async deletePipelineStage(id: string) {
+    const { error } = await supabase
+      .from('pipeline_stages')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', this.orgId);
+    if (error) { console.error('[DataAccessService] deletePipelineStage error:', error); throw error; }
+    return true;
+  }
+
   async getInterestLevels() {
     const { data, error } = await supabase
       .from('interest_levels')
