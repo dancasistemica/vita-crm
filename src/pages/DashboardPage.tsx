@@ -198,7 +198,7 @@ export default function DashboardPage() {
 
       {/* Product Insights */}
       {productInsights && (
-        <ProductInsights insights={productInsights} isSuperadmin={isSuperadmin} />
+        <ProductInsights insights={productInsights} isSuperadmin={false} />
       )}
     </div>
   );
