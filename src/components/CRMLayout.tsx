@@ -1,10 +1,19 @@
+import { useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
+import { useOrganization } from "@/contexts/OrganizationContext";
 
 export default function CRMLayout() {
   const { brand } = useBrand();
+  const { organization } = useOrganization();
+
+  useEffect(() => {
+    document.title = organization?.name
+      ? `RAIZ - ${organization.name}`
+      : 'RAIZ - CRM para Terapeutas e Mentores';
+  }, [organization?.name]);
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
