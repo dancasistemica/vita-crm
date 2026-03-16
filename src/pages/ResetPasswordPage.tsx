@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -16,18 +17,23 @@ export default function ResetPasswordPage() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // Check for recovery session - user arrives here via PASSWORD_RECOVERY event redirect
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        // User has a session (from recovery link), allow password reset
-        setIsRecovery(true);
-      }
+      const { code, hasTokenHash, rawHash, type } = getRecoveryContextFromUrl(window.location);
 
-      // Also check URL hash for type=recovery (fallback)
-      const hash = window.location.hash;
-      if (hash.includes('type=recovery')) {
+      console.log('[ResetPasswordPage] Carregando...');
+      console.log('[ResetPasswordPage] Search:', window.location.search);
+      console.log('[ResetPasswordPage] Hash:', rawHash);
+      console.log('[ResetPasswordPage] Token:', code);
+      console.log('[ResetPasswordPage] Type:', type);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('[ResetPasswordPage] Sessão ativa:', session);
+
+      if (session || type === 'recovery' || Boolean(code) || hasTokenHash) {
+        console.log('[ResetPasswordPage] Contexto de recovery detectado.');
         setIsRecovery(true);
+      } else {
+        console.log('[ResetPasswordPage] Nenhum contexto de recovery detectado.');
       }
 
       setChecking(false);
@@ -35,8 +41,14 @@ export default function ResetPasswordPage() {
 
     checkSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const { code, hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
+
+      console.log('[ResetPasswordPage] Auth Event:', event);
+      console.log('[ResetPasswordPage] Auth Session:', session);
+
+      if (event === 'PASSWORD_RECOVERY' || ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && (type === 'recovery' || Boolean(code) || hasTokenHash))) {
+        console.log('[ResetPasswordPage] Recovery confirmado pelo auth state.');
         setIsRecovery(true);
         setChecking(false);
       }
@@ -57,13 +69,15 @@ export default function ResetPasswordPage() {
 
     setIsSubmitting(true);
     try {
+      console.log('[ResetPasswordPage] Enviando updateUser para redefinir senha...');
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
+      console.log('[ResetPasswordPage] Senha redefinida com sucesso.');
       toast.success('Senha redefinida com sucesso! Redirecionando para login...');
-      // Sign out and redirect to login
       await supabase.auth.signOut();
       setTimeout(() => navigate('/auth'), 2000);
     } catch (error: any) {
+      console.error('[ResetPasswordPage] Erro ao redefinir senha:', error);
       if (error.message?.includes('expired') || error.message?.includes('invalid')) {
         toast.error('Link expirado. Solicite um novo reset.');
       } else {
@@ -91,7 +105,7 @@ export default function ResetPasswordPage() {
             <CardDescription>Este link de recuperação é inválido ou expirou.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/auth')} className="w-full">
+            <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
             </Button>
           </CardContent>
