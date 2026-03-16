@@ -29,6 +29,15 @@ import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
+import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
+
+const normalizedRecoveryRoute =
+  typeof window !== "undefined" ? getNormalizedRecoveryRoute(window.location) : null;
+
+if (normalizedRecoveryRoute) {
+  console.log("[App] Normalizing recovery URL to:", normalizedRecoveryRoute);
+  window.history.replaceState(window.history.state, "", normalizedRecoveryRoute);
+}
 
 const queryClient = new QueryClient();
 
@@ -36,44 +45,44 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <OrganizationProvider>
       <BrandProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/setup" element={<FirstSuperadminSetup />} />
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/setup" element={<FirstSuperadminSetup />} />
 
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<CRMLayout />}>
-              <Route path="/superadmin" element={<SuperadminDashboard />} />
-                <Route path="/admin/users" element={<AdminUsersPage />} />
-                <Route path="/debug" element={<DebugMultiTenantPage />} />
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
-                <Route path="/leads" element={<LeadsPage />} />
-                <Route path="/import-wizard" element={<ImportLeadsWizard />} />
-                <Route path="/pipeline" element={<PipelinePage />} />
-                <Route path="/clientes" element={<ClientesPage />} />
-                <Route path="/clientes/:id" element={<ClientDetailPage />} />
-                <Route path="/interacoes" element={<InteracoesPage />} />
-                <Route path="/tarefas" element={<TarefasPage />} />
-                <Route path="/produtos" element={<ProdutosPage />} />
-                <Route path="/relatorios" element={<RelatoriosPage />} />
-                <Route path="/configuracoes" element={<ConfiguracoesPage />} />
-                <Route path="/personalizar" element={<CustomizePage />} />
-                <Route path="/perfil" element={<ProfilePage />} />
+              {/* Protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<CRMLayout />}>
+                  <Route path="/superadmin" element={<SuperadminDashboard />} />
+                  <Route path="/admin/users" element={<AdminUsersPage />} />
+                  <Route path="/debug" element={<DebugMultiTenantPage />} />
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
+                  <Route path="/leads" element={<LeadsPage />} />
+                  <Route path="/import-wizard" element={<ImportLeadsWizard />} />
+                  <Route path="/pipeline" element={<PipelinePage />} />
+                  <Route path="/clientes" element={<ClientesPage />} />
+                  <Route path="/clientes/:id" element={<ClientDetailPage />} />
+                  <Route path="/interacoes" element={<InteracoesPage />} />
+                  <Route path="/tarefas" element={<TarefasPage />} />
+                  <Route path="/produtos" element={<ProdutosPage />} />
+                  <Route path="/relatorios" element={<RelatoriosPage />} />
+                  <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+                  <Route path="/personalizar" element={<CustomizePage />} />
+                  <Route path="/perfil" element={<ProfilePage />} />
+                </Route>
               </Route>
-            </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
       </BrandProvider>
     </OrganizationProvider>
   </QueryClientProvider>

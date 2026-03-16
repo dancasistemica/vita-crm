@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
+import { getNormalizedRecoveryRoute } from '@/utils/authRecovery';
 
 interface UseAuthReturn {
   user: User | null;
@@ -17,21 +18,34 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     // Set up listener BEFORE getSession
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        // Intercept password recovery: redirect to reset page
+      (event, nextSession) => {
+        console.log('[useAuth] Auth Event:', event);
+        console.log('[useAuth] Session:', nextSession);
+
         if (event === 'PASSWORD_RECOVERY') {
-          window.location.href = '/reset-password';
-          return;
+          const recoveryRoute = getNormalizedRecoveryRoute(window.location) ?? '/reset-password';
+          console.log('[useAuth] PASSWORD_RECOVERY detectado!');
+          console.log('[useAuth] Redirecionando para:', recoveryRoute);
+          setSession(nextSession);
+          setUser(nextSession?.user ?? null);
+          setLoading(false);
+
+          if (window.location.pathname !== '/reset-password') {
+            window.location.replace(recoveryRoute);
+            return;
+          }
         }
-        setSession(session);
-        setUser(session?.user ?? null);
+
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
         setLoading(false);
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log('[useAuth] getSession:', currentSession);
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
       setLoading(false);
     });
 

@@ -1,10 +1,17 @@
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate, Outlet } from 'react-router-dom';
+import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
 
 export function ProtectedRoute() {
   const { user, loading } = useAuth();
+  const { hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
+  const isRecoveryFlow = (type === 'recovery' || hasTokenHash) && window.location.pathname !== '/reset-password';
 
-  if (loading) {
+  if (loading || isRecoveryFlow) {
+    if (isRecoveryFlow) {
+      console.log('[ProtectedRoute] Recovery detectado, aguardando redirecionamento para /reset-password');
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
@@ -16,8 +23,10 @@ export function ProtectedRoute() {
   }
 
   if (!user) {
+    console.log('[ProtectedRoute] Usuário não autenticado, redirecionando para /auth');
     return <Navigate to="/auth" replace />;
   }
 
+  console.log('[ProtectedRoute] Usuário autenticado, liberando rota protegida');
   return <Outlet />;
 }
