@@ -83,9 +83,25 @@ export function AppSidebar() {
         {/* Organization Switcher (SuperAdmin only) */}
         {!collapsed && <OrganizationSwitcher />}
 
-        {/* User & Organization Info */}
+        {/* Branding RAIZ */}
         {!collapsed && (
-          <div className="px-4 pt-4 pb-1">
+          <div className="px-4 pt-4 pb-2">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-green-600 to-purple-600 shrink-0">
+                <span className="text-white font-bold text-base">R</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-sidebar-foreground tracking-wide">RAIZ</p>
+                <p className="text-[10px] text-sidebar-foreground/50">CRM Integrativo</p>
+              </div>
+            </div>
+            <Separator className="bg-sidebar-foreground/10" />
+          </div>
+        )}
+
+        {/* User Info */}
+        {!collapsed && (
+          <div className="px-4 pt-2 pb-1">
             <div className="flex items-center gap-2.5">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={avatarUrl || undefined} alt={profileName || "Usuário"} />
