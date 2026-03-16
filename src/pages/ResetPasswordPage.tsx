@@ -13,17 +13,32 @@ export default function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // Check for recovery token in URL hash
-    const hash = window.location.hash;
-    if (hash.includes('type=recovery')) {
-      setIsRecovery(true);
-    }
+    // Check for recovery session - user arrives here via PASSWORD_RECOVERY event redirect
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // User has a session (from recovery link), allow password reset
+        setIsRecovery(true);
+      }
+
+      // Also check URL hash for type=recovery (fallback)
+      const hash = window.location.hash;
+      if (hash.includes('type=recovery')) {
+        setIsRecovery(true);
+      }
+
+      setChecking(false);
+    };
+
+    checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         setIsRecovery(true);
+        setChecking(false);
       }
     });
 
@@ -31,8 +46,8 @@ export default function ResetPasswordPage() {
   }, []);
 
   const handleResetPassword = async () => {
-    if (password.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres');
+    if (password.length < 8) {
+      toast.error('A senha deve ter pelo menos 8 caracteres');
       return;
     }
     if (password !== confirmPassword) {
@@ -44,14 +59,28 @@ export default function ResetPasswordPage() {
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      toast.success('Senha atualizada com sucesso!');
-      navigate('/');
+      toast.success('Senha redefinida com sucesso! Redirecionando para login...');
+      // Sign out and redirect to login
+      await supabase.auth.signOut();
+      setTimeout(() => navigate('/auth'), 2000);
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao atualizar senha');
+      if (error.message?.includes('expired') || error.message?.includes('invalid')) {
+        toast.error('Link expirado. Solicite um novo reset.');
+      } else {
+        toast.error(error.message || 'Erro ao redefinir senha. Tente novamente.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   if (!isRecovery) {
     return (
@@ -86,7 +115,8 @@ export default function ResetPasswordPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
+              className="min-h-[44px]"
             />
           </div>
           <div className="space-y-2">
@@ -97,10 +127,11 @@ export default function ResetPasswordPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Repita a senha"
+              className="min-h-[44px]"
             />
           </div>
-          <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full">
-            {isSubmitting ? 'Atualizando...' : 'Atualizar senha'}
+          <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
+            {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
           </Button>
         </CardContent>
       </Card>

@@ -17,7 +17,12 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     // Set up listener BEFORE getSession
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
+        // Intercept password recovery: redirect to reset page
+        if (event === 'PASSWORD_RECOVERY') {
+          window.location.href = '/reset-password';
+          return;
+        }
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
