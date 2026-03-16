@@ -76,7 +76,7 @@ const App = () => (
       </TooltipProvider>
       </BrandProvider>
     </OrganizationProvider>
-  </QueryClientProvide>
+  </QueryClientProvider>
 );
 
 export default App;
