@@ -156,7 +156,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
         const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all(basePromises);
 
         if (consolidated) {
-          const orgsRes = await supabase.from('organizations').select('id, name').order('name');
+          const orgsRes = await supabase.from('organizations').select('id, name').eq('active', true).order('name');
           orgsData = orgsRes.data || [];
         }
 
