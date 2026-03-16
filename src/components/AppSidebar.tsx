@@ -33,6 +33,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const { user, signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
+  const { organization } = useOrganization();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
