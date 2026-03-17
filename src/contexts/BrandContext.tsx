@@ -153,6 +153,20 @@ function buildBrand(
       if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
       return DEFAULT_BRAND.logo_size;
     })(),
+    logo_size_desktop: (() => {
+      const orgVal = orgData?.logo_size_desktop;
+      if (orgVal !== undefined && orgVal !== null) return Number(orgVal);
+      const sysVal = sysMap['logo_size_desktop'];
+      if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
+      return DEFAULT_BRAND.logo_size_desktop;
+    })(),
+    logo_size_mobile: (() => {
+      const orgVal = orgData?.logo_size_mobile;
+      if (orgVal !== undefined && orgVal !== null) return Number(orgVal);
+      const sysVal = sysMap['logo_size_mobile'];
+      if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
+      return DEFAULT_BRAND.logo_size_mobile;
+    })(),
   };
 }
 
