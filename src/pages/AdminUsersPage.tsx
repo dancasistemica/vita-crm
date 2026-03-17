@@ -62,6 +62,8 @@ export default function AdminUsersPage() {
   const [editEmail, setEditEmail] = useState("");
   const [editPassword, setEditPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [editOrgId, setEditOrgId] = useState<string | null>(null);
+  const [orgSearch, setOrgSearch] = useState("");
   const [saving, setSaving] = useState(false);
 
   // Delete modal
@@ -186,6 +188,7 @@ export default function AdminUsersPage() {
 
   // Edit handlers
   const openEdit = (u: AdminUser) => {
+    console.log('[EditUserModal] Abrindo edição para:', u.user_id, u.full_name);
     setEditUser(u);
     setEditName(u.full_name);
     setEditPhone(u.phone || "");
@@ -193,6 +196,8 @@ export default function AdminUsersPage() {
     setEditEmail(u.email);
     setEditPassword("");
     setShowPassword(false);
+    setEditOrgId(u.org_id);
+    setOrgSearch("");
     setEditOpen(true);
   };
 
@@ -211,13 +216,38 @@ export default function AdminUsersPage() {
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
-      // Update role if changed
-      if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
-        const { error: roleError } = await supabase
-          .from("organization_members")
-          .update({ role: editRole as any })
-          .eq("id", editUser.member_id);
-        if (roleError) throw roleError;
+      // Handle organization change
+      const orgChanged = editOrgId !== editUser.org_id;
+      if (orgChanged) {
+        console.log('[EditUserModal] Salvando vínculo:', editUser.user_id, editOrgId);
+        // Remove existing membership(s)
+        if (editUser.member_id) {
+          const { error: delError } = await supabase
+            .from("organization_members")
+            .delete()
+            .eq("user_id", editUser.user_id);
+          if (delError) throw delError;
+        }
+        // Create new membership if org selected
+        if (editOrgId) {
+          const { error: insError } = await supabase
+            .from("organization_members")
+            .insert({
+              user_id: editUser.user_id,
+              organization_id: editOrgId,
+              role: (editRole && editRole !== "—" ? editRole : "member") as any,
+            });
+          if (insError) throw insError;
+        }
+      } else {
+        // Update role if changed (and has membership)
+        if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
+          const { error: roleError } = await supabase
+            .from("organization_members")
+            .update({ role: editRole as any })
+            .eq("id", editUser.member_id);
+          if (roleError) throw roleError;
+        }
       }
 
       // Update email/password via edge function if changed
@@ -240,11 +270,12 @@ export default function AdminUsersPage() {
         if (data?.error) throw new Error(data.error);
       }
 
-      toast.success("Usuário atualizado!");
+      toast.success(orgChanged ? "Usuário vinculado à organização com sucesso!" : "Usuário atualizado!");
       setEditOpen(false);
       setEditUser(null);
       fetchAll();
     } catch (err: any) {
+      console.error('[EditUserModal] Erro ao salvar:', err);
       toast.error(err.message || "Erro ao atualizar");
     } finally {
       setSaving(false);
@@ -487,10 +518,10 @@ export default function AdminUsersPage() {
               <Label>Telefone</Label>
               <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
             </div>
-            {editUser?.member_id && (
+            {editOrgId && (
               <div className="space-y-1">
                 <Label>Função</Label>
-                <Select value={editRole} onValueChange={setEditRole}>
+                <Select value={editRole === "—" ? "member" : editRole} onValueChange={setEditRole}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="owner">Proprietário</SelectItem>
@@ -503,7 +534,36 @@ export default function AdminUsersPage() {
             )}
             <div className="space-y-1">
               <Label>Organização</Label>
-              <Input value={editUser?.org_name || "Sem organização"} disabled />
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  value={orgSearch}
+                  onChange={(e) => setOrgSearch(e.target.value)}
+                  placeholder="Buscar organização..."
+                  className="pl-9 min-h-[44px]"
+                />
+              </div>
+              <div className="max-h-[160px] overflow-y-auto border rounded-md mt-1">
+                <button
+                  type="button"
+                  className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${!editOrgId ? 'bg-accent font-medium' : ''}`}
+                  onClick={() => { setEditOrgId(null); setEditRole("—"); }}
+                >
+                  Sem organização
+                </button>
+                {orgs
+                  .filter((o) => !orgSearch || o.name.toLowerCase().includes(orgSearch.toLowerCase()))
+                  .map((o) => (
+                    <button
+                      key={o.id}
+                      type="button"
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${editOrgId === o.id ? 'bg-accent font-medium' : ''}`}
+                      onClick={() => { setEditOrgId(o.id); if (editRole === "—") setEditRole("member"); }}
+                    >
+                      {o.name}
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
           <DialogFooter>
