@@ -166,6 +166,28 @@ export default function CustomizePage() {
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
                   </Button>
                 )}
+                {brand.logo_url && (
+                  <div className="mt-3 space-y-2">
+                    <Label className="text-sm">Tamanho da Logomarca</Label>
+                    <div className="flex items-center gap-3">
+                      <Slider
+                        value={[brand.logo_size]}
+                        onValueChange={([v]) => {
+                          console.log('[BrandCustomizer] Salvando logo_size da org:', v);
+                          updateLocalBrand({ logo_size: v });
+                        }}
+                        min={24}
+                        max={120}
+                        step={4}
+                        className="flex-1"
+                      />
+                      <span className="text-sm text-muted-foreground w-12 text-right">{brand.logo_size}px</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span>24px</span><span>120px</span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <Label>Nome da organização</Label>

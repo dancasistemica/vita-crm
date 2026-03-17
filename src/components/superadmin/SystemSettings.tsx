@@ -196,6 +196,28 @@ export function SystemSettings() {
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
                   </Button>
                 )}
+                {settings.logo_url && (
+                  <div className="mt-3 space-y-2">
+                    <Label className="text-sm">Tamanho da Logomarca</Label>
+                    <div className="flex items-center gap-3">
+                      <Slider
+                        value={[Number(settings.logo_size) || 32]}
+                        onValueChange={([v]) => {
+                          console.log('[SystemSettings] Salvando logo_size global:', v);
+                          updateSetting('logo_size', String(v));
+                        }}
+                        min={24}
+                        max={120}
+                        step={4}
+                        className="flex-1"
+                      />
+                      <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size || '32'}px</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span>24px</span><span>120px</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Favicon upload */}
