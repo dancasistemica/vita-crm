@@ -10,7 +10,7 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe } from 'lucide-react';
+import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
 
 const PALETTES = [
   { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
@@ -337,6 +337,13 @@ export default function CustomizePage() {
                     </button>
                   ))}
                 </div>
+              </div>
+              {/* Info about global colors */}
+              <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 p-3 mt-4">
+                <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                <p className="text-xs text-blue-800 dark:text-blue-300">
+                  ℹ️ As demais cores do sistema (hover, tipografia, layout, feedback) seguem o padrão global definido nas Configurações do Sistema pelo SuperAdmin.
+                </p>
               </div>
             </CardContent>
           </Card>

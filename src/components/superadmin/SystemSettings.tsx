@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
 
 interface SystemSettingsMap {
@@ -21,6 +22,24 @@ interface SystemSettingsMap {
   logo_size: string;
   logo_size_desktop: string;
   logo_size_mobile: string;
+  // Advanced colors
+  color_hover: string;
+  color_active: string;
+  color_selected_bg: string;
+  color_selected_text: string;
+  color_text_primary: string;
+  color_text_secondary: string;
+  color_background: string;
+  color_card_bg: string;
+  color_border: string;
+  color_success: string;
+  color_warning: string;
+  color_error: string;
+  color_info: string;
+  color_button_text: string;
+  color_sidebar_text: string;
+  color_sidebar_hover: string;
+  color_sidebar_selected: string;
 }
 
 const DEFAULTS: SystemSettingsMap = {
@@ -35,6 +54,23 @@ const DEFAULTS: SystemSettingsMap = {
   logo_size: '32',
   logo_size_desktop: '40',
   logo_size_mobile: '32',
+  color_hover: '#6d28d9',
+  color_active: '#5b21b6',
+  color_selected_bg: '#ede9fe',
+  color_selected_text: '#5b21b6',
+  color_text_primary: '#111827',
+  color_text_secondary: '#6b7280',
+  color_background: '#f9fafb',
+  color_card_bg: '#ffffff',
+  color_border: '#e5e7eb',
+  color_success: '#10b981',
+  color_warning: '#f59e0b',
+  color_error: '#ef4444',
+  color_info: '#3b82f6',
+  color_button_text: '#ffffff',
+  color_sidebar_text: '#f3f4f6',
+  color_sidebar_hover: '#4c1d95',
+  color_sidebar_selected: '#7c3aed',
 };
 
 const FONTS = ['DM Sans', 'Inter', 'Poppins', 'Nunito'];
@@ -81,7 +117,7 @@ export function SystemSettings() {
         setting_value: value,
         updated_at: new Date().toISOString(),
       }));
-      console.log('[SystemSettings] Salvando configurações:', settingsToSave);
+      console.log('[SystemSettings] Salvando configurações avançadas:', settingsToSave.length, 'campos');
       const { error } = await supabase
         .from('system_settings')
         .upsert(settingsToSave, { onConflict: 'setting_key' });
@@ -141,7 +177,7 @@ export function SystemSettings() {
       <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 p-4">
         <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
         <div className="text-sm text-blue-800 dark:text-blue-300">
-          <strong>Configurações padrão globais.</strong> Cada organização pode substituir individualmente logo, favicon, nome e cores nas configurações da própria organização.
+          <strong>Configurações padrão globais.</strong> Cada organização pode substituir individualmente logo, favicon, nome e cores básicas. As cores avançadas (hover, tipografia, layout, feedback) são exclusivas do SuperAdmin e aplicam-se globalmente.
         </div>
       </div>
 
@@ -286,7 +322,7 @@ export function SystemSettings() {
             </CardContent>
           </Card>
 
-          {/* Colors */}
+          {/* Basic Colors */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
@@ -307,6 +343,113 @@ export function SystemSettings() {
                     updateSetting('sidebar_bg_color', v);
                   }} />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Advanced Colors */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Palette className="h-5 w-5" /> Cores Avançadas do Sistema
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-3 mb-4">
+                <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                <p className="text-xs text-amber-800 dark:text-amber-300">
+                  Estas cores são <strong>exclusivas do SuperAdmin</strong> e aplicam-se globalmente a todo o sistema. Organizações não podem sobrescrevê-las.
+                </p>
+              </div>
+
+              <Accordion type="multiple" defaultValue={['brand', 'selected', 'typography', 'layout', 'sidebar', 'feedback']}>
+                {/* Brand Colors */}
+                <AccordionItem value="brand">
+                  <AccordionTrigger className="text-sm font-medium">🎨 Cores de Marca</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Cor de Hover" description="Efeito ao passar o mouse"
+                        value={settings.color_hover} onChange={v => updateSetting('color_hover', v)} />
+                      <SystemColorPicker label="Cor Ativa/Clicada" description="Efeito ao clicar"
+                        value={settings.color_active} onChange={v => updateSetting('color_active', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Selected */}
+                <AccordionItem value="selected">
+                  <AccordionTrigger className="text-sm font-medium">📋 Seção Selecionada</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Fundo Selecionado" description="Background de itens selecionados"
+                        value={settings.color_selected_bg} onChange={v => updateSetting('color_selected_bg', v)} />
+                      <SystemColorPicker label="Texto Selecionado" description="Cor do texto quando selecionado"
+                        value={settings.color_selected_text} onChange={v => updateSetting('color_selected_text', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Typography */}
+                <AccordionItem value="typography">
+                  <AccordionTrigger className="text-sm font-medium">🔤 Tipografia</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Texto Principal" description="Cor principal dos textos"
+                        value={settings.color_text_primary} onChange={v => updateSetting('color_text_primary', v)} />
+                      <SystemColorPicker label="Texto Secundário" description="Textos de apoio e legendas"
+                        value={settings.color_text_secondary} onChange={v => updateSetting('color_text_secondary', v)} />
+                      <SystemColorPicker label="Texto dos Botões" description="Cor do texto nos botões primários"
+                        value={settings.color_button_text} onChange={v => updateSetting('color_button_text', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Layout */}
+                <AccordionItem value="layout">
+                  <AccordionTrigger className="text-sm font-medium">🏗️ Layout e Estrutura</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Fundo da Página" description="Cor de fundo geral"
+                        value={settings.color_background} onChange={v => updateSetting('color_background', v)} />
+                      <SystemColorPicker label="Fundo dos Cards" description="Background dos cartões"
+                        value={settings.color_card_bg} onChange={v => updateSetting('color_card_bg', v)} />
+                      <SystemColorPicker label="Cor das Bordas" description="Bordas e divisórias"
+                        value={settings.color_border} onChange={v => updateSetting('color_border', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Sidebar */}
+                <AccordionItem value="sidebar">
+                  <AccordionTrigger className="text-sm font-medium">🗂️ Menu Lateral</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Texto do Menu" description="Cor dos textos na sidebar"
+                        value={settings.color_sidebar_text} onChange={v => updateSetting('color_sidebar_text', v)} />
+                      <SystemColorPicker label="Hover do Menu" description="Efeito ao passar sobre itens"
+                        value={settings.color_sidebar_hover} onChange={v => updateSetting('color_sidebar_hover', v)} />
+                      <SystemColorPicker label="Item Selecionado" description="Item ativo no menu"
+                        value={settings.color_sidebar_selected} onChange={v => updateSetting('color_sidebar_selected', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Feedback */}
+                <AccordionItem value="feedback">
+                  <AccordionTrigger className="text-sm font-medium">🚦 Feedback e Status</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <SystemColorPicker label="Sucesso" description="Ações concluídas com êxito"
+                        value={settings.color_success} onChange={v => updateSetting('color_success', v)} />
+                      <SystemColorPicker label="Aviso" description="Alertas e atenção"
+                        value={settings.color_warning} onChange={v => updateSetting('color_warning', v)} />
+                      <SystemColorPicker label="Erro" description="Falhas e erros"
+                        value={settings.color_error} onChange={v => updateSetting('color_error', v)} />
+                      <SystemColorPicker label="Informação" description="Dicas e informações"
+                        value={settings.color_info} onChange={v => updateSetting('color_info', v)} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
           </Card>
 
@@ -337,7 +480,7 @@ export function SystemSettings() {
         <div className="space-y-4">
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preview do sistema</h3>
           <Card className="overflow-hidden">
-            <div className="p-4 rounded-t-lg" style={{ backgroundColor: `hsl(${settings.sidebar_bg_color})` }}>
+            <div className="p-4 rounded-t-lg" style={{ backgroundColor: settings.sidebar_bg_color.startsWith('#') ? settings.sidebar_bg_color : `hsl(${settings.sidebar_bg_color})` }}>
               <div className="flex items-center gap-2 mb-4">
                 {settings.logo_url ? (
                   <img src={settings.logo_url} alt="Logo" className="h-8 object-contain" />
@@ -345,7 +488,7 @@ export function SystemSettings() {
                   <div className="h-8 w-8 rounded-lg flex items-center justify-center text-sm"
                     style={{ backgroundColor: settings.primary_color, color: '#fff' }}>⚙</div>
                 )}
-                <span className="text-sm font-medium" style={{ color: '#d4d4d8' }}>
+                <span className="text-sm font-medium" style={{ color: settings.color_sidebar_text }}>
                   {settings.system_name || 'Vita CRM'}
                 </span>
               </div>
@@ -353,8 +496,8 @@ export function SystemSettings() {
                 {['Dashboard', 'Leads', 'Pipeline'].map((item, i) => (
                   <div key={item} className={`px-3 py-1.5 rounded text-xs ${i === 0 ? 'font-medium' : ''}`}
                     style={{
-                      backgroundColor: i === 0 ? 'rgba(255,255,255,0.1)' : 'transparent',
-                      color: i === 0 ? settings.primary_color : '#a1a1aa',
+                      backgroundColor: i === 0 ? settings.color_sidebar_selected : 'transparent',
+                      color: i === 0 ? settings.color_sidebar_text : settings.color_sidebar_text + '99',
                     }}>
                     {item}
                   </div>
@@ -365,9 +508,9 @@ export function SystemSettings() {
 
           <Card>
             <CardContent className="p-4 space-y-3">
-              <p className="text-xs text-muted-foreground">Botão primário</p>
-              <button className="px-4 py-2 rounded-md text-sm font-medium text-white"
-                style={{ backgroundColor: settings.primary_color }}>
+              <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
+              <button className="px-4 py-2 rounded-md text-sm font-medium"
+                style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
               </button>
               <div className="flex gap-2 mt-2">
@@ -375,6 +518,12 @@ export function SystemSettings() {
                   style={{ backgroundColor: settings.accent_color }}>Tag 1</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: settings.secondary_color }}>Tag 2</span>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_success }}>✓ Sucesso</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_warning }}>⚠ Aviso</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_error }}>✕ Erro</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_info }}>ℹ Info</span>
               </div>
             </CardContent>
           </Card>

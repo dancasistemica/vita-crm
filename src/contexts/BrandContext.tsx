@@ -15,6 +15,26 @@ export interface BrandSettings {
   logo_size_mobile: number;
 }
 
+export interface AdvancedColors {
+  color_hover: string;
+  color_active: string;
+  color_selected_bg: string;
+  color_selected_text: string;
+  color_text_primary: string;
+  color_text_secondary: string;
+  color_background: string;
+  color_card_bg: string;
+  color_border: string;
+  color_success: string;
+  color_warning: string;
+  color_error: string;
+  color_info: string;
+  color_button_text: string;
+  color_sidebar_text: string;
+  color_sidebar_hover: string;
+  color_sidebar_selected: string;
+}
+
 const DEFAULT_BRAND: BrandSettings = {
   primary_color: '#C4707A',
   secondary_color: '#F3E8FF',
@@ -29,8 +49,29 @@ const DEFAULT_BRAND: BrandSettings = {
   logo_size_mobile: 32,
 };
 
+const DEFAULT_ADVANCED: AdvancedColors = {
+  color_hover: '#6d28d9',
+  color_active: '#5b21b6',
+  color_selected_bg: '#ede9fe',
+  color_selected_text: '#5b21b6',
+  color_text_primary: '#111827',
+  color_text_secondary: '#6b7280',
+  color_background: '#f9fafb',
+  color_card_bg: '#ffffff',
+  color_border: '#e5e7eb',
+  color_success: '#10b981',
+  color_warning: '#f59e0b',
+  color_error: '#ef4444',
+  color_info: '#3b82f6',
+  color_button_text: '#ffffff',
+  color_sidebar_text: '#f3f4f6',
+  color_sidebar_hover: '#4c1d95',
+  color_sidebar_selected: '#7c3aed',
+};
+
 interface BrandContextType {
   brand: BrandSettings;
+  advancedColors: AdvancedColors;
   loading: boolean;
   saveBrand: (settings: Partial<BrandSettings>) => Promise<void>;
   resetBrand: () => Promise<void>;
@@ -39,6 +80,7 @@ interface BrandContextType {
 
 const BrandContext = createContext<BrandContextType>({
   brand: DEFAULT_BRAND,
+  advancedColors: DEFAULT_ADVANCED,
   loading: true,
   saveBrand: async () => {},
   resetBrand: async () => {},
@@ -65,7 +107,7 @@ function hexToHSL(hex: string): string {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
-function applyBrandCSS(brand: BrandSettings) {
+function applyBrandCSS(brand: BrandSettings, advanced: AdvancedColors) {
   const root = document.documentElement;
   const primaryHSL = hexToHSL(brand.primary_color);
   const secondaryHSL = hexToHSL(brand.secondary_color);
@@ -95,6 +137,27 @@ function applyBrandCSS(brand: BrandSettings) {
   root.style.setProperty('--logo-h-desktop', `${brand.logo_size_desktop}px`);
   root.style.setProperty('--logo-h-mobile', `${brand.logo_size_mobile}px`);
 
+  // Advanced colors → CSS custom properties mapped to semantic tokens
+  root.style.setProperty('--foreground', hexToHSL(advanced.color_text_primary));
+  root.style.setProperty('--card-foreground', hexToHSL(advanced.color_text_primary));
+  root.style.setProperty('--popover-foreground', hexToHSL(advanced.color_text_primary));
+  root.style.setProperty('--muted-foreground', hexToHSL(advanced.color_text_secondary));
+  root.style.setProperty('--background', hexToHSL(advanced.color_background));
+  root.style.setProperty('--card', hexToHSL(advanced.color_card_bg));
+  root.style.setProperty('--popover', hexToHSL(advanced.color_card_bg));
+  root.style.setProperty('--border', hexToHSL(advanced.color_border));
+  root.style.setProperty('--input', hexToHSL(advanced.color_border));
+  root.style.setProperty('--success', hexToHSL(advanced.color_success));
+  root.style.setProperty('--warning', hexToHSL(advanced.color_warning));
+  root.style.setProperty('--destructive', hexToHSL(advanced.color_error));
+  root.style.setProperty('--info', hexToHSL(advanced.color_info));
+  root.style.setProperty('--primary-foreground', hexToHSL(advanced.color_button_text));
+  root.style.setProperty('--sidebar-foreground', hexToHSL(advanced.color_sidebar_text));
+  root.style.setProperty('--sidebar-accent', hexToHSL(advanced.color_sidebar_hover));
+  root.style.setProperty('--sidebar-accent-foreground', hexToHSL(advanced.color_sidebar_text));
+
+  console.log('[BrandContext] CSS custom properties aplicadas: 20+ variáveis');
+
   if (brand.favicon_url) {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
@@ -117,6 +180,35 @@ async function loadSystemDefaults(): Promise<Record<string, string | null>> {
     map[row.setting_key] = row.setting_value;
   }
   return map;
+}
+
+/** Build advanced colors exclusively from system_settings */
+function buildAdvancedColors(sysMap: Record<string, string | null>): AdvancedColors {
+  const get = (key: keyof AdvancedColors, sysKey: string) => {
+    const val = sysMap[sysKey];
+    if (val !== undefined && val !== null && val !== '') return val;
+    return DEFAULT_ADVANCED[key];
+  };
+
+  return {
+    color_hover: get('color_hover', 'color_hover'),
+    color_active: get('color_active', 'color_active'),
+    color_selected_bg: get('color_selected_bg', 'color_selected_bg'),
+    color_selected_text: get('color_selected_text', 'color_selected_text'),
+    color_text_primary: get('color_text_primary', 'color_text_primary'),
+    color_text_secondary: get('color_text_secondary', 'color_text_secondary'),
+    color_background: get('color_background', 'color_background'),
+    color_card_bg: get('color_card_bg', 'color_card_bg'),
+    color_border: get('color_border', 'color_border'),
+    color_success: get('color_success', 'color_success'),
+    color_warning: get('color_warning', 'color_warning'),
+    color_error: get('color_error', 'color_error'),
+    color_info: get('color_info', 'color_info'),
+    color_button_text: get('color_button_text', 'color_button_text'),
+    color_sidebar_text: get('color_sidebar_text', 'color_sidebar_text'),
+    color_sidebar_hover: get('color_sidebar_hover', 'color_sidebar_hover'),
+    color_sidebar_selected: get('color_sidebar_selected', 'color_sidebar_selected'),
+  };
 }
 
 /** Merge: org brand_settings > system_settings > hardcoded defaults */
@@ -172,6 +264,7 @@ function buildBrand(
 
 export function BrandProvider({ children }: { children: ReactNode }) {
   const [brand, setBrand] = useState<BrandSettings>(DEFAULT_BRAND);
+  const [advancedColors, setAdvancedColors] = useState<AdvancedColors>(DEFAULT_ADVANCED);
   const [loading, setLoading] = useState(true);
   const [resolvedOrgId, setResolvedOrgId] = useState<string | null>(null);
 
@@ -181,15 +274,14 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           console.log('[BrandContext] No user, using defaults');
-          // Even without user, load system defaults for login page
           const sysMap = await loadSystemDefaults();
           const settings = buildBrand(null, sysMap);
+          const advanced = buildAdvancedColors(sysMap);
           setBrand(settings);
-          applyBrandCSS(settings);
-          // Apply system name as tab title
+          setAdvancedColors(advanced);
+          applyBrandCSS(settings, advanced);
           if (sysMap['system_name']) {
             document.title = sysMap['system_name'];
-            console.log('[BrandContext] Título da aba atualizado:', sysMap['system_name']);
           }
           setLoading(false);
           return;
@@ -203,7 +295,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { _user_id: user.id });
           if (isSuperadmin) {
             orgId = superadminOrgId;
-            console.log('[BrandContext] SuperAdmin viewing org:', orgId);
           }
         }
 
@@ -216,11 +307,12 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             .maybeSingle();
 
           if (!membership) {
-            console.log('[BrandContext] No org membership, loading system defaults');
             const sysMap = await loadSystemDefaults();
             const settings = buildBrand(null, sysMap);
+            const advanced = buildAdvancedColors(sysMap);
             setBrand(settings);
-            applyBrandCSS(settings);
+            setAdvancedColors(advanced);
+            applyBrandCSS(settings, advanced);
             setLoading(false);
             return;
           }
@@ -229,7 +321,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
         setResolvedOrgId(orgId);
 
-        // Load system defaults and org settings in parallel
         const [sysMap, orgResult] = await Promise.all([
           loadSystemDefaults(),
           supabase
@@ -242,15 +333,16 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         if (orgResult.error) throw orgResult.error;
 
         const settings = buildBrand(orgResult.data, sysMap);
+        const advanced = buildAdvancedColors(sysMap);
 
         console.log('[BrandContext] ✅ Tema carregado:', settings.primary_color);
+        console.log('[BrandContext] Campos avançados: exclusivamente do sistema global');
         setBrand(settings);
-        applyBrandCSS(settings);
+        setAdvancedColors(advanced);
+        applyBrandCSS(settings, advanced);
 
-        // Apply system name as tab title
         const tabTitle = orgResult.data?.org_display_name || sysMap['system_name'] || 'Vita CRM';
         document.title = tabTitle;
-        console.log('[BrandContext] Título da aba atualizado:', tabTitle);
       } catch (e) {
         console.error('[BrandContext] ❌ Erro:', e);
       } finally {
@@ -264,7 +356,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       loadBrand();
     });
 
-    // Listen for org switch via localStorage (SuperAdmin)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'superadmin_current_org') {
         console.log('[BrandContext] Org switch detected, reloading brand');
@@ -273,7 +364,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener('storage', handleStorageChange);
 
-    // Also poll for same-tab localStorage changes
     let lastOrgId = localStorage.getItem('superadmin_current_org');
     const interval = setInterval(() => {
       const current = localStorage.getItem('superadmin_current_org');
@@ -295,10 +385,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     console.log('[BrandContext] updateLocalBrand:', partial);
     setBrand(prev => {
       const next = { ...prev, ...partial };
-      applyBrandCSS(next);
+      applyBrandCSS(next, advancedColors);
       return next;
     });
-  }, []);
+  }, [advancedColors]);
 
   const saveBrand = useCallback(async (partial: Partial<BrandSettings>) => {
     if (!resolvedOrgId) {
@@ -321,9 +411,9 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
 
     setBrand(updated);
-    applyBrandCSS(updated);
+    applyBrandCSS(updated, advancedColors);
     console.log('[BrandContext] ✅ brand_settings salvo');
-  }, [resolvedOrgId, brand]);
+  }, [resolvedOrgId, brand, advancedColors]);
 
   const resetBrand = useCallback(async () => {
     if (!resolvedOrgId) {
@@ -333,7 +423,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, [resolvedOrgId, saveBrand]);
 
   return (
-    <BrandContext.Provider value={{ brand, loading, saveBrand, resetBrand, updateLocalBrand }}>
+    <BrandContext.Provider value={{ brand, advancedColors, loading, saveBrand, resetBrand, updateLocalBrand }}>
       {children}
     </BrandContext.Provider>
   );
