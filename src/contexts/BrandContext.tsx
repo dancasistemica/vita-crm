@@ -145,7 +145,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase
           .from('brand_settings')
           .select('*')
-          .eq('organization_id', membership.organization_id)
+          .eq('organization_id', orgId)
           .maybeSingle();
 
         if (error) throw error;
