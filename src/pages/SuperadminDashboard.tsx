@@ -7,7 +7,8 @@ import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
-import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3 } from 'lucide-react';
+import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
+import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail } from 'lucide-react';
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();
