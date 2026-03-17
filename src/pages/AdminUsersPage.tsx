@@ -216,13 +216,38 @@ export default function AdminUsersPage() {
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
-      // Update role if changed
-      if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
-        const { error: roleError } = await supabase
-          .from("organization_members")
-          .update({ role: editRole as any })
-          .eq("id", editUser.member_id);
-        if (roleError) throw roleError;
+      // Handle organization change
+      const orgChanged = editOrgId !== editUser.org_id;
+      if (orgChanged) {
+        console.log('[EditUserModal] Salvando vínculo:', editUser.user_id, editOrgId);
+        // Remove existing membership(s)
+        if (editUser.member_id) {
+          const { error: delError } = await supabase
+            .from("organization_members")
+            .delete()
+            .eq("user_id", editUser.user_id);
+          if (delError) throw delError;
+        }
+        // Create new membership if org selected
+        if (editOrgId) {
+          const { error: insError } = await supabase
+            .from("organization_members")
+            .insert({
+              user_id: editUser.user_id,
+              organization_id: editOrgId,
+              role: (editRole && editRole !== "—" ? editRole : "member") as any,
+            });
+          if (insError) throw insError;
+        }
+      } else {
+        // Update role if changed (and has membership)
+        if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
+          const { error: roleError } = await supabase
+            .from("organization_members")
+            .update({ role: editRole as any })
+            .eq("id", editUser.member_id);
+          if (roleError) throw roleError;
+        }
       }
 
       // Update email/password via edge function if changed
@@ -245,11 +270,12 @@ export default function AdminUsersPage() {
         if (data?.error) throw new Error(data.error);
       }
 
-      toast.success("Usuário atualizado!");
+      toast.success(orgChanged ? "Usuário vinculado à organização com sucesso!" : "Usuário atualizado!");
       setEditOpen(false);
       setEditUser(null);
       fetchAll();
     } catch (err: any) {
+      console.error('[EditUserModal] Erro ao salvar:', err);
       toast.error(err.message || "Erro ao atualizar");
     } finally {
       setSaving(false);
