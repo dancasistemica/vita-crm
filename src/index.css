@@ -127,5 +127,15 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/30;
   }
+
+  .brand-logo {
+    height: var(--logo-h-mobile, 32px);
+  }
+
+  @media (min-width: 768px) {
+    .brand-logo {
+      height: var(--logo-h-desktop, 40px);
+    }
+  }
 }
 
