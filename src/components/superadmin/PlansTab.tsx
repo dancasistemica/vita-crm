@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
 import { Plus, Trash2, Users, FileText, Link } from 'lucide-react';
+import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface Plan {
   id: string;
