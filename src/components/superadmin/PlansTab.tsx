@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
 import { Plus, Trash2, Users, FileText, Link } from 'lucide-react';
+import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface Plan {
   id: string;
@@ -71,11 +72,13 @@ export function PlansTab() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja deletar este plano?')) return;
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
+
+  const handleDeleteConfirm = async () => {
     try {
-      await deletePlan(id);
+      await deletePlan(deleteConfirm.id);
       toast.success('Plano deletado');
+      setDeleteConfirm({ isOpen: false, id: '', name: '' });
       fetchPlans();
     } catch (err) {
       console.error('[PlansTab] delete:', err);
@@ -89,6 +92,13 @@ export function PlansTab() {
 
   return (
     <div className="space-y-6">
+      <ConfirmDeleteDialog
+        isOpen={deleteConfirm.isOpen}
+        itemName={deleteConfirm.name}
+        itemType="Plano"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
+      />
       <div className="flex justify-end">
         <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano
@@ -132,7 +142,7 @@ export function PlansTab() {
                 </div>
               </div>
 
-              <Button variant="destructive" size="sm" className="w-full" onClick={() => handleDelete(plan.id)}>
+              <Button variant="destructive" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </Button>
             </CardContent>

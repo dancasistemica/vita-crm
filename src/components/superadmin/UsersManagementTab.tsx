@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
 import { Plus, Trash2, ShieldCheck } from 'lucide-react';
+import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface SuperadminUser {
   id: string;
@@ -56,11 +57,13 @@ export function UsersManagementTab() {
     }
   };
 
-  const handleRemove = async (roleId: string) => {
-    if (!confirm('Tem certeza que deseja remover este superadmin?')) return;
+  const [removeConfirm, setRemoveConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
+
+  const handleRemoveConfirm = async () => {
     try {
-      await removeSuperadmin(roleId);
+      await removeSuperadmin(removeConfirm.id);
       toast.success('Superadmin removido');
+      setRemoveConfirm({ isOpen: false, id: '', name: '' });
       fetchUsers();
     } catch (err) {
       console.error('[UsersManagementTab] remove:', err);
@@ -74,6 +77,13 @@ export function UsersManagementTab() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDeleteDialog
+        isOpen={removeConfirm.isOpen}
+        itemName={removeConfirm.name}
+        itemType="Superadmin"
+        onConfirm={handleRemoveConfirm}
+        onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
+      />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-muted-foreground text-sm">
           <ShieldCheck className="h-4 w-4" />
@@ -102,7 +112,7 @@ export function UsersManagementTab() {
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
-                <Button variant="destructive" size="sm" onClick={() => handleRemove(u.id)}>
+                <Button variant="destructive" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button>
               </TableCell>
