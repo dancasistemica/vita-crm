@@ -338,6 +338,13 @@ export default function CustomizePage() {
                   ))}
                 </div>
               </div>
+              {/* Info about global colors */}
+              <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 p-3 mt-4">
+                <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                <p className="text-xs text-blue-800 dark:text-blue-300">
+                  ℹ️ As demais cores do sistema (hover, tipografia, layout, feedback) seguem o padrão global definido nas Configurações do Sistema pelo SuperAdmin.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
