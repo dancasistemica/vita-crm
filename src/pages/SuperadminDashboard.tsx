@@ -125,6 +125,9 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="emails" className="gap-2">
               <Mail className="h-4 w-4" /> Email Templates
             </TabsTrigger>
+            <TabsTrigger value="custom-fields" className="gap-2">
+              <Settings2 className="h-4 w-4" /> Campos Custom
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="organizations">
