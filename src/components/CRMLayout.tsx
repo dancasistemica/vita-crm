@@ -21,9 +21,9 @@ export default function CRMLayout() {
               <img
                 src={brand.logo_url}
                 alt="Logo"
-                className="h-7 md:h-8 w-auto max-w-[100px] md:max-w-[140px] object-contain transition-opacity duration-300"
+                style={{ height: `${Math.min(brand.logo_size, 48)}px`, opacity: 0 }}
+                className="w-auto max-w-[120px] md:max-w-[200px] object-contain transition-all duration-300"
                 onLoad={e => { (e.target as HTMLImageElement).style.opacity = '1'; }}
-                style={{ opacity: 0 }}
               />
             )}
           </header>
