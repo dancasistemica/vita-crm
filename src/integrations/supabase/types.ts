@@ -137,6 +137,56 @@ export type Database = {
           },
         ]
       }
+      custom_fields: {
+        Row: {
+          created_at: string
+          display_order: number
+          field_label: string
+          field_name: string
+          field_options: Json | null
+          field_type: string
+          id: string
+          is_active: boolean
+          is_required: boolean
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          field_label: string
+          field_name: string
+          field_options?: Json | null
+          field_type: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          field_label?: string
+          field_name?: string
+          field_options?: Json | null
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_fields_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_roles: {
         Row: {
           created_at: string
@@ -358,6 +408,7 @@ export type Database = {
           city: string | null
           cpf: string | null
           created_at: string
+          custom_data: Json | null
           email: string | null
           emotional_goal: string | null
           entry_date: string | null
@@ -382,6 +433,7 @@ export type Database = {
           city?: string | null
           cpf?: string | null
           created_at?: string
+          custom_data?: Json | null
           email?: string | null
           emotional_goal?: string | null
           entry_date?: string | null
@@ -406,6 +458,7 @@ export type Database = {
           city?: string | null
           cpf?: string | null
           created_at?: string
+          custom_data?: Json | null
           email?: string | null
           emotional_goal?: string | null
           entry_date?: string | null
