@@ -29,8 +29,12 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
   );
 
   const [cpfWarning, setCpfWarning] = useState(false);
+  const [customData, setCustomData] = useState<Record<string, any>>(
+    (lead as any)?.customData || (lead as any)?.custom_data || {}
+  );
 
   const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
+  const setCustom = (key: string, val: any) => setCustomData(d => ({ ...d, [key]: val }));
 
   const toggleTag = (tagName: string) => {
     const current = form.tags || [];
