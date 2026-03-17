@@ -18,6 +18,7 @@ interface LeadFormProps {
 
 export default function LeadForm({ lead, onSave }: LeadFormProps) {
   const { origins, pipelineStages, tags, interestLevels } = useLeadsData();
+  const { customFields } = useCustomFields();
 
   const defaultStageId = pipelineStages.length > 0
     ? pipelineStages.sort((a, b) => a.order - b.order)[0].id
