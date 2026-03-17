@@ -77,6 +77,8 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   totalSales: 0,
   recurringClients: 0,
   ticketMedio: 0,
+  predictedRevenue: 0,
+  predictedLeadsCount: 0,
   topProducts: [],
   salesByDay: [],
   leadsByStage: [],
