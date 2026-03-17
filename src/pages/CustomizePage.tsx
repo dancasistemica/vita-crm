@@ -213,6 +213,15 @@ export default function CustomizePage() {
                   value={brand.secondary_color} onChange={v => handleColorChange('secondary_color', v)} />
                 <ColorPicker label="Cor de Destaque" description="Tags, chips e badges"
                   value={brand.accent_color} onChange={v => handleColorChange('accent_color', v)} />
+                <SidebarColorPicker
+                  label="Fundo do Menu Lateral"
+                  description="Cor de fundo da sidebar"
+                  hslValue={brand.sidebar_color}
+                  onChange={v => {
+                    console.log('[BrandCustomizer] Salvando sidebarBgColor:', v);
+                    updateLocalBrand({ sidebar_color: v });
+                  }}
+                />
               </div>
               <div>
                 <Label className="text-sm font-medium mb-2 block">Paletas prontas</Label>
