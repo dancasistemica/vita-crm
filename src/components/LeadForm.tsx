@@ -129,7 +129,53 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         </div>
       </div>
       <div><Label>Observações</Label><Textarea value={form.notes || ''} onChange={e => set('notes', e.target.value)} /></div>
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.name?.trim()}>Salvar</Button>
+
+      {/* Custom Fields */}
+      {customFields.length > 0 && (
+        <div className="space-y-3 border-t pt-3">
+          <p className="text-sm font-medium text-muted-foreground">Campos Customizados</p>
+          <div className="grid grid-cols-2 gap-3">
+            {customFields.map(cf => (
+              <div key={cf.id}>
+                <Label>{cf.field_label}{cf.is_required ? ' *' : ''}</Label>
+                {cf.field_type === 'text' && (
+                  <Input value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                )}
+                {cf.field_type === 'number' && (
+                  <Input type="number" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                )}
+                {cf.field_type === 'date' && (
+                  <Input type="date" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                )}
+                {cf.field_type === 'textarea' && (
+                  <Textarea value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} className="min-h-[60px]" />
+                )}
+                {cf.field_type === 'select' && (
+                  <Select value={customData[cf.field_name] || ''} onValueChange={v => setCustom(cf.field_name, v)}>
+                    <SelectTrigger><SelectValue placeholder="Selecionar" /></SelectTrigger>
+                    <SelectContent>
+                      {(cf.field_options || []).map(opt => (
+                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+                {cf.field_type === 'checkbox' && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Checkbox
+                      checked={!!customData[cf.field_name]}
+                      onCheckedChange={v => setCustom(cf.field_name, v)}
+                    />
+                    <span className="text-sm">{cf.field_label}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <Button className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</Button>
     </div>
   );
 }
