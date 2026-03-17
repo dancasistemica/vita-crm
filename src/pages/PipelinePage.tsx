@@ -66,6 +66,9 @@ export default function PipelinePage() {
                           {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
                         </div>
                       )}
+                      {lead.dealValue != null && lead.dealValue > 0 && (
+                        <p className="text-xs font-medium text-success mt-1">💰 R$ {lead.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                      )}
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs text-muted-foreground">Última: —</span>
                         <div className="flex items-center gap-1">
