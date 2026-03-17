@@ -226,6 +226,7 @@ export function useLeadsData() {
         pipeline_stage: leadData.pipelineStage || '1',
         responsible: leadData.responsible || '',
         notes: leadData.notes || '',
+        deal_value: leadData.dealValue ?? null,
       };
 
       const created = await dataAccess.createLead(dbData);
