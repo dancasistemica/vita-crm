@@ -180,9 +180,7 @@ export function useLeadsData() {
       if (updates.interestLevel !== undefined) dbUpdates.interest_level = updates.interestLevel;
       if (updates.mainInterest !== undefined) dbUpdates.main_interest = updates.mainInterest;
       if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
-      if (updates.painPoint !== undefined) dbUpdates.pain_point = updates.painPoint;
-      if (updates.bodyTensionArea !== undefined) dbUpdates.body_tension_area = updates.bodyTensionArea;
-      if (updates.emotionalGoal !== undefined) dbUpdates.emotional_goal = updates.emotionalGoal;
+      if (updates.customData !== undefined) dbUpdates.custom_data = updates.customData;
       if (updates.pipelineStage !== undefined) dbUpdates.pipeline_stage = updates.pipelineStage;
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
