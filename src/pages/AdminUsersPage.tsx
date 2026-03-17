@@ -518,10 +518,10 @@ export default function AdminUsersPage() {
               <Label>Telefone</Label>
               <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
             </div>
-            {editUser?.member_id && (
+            {editOrgId && (
               <div className="space-y-1">
                 <Label>Função</Label>
-                <Select value={editRole} onValueChange={setEditRole}>
+                <Select value={editRole === "—" ? "member" : editRole} onValueChange={setEditRole}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="owner">Proprietário</SelectItem>
@@ -534,7 +534,36 @@ export default function AdminUsersPage() {
             )}
             <div className="space-y-1">
               <Label>Organização</Label>
-              <Input value={editUser?.org_name || "Sem organização"} disabled />
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  value={orgSearch}
+                  onChange={(e) => setOrgSearch(e.target.value)}
+                  placeholder="Buscar organização..."
+                  className="pl-9 min-h-[44px]"
+                />
+              </div>
+              <div className="max-h-[160px] overflow-y-auto border rounded-md mt-1">
+                <button
+                  type="button"
+                  className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${!editOrgId ? 'bg-accent font-medium' : ''}`}
+                  onClick={() => { setEditOrgId(null); setEditRole("—"); }}
+                >
+                  Sem organização
+                </button>
+                {orgs
+                  .filter((o) => !orgSearch || o.name.toLowerCase().includes(orgSearch.toLowerCase()))
+                  .map((o) => (
+                    <button
+                      key={o.id}
+                      type="button"
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${editOrgId === o.id ? 'bg-accent font-medium' : ''}`}
+                      onClick={() => { setEditOrgId(o.id); if (editRole === "—") setEditRole("member"); }}
+                    >
+                      {o.name}
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
           <DialogFooter>
