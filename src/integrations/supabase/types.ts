@@ -417,6 +417,7 @@ export type Database = {
           cpf: string | null
           created_at: string
           custom_data: Json | null
+          deal_value: number | null
           email: string | null
           entry_date: string | null
           id: string
@@ -439,6 +440,7 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           custom_data?: Json | null
+          deal_value?: number | null
           email?: string | null
           entry_date?: string | null
           id?: string
@@ -461,6 +463,7 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           custom_data?: Json | null
+          deal_value?: number | null
           email?: string | null
           entry_date?: string | null
           id?: string
