@@ -10,11 +10,22 @@ export default function CRMLayout() {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center border-b border-border/60 px-4 bg-card shadow-card sticky top-0 z-30">
-            <SidebarTrigger className="mr-4" />
-            <h2 className="text-lg font-semibold text-foreground font-display">
-              {brand.org_display_name || 'CRM'}
-            </h2>
+          <header className="h-14 flex items-center justify-between border-b border-border/60 px-4 bg-card shadow-card sticky top-0 z-30">
+            <div className="flex items-center">
+              <SidebarTrigger className="mr-4" />
+              <h2 className="text-lg font-semibold text-foreground font-display">
+                {brand.org_display_name || 'CRM'}
+              </h2>
+            </div>
+            {brand.logo_url && (
+              <img
+                src={brand.logo_url}
+                alt="Logo"
+                className="h-7 md:h-8 w-auto max-w-[100px] md:max-w-[140px] object-contain transition-opacity duration-300"
+                onLoad={e => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                style={{ opacity: 0 }}
+              />
+            )}
           </header>
           <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
             <div className="animate-fade-in">
