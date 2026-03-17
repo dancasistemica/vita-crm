@@ -175,6 +175,65 @@ export type Database = {
           },
         ]
       }
+      email_templates: {
+        Row: {
+          body_html: string
+          button_link: string
+          button_text: string
+          created_at: string
+          footer_text: string
+          id: string
+          logo_url: string | null
+          organization_id: string | null
+          primary_color: string
+          secondary_color: string
+          subject: string
+          template_type: string
+          text_color: string
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string
+          button_link?: string
+          button_text?: string
+          created_at?: string
+          footer_text?: string
+          id?: string
+          logo_url?: string | null
+          organization_id?: string | null
+          primary_color?: string
+          secondary_color?: string
+          subject?: string
+          template_type: string
+          text_color?: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          button_link?: string
+          button_text?: string
+          created_at?: string
+          footer_text?: string
+          id?: string
+          logo_url?: string | null
+          organization_id?: string | null
+          primary_color?: string
+          secondary_color?: string
+          subject?: string
+          template_type?: string
+          text_color?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       interactions: {
         Row: {
           created_at: string

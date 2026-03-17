@@ -7,7 +7,8 @@ import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
-import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3 } from 'lucide-react';
+import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
+import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail } from 'lucide-react';
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();
@@ -120,6 +121,9 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="users" className="gap-2">
               <Users className="h-4 w-4" /> Superadmins
             </TabsTrigger>
+            <TabsTrigger value="emails" className="gap-2">
+              <Mail className="h-4 w-4" /> Email Templates
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="organizations">
@@ -130,6 +134,9 @@ export default function SuperadminDashboard() {
           </TabsContent>
           <TabsContent value="users">
             <UsersManagementTab />
+          </TabsContent>
+          <TabsContent value="emails">
+            <EmailTemplatesTab />
           </TabsContent>
         </Tabs>
     </div>
