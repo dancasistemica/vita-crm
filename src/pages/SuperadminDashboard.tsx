@@ -149,6 +149,9 @@ export default function SuperadminDashboard() {
           <TabsContent value="custom-fields">
             <CustomFieldsManager />
           </TabsContent>
+          <TabsContent value="system-settings">
+            <SystemSettings />
+          </TabsContent>
         </Tabs>
     </div>
   );
