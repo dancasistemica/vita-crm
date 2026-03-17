@@ -10,6 +10,7 @@ export interface BrandSettings {
   favicon_url: string | null;
   org_display_name: string | null;
   font_family: string;
+  logo_size: number;
 }
 
 const DEFAULT_BRAND: BrandSettings = {
@@ -21,6 +22,7 @@ const DEFAULT_BRAND: BrandSettings = {
   favicon_url: null,
   org_display_name: null,
   font_family: 'DM Sans',
+  logo_size: 32,
 };
 
 interface BrandContextType {
