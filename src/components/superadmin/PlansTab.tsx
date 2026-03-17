@@ -72,11 +72,13 @@ export function PlansTab() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja deletar este plano?')) return;
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
+
+  const handleDeleteConfirm = async () => {
     try {
-      await deletePlan(id);
+      await deletePlan(deleteConfirm.id);
       toast.success('Plano deletado');
+      setDeleteConfirm({ isOpen: false, id: '', name: '' });
       fetchPlans();
     } catch (err) {
       console.error('[PlansTab] delete:', err);
