@@ -44,6 +44,7 @@ export interface LeadView {
   pipelineStage: string;
   responsible: string;
   notes: string;
+  dealValue: number | null;
 }
 
 interface OriginView { id: string; name: string; }
