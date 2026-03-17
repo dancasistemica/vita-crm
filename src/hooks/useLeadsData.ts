@@ -20,6 +20,7 @@ interface DbLead {
   pipeline_stage: string | null;
   responsible: string | null;
   notes: string | null;
+  deal_value: number | null;
   organization_id: string;
   created_at: string;
   updated_at: string;
