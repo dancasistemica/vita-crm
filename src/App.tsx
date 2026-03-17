@@ -31,13 +31,16 @@ import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
-const normalizedRecoveryRoute =
-  typeof window !== "undefined" ? getNormalizedRecoveryRoute(window.location) : null;
-
-if (normalizedRecoveryRoute) {
-  console.log("[App] Normalizing recovery URL to:", normalizedRecoveryRoute);
-  window.history.replaceState(window.history.state, "", normalizedRecoveryRoute);
+// Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
+if (typeof window !== "undefined") {
+  const recoveryRoute = getNormalizedRecoveryRoute(window.location);
+  if (recoveryRoute) {
+    console.log("[App] Recovery URL detected, redirecting to:", recoveryRoute);
+    // Full page redirect so BrowserRouter picks up the correct pathname
+    window.location.replace(recoveryRoute);
+  }
 }
+
 
 const queryClient = new QueryClient();
 
