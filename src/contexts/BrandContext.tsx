@@ -110,21 +110,37 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Get user's org directly
-        const { data: membership } = await supabase
-          .from('organization_members')
-          .select('organization_id')
-          .eq('user_id', user.id)
-          .limit(1)
-          .maybeSingle();
-
-        if (!membership) {
-          console.log('[BrandContext] No org membership, using defaults');
-          setLoading(false);
-          return;
+        // Check if superadmin with a selected org
+        let orgId: string | null = null;
+        const superadminOrgId = localStorage.getItem('superadmin_current_org');
+        
+        if (superadminOrgId && superadminOrgId !== 'consolidado') {
+          // Verify user is actually a superadmin
+          const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { _user_id: user.id });
+          if (isSuperadmin) {
+            orgId = superadminOrgId;
+            console.log('[BrandContext] SuperAdmin viewing org:', orgId);
+          }
         }
 
-        setResolvedOrgId(membership.organization_id);
+        // Fallback: get user's org from membership
+        if (!orgId) {
+          const { data: membership } = await supabase
+            .from('organization_members')
+            .select('organization_id')
+            .eq('user_id', user.id)
+            .limit(1)
+            .maybeSingle();
+
+          if (!membership) {
+            console.log('[BrandContext] No org membership, using defaults');
+            setLoading(false);
+            return;
+          }
+          orgId = membership.organization_id;
+        }
+
+        setResolvedOrgId(orgId);
 
         const { data, error } = await supabase
           .from('brand_settings')
