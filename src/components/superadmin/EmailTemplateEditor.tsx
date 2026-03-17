@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
 import { Save, RotateCcw, Send, Loader2 } from 'lucide-react';
+import { emailService } from '@/services/emailService';
 
 interface EmailTemplateData {
   id?: string;
@@ -206,8 +207,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user?.email) { toast.error('Email do usuário não encontrado'); return; }
       console.log('[EmailTemplateEditor] Sending test email to:', user.email);
-      // For now just simulate - actual sending requires edge function
-      await new Promise(r => setTimeout(r, 1500));
+      await emailService.sendTestEmail(form.template_type, user.email);
       toast.success(`Email de teste enviado para ${user.email}`);
     } catch (err) {
       console.error('[EmailTemplateEditor] Test email error:', err);
