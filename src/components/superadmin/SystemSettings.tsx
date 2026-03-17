@@ -202,28 +202,58 @@ export function SystemSettings() {
                   </Button>
                 )}
                 {settings.logo_url && (
-                  <div className="mt-3 space-y-2">
-                    <Label className="text-sm">Tamanho da Logomarca</Label>
-                    <div className="flex items-center gap-3">
-                      <Slider
-                        value={[Number(settings.logo_size) || 32]}
-                        onValueChange={([v]) => {
-                          console.log('[SystemSettings] Salvando logo_size global:', v);
-                          updateSetting('logo_size', String(v));
-                        }}
-                        min={24}
-                        max={200}
-                        step={4}
-                        className="flex-1"
-                      />
-                      <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size || '32'}px</span>
+                  <div className="mt-3 space-y-4">
+                    <Label className="text-sm font-medium">Tamanho da Logomarca</Label>
+                    
+                    {/* Desktop */}
+                    <div className="space-y-1">
+                      <Label className="text-xs text-muted-foreground">🖥️ Desktop</Label>
+                      <div className="flex items-center gap-3">
+                        <Slider
+                          value={[Number(settings.logo_size_desktop) || 40]}
+                          onValueChange={([v]) => {
+                            console.log('[SystemSettings] Salvando logo_size_desktop:', v);
+                            updateSetting('logo_size_desktop', String(v));
+                          }}
+                          min={24}
+                          max={200}
+                          step={4}
+                          className="flex-1"
+                        />
+                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_desktop || '40'}px</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                        <span>24px</span><span>200px</span>
+                      </div>
+                      {Number(settings.logo_size_desktop) > 120 && (
+                        <p className="text-xs text-amber-600 flex items-center gap-1 mt-1">⚠️ Logo grande pode afetar o layout em telas médias</p>
+                      )}
                     </div>
-                    <div className="flex justify-between text-[10px] text-muted-foreground">
-                      <span>24px</span><span>200px</span>
+
+                    {/* Mobile */}
+                    <div className="space-y-1">
+                      <Label className="text-xs text-muted-foreground">📱 Mobile</Label>
+                      <div className="flex items-center gap-3">
+                        <Slider
+                          value={[Number(settings.logo_size_mobile) || 32]}
+                          onValueChange={([v]) => {
+                            console.log('[SystemSettings] Salvando logo_size_mobile:', v);
+                            updateSetting('logo_size_mobile', String(v));
+                          }}
+                          min={20}
+                          max={80}
+                          step={4}
+                          className="flex-1"
+                        />
+                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_mobile || '32'}px</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                        <span>20px</span><span>80px</span>
+                      </div>
+                      {Number(settings.logo_size_mobile) > 56 && (
+                        <p className="text-xs text-amber-600 flex items-center gap-1 mt-1">⚠️ Logo grande pode comprimir outros elementos no mobile</p>
+                      )}
                     </div>
-                    {Number(settings.logo_size) > 120 && (
-                      <p className="text-xs text-warning flex items-center gap-1 mt-1">⚠️ Logo grande pode afetar o layout em telas menores</p>
-                    )}
                   </div>
                 )}
               </div>
