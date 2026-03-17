@@ -16,9 +16,7 @@ interface DbLead {
   interest_level: string | null;
   main_interest: string | null;
   tags: string[] | null;
-  pain_point: string | null;
-  body_tension_area: string | null;
-  emotional_goal: string | null;
+  custom_data: Record<string, any> | null;
   pipeline_stage: string | null;
   responsible: string | null;
   notes: string | null;
