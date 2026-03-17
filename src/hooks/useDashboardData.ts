@@ -509,7 +509,12 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           console.log('[useDashboardData] ✅ Product Insights calculados');
         }
 
-        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
+        // Predicted revenue: sum of deal_value for non-last-stage leads
+        const activeLeadsWithDeal = leads.filter((l: any) => !allLastStageIds.has(l.pipeline_stage) && l.deal_value != null && Number(l.deal_value) > 0);
+        const predictedRevenue = activeLeadsWithDeal.reduce((sum: number, l: any) => sum + Number(l.deal_value), 0);
+        const predictedLeadsCount = activeLeadsWithDeal.length;
+
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, predictedRevenue, predictedLeadsCount, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
         setConsolidatedData(consolidatedExtra);
         setProductInsights(pInsights);
       } catch (err) {
