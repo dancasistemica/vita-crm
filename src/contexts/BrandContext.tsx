@@ -73,7 +73,6 @@ function applyBrandCSS(brand: BrandSettings) {
   root.style.setProperty('--accent', accentHSL);
   root.style.setProperty('--sidebar-background', brand.sidebar_color);
 
-  // Font
   const fontMap: Record<string, string> = {
     'DM Sans': "'DM Sans', sans-serif",
     'Inter': "'Inter', sans-serif",
@@ -82,7 +81,6 @@ function applyBrandCSS(brand: BrandSettings) {
   };
   root.style.setProperty('--font-sans', fontMap[brand.font_family] || fontMap['DM Sans']);
 
-  // Favicon
   if (brand.favicon_url) {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
@@ -91,7 +89,50 @@ function applyBrandCSS(brand: BrandSettings) {
       document.head.appendChild(link);
     }
     link.href = brand.favicon_url;
+    console.log('[BrandContext] Favicon aplicado:', brand.favicon_url);
   }
+}
+
+/** Load system_settings as a fallback map */
+async function loadSystemDefaults(): Promise<Record<string, string | null>> {
+  const { data } = await supabase
+    .from('system_settings')
+    .select('setting_key, setting_value');
+  const map: Record<string, string | null> = {};
+  for (const row of (data || [])) {
+    map[row.setting_key] = row.setting_value;
+  }
+  return map;
+}
+
+/** Merge: org brand_settings > system_settings > hardcoded defaults */
+function buildBrand(
+  orgData: any | null,
+  sysMap: Record<string, string | null>
+): BrandSettings {
+  const get = (orgKey: keyof BrandSettings, sysKey: string, fallback: string | null) => {
+    const orgVal = orgData?.[orgKey];
+    if (orgVal !== undefined && orgVal !== null && orgVal !== '') {
+      console.log('[BrandContext] Usando configuração da org para:', orgKey);
+      return orgVal;
+    }
+    if (sysMap[sysKey] !== undefined && sysMap[sysKey] !== null) {
+      console.log('[BrandContext] Usando fallback global para:', orgKey);
+      return sysMap[sysKey];
+    }
+    return fallback;
+  };
+
+  return {
+    primary_color: get('primary_color', 'primary_color', DEFAULT_BRAND.primary_color) as string,
+    secondary_color: get('secondary_color', 'secondary_color', DEFAULT_BRAND.secondary_color) as string,
+    accent_color: get('accent_color', 'accent_color', DEFAULT_BRAND.accent_color) as string,
+    sidebar_color: get('sidebar_color', 'sidebar_bg_color', DEFAULT_BRAND.sidebar_color) as string,
+    logo_url: get('logo_url', 'logo_url', DEFAULT_BRAND.logo_url) as string | null,
+    favicon_url: get('favicon_url', 'favicon_url', DEFAULT_BRAND.favicon_url) as string | null,
+    org_display_name: get('org_display_name', 'system_name', DEFAULT_BRAND.org_display_name) as string | null,
+    font_family: get('font_family', 'font_family', DEFAULT_BRAND.font_family) as string,
+  };
 }
 
 export function BrandProvider({ children }: { children: ReactNode }) {
@@ -99,23 +140,31 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [resolvedOrgId, setResolvedOrgId] = useState<string | null>(null);
 
-  // Fetch org id + brand settings directly from user session
   useEffect(() => {
     const loadBrand = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           console.log('[BrandContext] No user, using defaults');
+          // Even without user, load system defaults for login page
+          const sysMap = await loadSystemDefaults();
+          const settings = buildBrand(null, sysMap);
+          setBrand(settings);
+          applyBrandCSS(settings);
+          // Apply system name as tab title
+          if (sysMap['system_name']) {
+            document.title = sysMap['system_name'];
+            console.log('[BrandContext] Título da aba atualizado:', sysMap['system_name']);
+          }
           setLoading(false);
           return;
         }
 
-        // Check if superadmin with a selected org
+        // Resolve org id
         let orgId: string | null = null;
         const superadminOrgId = localStorage.getItem('superadmin_current_org');
-        
+
         if (superadminOrgId && superadminOrgId !== 'consolidado') {
-          // Verify user is actually a superadmin
           const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { _user_id: user.id });
           if (isSuperadmin) {
             orgId = superadminOrgId;
@@ -123,7 +172,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           }
         }
 
-        // Fallback: get user's org from membership
         if (!orgId) {
           const { data: membership } = await supabase
             .from('organization_members')
@@ -133,7 +181,11 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             .maybeSingle();
 
           if (!membership) {
-            console.log('[BrandContext] No org membership, using defaults');
+            console.log('[BrandContext] No org membership, loading system defaults');
+            const sysMap = await loadSystemDefaults();
+            const settings = buildBrand(null, sysMap);
+            setBrand(settings);
+            applyBrandCSS(settings);
             setLoading(false);
             return;
           }
@@ -142,30 +194,28 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
         setResolvedOrgId(orgId);
 
-        const { data, error } = await supabase
-          .from('brand_settings')
-          .select('*')
-          .eq('organization_id', orgId)
-          .maybeSingle();
+        // Load system defaults and org settings in parallel
+        const [sysMap, orgResult] = await Promise.all([
+          loadSystemDefaults(),
+          supabase
+            .from('brand_settings')
+            .select('*')
+            .eq('organization_id', orgId)
+            .maybeSingle(),
+        ]);
 
-        if (error) throw error;
+        if (orgResult.error) throw orgResult.error;
 
-        const settings: BrandSettings = data
-          ? {
-              primary_color: data.primary_color,
-              secondary_color: data.secondary_color,
-              accent_color: data.accent_color,
-              sidebar_color: data.sidebar_color,
-              logo_url: data.logo_url,
-              favicon_url: data.favicon_url,
-              org_display_name: data.org_display_name,
-              font_family: data.font_family,
-            }
-          : DEFAULT_BRAND;
+        const settings = buildBrand(orgResult.data, sysMap);
 
         console.log('[BrandContext] ✅ Tema carregado:', settings.primary_color);
         setBrand(settings);
         applyBrandCSS(settings);
+
+        // Apply system name as tab title
+        const tabTitle = orgResult.data?.org_display_name || sysMap['system_name'] || 'Vita CRM';
+        document.title = tabTitle;
+        console.log('[BrandContext] Título da aba atualizado:', tabTitle);
       } catch (e) {
         console.error('[BrandContext] ❌ Erro:', e);
       } finally {

@@ -9,7 +9,8 @@ import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
 import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
 import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2 } from 'lucide-react';
+import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog } from 'lucide-react';
+import { SystemSettings } from '@/components/superadmin/SystemSettings';
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();
