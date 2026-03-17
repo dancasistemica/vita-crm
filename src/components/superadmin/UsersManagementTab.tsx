@@ -77,6 +77,13 @@ export function UsersManagementTab() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDeleteDialog
+        isOpen={removeConfirm.isOpen}
+        itemName={removeConfirm.name}
+        itemType="Superadmin"
+        onConfirm={handleRemoveConfirm}
+        onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
+      />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-muted-foreground text-sm">
           <ShieldCheck className="h-4 w-4" />
