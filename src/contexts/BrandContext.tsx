@@ -91,6 +91,10 @@ function applyBrandCSS(brand: BrandSettings) {
   };
   root.style.setProperty('--font-sans', fontMap[brand.font_family] || fontMap['DM Sans']);
 
+  // Logo size CSS custom properties
+  root.style.setProperty('--logo-h-desktop', `${brand.logo_size_desktop}px`);
+  root.style.setProperty('--logo-h-mobile', `${brand.logo_size_mobile}px`);
+
   if (brand.favicon_url) {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
