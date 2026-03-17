@@ -72,15 +72,16 @@ export function SystemSettings() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const entries = Object.entries(settings) as [string, string | null][];
-      for (const [key, value] of entries) {
-        const { error } = await supabase
-          .from('system_settings')
-          .update({ setting_value: value, updated_at: new Date().toISOString() } as any)
-          .eq('setting_key', key);
-        if (error) throw error;
-        console.log('[SystemSettings] Configurações salvas:', key);
-      }
+      const settingsToSave = Object.entries(settings).map(([key, value]) => ({
+        setting_key: key,
+        setting_value: value,
+        updated_at: new Date().toISOString(),
+      }));
+      console.log('[SystemSettings] Salvando configurações:', settingsToSave);
+      const { error } = await supabase
+        .from('system_settings')
+        .upsert(settingsToSave, { onConflict: 'setting_key' });
+      if (error) throw error;
       toast.success('Configurações do sistema salvas com sucesso');
     } catch (e: any) {
       console.error('[SystemSettings] Erro ao salvar:', e);
