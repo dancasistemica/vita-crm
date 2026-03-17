@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -61,6 +62,7 @@ interface OrgMember {
 }
 
 export default function TarefasPage() {
+  const [searchParams] = useSearchParams();
   const dataAccess = useDataAccess();
   const { user } = useAuth();
   const { leads, pipelineStages } = useLeadsData();
@@ -79,6 +81,7 @@ export default function TarefasPage() {
   const [assignedFilter, setAssignedFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const dashboardFilter = searchParams.get('filter'); // 'overdue' | 'pending' | null
 
   const fetchTasks = useCallback(async () => {
     if (!dataAccess) return;
@@ -138,7 +141,14 @@ export default function TarefasPage() {
 
   // Client-side filtering
   const filteredTasks = useMemo(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
     return tasks.filter(t => {
+      // Dashboard pre-filter
+      if (dashboardFilter === 'overdue') {
+        if (t.completed || !t.due_date || t.due_date >= todayStr) return false;
+      } else if (dashboardFilter === 'pending') {
+        if (t.completed || !t.due_date || t.due_date < todayStr) return false;
+      }
       if (searchTerm) {
         const search = searchTerm.toLowerCase();
         const leadName = leads.find(l => l.id === t.lead_id)?.name?.toLowerCase() || '';
@@ -151,7 +161,7 @@ export default function TarefasPage() {
       if (dateTo && t.due_date && t.due_date > dateTo) return false;
       return true;
     });
-  }, [tasks, searchTerm, typeFilter, assignedFilter, dateFrom, dateTo, leads]);
+  }, [tasks, searchTerm, typeFilter, assignedFilter, dateFrom, dateTo, leads, dashboardFilter]);
 
   const clearFilters = () => {
     setSearchTerm('');

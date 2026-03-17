@@ -5,6 +5,7 @@ import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import TaskMetricsCards from "@/components/dashboard/TaskMetricsCards";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -95,8 +96,8 @@ export default function DashboardPage() {
         ))}
       </div>
 
-
-
+      {/* Task Metrics */}
+      <TaskMetricsCards />
 
       {/* Stuck Leads Alert */}
       <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
