@@ -16,9 +16,7 @@ interface DbLead {
   interest_level: string | null;
   main_interest: string | null;
   tags: string[] | null;
-  pain_point: string | null;
-  body_tension_area: string | null;
-  emotional_goal: string | null;
+  custom_data: Record<string, any> | null;
   pipeline_stage: string | null;
   responsible: string | null;
   notes: string | null;
@@ -41,9 +39,7 @@ export interface LeadView {
   interestLevel: string;
   mainInterest: string;
   tags: string[];
-  painPoint: string;
-  bodyTensionArea: string;
-  emotionalGoal: string;
+  customData: Record<string, any>;
   pipelineStage: string;
   responsible: string;
   notes: string;
@@ -69,9 +65,7 @@ function toLeadView(db: DbLead): LeadView {
     interestLevel: db.interest_level || 'frio',
     mainInterest: db.main_interest || '',
     tags: db.tags || [],
-    painPoint: db.pain_point || '',
-    bodyTensionArea: db.body_tension_area || '',
-    emotionalGoal: db.emotional_goal || '',
+    customData: (db.custom_data as Record<string, any>) || {},
     pipelineStage: db.pipeline_stage || '1',
     responsible: db.responsible || '',
     notes: db.notes || '',
@@ -186,9 +180,7 @@ export function useLeadsData() {
       if (updates.interestLevel !== undefined) dbUpdates.interest_level = updates.interestLevel;
       if (updates.mainInterest !== undefined) dbUpdates.main_interest = updates.mainInterest;
       if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
-      if (updates.painPoint !== undefined) dbUpdates.pain_point = updates.painPoint;
-      if (updates.bodyTensionArea !== undefined) dbUpdates.body_tension_area = updates.bodyTensionArea;
-      if (updates.emotionalGoal !== undefined) dbUpdates.emotional_goal = updates.emotionalGoal;
+      if (updates.customData !== undefined) dbUpdates.custom_data = updates.customData;
       if (updates.pipelineStage !== undefined) dbUpdates.pipeline_stage = updates.pipelineStage;
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
@@ -226,9 +218,7 @@ export function useLeadsData() {
         interest_level: leadData.interestLevel || 'frio',
         main_interest: leadData.mainInterest || '',
         tags: leadData.tags || [],
-        pain_point: leadData.painPoint || '',
-        body_tension_area: leadData.bodyTensionArea || '',
-        emotional_goal: leadData.emotionalGoal || '',
+        custom_data: leadData.customData || {},
         pipeline_stage: leadData.pipelineStage || '1',
         responsible: leadData.responsible || '',
         notes: leadData.notes || '',

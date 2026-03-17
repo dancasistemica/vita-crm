@@ -12,9 +12,7 @@ export interface Lead {
   interestLevel: string;
   mainInterest: string;
   tags: string[];
-  painPoint: string;
-  bodyTensionArea: string;
-  emotionalGoal: string;
+  customData: Record<string, any>;
   pipelineStage: string;
   responsible: string;
   notes: string;

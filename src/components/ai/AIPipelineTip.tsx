@@ -20,7 +20,7 @@ export default function AIPipelineTip({ lead, stageName, daysInStage, onCreateTa
     setOpen(isOpen);
     if (isOpen && !response) {
       const prompt = `Lead "${lead.name}" está na etapa "${stageName}" há ${daysInStage || '?'} dias.
-Interesse: ${lead.interestLevel}. Dor: ${lead.painPoint || 'não informada'}. Objetivo: ${lead.emotionalGoal || 'não informado'}.
+Interesse: ${lead.interestLevel}. Dor: ${lead.customData?.pain_point || 'não informada'}. Objetivo: ${lead.customData?.emotional_goal || 'não informado'}.
 Sugira uma ação prática para avançar esta lead no funil.`;
       await generate(prompt);
     }

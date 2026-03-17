@@ -25,9 +25,9 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
 - Nome: ${lead.name}
 - Origem: ${lead.origin}
 - Nível de interesse: ${lead.interestLevel}
-- Dor principal: ${lead.painPoint || 'Não informada'}
-- Objetivo emocional: ${lead.emotionalGoal || 'Não informado'}
-- Área de tensão corporal: ${lead.bodyTensionArea || 'Não informada'}
+- Dor principal: ${lead.customData?.pain_point || 'Não informada'}
+- Objetivo emocional: ${lead.customData?.emotional_goal || 'Não informado'}
+- Área de tensão corporal: ${lead.customData?.body_tension_area || 'Não informada'}
 - Interesse principal: ${lead.mainInterest || 'Não informado'}
 - Etapa do funil: ${stageName}
 - Produtos disponíveis: ${products.map(p => p.name).join(', ') || 'Nenhum'}`;
