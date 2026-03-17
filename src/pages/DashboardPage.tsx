@@ -38,6 +38,7 @@ export default function DashboardPage() {
     { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
     { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Receita Prevista", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
     { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
     { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
