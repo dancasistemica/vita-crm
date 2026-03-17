@@ -92,6 +92,13 @@ export function PlansTab() {
 
   return (
     <div className="space-y-6">
+      <ConfirmDeleteDialog
+        isOpen={deleteConfirm.isOpen}
+        itemName={deleteConfirm.name}
+        itemType="Plano"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
+      />
       <div className="flex justify-end">
         <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano

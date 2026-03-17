@@ -105,7 +105,7 @@ export function UsersManagementTab() {
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
-                <Button variant="destructive" size="sm" onClick={() => handleRemove(u.id)}>
+                <Button variant="destructive" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button>
               </TableCell>
