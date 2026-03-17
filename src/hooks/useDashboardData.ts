@@ -422,17 +422,30 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           const orgsBelow = topOrgs.filter(o => o.conversionRate < overallRate).length;
 
           // Funnel analysis
+          // Detect final stages: last stage by index OR name contains "cliente" (case-insensitive)
+          const finalStageNames = new Set(['cliente', 'clientes', 'não avançou', 'nao avancou', 'perdido', 'perdidos']);
           const funnelByStage = stageMetrics.map((sm, idx) => {
             const converted = clients > 0 && sm.leadCount > 0
               ? Math.round((sm.conversionRate / 100) * sm.leadCount)
               : 0;
-            const isFinalStage = idx === stageMetrics.length - 1 || sm.name.toLowerCase() === 'cliente';
+            const nameLower = sm.name.toLowerCase().trim();
+            const isFinalStage = idx === stageMetrics.length - 1 || finalStageNames.has(nameLower);
             // Sequential progression: leads in NEXT stage / leads in THIS stage
             let progressionRate = 0;
-            const nextStageName = !isFinalStage && idx < stageMetrics.length - 1 ? stageMetrics[idx + 1].name : null;
-            if (!isFinalStage && sm.leadCount > 0 && idx < stageMetrics.length - 1) {
-              const nextStageLeads = stageMetrics[idx + 1].leadCount;
-              progressionRate = Math.min((nextStageLeads / sm.leadCount) * 100, 100);
+            let nextStageName: string | null = null;
+            if (!isFinalStage && idx < stageMetrics.length - 1) {
+              // Find next non-dropout stage
+              let nextIdx = idx + 1;
+              while (nextIdx < stageMetrics.length - 1 && finalStageNames.has(stageMetrics[nextIdx].name.toLowerCase().trim())) {
+                nextIdx++;
+              }
+              if (nextIdx < stageMetrics.length) {
+                nextStageName = stageMetrics[nextIdx].name;
+                const nextStageLeads = stageMetrics[nextIdx].leadCount;
+                progressionRate = sm.leadCount > 0
+                  ? Math.min((nextStageLeads / sm.leadCount) * 100, 100)
+                  : 0;
+              }
             }
             return {
               stage: sm.name,
@@ -460,21 +473,28 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           const leadsPerDay = periodDays > 0 ? Math.round((totalLeads / periodDays) * 10) / 10 : 0;
           const conversionPerDay = periodDays > 0 ? Math.round((clients / periodDays) * 10) / 10 : 0;
           
-          // Tempo médio: dias entre created_at e updated_at dos leads convertidos (último stage)
+          // Tempo médio: para leads convertidos, usar data da venda se disponível, senão updated_at - created_at
           let avgTimeToConvert = 0;
-          if (clients > 0) {
-            const convertedLeadsList = leads.filter((l: any) => allLastStageIds.has(l.pipeline_stage));
-            if (convertedLeadsList.length > 0) {
-              const totalDays = convertedLeadsList.reduce((sum: number, l: any) => {
-                const created = new Date(l.created_at);
-                const updated = new Date(l.updated_at || l.created_at);
-                return sum + Math.max(0, (updated.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
-              }, 0);
-              avgTimeToConvert = Math.round((totalDays / convertedLeadsList.length) * 10) / 10;
-            }
+          const convertedLeadsList = leads.filter((l: any) => allLastStageIds.has(l.pipeline_stage));
+          if (convertedLeadsList.length > 0) {
+            const totalDays = convertedLeadsList.reduce((sum: number, l: any) => {
+              const created = new Date(l.created_at);
+              // Try to find a sale for this lead to get more accurate conversion date
+              const leadSale = sales.find((s: any) => s.lead_id === l.id);
+              const convertedDate = leadSale ? new Date(leadSale.created_at) : new Date(l.updated_at || l.created_at);
+              const days = Math.max(0, (convertedDate.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+              return sum + days;
+            }, 0);
+            avgTimeToConvert = Math.round((totalDays / convertedLeadsList.length) * 10) / 10;
           }
           
           const seasonality = leadsPerDay > 10 ? 'high' : leadsPerDay > 5 ? 'medium' : 'low';
+
+          console.log('[useDashboardData] 📊 Product Insights:', {
+            leadsPerDay, conversionPerDay, avgTimeToConvert, seasonality,
+            convertedLeads: convertedLeadsList.length, periodDays,
+            funnelStages: funnelByStage.map(s => `${s.stage}(${s.leads}/${s.isFinalStage ? 'FINAL' : s.progressionRate.toFixed(0) + '%'})`),
+          });
 
           pInsights = {
             topProducts: topProdsInsights,
