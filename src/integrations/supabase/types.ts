@@ -234,6 +234,44 @@ export type Database = {
           },
         ]
       }
+      dashboard_settings: {
+        Row: {
+          card_id: string
+          created_at: string | null
+          id: string
+          is_visible: boolean | null
+          organization_id: string
+          position: number
+          updated_at: string | null
+        }
+        Insert: {
+          card_id: string
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          organization_id: string
+          position?: number
+          updated_at?: string | null
+        }
+        Update: {
+          card_id?: string
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          organization_id?: string
+          position?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dashboard_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_templates: {
         Row: {
           body_html: string
