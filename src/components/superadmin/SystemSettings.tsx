@@ -18,6 +18,7 @@ interface SystemSettingsMap {
   logo_url: string | null;
   favicon_url: string | null;
   font_family: string;
+  logo_size: string;
 }
 
 const DEFAULTS: SystemSettingsMap = {
@@ -29,6 +30,7 @@ const DEFAULTS: SystemSettingsMap = {
   logo_url: null,
   favicon_url: null,
   font_family: 'DM Sans',
+  logo_size: '32',
 };
 
 const FONTS = ['DM Sans', 'Inter', 'Poppins', 'Nunito'];
