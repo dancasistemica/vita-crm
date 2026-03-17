@@ -404,13 +404,11 @@ export type Database = {
       }
       leads: {
         Row: {
-          body_tension_area: string | null
           city: string | null
           cpf: string | null
           created_at: string
           custom_data: Json | null
           email: string | null
-          emotional_goal: string | null
           entry_date: string | null
           id: string
           instagram: string | null
@@ -420,7 +418,6 @@ export type Database = {
           notes: string | null
           organization_id: string
           origin: string | null
-          pain_point: string | null
           phone: string | null
           pipeline_stage: string | null
           responsible: string | null
@@ -429,13 +426,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          body_tension_area?: string | null
           city?: string | null
           cpf?: string | null
           created_at?: string
           custom_data?: Json | null
           email?: string | null
-          emotional_goal?: string | null
           entry_date?: string | null
           id?: string
           instagram?: string | null
@@ -445,7 +440,6 @@ export type Database = {
           notes?: string | null
           organization_id: string
           origin?: string | null
-          pain_point?: string | null
           phone?: string | null
           pipeline_stage?: string | null
           responsible?: string | null
@@ -454,13 +448,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          body_tension_area?: string | null
           city?: string | null
           cpf?: string | null
           created_at?: string
           custom_data?: Json | null
           email?: string | null
-          emotional_goal?: string | null
           entry_date?: string | null
           id?: string
           instagram?: string | null
@@ -470,7 +462,6 @@ export type Database = {
           notes?: string | null
           organization_id?: string
           origin?: string | null
-          pain_point?: string | null
           phone?: string | null
           pipeline_stage?: string | null
           responsible?: string | null
