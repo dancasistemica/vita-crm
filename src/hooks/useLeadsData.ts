@@ -71,7 +71,7 @@ function toLeadView(db: DbLead): LeadView {
     pipelineStage: db.pipeline_stage || '1',
     responsible: db.responsible || '',
     notes: db.notes || '',
-  };
+    dealValue: db.deal_value != null ? Number(db.deal_value) : null,
 }
 
 export function useLeadsData() {
