@@ -374,10 +374,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
               Restaurar Padrão
             </Button>
           )}
-          <Button variant="secondary" onClick={handleTestEmail} disabled={sending} className="min-h-[44px] gap-2">
-            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            Testar Email
-          </Button>
+          {/* TODO: Reativar quando integrar provedor de email */}
         </div>
       </div>
 
