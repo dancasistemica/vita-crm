@@ -51,6 +51,8 @@ interface DashboardData {
   totalSales: number;
   recurringClients: number;
   ticketMedio: number;
+  predictedRevenue: number;
+  predictedLeadsCount: number;
   topProducts: { name: string; count: number; revenue: number }[];
   salesByDay: { day: string; value: number }[];
   leadsByStage: { name: string; value: number }[];
@@ -75,6 +77,8 @@ const EMPTY_DATA: Omit<DashboardData, 'loading' | 'isConsolidated' | 'consolidat
   totalSales: 0,
   recurringClients: 0,
   ticketMedio: 0,
+  predictedRevenue: 0,
+  predictedLeadsCount: 0,
   topProducts: [],
   salesByDay: [],
   leadsByStage: [],
@@ -130,8 +134,8 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
       try {
         // Build queries: consolidated mode queries ALL data (superadmin RLS allows it)
         const leadsQ = consolidated
-          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id')
-          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id').eq('organization_id', organizationId);
+          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id, deal_value')
+          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id, deal_value').eq('organization_id', organizationId);
 
         const salesQ = consolidated
           ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
@@ -505,7 +509,12 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           console.log('[useDashboardData] ✅ Product Insights calculados');
         }
 
-        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
+        // Predicted revenue: sum of deal_value for non-last-stage leads
+        const activeLeadsWithDeal = leads.filter((l: any) => !allLastStageIds.has(l.pipeline_stage) && l.deal_value != null && Number(l.deal_value) > 0);
+        const predictedRevenue = activeLeadsWithDeal.reduce((sum: number, l: any) => sum + Number(l.deal_value), 0);
+        const predictedLeadsCount = activeLeadsWithDeal.length;
+
+        setData({ totalLeads, clients, conversionRate, totalRevenue, totalSales: totalSalesCount, recurringClients, ticketMedio, predictedRevenue, predictedLeadsCount, topProducts, salesByDay, leadsByStage, leadsByOrigin, revenueByProduct, stuckLeads, stageMetrics });
         setConsolidatedData(consolidatedExtra);
         setProductInsights(pInsights);
       } catch (err) {

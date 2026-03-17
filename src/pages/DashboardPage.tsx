@@ -27,7 +27,7 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, productInsights } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, predictedRevenue = 0, predictedLeadsCount = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, productInsights } = useDashboardData(dateRange);
 
   console.log('[DashboardPage] User:', user?.email);
   console.log('[DashboardPage] Organization:', organizationId, organization?.name);
@@ -38,6 +38,7 @@ export default function DashboardPage() {
     { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
     { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Receita Prevista", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
     { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
     { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
@@ -86,6 +87,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{m.label}</p>
                   <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
+                  {'subtitle' in m && m.subtitle && <p className="text-xs text-muted-foreground">{m.subtitle}</p>}
                 </div>
               </div>
             </CardContent>

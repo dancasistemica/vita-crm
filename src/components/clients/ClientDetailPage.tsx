@@ -145,6 +145,9 @@ export default function ClientDetailPage() {
               <h1 className="text-2xl font-display text-foreground">{client.name}</h1>
               <p className="text-sm text-muted-foreground">{client.email} • {client.phone} • {client.city}</p>
               {client.instagram && <p className="text-sm text-muted-foreground">{client.instagram}</p>}
+              {client.dealValue != null && client.dealValue > 0 && (
+                <p className="text-sm font-medium text-success mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+              )}
             </div>
           </div>
           <div className="flex gap-3 mt-3">

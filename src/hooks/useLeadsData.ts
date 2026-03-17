@@ -20,6 +20,7 @@ interface DbLead {
   pipeline_stage: string | null;
   responsible: string | null;
   notes: string | null;
+  deal_value: number | null;
   organization_id: string;
   created_at: string;
   updated_at: string;
@@ -43,6 +44,7 @@ export interface LeadView {
   pipelineStage: string;
   responsible: string;
   notes: string;
+  dealValue: number | null;
 }
 
 interface OriginView { id: string; name: string; }
@@ -69,6 +71,7 @@ function toLeadView(db: DbLead): LeadView {
     pipelineStage: db.pipeline_stage || '1',
     responsible: db.responsible || '',
     notes: db.notes || '',
+    dealValue: db.deal_value != null ? Number(db.deal_value) : null,
   };
 }
 
@@ -184,6 +187,7 @@ export function useLeadsData() {
       if (updates.pipelineStage !== undefined) dbUpdates.pipeline_stage = updates.pipelineStage;
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.dealValue !== undefined) dbUpdates.deal_value = updates.dealValue;
 
       console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
 
@@ -222,6 +226,7 @@ export function useLeadsData() {
         pipeline_stage: leadData.pipelineStage || '1',
         responsible: leadData.responsible || '',
         notes: leadData.notes || '',
+        deal_value: leadData.dealValue ?? null,
       };
 
       const created = await dataAccess.createLead(dbData);
