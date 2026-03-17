@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type } from 'lucide-react';
+import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe } from 'lucide-react';
 
 const PALETTES = [
   { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
@@ -203,7 +204,49 @@ export default function CustomizePage() {
           {/* Colors Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2"><Palette className="h-5 w-5" /> Cores</CardTitle>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-lg flex items-center gap-2"><Palette className="h-5 w-5" /> Cores</CardTitle>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="min-h-[44px] gap-2">
+                      <Globe className="h-4 w-4" /> Usar Cores Globais
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Aplicar cores globais?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Isso substituirá as cores atuais da organização pelas cores globais do sistema. Deseja continuar?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={async () => {
+                        console.log('[BrandCustomizer] Carregando cores globais do sistema');
+                        const { data: sysSettings } = await supabase
+                          .from('system_settings')
+                          .select('setting_key, setting_value')
+                          .in('setting_key', ['primary_color', 'secondary_color', 'accent_color', 'sidebar_bg_color']);
+                        const sysMap: Record<string, string> = {};
+                        for (const row of (sysSettings || [])) {
+                          sysMap[row.setting_key] = row.setting_value || '';
+                        }
+                        const globalColors: Partial<BrandSettings> = {
+                          primary_color: sysMap['primary_color'] || DEFAULT_BRAND.primary_color,
+                          secondary_color: sysMap['secondary_color'] || DEFAULT_BRAND.secondary_color,
+                          accent_color: sysMap['accent_color'] || DEFAULT_BRAND.accent_color,
+                          sidebar_color: sysMap['sidebar_bg_color']
+                            ? (sysMap['sidebar_bg_color'].startsWith('#') ? hexToHSLString(sysMap['sidebar_bg_color']) : sysMap['sidebar_bg_color'])
+                            : DEFAULT_BRAND.sidebar_color,
+                        };
+                        console.log('[BrandCustomizer] Cores globais aplicadas:', globalColors);
+                        updateLocalBrand(globalColors);
+                        toast.info('Cores globais aplicadas. Clique em Salvar para confirmar.');
+                      }}>Aplicar Cores Globais</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
