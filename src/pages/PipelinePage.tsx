@@ -36,6 +36,7 @@ export default function PipelinePage() {
         <div className="flex gap-4 pb-4 min-w-max">
           {pipelineStages.sort((a, b) => a.order - b.order).map(stage => {
             const stageLeads = leads.filter(l => l.pipelineStage === stage.id);
+            const totalDealValue = stageLeads.reduce((sum, l) => sum + (l.dealValue || 0), 0);
             return (
               <div
                 key={stage.id}
@@ -43,10 +44,13 @@ export default function PipelinePage() {
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => handleDrop(e, stage.id)}
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-1">
                   <h3 className="font-semibold text-sm text-foreground">{stage.name}</h3>
                   <Badge variant="secondary" className="text-xs">{stageLeads.length}</Badge>
                 </div>
+                {totalDealValue > 0 && (
+                  <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
+                )}
                 <div className="space-y-2 min-h-[100px]">
                   {stageLeads.map(lead => (
                     <Card
