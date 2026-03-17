@@ -62,6 +62,7 @@ interface OrgMember {
 }
 
 export default function TarefasPage() {
+  const [searchParams] = useSearchParams();
   const dataAccess = useDataAccess();
   const { user } = useAuth();
   const { leads, pipelineStages } = useLeadsData();
