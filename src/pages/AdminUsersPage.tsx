@@ -62,6 +62,8 @@ export default function AdminUsersPage() {
   const [editEmail, setEditEmail] = useState("");
   const [editPassword, setEditPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [editOrgId, setEditOrgId] = useState<string | null>(null);
+  const [orgSearch, setOrgSearch] = useState("");
   const [saving, setSaving] = useState(false);
 
   // Delete modal
