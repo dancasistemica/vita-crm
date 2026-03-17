@@ -242,7 +242,31 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       loadBrand();
     });
 
-    return () => subscription.unsubscribe();
+    // Listen for org switch via localStorage (SuperAdmin)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'superadmin_current_org') {
+        console.log('[BrandContext] Org switch detected, reloading brand');
+        loadBrand();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also poll for same-tab localStorage changes
+    let lastOrgId = localStorage.getItem('superadmin_current_org');
+    const interval = setInterval(() => {
+      const current = localStorage.getItem('superadmin_current_org');
+      if (current !== lastOrgId) {
+        lastOrgId = current;
+        console.log('[BrandContext] Org switch detected (same tab), reloading brand');
+        loadBrand();
+      }
+    }, 1000);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
   }, []);
 
   const updateLocalBrand = useCallback((partial: Partial<BrandSettings>) => {
