@@ -200,21 +200,6 @@ export default function EmailTemplateEditor({ templateType }: Props) {
     }
   };
 
-  const handleTestEmail = async () => {
-    setSending(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email) { toast.error('Email do usuário não encontrado'); return; }
-      console.log('[EmailTemplateEditor] Sending test email to:', user.email);
-      await emailService.sendTestEmail(form.template_type, user.email);
-      toast.success(`Email de teste enviado para ${user.email}`);
-    } catch (err) {
-      console.error('[EmailTemplateEditor] Test email error:', err);
-      toast.error('Erro ao enviar email de teste');
-    } finally {
-      setSending(false);
-    }
-  };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
