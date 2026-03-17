@@ -135,7 +135,7 @@ export function PlansTab() {
                 </div>
               </div>
 
-              <Button variant="destructive" size="sm" className="w-full" onClick={() => handleDelete(plan.id)}>
+              <Button variant="destructive" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </Button>
             </CardContent>
