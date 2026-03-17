@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
-import { Save, RotateCcw, Send, Loader2 } from 'lucide-react';
-import { emailService } from '@/services/emailService';
+import { Save, RotateCcw, Loader2 } from 'lucide-react';
 
 interface EmailTemplateData {
   id?: string;
