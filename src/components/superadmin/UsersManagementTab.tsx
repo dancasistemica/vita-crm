@@ -57,11 +57,13 @@ export function UsersManagementTab() {
     }
   };
 
-  const handleRemove = async (roleId: string) => {
-    if (!confirm('Tem certeza que deseja remover este superadmin?')) return;
+  const [removeConfirm, setRemoveConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
+
+  const handleRemoveConfirm = async () => {
     try {
-      await removeSuperadmin(roleId);
+      await removeSuperadmin(removeConfirm.id);
       toast.success('Superadmin removido');
+      setRemoveConfirm({ isOpen: false, id: '', name: '' });
       fetchUsers();
     } catch (err) {
       console.error('[UsersManagementTab] remove:', err);
