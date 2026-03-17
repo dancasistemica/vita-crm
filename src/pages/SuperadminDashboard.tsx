@@ -129,6 +129,9 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="custom-fields" className="gap-2">
               <Settings2 className="h-4 w-4" /> Campos Custom
             </TabsTrigger>
+            <TabsTrigger value="system-settings" className="gap-2">
+              <Cog className="h-4 w-4" /> Sistema
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="organizations">
