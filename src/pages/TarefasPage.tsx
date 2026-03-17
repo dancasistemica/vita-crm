@@ -81,6 +81,7 @@ export default function TarefasPage() {
   const [assignedFilter, setAssignedFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const dashboardFilter = searchParams.get('filter'); // 'overdue' | 'pending' | null
 
   const fetchTasks = useCallback(async () => {
     if (!dataAccess) return;
