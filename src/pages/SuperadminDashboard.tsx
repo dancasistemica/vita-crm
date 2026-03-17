@@ -142,6 +142,9 @@ export default function SuperadminDashboard() {
           <TabsContent value="emails">
             <EmailTemplatesTab />
           </TabsContent>
+          <TabsContent value="custom-fields">
+            <CustomFieldsManager />
+          </TabsContent>
         </Tabs>
     </div>
   );
