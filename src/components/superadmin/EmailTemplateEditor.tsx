@@ -65,7 +65,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
   const [form, setForm] = useState<EmailTemplateData>(DEFAULTS[templateType]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [sending, setSending] = useState(false);
+  
   const [isCustom, setIsCustom] = useState(false);
   const [uploading, setUploading] = useState(false);
 
