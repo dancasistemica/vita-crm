@@ -11,6 +11,8 @@ export interface BrandSettings {
   org_display_name: string | null;
   font_family: string;
   logo_size: number;
+  logo_size_desktop: number;
+  logo_size_mobile: number;
 }
 
 const DEFAULT_BRAND: BrandSettings = {
@@ -23,6 +25,8 @@ const DEFAULT_BRAND: BrandSettings = {
   org_display_name: null,
   font_family: 'DM Sans',
   logo_size: 32,
+  logo_size_desktop: 40,
+  logo_size_mobile: 32,
 };
 
 interface BrandContextType {
