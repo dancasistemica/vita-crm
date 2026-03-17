@@ -108,6 +108,19 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
       </div>
       <div><Label>Interesse principal</Label><Input value={form.mainInterest || ''} onChange={e => set('mainInterest', e.target.value)} /></div>
       <div>
+        <Label>Valor do Negócio</Label>
+        <Input
+          inputMode="decimal"
+          placeholder="R$ 0,00"
+          value={form.dealValue != null ? `R$ ${Number(form.dealValue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
+          onChange={e => {
+            const raw = e.target.value.replace(/[R$\s.]/g, '').replace(',', '.');
+            const num = parseFloat(raw);
+            set('dealValue', isNaN(num) ? null : num);
+          }}
+        />
+      </div>
+      <div>
         <Label>Tags</Label>
         <div className="flex flex-wrap gap-1.5 mt-1">
           {tags.map(t => (
