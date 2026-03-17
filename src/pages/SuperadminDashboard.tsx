@@ -135,6 +135,10 @@ export default function SuperadminDashboard() {
           <TabsContent value="users">
             <UsersManagementTab />
           </TabsContent>
+          <TabsContent value="emails">
+            <EmailTemplatesTab />
+          </TabsContent>
+        </Tabs>
         </Tabs>
     </div>
   );
