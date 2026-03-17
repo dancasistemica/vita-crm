@@ -71,7 +71,11 @@ function applyBrandCSS(brand: BrandSettings) {
   root.style.setProperty('--sidebar-ring', primaryHSL);
   root.style.setProperty('--secondary', secondaryHSL);
   root.style.setProperty('--accent', accentHSL);
-  root.style.setProperty('--sidebar-background', brand.sidebar_color);
+
+  // sidebar_color may be HSL string or hex — normalize to HSL
+  const sidebarVal = brand.sidebar_color;
+  const sidebarHSL = sidebarVal.startsWith('#') ? hexToHSL(sidebarVal) : sidebarVal;
+  root.style.setProperty('--sidebar-background', sidebarHSL);
 
   const fontMap: Record<string, string> = {
     'DM Sans': "'DM Sans', sans-serif",

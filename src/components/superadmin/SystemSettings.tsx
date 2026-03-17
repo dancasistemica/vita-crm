@@ -24,7 +24,7 @@ const DEFAULTS: SystemSettingsMap = {
   primary_color: '#C4707A',
   secondary_color: '#F3E8FF',
   accent_color: '#C026D3',
-  sidebar_bg_color: '240 10% 10%',
+  sidebar_bg_color: '#1e1e2e',
   logo_url: null,
   favicon_url: null,
   font_family: 'DM Sans',
