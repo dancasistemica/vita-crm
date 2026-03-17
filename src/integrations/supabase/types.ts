@@ -56,6 +56,7 @@ export type Database = {
           favicon_url: string | null
           font_family: string
           id: string
+          logo_size: number | null
           logo_url: string | null
           org_display_name: string | null
           organization_id: string
@@ -70,6 +71,7 @@ export type Database = {
           favicon_url?: string | null
           font_family?: string
           id?: string
+          logo_size?: number | null
           logo_url?: string | null
           org_display_name?: string | null
           organization_id: string
@@ -84,6 +86,7 @@ export type Database = {
           favicon_url?: string | null
           font_family?: string
           id?: string
+          logo_size?: number | null
           logo_url?: string | null
           org_display_name?: string | null
           organization_id?: string
