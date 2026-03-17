@@ -188,6 +188,7 @@ export default function AdminUsersPage() {
 
   // Edit handlers
   const openEdit = (u: AdminUser) => {
+    console.log('[EditUserModal] Abrindo edição para:', u.user_id, u.full_name);
     setEditUser(u);
     setEditName(u.full_name);
     setEditPhone(u.phone || "");
@@ -195,6 +196,8 @@ export default function AdminUsersPage() {
     setEditEmail(u.email);
     setEditPassword("");
     setShowPassword(false);
+    setEditOrgId(u.org_id);
+    setOrgSearch("");
     setEditOpen(true);
   };
 
