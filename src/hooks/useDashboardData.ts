@@ -51,6 +51,8 @@ interface DashboardData {
   totalSales: number;
   recurringClients: number;
   ticketMedio: number;
+  predictedRevenue: number;
+  predictedLeadsCount: number;
   topProducts: { name: string; count: number; revenue: number }[];
   salesByDay: { day: string; value: number }[];
   leadsByStage: { name: string; value: number }[];
