@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
-import { Save, RotateCcw, Send, Loader2 } from 'lucide-react';
-import { emailService } from '@/services/emailService';
+import { Save, RotateCcw, Loader2 } from 'lucide-react';
 
 interface EmailTemplateData {
   id?: string;
@@ -66,7 +65,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
   const [form, setForm] = useState<EmailTemplateData>(DEFAULTS[templateType]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [sending, setSending] = useState(false);
+  
   const [isCustom, setIsCustom] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -201,21 +200,6 @@ export default function EmailTemplateEditor({ templateType }: Props) {
     }
   };
 
-  const handleTestEmail = async () => {
-    setSending(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email) { toast.error('Email do usuário não encontrado'); return; }
-      console.log('[EmailTemplateEditor] Sending test email to:', user.email);
-      await emailService.sendTestEmail(form.template_type, user.email);
-      toast.success(`Email de teste enviado para ${user.email}`);
-    } catch (err) {
-      console.error('[EmailTemplateEditor] Test email error:', err);
-      toast.error('Erro ao enviar email de teste');
-    } finally {
-      setSending(false);
-    }
-  };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -390,10 +374,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
               Restaurar Padrão
             </Button>
           )}
-          <Button variant="secondary" onClick={handleTestEmail} disabled={sending} className="min-h-[44px] gap-2">
-            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            Testar Email
-          </Button>
+          {/* TODO: Reativar quando integrar provedor de email */}
         </div>
       </div>
 
