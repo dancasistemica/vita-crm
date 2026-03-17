@@ -96,8 +96,8 @@ export default function DashboardPage() {
         ))}
       </div>
 
-
-
+      {/* Task Metrics */}
+      <TaskMetricsCards />
 
       {/* Stuck Leads Alert */}
       <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={(id) => navigate(`/leads`)} />
