@@ -23,7 +23,7 @@ const SAMPLE_VARS: Record<string, string> = {
 function replaceVars(text: string): string {
   let result = text;
   for (const [key, val] of Object.entries(SAMPLE_VARS)) {
-    result = result.replaceAll(key, val);
+    result = result.split(key).join(val);
   }
   return result;
 }
