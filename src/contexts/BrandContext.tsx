@@ -138,6 +138,13 @@ function buildBrand(
     favicon_url: get('favicon_url', 'favicon_url', DEFAULT_BRAND.favicon_url) as string | null,
     org_display_name: get('org_display_name', 'system_name', DEFAULT_BRAND.org_display_name) as string | null,
     font_family: get('font_family', 'font_family', DEFAULT_BRAND.font_family) as string,
+    logo_size: (() => {
+      const orgVal = orgData?.logo_size;
+      if (orgVal !== undefined && orgVal !== null) return Number(orgVal);
+      const sysVal = sysMap['logo_size'];
+      if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
+      return DEFAULT_BRAND.logo_size;
+    })(),
   };
 }
 
