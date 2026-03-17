@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
 import { Plus, Trash2, ShieldCheck } from 'lucide-react';
+import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface SuperadminUser {
   id: string;
