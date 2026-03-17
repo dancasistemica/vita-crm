@@ -238,6 +238,11 @@ export function SystemSettings() {
                   value={settings.secondary_color} onChange={v => updateSetting('secondary_color', v)} />
                 <SystemColorPicker label="Cor de Destaque" description="Tags e badges"
                   value={settings.accent_color} onChange={v => updateSetting('accent_color', v)} />
+                <SystemColorPicker label="Cor de Fundo do Menu Lateral" description="Background do sidebar"
+                  value={settings.sidebar_bg_color} onChange={v => {
+                    console.log('[SystemSettings] Salvando sidebar_bg_color:', v);
+                    updateSetting('sidebar_bg_color', v);
+                  }} />
               </div>
             </CardContent>
           </Card>
