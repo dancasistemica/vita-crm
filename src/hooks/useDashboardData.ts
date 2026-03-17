@@ -134,8 +134,8 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
       try {
         // Build queries: consolidated mode queries ALL data (superadmin RLS allows it)
         const leadsQ = consolidated
-          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id')
-          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id').eq('organization_id', organizationId);
+          ? supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id, deal_value')
+          : supabase.from('leads').select('id, name, email, pipeline_stage, origin, created_at, updated_at, organization_id, deal_value').eq('organization_id', organizationId);
 
         const salesQ = consolidated
           ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
