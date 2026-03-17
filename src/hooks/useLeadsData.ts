@@ -187,6 +187,7 @@ export function useLeadsData() {
       if (updates.pipelineStage !== undefined) dbUpdates.pipeline_stage = updates.pipelineStage;
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.dealValue !== undefined) dbUpdates.deal_value = updates.dealValue;
 
       console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
 
