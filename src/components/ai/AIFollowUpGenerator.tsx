@@ -29,8 +29,8 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
 - Nome: ${lead.name}
 - Etapa do funil: ${stageName}
 - Interesse: ${lead.interestLevel}
-- Dor: ${lead.painPoint || 'não informada'}
-- Objetivo emocional: ${lead.emotionalGoal || 'não informado'}
+- Dor: ${lead.customData?.pain_point || 'não informada'}
+- Objetivo emocional: ${lead.customData?.emotional_goal || 'não informado'}
 - Canal: ${channel}`;
 
     const result = await generate(prompt);
