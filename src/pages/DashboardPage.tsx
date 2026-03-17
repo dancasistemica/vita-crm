@@ -87,6 +87,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{m.label}</p>
                   <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
+                  {'subtitle' in m && m.subtitle && <p className="text-xs text-muted-foreground">{m.subtitle}</p>}
                 </div>
               </div>
             </CardContent>
