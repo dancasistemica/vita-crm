@@ -177,15 +177,18 @@ export default function CustomizePage() {
                           updateLocalBrand({ logo_size: v });
                         }}
                         min={24}
-                        max={120}
+                        max={200}
                         step={4}
                         className="flex-1"
                       />
                       <span className="text-sm text-muted-foreground w-12 text-right">{brand.logo_size}px</span>
                     </div>
                     <div className="flex justify-between text-[10px] text-muted-foreground">
-                      <span>24px</span><span>120px</span>
+                      <span>24px</span><span>200px</span>
                     </div>
+                    {brand.logo_size > 120 && (
+                      <p className="text-xs text-warning flex items-center gap-1 mt-1">⚠️ Logo grande pode afetar o layout em telas menores</p>
+                    )}
                   </div>
                 )}
               </div>

@@ -207,15 +207,18 @@ export function SystemSettings() {
                           updateSetting('logo_size', String(v));
                         }}
                         min={24}
-                        max={120}
+                        max={200}
                         step={4}
                         className="flex-1"
                       />
                       <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size || '32'}px</span>
                     </div>
                     <div className="flex justify-between text-[10px] text-muted-foreground">
-                      <span>24px</span><span>120px</span>
+                      <span>24px</span><span>200px</span>
                     </div>
+                    {Number(settings.logo_size) > 120 && (
+                      <p className="text-xs text-warning flex items-center gap-1 mt-1">⚠️ Logo grande pode afetar o layout em telas menores</p>
+                    )}
                   </div>
                 )}
               </div>
