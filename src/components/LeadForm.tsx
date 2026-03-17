@@ -107,11 +107,6 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         </div>
       </div>
       <div><Label>Interesse principal</Label><Input value={form.mainInterest || ''} onChange={e => set('mainInterest', e.target.value)} /></div>
-      <div className="grid grid-cols-3 gap-3">
-        <div><Label>Dor principal</Label><Textarea value={form.painPoint || ''} onChange={e => set('painPoint', e.target.value)} className="min-h-[60px]" /></div>
-        <div><Label>Área de tensão no corpo</Label><Textarea value={form.bodyTensionArea || ''} onChange={e => set('bodyTensionArea', e.target.value)} className="min-h-[60px]" /></div>
-        <div><Label>Objetivo emocional</Label><Textarea value={form.emotionalGoal || ''} onChange={e => set('emotionalGoal', e.target.value)} className="min-h-[60px]" /></div>
-      </div>
       <div>
         <Label>Tags</Label>
         <div className="flex flex-wrap gap-1.5 mt-1">
