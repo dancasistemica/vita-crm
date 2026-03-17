@@ -57,6 +57,8 @@ export type Database = {
           font_family: string
           id: string
           logo_size: number | null
+          logo_size_desktop: number | null
+          logo_size_mobile: number | null
           logo_url: string | null
           org_display_name: string | null
           organization_id: string
@@ -72,6 +74,8 @@ export type Database = {
           font_family?: string
           id?: string
           logo_size?: number | null
+          logo_size_desktop?: number | null
+          logo_size_mobile?: number | null
           logo_url?: string | null
           org_display_name?: string | null
           organization_id: string
@@ -87,6 +91,8 @@ export type Database = {
           font_family?: string
           id?: string
           logo_size?: number | null
+          logo_size_desktop?: number | null
+          logo_size_mobile?: number | null
           logo_url?: string | null
           org_display_name?: string | null
           organization_id?: string

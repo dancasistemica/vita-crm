@@ -11,6 +11,8 @@ export interface BrandSettings {
   org_display_name: string | null;
   font_family: string;
   logo_size: number;
+  logo_size_desktop: number;
+  logo_size_mobile: number;
 }
 
 const DEFAULT_BRAND: BrandSettings = {
@@ -23,6 +25,8 @@ const DEFAULT_BRAND: BrandSettings = {
   org_display_name: null,
   font_family: 'DM Sans',
   logo_size: 32,
+  logo_size_desktop: 40,
+  logo_size_mobile: 32,
 };
 
 interface BrandContextType {
@@ -87,6 +91,10 @@ function applyBrandCSS(brand: BrandSettings) {
   };
   root.style.setProperty('--font-sans', fontMap[brand.font_family] || fontMap['DM Sans']);
 
+  // Logo size CSS custom properties
+  root.style.setProperty('--logo-h-desktop', `${brand.logo_size_desktop}px`);
+  root.style.setProperty('--logo-h-mobile', `${brand.logo_size_mobile}px`);
+
   if (brand.favicon_url) {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
@@ -144,6 +152,20 @@ function buildBrand(
       const sysVal = sysMap['logo_size'];
       if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
       return DEFAULT_BRAND.logo_size;
+    })(),
+    logo_size_desktop: (() => {
+      const orgVal = orgData?.logo_size_desktop;
+      if (orgVal !== undefined && orgVal !== null) return Number(orgVal);
+      const sysVal = sysMap['logo_size_desktop'];
+      if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
+      return DEFAULT_BRAND.logo_size_desktop;
+    })(),
+    logo_size_mobile: (() => {
+      const orgVal = orgData?.logo_size_mobile;
+      if (orgVal !== undefined && orgVal !== null) return Number(orgVal);
+      const sysVal = sysMap['logo_size_mobile'];
+      if (sysVal !== undefined && sysVal !== null) return Number(sysVal);
+      return DEFAULT_BRAND.logo_size_mobile;
     })(),
   };
 }
