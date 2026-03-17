@@ -72,6 +72,7 @@ function toLeadView(db: DbLead): LeadView {
     responsible: db.responsible || '',
     notes: db.notes || '',
     dealValue: db.deal_value != null ? Number(db.deal_value) : null,
+  };
 }
 
 export function useLeadsData() {
