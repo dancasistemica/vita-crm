@@ -21,13 +21,14 @@ export function getRecoveryContextFromUrl(location: Location = window.location) 
   };
 }
 
-export function getNormalizedRecoveryRoute(location: Location = window.location) {
+export function getNormalizedRecoveryRoute(location: Location = window.location): string | null {
   if (location.pathname === '/reset-password') {
     return null;
   }
 
-  const { code, hasTokenHash, hashResetPath, type } = getRecoveryContextFromUrl(location);
+  const { code, hasTokenHash, hashResetPath, type, rawHash } = getRecoveryContextFromUrl(location);
 
+  // If hash contains /reset-password path (e.g. from HashRouter-style links)
   if (hashResetPath) {
     return hashResetPath;
   }
@@ -36,17 +37,13 @@ export function getNormalizedRecoveryRoute(location: Location = window.location)
     return null;
   }
 
+  // Build clean /reset-password URL, preserving tokens in hash for Supabase client
   const params = new URLSearchParams();
-
-  if (code) {
-    params.set('code', code);
-  }
-
-  if (type) {
-    params.set('type', type);
-  }
-
+  if (code) params.set('code', code);
+  if (type) params.set('type', type);
   const query = params.toString();
+
+  // Keep the original hash so Supabase can process access_token/refresh_token
   const hashSuffix = hasTokenHash && location.hash ? location.hash : '';
 
   return `/reset-password${query ? `?${query}` : ''}${hashSuffix}`;
