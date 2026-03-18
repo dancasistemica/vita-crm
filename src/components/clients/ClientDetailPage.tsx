@@ -181,6 +181,7 @@ export default function ClientDetailPage() {
           <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
           <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
           <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
+          <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
         </TabsList>
 
         {/* Vendas */}
