@@ -275,6 +275,11 @@ export default function ClientDetailPage() {
             className="min-h-[200px]"
           />
         </TabsContent>
+
+        {/* Histórico */}
+        <TabsContent value="historico" className="space-y-4">
+          <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
+        </TabsContent>
       </Tabs>
 
       <EditSaleModal
