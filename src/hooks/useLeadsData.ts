@@ -199,6 +199,25 @@ export function useLeadsData() {
       const result = await dataAccess.updateLead(leadId, dbUpdates);
       console.log('[useLeadsData] Lead atualizado no banco:', result);
 
+      // Register stage change in history
+      if (updates.pipelineStage !== undefined && organizationId) {
+        const currentLead = leads.find(l => l.id === leadId);
+        const fromStage = currentLead?.pipelineStage || null;
+        if (fromStage !== updates.pipelineStage) {
+          // Resolve stage names for readability
+          const fromName = pipelineStages.find(s => s.id === fromStage)?.name || fromStage;
+          const toName = pipelineStages.find(s => s.id === updates.pipelineStage)?.name || updates.pipelineStage;
+          await supabase.from('pipeline_stage_history').insert({
+            lead_id: leadId,
+            organization_id: organizationId,
+            from_stage: fromName,
+            to_stage: toName,
+            changed_by: user?.id || null,
+          });
+          console.log('[StageHistory] Mudança registrada:', fromName, '→', toName);
+        }
+      }
+
       console.log('[useLeadsData] 🔄 Chamando fetchAll() para sincronizar...');
       await fetchAll();
       console.log('[useLeadsData] ✅ fetchAll() completado - dados sincronizados');
