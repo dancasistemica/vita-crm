@@ -1,5 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useDataAccess } from '@/hooks/useDataAccess';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
 interface DbLead {
@@ -77,6 +80,8 @@ function toLeadView(db: DbLead): LeadView {
 
 export function useLeadsData() {
   const dataAccess = useDataAccess();
+  const { organizationId } = useOrganization();
+  const { user } = useAuth();
   const [leads, setLeads] = useState<LeadView[]>([]);
   const [origins, setOrigins] = useState<string[]>([]);
   const [pipelineStages, setPipelineStages] = useState<StageView[]>([]);
@@ -194,6 +199,25 @@ export function useLeadsData() {
       const result = await dataAccess.updateLead(leadId, dbUpdates);
       console.log('[useLeadsData] Lead atualizado no banco:', result);
 
+      // Register stage change in history
+      if (updates.pipelineStage !== undefined && organizationId) {
+        const currentLead = leads.find(l => l.id === leadId);
+        const fromStage = currentLead?.pipelineStage || null;
+        if (fromStage !== updates.pipelineStage) {
+          // Resolve stage names for readability
+          const fromName = pipelineStages.find(s => s.id === fromStage)?.name || fromStage;
+          const toName = pipelineStages.find(s => s.id === updates.pipelineStage)?.name || updates.pipelineStage;
+          await supabase.from('pipeline_stage_history').insert({
+            lead_id: leadId,
+            organization_id: organizationId,
+            from_stage: fromName,
+            to_stage: toName,
+            changed_by: user?.id || null,
+          });
+          console.log('[StageHistory] Mudança registrada:', fromName, '→', toName);
+        }
+      }
+
       console.log('[useLeadsData] 🔄 Chamando fetchAll() para sincronizar...');
       await fetchAll();
       console.log('[useLeadsData] ✅ fetchAll() completado - dados sincronizados');
@@ -204,7 +228,7 @@ export function useLeadsData() {
       await fetchAll();
       throw err;
     }
-  }, [dataAccess, fetchAll]);
+  }, [dataAccess, fetchAll, leads, pipelineStages, organizationId, user]);
 
   const addLead = useCallback(async (leadData: Partial<LeadView>) => {
     if (!dataAccess) return;
