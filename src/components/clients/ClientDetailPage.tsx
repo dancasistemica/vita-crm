@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2 } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock } from 'lucide-react';
+import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
 import EditSaleModal from '@/components/sales/EditSaleModal';
@@ -180,6 +181,7 @@ export default function ClientDetailPage() {
           <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
           <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
           <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
+          <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
         </TabsList>
 
         {/* Vendas */}
@@ -272,6 +274,11 @@ export default function ClientDetailPage() {
             onBlur={handleNotesBlur}
             className="min-h-[200px]"
           />
+        </TabsContent>
+
+        {/* Histórico */}
+        <TabsContent value="historico" className="space-y-4">
+          <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
         </TabsContent>
       </Tabs>
 

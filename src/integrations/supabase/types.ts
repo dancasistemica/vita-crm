@@ -742,6 +742,51 @@ export type Database = {
           },
         ]
       }
+      pipeline_stage_history: {
+        Row: {
+          changed_at: string | null
+          changed_by: string | null
+          from_stage: string | null
+          id: string
+          lead_id: string
+          organization_id: string
+          to_stage: string
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by?: string | null
+          from_stage?: string | null
+          id?: string
+          lead_id: string
+          organization_id: string
+          to_stage: string
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string | null
+          from_stage?: string | null
+          id?: string
+          lead_id?: string
+          organization_id?: string
+          to_stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_stage_history_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_stage_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pipeline_stages: {
         Row: {
           active: boolean
