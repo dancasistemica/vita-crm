@@ -228,7 +228,7 @@ export function useLeadsData() {
       await fetchAll();
       throw err;
     }
-  }, [dataAccess, fetchAll]);
+  }, [dataAccess, fetchAll, leads, pipelineStages, organizationId, user]);
 
   const addLead = useCallback(async (leadData: Partial<LeadView>) => {
     if (!dataAccess) return;
