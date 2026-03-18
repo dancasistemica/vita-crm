@@ -1,5 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useDataAccess } from '@/hooks/useDataAccess';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
 interface DbLead {
