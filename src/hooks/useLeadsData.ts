@@ -80,6 +80,8 @@ function toLeadView(db: DbLead): LeadView {
 
 export function useLeadsData() {
   const dataAccess = useDataAccess();
+  const { organizationId } = useOrganization();
+  const { user } = useAuth();
   const [leads, setLeads] = useState<LeadView[]>([]);
   const [origins, setOrigins] = useState<string[]>([]);
   const [pipelineStages, setPipelineStages] = useState<StageView[]>([]);
