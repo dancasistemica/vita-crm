@@ -12,6 +12,7 @@ const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: '
 export default function PipelinePage() {
   const { leads, pipelineStages, updateLead, loading } = useLeadsData();
   const [dragging, setDragging] = useState<string | null>(null);
+  const [detailLead, setDetailLead] = useState<LeadView | null>(null);
 
   const handleDragStart = (e: React.DragEvent, leadId: string) => {
     setDragging(leadId);
