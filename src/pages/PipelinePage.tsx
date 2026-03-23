@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useLeadsData } from "@/hooks/useLeadsData";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
+import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";
 
 const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
@@ -11,6 +12,7 @@ const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: '
 export default function PipelinePage() {
   const { leads, pipelineStages, updateLead, loading } = useLeadsData();
   const [dragging, setDragging] = useState<string | null>(null);
+  const [detailLead, setDetailLead] = useState<LeadView | null>(null);
 
   const handleDragStart = (e: React.DragEvent, leadId: string) => {
     setDragging(leadId);
@@ -59,7 +61,7 @@ export default function PipelinePage() {
                       onDragStart={e => handleDragStart(e, lead.id)}
                       className={`p-3 cursor-grab active:cursor-grabbing border-l-4 ${interestColors[lead.interestLevel]} transition-all hover:shadow-md ${dragging === lead.id ? 'opacity-50' : ''}`}
                     >
-                      <p className="font-medium text-sm text-foreground">{lead.name}</p>
+                      <p className="font-medium text-sm text-foreground cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</p>
                       <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
                       {lead.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
@@ -85,6 +87,12 @@ export default function PipelinePage() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+      <LeadDetailSheet
+        lead={detailLead}
+        open={!!detailLead}
+        onClose={() => setDetailLead(null)}
+        stageName={detailLead ? pipelineStages.find(s => s.id === detailLead.pipelineStage)?.name : ''}
+      />
     </div>
   );
 }

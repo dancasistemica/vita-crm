@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2, FilterX } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
+import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
@@ -37,6 +38,7 @@ export default function LeadsPage() {
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [detailLead, setDetailLead] = useState<LeadView | null>(null);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
@@ -269,7 +271,7 @@ export default function LeadsPage() {
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-foreground text-sm">{lead.name}</span>
+                    <span className="font-semibold text-foreground text-sm cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</span>
                     <Badge variant="outline" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
                     <Badge variant="outline" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>
                     {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] bg-primary/8 text-primary border-primary/15">{tag}</Badge>)}
@@ -334,6 +336,15 @@ export default function LeadsPage() {
       <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
       <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
+      <LeadDetailSheet
+        lead={detailLead}
+        open={!!detailLead}
+        onClose={() => setDetailLead(null)}
+        stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
+        interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
+        onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
+        onDelete={userCanDelete ? async (id) => { setDetailLead(null); await deleteLead(id); toast.success('Lead removido'); } : undefined}
+      />
     </div>
   );
 }
