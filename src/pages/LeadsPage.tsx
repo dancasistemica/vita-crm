@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2, FilterX } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
+import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
