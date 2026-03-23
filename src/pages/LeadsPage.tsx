@@ -38,6 +38,7 @@ export default function LeadsPage() {
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [detailLead, setDetailLead] = useState<LeadView | null>(null);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
   const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
