@@ -61,7 +61,7 @@ export default function PipelinePage() {
                       onDragStart={e => handleDragStart(e, lead.id)}
                       className={`p-3 cursor-grab active:cursor-grabbing border-l-4 ${interestColors[lead.interestLevel]} transition-all hover:shadow-md ${dragging === lead.id ? 'opacity-50' : ''}`}
                     >
-                      <p className="font-medium text-sm text-foreground">{lead.name}</p>
+                      <p className="font-medium text-sm text-foreground cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</p>
                       <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
                       {lead.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
