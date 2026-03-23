@@ -336,6 +336,15 @@ export default function LeadsPage() {
       <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
       <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
+      <LeadDetailSheet
+        lead={detailLead}
+        open={!!detailLead}
+        onClose={() => setDetailLead(null)}
+        stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
+        interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
+        onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
+        onDelete={userCanDelete ? async (id) => { setDetailLead(null); await deleteLead(id); toast.success('Lead removido'); } : undefined}
+      />
     </div>
   );
 }

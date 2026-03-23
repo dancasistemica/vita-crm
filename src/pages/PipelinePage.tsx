@@ -87,6 +87,12 @@ export default function PipelinePage() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+      <LeadDetailSheet
+        lead={detailLead}
+        open={!!detailLead}
+        onClose={() => setDetailLead(null)}
+        stageName={detailLead ? pipelineStages.find(s => s.id === detailLead.pipelineStage)?.name : ''}
+      />
     </div>
   );
 }
