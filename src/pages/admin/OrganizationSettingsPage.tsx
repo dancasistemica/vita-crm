@@ -42,6 +42,7 @@ export default function OrganizationSettingsPage() {
   const [botconversaConfigId, setBotconversaConfigId] = useState<string | null>(null);
   const [botconversaSaving, setBotconversaSaving] = useState(false);
   const [botconversaStatus, setBotconversaStatus] = useState<'none' | 'valid' | 'invalid'>('none');
+  const [botconversaInvalidSource, setBotconversaInvalidSource] = useState<'previous' | 'current' | null>(null);
   const [botconversaLoading, setBotconversaLoading] = useState(false);
 
   const canManage = role === 'admin' || role === 'superadmin';
@@ -87,11 +88,49 @@ export default function OrganizationSettingsPage() {
       }
 
       setBotconversaConfigId(data?.id ?? null);
-      setBotconversaKey(data?.api_key ?? '');
-      setBotconversaStatus(data?.api_key ? 'valid' : 'none');
+      setBotconversaKey('');
+
+      const apiKey = data?.api_key?.trim() ?? '';
+
+      if (!apiKey) {
+        if (data?.id) {
+          await supabase
+            .from('botconversa_config')
+            .delete()
+            .eq('id', data.id);
+        } else {
+          await supabase
+            .from('botconversa_config')
+            .delete()
+            .eq('organization_id', organizationId)
+            .or('api_key.is.null,api_key.eq.');
+        }
+
+        setBotconversaConfigId(null);
+        setBotconversaStatus('none');
+        setBotconversaInvalidSource(null);
+        return;
+      }
+
+      const isValid = await validateBotconversaKey(apiKey);
+
+      if (!isValid) {
+        await supabase
+          .from('botconversa_config')
+          .delete()
+          .eq('id', data?.id ?? '');
+        setBotconversaConfigId(null);
+        setBotconversaStatus('invalid');
+        setBotconversaInvalidSource('previous');
+        return;
+      }
+
+      setBotconversaStatus('valid');
+      setBotconversaInvalidSource(null);
     } catch {
       toast.error('Erro ao carregar configuração do Botconversa');
       setBotconversaStatus('none');
+      setBotconversaInvalidSource(null);
     } finally {
       setBotconversaLoading(false);
     }
@@ -147,7 +186,11 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     const trimmedKey = botconversaKey.trim();
     if (!trimmedKey) {
-      setBotconversaStatus('invalid');
+      if (botconversaStatus !== 'valid') {
+        setBotconversaStatus('invalid');
+        setBotconversaInvalidSource('current');
+      }
+      setBotconversaKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -157,7 +200,11 @@ export default function OrganizationSettingsPage() {
 
     if (!isValid) {
       setBotconversaSaving(false);
-      setBotconversaStatus('invalid');
+      if (botconversaStatus !== 'valid') {
+        setBotconversaStatus('invalid');
+        setBotconversaInvalidSource('current');
+      }
+      setBotconversaKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -192,9 +239,15 @@ export default function OrganizationSettingsPage() {
       }
 
       setBotconversaStatus('valid');
+      setBotconversaInvalidSource(null);
+      setBotconversaKey('');
       toast.success('Chave salva com sucesso!');
     } catch {
-      setBotconversaStatus('invalid');
+      if (botconversaStatus !== 'valid') {
+        setBotconversaStatus('invalid');
+        setBotconversaInvalidSource('current');
+      }
+      setBotconversaKey('');
       toast.error('Chave API inválida');
     } finally {
       setBotconversaSaving(false);
@@ -396,7 +449,9 @@ export default function OrganizationSettingsPage() {
               {botconversaStatus === 'valid'
                 ? '✓ Chave configurada'
                 : botconversaStatus === 'invalid'
-                  ? '✗ Chave inválida'
+                  ? botconversaInvalidSource === 'previous'
+                    ? '✗ Chave anterior inválida'
+                    : '✗ Chave inválida'
                   : '⚠️ Nenhuma chave configurada'}
             </Badge>
           </div>
