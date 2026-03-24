@@ -314,7 +314,7 @@ export default function ClientDetailPage() {
         onOpenChange={setScheduleDialogOpen}
         client={{ id: client.id, name: client.name, phone: client.phone }}
         onScheduled={() => {
-          console.log('[ClientDetailPage] Mensagem agendada');
+          console.log('[ClientDetail] Mensagem agendada com sucesso');
         }}
       />
     </div>
