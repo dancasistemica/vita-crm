@@ -10,7 +10,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const normalizePhone = (value: string) => value.replace(/\D/g, '');
 
-serve(async () => {
+serve(async (req) => {
+  // Verificar token secreto para Cron-Job.org
+  const authHeader = req.headers.get('authorization');
+  const expectedToken = Deno.env.get('CRON_SECRET_TOKEN');
+
+  if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
   try {
     const now = new Date().toISOString();
     const { data: messages, error } = await supabase
