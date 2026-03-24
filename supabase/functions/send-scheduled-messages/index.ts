@@ -11,21 +11,44 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const normalizePhone = (value: string) => value.replace(/\D/g, '');
 
 serve(async (req) => {
-  // Verificar token secreto para Cron-Job.org
-  const authHeader = req.headers.get('authorization');
-  const expectedToken = Deno.env.get('CRON_SECRET_TOKEN');
-
-  if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
   try {
+    // VERIFICAÇÃO DE AUTENTICAÇÃO: Token secreto da organização
+    const authHeader = req.headers.get('authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('[SendScheduledMessages] Erro: Header Authorization ausente ou inválido');
+      return new Response(
+        JSON.stringify({ error: 'Missing or invalid Authorization header' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const providedToken = authHeader.substring(7); // Remove "Bearer "
+
+    // Buscar organização pelo token secreto
+    const { data: org, error: orgError } = await supabase
+      .from('organizations')
+      .select('id')
+      .eq('cron_secret_token', providedToken)
+      .single();
+
+    if (orgError || !org) {
+      console.error('[SendScheduledMessages] Erro: Token inválido ou organização não encontrada');
+      return new Response(
+        JSON.stringify({ error: 'Invalid token or organization not found' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`[SendScheduledMessages] Autenticação OK para organização: ${org.id}`);
+
     const now = new Date().toISOString();
+    
+    // Buscar mensagens pendentes APENAS desta organização
     const { data: messages, error } = await supabase
       .from('scheduled_messages')
       .select('*')
+      .eq('organization_id', org.id)
       .eq('status', 'pending')
       .lte('scheduled_at', now);
 
@@ -92,6 +115,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         message: 'Processamento concluído',
+        organization_id: org.id,
         total: messages?.length || 0,
         successful,
         failed,
