@@ -14,3 +14,7 @@ verify_jwt = false
 
 [functions.send-test-email]
 verify_jwt = false
+
+[functions.send-scheduled-messages]
+verify_jwt = false
+crons = ["*/5 * * * *"]

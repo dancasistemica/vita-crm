@@ -17,6 +17,9 @@ import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
 import EditSaleModal from '@/components/sales/EditSaleModal';
 import { useEffect } from 'react';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
+import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success',
@@ -61,6 +64,7 @@ export default function ClientDetailPage() {
   const navigate = useNavigate();
   const { leads, updateLead } = useLeadsData();
   const dataAccess = useDataAccess();
+  const { organizationId } = useOrganization();
 
   const [sales, setSales] = useState<SaleView[]>([]);
   const [interactions, setInteractions] = useState<InteractionView[]>([]);
@@ -68,6 +72,7 @@ export default function ClientDetailPage() {
   const [products, setProducts] = useState<ProductView[]>([]);
   const [editSaleId, setEditSaleId] = useState<string | null>(null);
   const [notesValue, setNotesValue] = useState('');
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   const client = leads.find(l => l.id === id);
 
@@ -171,18 +176,30 @@ export default function ClientDetailPage() {
               </CardContent>
             </Card>
           </div>
+          <div className="flex gap-2 mt-4 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setScheduleDialogOpen(true)}
+              className="gap-2 min-h-[44px]"
+            >
+              <Clock className="h-4 w-4" />
+              Agendar Mensagem
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="vendas">
-        <TabsList className="w-full justify-start">
-          <TabsTrigger value="vendas" className="gap-1"><ShoppingCart className="h-4 w-4" /> Vendas</TabsTrigger>
-          <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
-          <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
-          <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
-          <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="vendas">
+          <TabsList className="w-full justify-start">
+            <TabsTrigger value="vendas" className="gap-1"><ShoppingCart className="h-4 w-4" /> Vendas</TabsTrigger>
+            <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
+            <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
+            <TabsTrigger value="agendamentos" className="gap-1"><Clock className="h-4 w-4" /> Agendamentos</TabsTrigger>
+            <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
+            <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
+          </TabsList>
 
         {/* Vendas */}
         <TabsContent value="vendas" className="space-y-4">
@@ -276,6 +293,11 @@ export default function ClientDetailPage() {
           />
         </TabsContent>
 
+        {/* Agendamentos */}
+        <TabsContent value="agendamentos" className="space-y-4">
+          <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
+        </TabsContent>
+
         {/* Histórico */}
         <TabsContent value="historico" className="space-y-4">
           <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
@@ -286,6 +308,14 @@ export default function ClientDetailPage() {
         open={!!editSaleId}
         onOpenChange={(o) => { if (!o) setEditSaleId(null); }}
         saleId={editSaleId}
+      />
+      <ScheduleMessageDialog
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        client={{ id: client.id, name: client.name, phone: client.phone }}
+        onScheduled={() => {
+          console.log('[ClientDetailPage] Mensagem agendada');
+        }}
       />
     </div>
   );

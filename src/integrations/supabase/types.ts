@@ -1042,6 +1042,69 @@ export type Database = {
           },
         ]
       }
+      scheduled_messages: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          created_by: string
+          error_message: string | null
+          id: string
+          lead_id: string | null
+          message_text: string
+          organization_id: string
+          phone_number: string
+          scheduled_at: string
+          sent_at: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          created_by: string
+          error_message?: string | null
+          id?: string
+          lead_id?: string | null
+          message_text: string
+          organization_id: string
+          phone_number: string
+          scheduled_at: string
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string
+          error_message?: string | null
+          id?: string
+          lead_id?: string | null
+          message_text?: string
+          organization_id?: string
+          phone_number?: string
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       superadmin_roles: {
         Row: {
           created_at: string

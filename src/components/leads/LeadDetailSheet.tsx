@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import type { LeadView } from '@/hooks/useLeadsData';
+import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
+import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -45,6 +47,7 @@ export default function LeadDetailSheet({
   const [loadingTasks, setLoadingTasks] = useState(false);
   const [loadingInteractions, setLoadingInteractions] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   const loadTasks = useCallback(async () => {
     if (!lead || !organizationId) return;
@@ -116,7 +119,7 @@ export default function LeadDetailSheet({
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <div className="px-6">
-            <TabsList className="w-full grid grid-cols-4">
+            <TabsList className="w-full grid grid-cols-5">
               <TabsTrigger value="info" className="text-xs">Informações</TabsTrigger>
               <TabsTrigger value="tasks" className="text-xs">
                 Tarefas
@@ -126,6 +129,7 @@ export default function LeadDetailSheet({
                 Interações
                 {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
               </TabsTrigger>
+              <TabsTrigger value="scheduled" className="text-xs">Agendamentos</TabsTrigger>
               <TabsTrigger value="history" className="text-xs">Histórico</TabsTrigger>
             </TabsList>
           </div>
@@ -180,6 +184,15 @@ export default function LeadDetailSheet({
                   <Button variant="outline" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
                 </a>
               )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setScheduleDialogOpen(true)}
+                className="gap-2 min-h-[44px]"
+              >
+                <Clock className="h-4 w-4" />
+                Agendar Mensagem
+              </Button>
               {lead.email && (
                 <a href={`mailto:${lead.email}`}>
                   <Button variant="outline" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</Button>
@@ -258,8 +271,21 @@ export default function LeadDetailSheet({
           <TabsContent value="history" className="px-6 pb-6 mt-4">
             <LeadTimeline leadId={lead.id} leadCreatedAt={lead.entryDate || undefined} />
           </TabsContent>
+
+          {/* SCHEDULED TAB */}
+          <TabsContent value="scheduled" className="px-6 pb-6 mt-4">
+            <ScheduledMessagesList organizationId={organizationId} leadId={lead.id} />
+          </TabsContent>
         </Tabs>
       </SheetContent>
+      <ScheduleMessageDialog
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        lead={{ id: lead.id, name: lead.name, phone: lead.phone }}
+        onScheduled={() => {
+          console.log('[LeadDetailSheet] Mensagem agendada');
+        }}
+      />
     </Sheet>
   );
 }
