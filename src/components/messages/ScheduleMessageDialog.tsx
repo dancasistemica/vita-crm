@@ -21,7 +21,7 @@ interface ScheduleMessageDialogProps {
   onOpenChange: (open: boolean) => void;
   lead?: RecipientRef;
   client?: RecipientRef;
-  onScheduled?: (message: ScheduledMessage) => void;
+  onScheduled?: () => void;
 }
 
 const normalizePhone = (value: string) => value.replace(/\D/g, '');
@@ -42,6 +42,7 @@ export const ScheduleMessageDialog = ({
   const [error, setError] = useState<string | null>(null);
 
   const recipient = lead || client;
+  const recipientType = lead ? 'lead' : 'client';
 
   const handleSchedule = async () => {
     if (!messageText.trim()) {
@@ -74,16 +75,16 @@ export const ScheduleMessageDialog = ({
     console.log('[ScheduleMessageDialog] Agendamento validado');
 
     try {
-      const message = await scheduleMessage({
-        leadId: lead?.id,
-        clientId: client?.id,
+      await scheduleMessage({
+        leadId: recipientType === 'lead' ? lead?.id : undefined,
+        clientId: recipientType === 'client' ? client?.id : undefined,
         phoneNumber: normalizedPhone,
         messageText: messageText.trim(),
         scheduledAt: scheduledDateTime,
       });
 
       toast.success('Mensagem agendada com sucesso!');
-      onScheduled?.(message);
+      onScheduled?.();
       onOpenChange(false);
       setMessageText('');
       setScheduledDate(new Date());

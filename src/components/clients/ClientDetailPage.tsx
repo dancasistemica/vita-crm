@@ -182,6 +182,7 @@ export default function ClientDetailPage() {
               size="sm"
               onClick={() => setScheduleDialogOpen(true)}
               className="gap-2 min-h-[44px]"
+              disabled={!client.phone}
             >
               <Clock className="h-4 w-4" />
               Agendar Mensagem
