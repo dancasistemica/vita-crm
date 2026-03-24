@@ -10,6 +10,7 @@ import { validateRows, getNewOptions } from '@/services/importService';
 import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
+import { convertExcelSerialToISO, isExcelSerialDate } from '@/utils/dateConversion';
 
 interface Props {
   state: ImportModalState;
@@ -48,6 +49,28 @@ function toDbRecord(data: Partial<Lead>, organizationId: string) {
 export default function Step5Import({ state, update, onNext, onBack }: Props) {
   const { organizationId } = useOrganization();
   const [existingLeads, setExistingLeads] = useState<any[]>([]);
+
+  const convertRecordDates = (record: Record<string, any>) => {
+    const dateColumns = ['entry_date', 'created_at', 'updated_at', 'due_date'];
+    let convertedCount = 0;
+
+    dateColumns.forEach(col => {
+      if (!record[col]) return;
+      if (!isExcelSerialDate(record[col])) return;
+
+      const iso = convertExcelSerialToISO(record[col]);
+      if (iso) {
+        console.log(`[DateConversion] ${col}: ${record[col]} → ${iso}`);
+        record[col] = iso;
+        convertedCount++;
+      } else {
+        console.warn(`[DateConversion] Falha ao converter ${col}:`, record[col]);
+        record[col] = null;
+      }
+    });
+
+    return convertedCount;
+  };
 
   // Fetch existing leads from DB for duplicate detection
   useEffect(() => {
@@ -121,7 +144,13 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       return;
     }
 
-    update({ importing: true, importProgress: 0 });
+    update({
+      importing: true,
+      importProgress: 0,
+      importProcessed: 0,
+      importTotal: 0,
+      dateConversions: state.dateConversions,
+    });
 
     // Auto-create missing options in DB
     for (const origin of state.newOptions.newOrigins) {
@@ -147,14 +176,21 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
     const cleanToImport = toImport.filter(r => !dupRows.has(r.row));
 
     let created = 0, updated = 0, duplicated = 0, errors = 0;
+    let dateConversions = state.dateConversions;
     const total = cleanToImport.length + state.duplicates.filter(d => d.action !== 'skip').length;
     let processed = 0;
+
+    update({ importTotal: total });
 
     // Batch insert clean leads (chunks of 50)
     const BATCH_SIZE = 50;
     for (let i = 0; i < cleanToImport.length; i += BATCH_SIZE) {
       const batch = cleanToImport.slice(i, i + BATCH_SIZE);
-      const records = batch.map(item => toDbRecord(item.data!, organizationId));
+      const records = batch.map(item => {
+        const record = toDbRecord(item.data!, organizationId);
+        dateConversions += convertRecordDates(record);
+        return record;
+      });
 
       const { data, error } = await supabase.from('leads').insert(records).select('id');
 
@@ -166,7 +202,11 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       }
 
       processed += batch.length;
-      update({ importProgress: Math.round((processed / Math.max(total, 1)) * 100) });
+      update({
+        importProgress: Math.round((processed / Math.max(total, 1)) * 100),
+        importProcessed: processed,
+        dateConversions,
+      });
     }
 
     // Handle duplicates
@@ -176,6 +216,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
         if (dup.action === 'update') {
           const updateData = toDbRecord(dup.newData as Partial<Lead>, organizationId);
           delete (updateData as any).organization_id; // Don't update org_id
+          dateConversions += convertRecordDates(updateData as Record<string, any>);
           const { error } = await supabase
             .from('leads')
             .update(updateData)
@@ -185,17 +226,22 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           else updated++;
         } else if (dup.action === 'duplicate') {
           const record = toDbRecord(dup.newData as Partial<Lead>, organizationId);
+          dateConversions += convertRecordDates(record as Record<string, any>);
           const { error } = await supabase.from('leads').insert(record);
           if (error) { console.error('[Step5Import] Duplicate insert error:', error); errors++; }
           else duplicated++;
         }
       } catch { errors++; }
       processed++;
-      update({ importProgress: Math.round((processed / Math.max(total, 1)) * 100) });
+      update({
+        importProgress: Math.round((processed / Math.max(total, 1)) * 100),
+        importProcessed: processed,
+        dateConversions,
+      });
     }
 
-    update({ importResult: { created, updated, duplicated, errors }, importing: false });
-    console.log('[Step5Import] ✅ Import done (Supabase):', { created, updated, duplicated, errors });
+    update({ importResult: { created, updated, duplicated, errors, dateConversions }, importing: false });
+    console.log('[Step5Import] ✅ Import done (Supabase):', { created, updated, duplicated, errors, dateConversions });
     onNext();
   };
 
@@ -203,7 +249,13 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
     return (
       <div className="text-center py-10 space-y-4">
         <div className="h-12 w-12 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm text-muted-foreground">Salvando leads no banco de dados...</p>
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">Salvando leads no banco de dados...</p>
+          <p className="text-sm text-muted-foreground">✓ Convertendo datas do Excel...</p>
+          <p className="text-xs text-muted-foreground">
+            {state.importProcessed} / {state.importTotal} leads processados
+          </p>
+        </div>
         <Progress value={state.importProgress} className="w-full max-w-sm mx-auto" />
         <p className="text-xs text-muted-foreground">{state.importProgress}%</p>
       </div>
@@ -299,6 +351,12 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
         </Button>
       </div>
+
+      {state.importResult && state.importResult.dateConversions > 0 && (
+        <div className="text-center text-xs text-blue-600">
+          ℹ {state.importResult.dateConversions} datas convertidas do formato Excel
+        </div>
+      )}
     </div>
   );
 }

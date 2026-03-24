@@ -23,7 +23,10 @@ export interface ImportModalState {
   newOptions: { newOrigins: string[]; newInterestLevels: string[]; newTags: string[] };
   importing: boolean;
   importProgress: number;
-  importResult: { created: number; updated: number; duplicated: number; errors: number } | null;
+  importProcessed: number;
+  importTotal: number;
+  importResult: { created: number; updated: number; duplicated: number; errors: number; dateConversions: number } | null;
+  dateConversions: number;
   loading: boolean;
   error: string | null;
 }
@@ -40,7 +43,10 @@ const INITIAL_STATE: ImportModalState = {
   newOptions: { newOrigins: [], newInterestLevels: [], newTags: [] },
   importing: false,
   importProgress: 0,
+  importProcessed: 0,
+  importTotal: 0,
   importResult: null,
+  dateConversions: 0,
   loading: false,
   error: null,
 };

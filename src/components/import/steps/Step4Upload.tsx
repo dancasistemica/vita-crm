@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { parseCSVText, suggestMapping, getCRMFields, type CSVRow } from '@/services/importService';
 import { parseFile, getFileType } from '@/services/excelParser';
 import { ImportModalState } from '@/hooks/useImportModal';
+import { convertExcelSerialToISO, isExcelSerialDate } from '@/utils/dateConversion';
 
 interface Props {
   state: ImportModalState;
@@ -17,6 +18,36 @@ interface Props {
 
 export default function Step4Upload({ state, update, onNext, onBack }: Props) {
   const [dragOver, setDragOver] = useState(false);
+
+  const isDateHeader = (header: string) => {
+    const normalized = header.toLowerCase();
+    return normalized.includes('data') || normalized.includes('date') || normalized.includes('created') || normalized.includes('updated') || normalized.includes('due');
+  };
+
+  const normalizeDateColumns = (headers: string[], rows: CSVRow[]) => {
+    let conversions = 0;
+    const normalizedRows = rows.map(row => {
+      const next = { ...row };
+      headers.forEach(header => {
+        if (!isDateHeader(header)) return;
+        const value = row[header];
+        if (!isExcelSerialDate(value)) return;
+
+        const iso = convertExcelSerialToISO(value);
+        if (iso) {
+          console.log(`[DateConversion] ${header}: ${value} → ${iso}`);
+          next[header] = iso;
+          conversions++;
+        } else {
+          console.warn(`[DateConversion] Falha ao converter ${header}:`, value);
+          next[header] = '';
+        }
+      });
+      return next;
+    });
+
+    return { normalizedRows, conversions };
+  };
 
   const handleFile = useCallback(async (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
@@ -50,7 +81,16 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
       if (rows.length > 1000) { toast.error('Máximo 1.000 linhas por importação.'); update({ loading: false }); return; }
 
       const suggested = suggestMapping(headers);
-      update({ file, fileName: file.name, csvHeaders: headers, csvRows: rows, mapping: suggested, loading: false });
+      const { normalizedRows, conversions } = normalizeDateColumns(headers, rows);
+      update({
+        file,
+        fileName: file.name,
+        csvHeaders: headers,
+        csvRows: normalizedRows,
+        mapping: suggested,
+        loading: false,
+        dateConversions: conversions,
+      });
       console.log('[Step4Upload] Arquivo processado:', { headers: headers.length, rows: rows.length });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erro ao processar arquivo');
@@ -108,7 +148,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
               <Badge variant="secondary">{state.csvRows.length} linhas</Badge>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {} })}>
+            <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar
             </Button>
           </div>

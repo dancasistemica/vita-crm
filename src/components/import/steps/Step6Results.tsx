@@ -23,6 +23,9 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
       <div>
         <p className="text-xl font-display text-foreground">Importação Concluída!</p>
         <p className="text-sm text-muted-foreground mt-1">{total} leads processados</p>
+        {result.dateConversions > 0 && (
+          <p className="text-xs text-blue-600 mt-1">ℹ {result.dateConversions} datas convertidas do formato Excel</p>
+        )}
       </div>
 
       <div className="flex justify-center gap-6">
