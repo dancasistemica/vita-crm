@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -63,6 +63,8 @@ interface OrgMember {
 
 export default function TarefasPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dataAccess = useDataAccess();
   const { user } = useAuth();
   const { leads, pipelineStages } = useLeadsData();
@@ -138,6 +140,18 @@ export default function TarefasPage() {
     fetchTaskStatuses();
     fetchNotifications();
   }, [fetchTasks, fetchOrgMembers, fetchTaskStatuses, fetchNotifications]);
+
+  useEffect(() => {
+    const state = location.state as { taskId?: string } | null;
+    if (!state?.taskId) return;
+
+    const targetTask = tasks.find(task => task.id === state.taskId);
+    if (targetTask) {
+      setEditingTask(targetTask);
+      setDialogOpen(true);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.state, tasks, navigate, location.pathname]);
 
   // Client-side filtering
   const filteredTasks = useMemo(() => {

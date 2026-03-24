@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-
 
 export default function LeadsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
 
@@ -69,6 +70,17 @@ export default function LeadsPage() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+
+  useEffect(() => {
+    const state = location.state as { leadId?: string } | null;
+    if (!state?.leadId) return;
+
+    const targetLead = leads.find(lead => lead.id === state.leadId);
+    if (targetLead) {
+      setDetailLead(targetLead);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.state, leads, navigate, location.pathname]);
 
   const closeDialog = () => {
     setEditingLead(null);
