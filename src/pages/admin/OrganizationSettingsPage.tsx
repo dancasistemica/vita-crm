@@ -236,17 +236,14 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
   };
 
   const handleActivateAutomation = () => {
-    console.log('[BotconversaSettings] handleActivateAutomation chamado');
     if (!cronSecretToken) {
-      toast.error('Token do cron não encontrado');
+      console.error('[BotconversaSettings] Erro: cron_secret_token não encontrado');
       return;
     }
-    const token = cronSecretToken;
-    const schedule = encodeURIComponent('*/5 * * * *');
-    const headers = encodeURIComponent(`Authorization: Bearer ${token}`);
-    const cronJobUrl = `https://cron-job.org/en/members/jobs/create?url=${encodeURIComponent(CRON_URL)}&schedule=${schedule}&headers=${headers}`;
-    window.open(cronJobUrl, '_blank', 'noopener,noreferrer');
-    toast.success("Abrindo Cron-Job.org... Clique em 'Create' para ativar");
+
+    const url = `https://cron-job.org/en/members/jobs/create?url=${CRON_URL}&schedule=*/5 * * * *&headers=Authorization: Bearer ${cronSecretToken}`;
+
+    window.open(url, '_blank');
   };
 
   if (!organizationId) {
@@ -256,6 +253,14 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
 
   const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
   const botconversaError = null;
+
+  console.log('[BotconversaSettings] FINAL STATE:', {
+    botconversaConfigId,
+    showActivateButton,
+    cron_secret_token: cronSecretToken ? 'EXISTS' : 'MISSING',
+    loading: botconversaLoading,
+    error: botconversaError,
+  });
 
   console.log('[BotconversaSettings] Renderizando com:', {
     organizationId,
@@ -304,6 +309,11 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 >
                   Ativar Automação
                 </Button>
+              )}
+              {!showActivateButton && botconversaConfigId === undefined && (
+                <div className="text-sm text-amber-600 p-2 bg-amber-50 rounded">
+                  ⚠️ Debug: configId não está definido
+                </div>
               )}
             </div>
           </div>
