@@ -44,6 +44,7 @@ export default function OrganizationSettingsPage() {
   const [botconversaStatus, setBotconversaStatus] = useState<'none' | 'valid' | 'invalid'>('none');
   const [botconversaInvalidSource, setBotconversaInvalidSource] = useState<'previous' | 'current' | null>(null);
   const [botconversaLoading, setBotconversaLoading] = useState(false);
+  const [savedApiKey, setSavedApiKey] = useState('');
 
   const canManage = role === 'admin' || role === 'superadmin';
 
@@ -109,6 +110,7 @@ export default function OrganizationSettingsPage() {
         setBotconversaConfigId(null);
         setBotconversaStatus('none');
         setBotconversaInvalidSource(null);
+        setSavedApiKey('');
         return;
       }
 
@@ -122,15 +124,22 @@ export default function OrganizationSettingsPage() {
         setBotconversaConfigId(null);
         setBotconversaStatus('invalid');
         setBotconversaInvalidSource('previous');
+        setSavedApiKey('');
         return;
       }
 
       setBotconversaStatus('valid');
       setBotconversaInvalidSource(null);
+      setSavedApiKey(apiKey);
+      console.log('[BotconversaConfig] Status:', {
+        hasConfig: !!data,
+        status: getStatusMessage(data),
+      });
     } catch {
       toast.error('Erro ao carregar configuração do Botconversa');
       setBotconversaStatus('none');
       setBotconversaInvalidSource(null);
+      setSavedApiKey('');
     } finally {
       setBotconversaLoading(false);
     }
@@ -142,6 +151,12 @@ export default function OrganizationSettingsPage() {
   }, [organizationId]);
 
   const maskedToken = useMemo(() => maskToken(token), [token]);
+
+  const getStatusMessage = (config?: { api_key?: string | null } | null) => {
+    const key = config?.api_key?.trim() ?? '';
+    if (!key) return 'Nenhuma chave configurada';
+    return 'Chave configurada';
+  };
 
   const lastExecutionDate = useMemo(() => {
     if (!lastExecution) return null;
@@ -191,6 +206,7 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
+      setSavedApiKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -205,6 +221,7 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
+      setSavedApiKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -238,6 +255,34 @@ export default function OrganizationSettingsPage() {
         setBotconversaConfigId(data?.id ?? null);
       }
 
+      console.log('[BotconversaConfig] Chave salva:', {
+        organizationId,
+        hasApiKey: !!trimmedKey,
+        apiKeyLength: trimmedKey.length,
+      });
+
+      const { data: config } = await supabase
+        .from('botconversa_config')
+        .select('*')
+        .eq('organization_id', organizationId)
+        .single();
+
+      const safeConfig = config
+        ? {
+            ...config,
+            api_key: config.api_key ? '[REDACTED]' : config.api_key,
+          }
+        : config;
+
+      console.log('[BotconversaConfig] Dados do banco:', safeConfig);
+      console.log('[BotconversaConfig] Status:', {
+        hasConfig: !!config,
+        status: getStatusMessage(config),
+      });
+
+      const persistedKey = config?.api_key?.trim() ?? '';
+      setSavedApiKey(persistedKey);
+
       setBotconversaStatus('valid');
       setBotconversaInvalidSource(null);
       setBotconversaKey('');
@@ -248,6 +293,7 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
+      setSavedApiKey('');
       toast.error('Chave API inválida');
     } finally {
       setBotconversaSaving(false);
@@ -309,6 +355,8 @@ export default function OrganizationSettingsPage() {
   if (!organizationId) {
     return <div className="py-10 text-muted-foreground">Nenhuma organização selecionada.</div>;
   }
+
+  const showActivateButton = !!savedApiKey && savedApiKey.length > 0;
 
   return (
     <div className="space-y-6">
@@ -424,7 +472,7 @@ export default function OrganizationSettingsPage() {
                     'Salvar'
                   )}
                 </Button>
-                {botconversaStatus === 'valid' && (
+                {showActivateButton && (
                   <Button
                     className="bg-emerald-600 text-white hover:bg-emerald-700"
                     onClick={handleActivateAutomation}
