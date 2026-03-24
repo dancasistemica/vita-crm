@@ -3,20 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
 import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
 import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog } from 'lucide-react';
+import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog } from 'lucide-react';
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
+import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
+import { getAllOrganizations } from '@/services/superadminService';
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('organizations');
   const [stats, setStats] = useState({ orgs: 0, plans: 0, superadmins: 0 });
+  const [botconversaOrgs, setBotconversaOrgs] = useState<{ id: string; name: string }[]>([]);
+  const [botconversaLoading, setBotconversaLoading] = useState(false);
+  const [selectedBotconversaOrgId, setSelectedBotconversaOrgId] = useState('');
   const orgsTabRef = useRef<{ openCreateModal?: () => void }>(null);
 
   useEffect(() => {
@@ -46,6 +53,31 @@ export default function SuperadminDashboard() {
   useEffect(() => {
     if (isSuperadmin) fetchStats();
   }, [isSuperadmin]);
+
+  useEffect(() => {
+    if (!isSuperadmin) return;
+    const fetchOrganizations = async () => {
+      setBotconversaLoading(true);
+      try {
+        const orgs = await getAllOrganizations();
+        setBotconversaOrgs(
+          (orgs || []).map((org: any) => ({
+            id: org.id,
+            name: org.name,
+          }))
+        );
+      } catch (err) {
+        console.error('[SuperadminDashboard] Botconversa orgs error:', err);
+        setBotconversaOrgs([]);
+      } finally {
+        setBotconversaLoading(false);
+      }
+    };
+
+    fetchOrganizations();
+  }, [isSuperadmin]);
+
+  const selectedBotconversaOrg = botconversaOrgs.find((org) => org.id === selectedBotconversaOrgId) || null;
 
   if (loading) {
     return (
@@ -129,6 +161,9 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="custom-fields" className="gap-2">
               <Settings2 className="h-4 w-4" /> Campos Custom
             </TabsTrigger>
+            <TabsTrigger value="botconversa" className="gap-2">
+              <Bot className="h-4 w-4" /> Botconversa
+            </TabsTrigger>
             <TabsTrigger value="system-settings" className="gap-2">
               <Cog className="h-4 w-4" /> Sistema
             </TabsTrigger>
@@ -148,6 +183,41 @@ export default function SuperadminDashboard() {
           </TabsContent>
           <TabsContent value="custom-fields">
             <CustomFieldsManager />
+          </TabsContent>
+          <TabsContent value="botconversa" className="space-y-4">
+            <div>
+              <Label htmlFor="botconversa-org-select">Selecione uma organização</Label>
+              <Select
+                value={selectedBotconversaOrgId}
+                onValueChange={(orgId) => setSelectedBotconversaOrgId(orgId)}
+              >
+                <SelectTrigger id="botconversa-org-select" className="mt-2 h-11">
+                  <SelectValue placeholder="Escolha uma organização..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {botconversaOrgs.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {botconversaLoading && (
+                <p className="mt-2 text-xs text-muted-foreground">Carregando organizações...</p>
+              )}
+              {!botconversaLoading && botconversaOrgs.length === 0 && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Nenhuma organização encontrada.
+                </p>
+              )}
+            </div>
+
+            {selectedBotconversaOrg && (
+              <BotconversaSettings
+                organizationId={selectedBotconversaOrg.id}
+                organizationName={selectedBotconversaOrg.name}
+              />
+            )}
           </TabsContent>
           <TabsContent value="system-settings">
             <SystemSettings />
