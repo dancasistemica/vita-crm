@@ -1,158 +1,173 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect, useCallback } from 'react'
+import { supabase } from '@/integrations/supabase/client'
 
-export interface ScheduledMessage {
-  id: string;
-  organization_id: string;
-  lead_id: string | null;
-  client_id: string | null;
-  phone_number: string;
-  message_text: string;
-  scheduled_at: string;
-  sent_at: string | null;
-  status: string;
-  error_message: string | null;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-  lead?: { id: string; name: string; phone: string | null } | null;
-  client?: { id: string; name: string; phone: string | null } | null;
+interface ScheduledMessage {
+  id: string
+  organization_id: string
+  lead_id?: string
+  client_id?: string
+  phone_number: string
+  message_text: string
+  scheduled_at: string
+  sent_at?: string
+  status: 'pending' | 'scheduled' | 'sent' | 'failed' | 'cancelled'
+  botconversa_message_id?: string
+  error_message?: string
+  created_by: string
+  created_at: string
+  updated_at: string
+  lead?: { id: string; name: string; phone: string }
+  client?: { id: string; name: string; phone: string }
 }
 
-const normalizePhone = (value: string) => value.replace(/\D/g, '');
+interface ScheduleMessagePayload {
+  phoneNumber: string
+  messageText: string
+  scheduledAt: Date
+  leadId?: string
+  clientId?: string
+}
 
 export const useScheduledMessages = (organizationId: string | null) => {
-  const [messages, setMessages] = useState<ScheduledMessage[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // TODOS os useState PRIMEIRO (antes de qualquer lógica)
+  const [messages, setMessages] = useState<ScheduledMessage[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const loadScheduledMessages = async () => {
-    if (!organizationId) return;
-    setLoading(true);
-    setError(null);
-    const { data, error } = await supabase
-      .from('scheduled_messages')
-      .select(`
-        *,
-        lead:lead_id(id, name, phone),
-        client:client_id(id, name, phone)
-      `)
-      .eq('organization_id', organizationId)
-      .neq('status', 'cancelled')
-      .order('scheduled_at', { ascending: true });
-
-    if (error) {
-      console.error('[ScheduledMessages] Erro ao carregar:', error);
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    setMessages((data as ScheduledMessage[]) || []);
-    setLoading(false);
-    console.log('[ScheduledMessages] Carregadas:', data?.length);
-  };
-
-  const scheduleMessage = async (payload: {
-    leadId?: string;
-    clientId?: string;
-    phoneNumber: string;
-    messageText: string;
-    scheduledAt: Date;
-  }) => {
-    if (!organizationId) {
-      throw new Error('OrganizationId não encontrado');
-    }
-
-    const normalizedPhone = normalizePhone(payload.phoneNumber);
-    const { data: authData } = await supabase.auth.getUser();
-    if (!authData.user?.id) {
-      throw new Error('Usuário não autenticado');
-    }
-
-    const { data, error } = await supabase
-      .from('scheduled_messages')
-      .insert({
-        organization_id: organizationId,
-        lead_id: payload.leadId || null,
-        client_id: payload.clientId || null,
-        phone_number: normalizedPhone,
-        message_text: payload.messageText,
-        scheduled_at: payload.scheduledAt.toISOString(),
-        status: 'pending',
-        created_by: authData.user.id,
-      })
-      .select();
-
-    if (error) {
-      console.error('[ScheduledMessages] Erro ao agendar:', error);
-      throw error;
-    }
-
-    const created = (data as ScheduledMessage[])[0];
-    setMessages(prev => [...prev, created]);
-    console.log('[ScheduledMessages] Mensagem agendada:', created.id);
-    return created;
-  };
-
-  const cancelMessage = async (messageId: string): Promise<boolean> => {
-    setLoading(true);
-    setError(null);
+  // DEPOIS as funções
+  const loadMessages = useCallback(async () => {
+    console.log('[useScheduledMessages.loadMessages] Iniciando carregamento')
+    setLoading(true)
+    setError(null)
 
     try {
-      console.log('[ScheduledMessages] Cancelando mensagem:', messageId);
-
-      const { error: updateError } = await supabase
+      const { data, error: queryError } = await supabase
         .from('scheduled_messages')
-        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-        .eq('id', messageId);
+        .select(`
+          *,
+          lead:lead_id(id, name, phone),
+          client:client_id(id, name, phone)
+        `)
+        .eq('organization_id', organizationId)
+        .neq('status', 'cancelled')
+        .order('scheduled_at', { ascending: true })
 
-      if (updateError) throw updateError;
+      if (queryError) throw queryError
 
-      setMessages(prev => prev.filter(m => m.id !== messageId));
-      console.log('[ScheduledMessages] Mensagem cancelada e removida da lista');
-      return true;
+      console.log('[useScheduledMessages.loadMessages] Carregadas:', data?.length)
+      setMessages(data || [])
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao cancelar';
-      setError(errorMessage);
-      console.error('[ScheduledMessages] Erro ao cancelar:', errorMessage);
-      return false;
+      const errorMsg = err instanceof Error ? err.message : 'Erro ao carregar'
+      console.error('[useScheduledMessages.loadMessages] Erro:', errorMsg)
+      setError(errorMsg)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }, [organizationId])
 
-  const updateMessage = async (messageId: string, updates: Partial<ScheduledMessage>) => {
-    const { data, error } = await supabase
-      .from('scheduled_messages')
-      .update(updates)
-      .eq('id', messageId)
-      .select();
+  const scheduleMessage = useCallback(
+    async (payload: ScheduleMessagePayload): Promise<boolean> => {
+      console.log('[useScheduledMessages.scheduleMessage] Agendando para:', payload.phoneNumber)
+      setLoading(true)
+      setError(null)
 
-    if (error) {
-      console.error('[ScheduledMessages] Erro ao atualizar:', error);
-      throw error;
-    }
+      try {
+        const cleanPhone = payload.phoneNumber.replace(/\D/g, '')
+        if (cleanPhone.length < 10) {
+          throw new Error('Telefone inválido')
+        }
 
-    const updated = (data as ScheduledMessage[])[0];
-    setMessages(prev => prev.map(m => (m.id === messageId ? updated : m)));
-    console.log('[ScheduledMessages] Mensagem atualizada:', messageId);
-  };
+        if (payload.scheduledAt <= new Date()) {
+          throw new Error('Data deve ser no futuro')
+        }
 
+        if (!payload.messageText.trim()) {
+          throw new Error('Mensagem obrigatória')
+        }
+
+        const user = await supabase.auth.getUser()
+        if (!user.data.user?.id) {
+          throw new Error('Usuário não autenticado')
+        }
+
+        const { data, error: insertError } = await supabase
+          .from('scheduled_messages')
+          .insert({
+            organization_id: organizationId,
+            lead_id: payload.leadId || null,
+            client_id: payload.clientId || null,
+            phone_number: `55${cleanPhone}`,
+            message_text: payload.messageText.trim(),
+            scheduled_at: payload.scheduledAt.toISOString(),
+            status: 'pending',
+            created_by: user.data.user.id,
+          })
+          .select()
+
+        if (insertError) throw insertError
+
+        console.log('[useScheduledMessages.scheduleMessage] Agendada:', data?.[0]?.id)
+        setMessages([...messages, data[0]])
+        return true
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Erro ao agendar'
+        console.error('[useScheduledMessages.scheduleMessage] Erro:', errorMsg)
+        setError(errorMsg)
+        return false
+      } finally {
+        setLoading(false)
+      }
+    },
+    [organizationId, messages]
+  )
+
+  const cancelMessage = useCallback(
+    async (messageId: string): Promise<boolean> => {
+      console.log('[useScheduledMessages.cancelMessage] Cancelando:', messageId)
+      setLoading(true)
+      setError(null)
+
+      try {
+        const { error: updateError } = await supabase
+          .from('scheduled_messages')
+          .update({
+            status: 'cancelled',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', messageId)
+
+        if (updateError) throw updateError
+
+        setMessages(messages.filter(m => m.id !== messageId))
+        console.log('[useScheduledMessages.cancelMessage] Cancelada')
+        return true
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Erro ao cancelar'
+        console.error('[useScheduledMessages.cancelMessage] Erro:', errorMsg)
+        setError(errorMsg)
+        return false
+      } finally {
+        setLoading(false)
+      }
+    },
+    [messages]
+  )
+
+  // useEffect ÚLTIMO
   useEffect(() => {
-    if (!organizationId) return;
-    loadScheduledMessages();
-    const interval = setInterval(loadScheduledMessages, 30000);
-    return () => clearInterval(interval);
-  }, [organizationId]);
+    if (organizationId) {
+      loadMessages()
+      const interval = setInterval(loadMessages, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [organizationId, loadMessages])
 
   return {
     messages,
     loading,
+    error,
     scheduleMessage,
     cancelMessage,
-    updateMessage,
-    reload: loadScheduledMessages,
-    error,
-  };
-};
+    reload: loadMessages,
+  }
+}
