@@ -30,49 +30,43 @@ const maskToken = (token: string | null) => {
   return `${'*'.repeat(token.length - 8)}${token.slice(-8)}`;
 };
 
-export default function OrganizationSettingsPage() {
-  const { organizationId } = useOrganization();
-  const { role, loading: roleLoading } = useUserRole();
-  const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null);
-  const [lastExecution, setLastExecution] = useState<string | null>(null);
-  const [regenerating, setRegenerating] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+interface BotconversaSettingsProps {
+  organizationId: string | null;
+  organizationName?: string | null;
+  cronSecretToken?: string | null;
+}
+
+const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSettingsProps) => {
   const [botconversaKey, setBotconversaKey] = useState('');
   const [botconversaConfigId, setBotconversaConfigId] = useState<string | null>(null);
   const [botconversaSaving, setBotconversaSaving] = useState(false);
   const [botconversaStatus, setBotconversaStatus] = useState<'none' | 'valid' | 'invalid'>('none');
-  const [botconversaInvalidSource, setBotconversaInvalidSource] = useState<'previous' | 'current' | null>(null);
+  const [botconversaInvalidSource, setBotconversaInvalidSource] = useState<'previous' | 'current' | null>(
+    null
+  );
   const [botconversaLoading, setBotconversaLoading] = useState(false);
-  const [savedApiKey, setSavedApiKey] = useState('');
 
-  const canManage = role === 'admin' || role === 'superadmin';
-
-  const fetchCronData = async () => {
-    if (!organizationId) return;
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('organizations')
-        .select('*')
-        .eq('id', organizationId)
-        .maybeSingle();
-
-      if (error) throw error;
-      const org = data as any;
-      setToken(org?.cron_secret_token ?? null);
-      setLastExecution(org?.last_cron_execution ?? null);
-    } catch {
-      toast.error('Erro ao carregar configurações do cron');
-    } finally {
-      setLoading(false);
-    }
+  const getStatusMessage = (config?: { api_key?: string | null } | null) => {
+    const key = config?.api_key?.trim() ?? '';
+    if (!key) return 'Nenhuma chave configurada';
+    return 'Chave configurada';
   };
 
-  useEffect(() => {
-    if (!organizationId) return;
-    fetchCronData();
-  }, [organizationId]);
+  const validateBotconversaKey = async (apiKey: string) => {
+    try {
+      const response = await fetch('https://api.botconversa.com.br/v1/account/info', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.ok;
+    } catch {
+      return false;
+    }
+  };
 
   const fetchBotconversaConfig = async () => {
     if (!organizationId) return;
@@ -95,10 +89,7 @@ export default function OrganizationSettingsPage() {
 
       if (!apiKey) {
         if (data?.id) {
-          await supabase
-            .from('botconversa_config')
-            .delete()
-            .eq('id', data.id);
+          await supabase.from('botconversa_config').delete().eq('id', data.id);
         } else {
           await supabase
             .from('botconversa_config')
@@ -110,27 +101,21 @@ export default function OrganizationSettingsPage() {
         setBotconversaConfigId(null);
         setBotconversaStatus('none');
         setBotconversaInvalidSource(null);
-        setSavedApiKey('');
         return;
       }
 
       const isValid = await validateBotconversaKey(apiKey);
 
       if (!isValid) {
-        await supabase
-          .from('botconversa_config')
-          .delete()
-          .eq('id', data?.id ?? '');
+        await supabase.from('botconversa_config').delete().eq('id', data?.id ?? '');
         setBotconversaConfigId(null);
         setBotconversaStatus('invalid');
         setBotconversaInvalidSource('previous');
-        setSavedApiKey('');
         return;
       }
 
       setBotconversaStatus('valid');
       setBotconversaInvalidSource(null);
-      setSavedApiKey(apiKey);
       console.log('[BotconversaConfig] Status:', {
         hasConfig: !!data,
         status: getStatusMessage(data),
@@ -139,7 +124,6 @@ export default function OrganizationSettingsPage() {
       toast.error('Erro ao carregar configuração do Botconversa');
       setBotconversaStatus('none');
       setBotconversaInvalidSource(null);
-      setSavedApiKey('');
     } finally {
       setBotconversaLoading(false);
     }
@@ -149,53 +133,6 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     fetchBotconversaConfig();
   }, [organizationId]);
-
-  const maskedToken = useMemo(() => maskToken(token), [token]);
-
-  const getStatusMessage = (config?: { api_key?: string | null } | null) => {
-    const key = config?.api_key?.trim() ?? '';
-    if (!key) return 'Nenhuma chave configurada';
-    return 'Chave configurada';
-  };
-
-  const lastExecutionDate = useMemo(() => {
-    if (!lastExecution) return null;
-    const date = new Date(lastExecution);
-    return Number.isNaN(date.getTime()) ? null : date;
-  }, [lastExecution]);
-
-  const nextExecutionDate = useMemo(() => {
-    if (!lastExecutionDate) return null;
-    return new Date(lastExecutionDate.getTime() + CRON_SCHEDULE_MINUTES * 60 * 1000);
-  }, [lastExecutionDate]);
-
-  const isActive = useMemo(() => {
-    if (!lastExecutionDate) return false;
-    return Date.now() - lastExecutionDate.getTime() <= ACTIVE_WINDOW_MINUTES * 60 * 1000;
-  }, [lastExecutionDate]);
-
-  const cronJobUrl = useMemo(() => {
-    if (!token) return '';
-    const schedule = encodeURIComponent('*/5 * * * *');
-    const headers = encodeURIComponent(`Authorization: Bearer ${token}`);
-    return `https://cron-job.org/en/members/jobs/create?url=${encodeURIComponent(CRON_URL)}&schedule=${schedule}&headers=${headers}`;
-  }, [token]);
-
-  const validateBotconversaKey = async (apiKey: string) => {
-    try {
-      const response = await fetch('https://api.botconversa.com.br/v1/account/info', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      return response.ok;
-    } catch {
-      return false;
-    }
-  };
 
   const handleSaveBotconversaKey = async () => {
     if (!organizationId) return;
@@ -210,7 +147,6 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
-      setSavedApiKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -225,7 +161,6 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
-      setSavedApiKey('');
       toast.error('Chave API inválida');
       return;
     }
@@ -284,9 +219,6 @@ export default function OrganizationSettingsPage() {
         status: getStatusMessage(config),
       });
 
-      const persistedKey = config?.api_key?.trim() ?? '';
-      setSavedApiKey(persistedKey);
-
       setBotconversaStatus('valid');
       setBotconversaInvalidSource(null);
       setBotconversaKey('');
@@ -297,7 +229,6 @@ export default function OrganizationSettingsPage() {
         setBotconversaInvalidSource('current');
       }
       setBotconversaKey('');
-      setSavedApiKey('');
       toast.error('Chave API inválida');
     } finally {
       setBotconversaSaving(false);
@@ -306,13 +237,158 @@ export default function OrganizationSettingsPage() {
 
   const handleActivateAutomation = () => {
     console.log('[BotconversaSettings] handleActivateAutomation chamado');
-    if (!cronJobUrl) {
+    if (!cronSecretToken) {
       toast.error('Token do cron não encontrado');
       return;
     }
+    const token = cronSecretToken;
+    const schedule = encodeURIComponent('*/5 * * * *');
+    const headers = encodeURIComponent(`Authorization: Bearer ${token}`);
+    const cronJobUrl = `https://cron-job.org/en/members/jobs/create?url=${encodeURIComponent(CRON_URL)}&schedule=${schedule}&headers=${headers}`;
     window.open(cronJobUrl, '_blank', 'noopener,noreferrer');
     toast.success("Abrindo Cron-Job.org... Clique em 'Create' para ativar");
   };
+
+  if (!organizationId) {
+    console.log('[BotconversaSettings] organizationId ausente');
+    return <div>Erro: organizationId não fornecido</div>;
+  }
+
+  const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
+  const botconversaError = null;
+
+  console.log('[BotconversaSettings] Renderizando com:', {
+    organizationId,
+    botconversaConfigId,
+    showActivateButton,
+    loading: botconversaLoading,
+    error: botconversaError,
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Botconversa Configuration</CardTitle>
+        <CardDescription>Salve a chave API e ative a automação de envios</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="botconversa-api-key">Chave API do Botconversa</Label>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Input
+              id="botconversa-api-key"
+              type="password"
+              placeholder="Cole sua chave API aqui"
+              value={botconversaKey}
+              onChange={(event) => setBotconversaKey(event.target.value)}
+              className="font-mono"
+              disabled={botconversaLoading}
+            />
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+              <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
+                {botconversaSaving ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Salvando...
+                  </span>
+                ) : (
+                  'Salvar'
+                )}
+              </Button>
+              {showActivateButton && (
+                <Button
+                  onClick={handleActivateAutomation}
+                  className="bg-green-600 hover:bg-green-700 w-full"
+                  data-testid="activate-automation-button"
+                  disabled={botconversaLoading}
+                >
+                  Ativar Automação
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm">
+          <Badge
+            className={
+              botconversaStatus === 'valid'
+                ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                : botconversaStatus === 'invalid'
+                  ? 'bg-rose-100 text-rose-700 border-rose-200'
+                  : 'bg-amber-100 text-amber-700 border-amber-200'
+            }
+          >
+            {botconversaStatus === 'valid'
+              ? '✓ Chave configurada'
+              : botconversaStatus === 'invalid'
+                ? botconversaInvalidSource === 'previous'
+                  ? '✗ Chave anterior inválida'
+                  : '✗ Chave inválida'
+                : '⚠️ Nenhuma chave configurada'}
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function OrganizationSettingsPage() {
+  const { organization, organizationId } = useOrganization();
+  const { role, loading: roleLoading } = useUserRole();
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [lastExecution, setLastExecution] = useState<string | null>(null);
+  const [regenerating, setRegenerating] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const canManage = role === 'admin' || role === 'superadmin';
+
+  const fetchCronData = async () => {
+    if (!organizationId) return;
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('id', organizationId)
+        .maybeSingle();
+
+      if (error) throw error;
+      const org = data as any;
+      setToken(org?.cron_secret_token ?? null);
+      setLastExecution(org?.last_cron_execution ?? null);
+    } catch {
+      toast.error('Erro ao carregar configurações do cron');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!organizationId) return;
+    fetchCronData();
+  }, [organizationId]);
+
+  const maskedToken = useMemo(() => maskToken(token), [token]);
+
+  const lastExecutionDate = useMemo(() => {
+    if (!lastExecution) return null;
+    const date = new Date(lastExecution);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }, [lastExecution]);
+
+  const nextExecutionDate = useMemo(() => {
+    if (!lastExecutionDate) return null;
+    return new Date(lastExecutionDate.getTime() + CRON_SCHEDULE_MINUTES * 60 * 1000);
+  }, [lastExecutionDate]);
+
+  const isActive = useMemo(() => {
+    if (!lastExecutionDate) return false;
+    return Date.now() - lastExecutionDate.getTime() <= ACTIVE_WINDOW_MINUTES * 60 * 1000;
+  }, [lastExecutionDate]);
+
+
 
   const handleCopy = async () => {
     if (!token) return;
@@ -360,15 +436,6 @@ export default function OrganizationSettingsPage() {
   if (!organizationId) {
     return <div className="py-10 text-muted-foreground">Nenhuma organização selecionada.</div>;
   }
-
-  const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
-  const botconversaError = null;
-  console.log('[BotconversaSettings] Estado antes de renderizar:', {
-    configId: botconversaConfigId,
-    showButton: showActivateButton,
-    loading: botconversaLoading,
-    error: botconversaError,
-  });
 
   return (
     <div className="space-y-6">
@@ -455,68 +522,11 @@ export default function OrganizationSettingsPage() {
         </AlertDialog>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Botconversa Configuration</CardTitle>
-          <CardDescription>Salve a chave API e ative a automação de envios</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="botconversa-api-key">Chave API do Botconversa</Label>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Input
-                id="botconversa-api-key"
-                type="password"
-                placeholder="Cole sua chave API aqui"
-                value={botconversaKey}
-                onChange={(event) => setBotconversaKey(event.target.value)}
-                className="font-mono"
-                disabled={botconversaLoading}
-              />
-              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
-                  {botconversaSaving ? (
-                    <span className="inline-flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Salvando...
-                    </span>
-                  ) : (
-                    'Salvar'
-                  )}
-                </Button>
-                {/* TESTE: Botão sempre visível */}
-                <Button
-                  className="bg-emerald-600 text-white hover:bg-emerald-700"
-                  onClick={handleActivateAutomation}
-                  disabled={botconversaLoading}
-                >
-                  Ativar Automação
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <Badge
-              className={
-                botconversaStatus === 'valid'
-                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-                  : botconversaStatus === 'invalid'
-                    ? 'bg-rose-100 text-rose-700 border-rose-200'
-                    : 'bg-amber-100 text-amber-700 border-amber-200'
-              }
-            >
-              {botconversaStatus === 'valid'
-                ? '✓ Chave configurada'
-                : botconversaStatus === 'invalid'
-                  ? botconversaInvalidSource === 'previous'
-                    ? '✗ Chave anterior inválida'
-                    : '✗ Chave inválida'
-                  : '⚠️ Nenhuma chave configurada'}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
+      <BotconversaSettings
+        organizationId={organizationId}
+        organizationName={organization?.name ?? null}
+        cronSecretToken={token}
+      />
     </div>
   );
 }
