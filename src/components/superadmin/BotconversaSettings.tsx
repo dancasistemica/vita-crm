@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 import { useBotconversaConfig } from '@/hooks/useBotconversaConfig';
@@ -16,54 +16,50 @@ export const BotconversaSettings = ({
   organizationId,
   organizationName,
 }: BotconversaSettingsProps) => {
-  const { config, loading, error, saveConfig, deleteConfig } = useBotconversaConfig(organizationId);
+  console.log('[BotconversaSettings] Renderizando com org:', organizationId, organizationName);
 
+  const { config, loading, error, saveConfig, deleteConfig } = useBotconversaConfig(organizationId);
   const [apiKey, setApiKey] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setSaving] = useState(false);
 
   useEffect(() => {
+    console.log('[BotconversaSettings] Config carregada:', config?.id, 'Loading:', loading);
     if (config) {
       setApiKey(config.api_key || '');
       setIsEditing(false);
     }
   }, [config]);
 
-  const maskedKey = useMemo(() => {
-    const value = apiKey.trim();
-    if (!value) return '••••••••';
-    if (value.length <= 8) return '••••••••';
-    return `${value.slice(0, 6)}••••••••${value.slice(-4)}`;
-  }, [apiKey]);
-
   const handleSave = async () => {
+    console.log('[BotconversaSettings] Clicou em Salvar');
     setSaving(true);
     const success = await saveConfig(apiKey);
     setSaving(false);
 
     if (success) {
-      toast.success('Chave API salva com sucesso!');
+      toast.success('Chave salva com sucesso!');
       setIsEditing(false);
     } else {
-      toast.error(error || 'Erro ao salvar chave API');
+      toast.error(error || 'Erro ao salvar');
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm('Tem certeza que deseja remover a chave API do Botconversa?')) {
-      return;
-    }
+    console.log('[BotconversaSettings] Clicou em Deletar');
+    if (!confirm('Remover chave API?')) return;
 
     const success = await deleteConfig();
     if (success) {
       toast.success('Chave removida');
       setApiKey('');
     } else {
-      toast.error(error || 'Erro ao remover chave');
+      toast.error(error || 'Erro ao remover');
     }
   };
 
   if (loading && !config) {
+    console.log('[BotconversaSettings] Renderizando loading state');
     return (
       <div className="p-6 text-center text-muted-foreground">
         Carregando configurações...
@@ -71,11 +67,28 @@ export const BotconversaSettings = ({
     );
   }
 
+  if (error && !config) {
+    console.log('[BotconversaSettings] Renderizando error state:', error);
+    return (
+      <div className="p-6 border rounded-lg bg-card">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Erro ao carregar configurações: {error}
+          </AlertDescription>
+        </Alert>
+        <Button className="mt-4" onClick={() => window.location.reload()}>
+          Recarregar Página
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 rounded-lg border bg-card p-6">
+    <div className="space-y-6 p-6 border rounded-lg bg-card">
       <div>
-        <h3 className="text-lg font-semibold">🤖 Botconversa</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h3 className="font-semibold text-lg">🤖 Botconversa</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Organização: <strong>{organizationName}</strong>
         </p>
       </div>
@@ -84,33 +97,20 @@ export const BotconversaSettings = ({
         <div className="space-y-4">
           <div>
             <Label className="text-xs text-muted-foreground">Chave API</Label>
-            <div className="mt-2 break-all rounded bg-muted px-3 py-3 font-mono text-sm">
-              {maskedKey}
+            <div className="mt-2 p-3 bg-muted rounded font-mono text-sm break-all">
+              {apiKey.substring(0, 8)}...{apiKey.substring(apiKey.length - 8)}
             </div>
           </div>
 
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => setIsEditing(true)}
               disabled={isSaving}
-              className="min-h-[44px]"
             >
               Editar
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isSaving}
-              className="min-h-[44px]"
-            >
+            <Button variant="destructive" onClick={handleDelete} disabled={isSaving}>
               Remover
             </Button>
           </div>
@@ -122,29 +122,15 @@ export const BotconversaSettings = ({
             <Input
               id="api-key"
               type="password"
-              placeholder="Exemplo: 74d7277a-5a29-407c-8b89-f250acfa428a"
+              placeholder="74d7277a-5a29-407c-8b89-f250acfa428a"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              className="mt-2 h-11 font-mono text-sm"
+              className="mt-2 font-mono text-sm"
             />
-            <p className="mt-1 text-xs text-muted-foreground">
-              Cole sua chave API UUID do Botconversa
-            </p>
           </div>
 
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              onClick={handleSave}
-              disabled={isSaving || !apiKey.trim()}
-              className="min-h-[44px]"
-            >
+          <div className="flex gap-2">
+            <Button onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
               {isSaving ? 'Salvando...' : 'Salvar Chave'}
             </Button>
             {config && (
@@ -154,7 +140,6 @@ export const BotconversaSettings = ({
                   setIsEditing(false);
                   setApiKey(config.api_key || '');
                 }}
-                className="min-h-[44px]"
               >
                 Cancelar
               </Button>
@@ -162,15 +147,6 @@ export const BotconversaSettings = ({
           </div>
         </div>
       )}
-
-      <div className="rounded bg-blue-50 p-4 text-sm text-blue-900 dark:bg-blue-950/20 dark:text-blue-200">
-        <p className="mb-2 font-semibold">💡 Como usar:</p>
-        <ol className="list-inside list-decimal space-y-1">
-          <li>Cole sua chave API UUID do Botconversa acima</li>
-          <li>Clique em "Salvar Chave"</li>
-          <li>Pronto! Agora você pode agendar mensagens WhatsApp</li>
-        </ol>
-      </div>
     </div>
   );
 };

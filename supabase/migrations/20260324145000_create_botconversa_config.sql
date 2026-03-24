@@ -10,9 +10,23 @@ CREATE TABLE IF NOT EXISTS public.botconversa_config (
 
 ALTER TABLE public.botconversa_config ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Superadmins can manage botconversa_config"
-  ON public.botconversa_config FOR ALL TO authenticated
-  USING (public.is_superadmin(auth.uid()))
-  WITH CHECK (public.is_superadmin(auth.uid()));
+CREATE POLICY "superadmin_manage_botconversa_config"
+ON botconversa_config FOR ALL TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM organization_members
+    WHERE organization_members.organization_id = botconversa_config.organization_id
+    AND organization_members.user_id = auth.uid()
+    AND organization_members.role = 'admin'
+  )
+)
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM organization_members
+    WHERE organization_members.organization_id = botconversa_config.organization_id
+    AND organization_members.user_id = auth.uid()
+    AND organization_members.role = 'admin'
+  )
+);
 
 CREATE INDEX idx_botconversa_config_org_id ON public.botconversa_config(organization_id);
