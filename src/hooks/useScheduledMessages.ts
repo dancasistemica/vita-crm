@@ -24,10 +24,12 @@ const normalizePhone = (value: string) => value.replace(/\D/g, '');
 export const useScheduledMessages = (organizationId: string | null) => {
   const [messages, setMessages] = useState<ScheduledMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadScheduledMessages = async () => {
     if (!organizationId) return;
     setLoading(true);
+    setError(null);
     const { data, error } = await supabase
       .from('scheduled_messages')
       .select(`
@@ -36,10 +38,12 @@ export const useScheduledMessages = (organizationId: string | null) => {
         client:client_id(id, name, phone)
       `)
       .eq('organization_id', organizationId)
+      .neq('status', 'cancelled')
       .order('scheduled_at', { ascending: true });
 
     if (error) {
       console.error('[ScheduledMessages] Erro ao carregar:', error);
+      setError(error.message);
       setLoading(false);
       return;
     }
@@ -91,19 +95,31 @@ export const useScheduledMessages = (organizationId: string | null) => {
     return created;
   };
 
-  const cancelMessage = async (messageId: string) => {
-    const { error } = await supabase
-      .from('scheduled_messages')
-      .delete()
-      .eq('id', messageId);
+  const cancelMessage = async (messageId: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
 
-    if (error) {
-      console.error('[ScheduledMessages] Erro ao cancelar:', error);
-      throw error;
+    try {
+      console.log('[ScheduledMessages] Cancelando mensagem:', messageId);
+
+      const { error: updateError } = await supabase
+        .from('scheduled_messages')
+        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .eq('id', messageId);
+
+      if (updateError) throw updateError;
+
+      setMessages(prev => prev.filter(m => m.id !== messageId));
+      console.log('[ScheduledMessages] Mensagem cancelada e removida da lista');
+      return true;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao cancelar';
+      setError(errorMessage);
+      console.error('[ScheduledMessages] Erro ao cancelar:', errorMessage);
+      return false;
+    } finally {
+      setLoading(false);
     }
-
-    setMessages(prev => prev.filter(m => m.id !== messageId));
-    console.log('[ScheduledMessages] Mensagem cancelada:', messageId);
   };
 
   const updateMessage = async (messageId: string, updates: Partial<ScheduledMessage>) => {
@@ -137,5 +153,6 @@ export const useScheduledMessages = (organizationId: string | null) => {
     cancelMessage,
     updateMessage,
     reload: loadScheduledMessages,
+    error,
   };
 };
