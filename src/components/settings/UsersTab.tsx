@@ -149,6 +149,7 @@ export default function UsersTab() {
         .order("name");
       if (error) throw error;
       setOrgOptions(data || []);
+      console.log("[AddUserDialog] Organizações carregadas:", data?.length || 0);
     } catch (err) {
       console.error("[UsersTab] fetch orgs error:", err);
     } finally {
@@ -202,6 +203,7 @@ export default function UsersTab() {
       return;
     }
     if (!editing && isSuperadmin && !formOrgId) {
+      console.log("[AddUserDialog] Validação: organização obrigatória");
       toast.error("Selecione uma organização");
       return;
     }
@@ -491,9 +493,9 @@ export default function UsersTab() {
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
                       <Command>
-                        <CommandInput placeholder="Buscar organização..." />
+                        <CommandInput placeholder="Buscar organização..." className="h-10" />
                         <CommandList>
                           <CommandEmpty>
                             {orgsLoading ? "Carregando..." : "Nenhuma organização encontrada."}
@@ -505,8 +507,10 @@ export default function UsersTab() {
                                 value={`${org.name} ${org.cnpj || ""}`}
                                 onSelect={() => {
                                   setFormOrgId(org.id);
+                                  console.log("[AddUserDialog] Organização selecionada:", org.id, org.name);
                                   setOrgSelectOpen(false);
                                 }}
+                                className="min-h-[44px]"
                               >
                                 <Check className={cn("mr-2 h-4 w-4", formOrgId === org.id ? "opacity-100" : "opacity-0")} />
                                 <div className="flex flex-col">
@@ -522,6 +526,12 @@ export default function UsersTab() {
                       </Command>
                     </PopoverContent>
                   </Popover>
+                  {orgsLoading && (
+                    <div className="text-sm text-muted-foreground">Carregando organizações...</div>
+                  )}
+                  {!orgsLoading && orgOptions.length === 0 && (
+                    <div className="text-sm text-muted-foreground">Nenhuma organização disponível</div>
+                  )}
                 </div>
               )}
               <div className="space-y-1">
