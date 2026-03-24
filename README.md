@@ -36,6 +36,60 @@ npm i
 npm run dev
 ```
 
+## Setup do Projeto
+
+### Instalacao de dependencias
+```bash
+# Instala todas as dependencias (incluindo devDependencies para desenvolvimento e lint)
+npm install
+
+# Ou com yarn
+yarn install
+```
+
+### Lint
+```bash
+# Verificar erros de linting
+npm run lint
+
+# Corrigir erros automaticamente
+npm run lint:fix
+```
+
+### Ambiente de testes/CI
+Para executar `npm run lint` no ambiente de testes, as devDependencies precisam estar instaladas.
+Evite `NODE_ENV=production` e `npm install --omit=dev` em jobs de testes.
+
+```bash
+# Instala dependencias incluindo devDependencies
+npm install
+
+# Alternativa explicita para garantir devDependencies
+npm install --include=dev
+```
+
+Exemplo de GitHub Actions (`.github/workflows/lint.yml`):
+
+```yaml
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Install dependencies (incluindo devDependencies)
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint
+```
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).
