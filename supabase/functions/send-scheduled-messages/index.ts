@@ -12,11 +12,11 @@ const normalizePhone = (value: string) => value.replace(/\D/g, '');
 
 serve(async (req) => {
   try {
-    // VERIFICAÇÃO DE AUTENTICAÇÃO: Token secreto da organização
+    // STEP 1: Validar Authorization header
     const authHeader = req.headers.get('authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.error('[SendScheduledMessages] Erro: Header Authorization ausente ou inválido');
+      console.error('[SendScheduledMessages] 401: Missing or invalid Authorization header');
       return new Response(
         JSON.stringify({ error: 'Missing or invalid Authorization header' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -25,7 +25,7 @@ serve(async (req) => {
 
     const providedToken = authHeader.substring(7); // Remove "Bearer "
 
-    // Buscar organização pelo token secreto
+    // STEP 2: Buscar organização pelo token
     const { data: org, error: orgError } = await supabase
       .from('organizations')
       .select('id')
@@ -33,18 +33,17 @@ serve(async (req) => {
       .single();
 
     if (orgError || !org) {
-      console.error('[SendScheduledMessages] Erro: Token inválido ou organização não encontrada');
+      console.error('[SendScheduledMessages] 401: Invalid token or organization not found');
       return new Response(
         JSON.stringify({ error: 'Invalid token or organization not found' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`[SendScheduledMessages] Autenticação OK para organização: ${org.id}`);
+    console.log(`[SendScheduledMessages] ✓ Authenticated for organization: ${org.id}`);
 
+    // STEP 3: Buscar mensagens pendentes da organização
     const now = new Date().toISOString();
-    
-    // Buscar mensagens pendentes APENAS desta organização
     const { data: messages, error } = await supabase
       .from('scheduled_messages')
       .select('*')
@@ -54,8 +53,16 @@ serve(async (req) => {
 
     if (error) throw error;
 
-    console.log(`[SendScheduledMessages] Encontradas ${messages?.length || 0} mensagens para enviar`);
+    console.log(`[SendScheduledMessages] Found ${messages?.length || 0} messages to send for org ${org.id}`);
 
+    if (!messages || messages.length === 0) {
+      return new Response(
+        JSON.stringify({ message: 'No messages to process', processed: 0 }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // STEP 4: Processar cada mensagem
     const results = await Promise.allSettled(
       (messages || []).map(async (msg) => {
         try {
@@ -80,7 +87,7 @@ serve(async (req) => {
           const result = await response.json();
 
           if (!response.ok) {
-            throw new Error(result?.error?.message || 'Erro ao enviar mensagem');
+            throw new Error(result?.error?.message || 'Error sending message');
           }
 
           await supabase
@@ -91,7 +98,7 @@ serve(async (req) => {
             })
             .eq('id', msg.id);
 
-          console.log(`[SendScheduledMessages] Mensagem enviada: ${msg.id}`);
+          console.log(`[SendScheduledMessages] ✓ Sent: ${msg.id}`);
           return { success: true, messageId: msg.id };
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err);
@@ -103,7 +110,7 @@ serve(async (req) => {
             })
             .eq('id', msg.id);
 
-          console.error(`[SendScheduledMessages] Erro ao enviar ${msg.id}:`, message);
+          console.error(`[SendScheduledMessages] ✗ Error sending ${msg.id}: ${message}`);
           return { success: false, messageId: msg.id, error: message };
         }
       })
@@ -112,11 +119,13 @@ serve(async (req) => {
     const successful = results.filter(r => r.status === 'fulfilled' && r.value.success).length;
     const failed = results.filter(r => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success)).length;
 
+    console.log(`[SendScheduledMessages] ✓ Completed: ${successful} sent, ${failed} failed`);
+
     return new Response(
       JSON.stringify({
-        message: 'Processamento concluído',
+        message: 'Processing completed',
         organization_id: org.id,
-        total: messages?.length || 0,
+        total: messages.length,
         successful,
         failed,
       }),
@@ -124,7 +133,7 @@ serve(async (req) => {
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error('[SendScheduledMessages] Erro geral:', message);
+    console.error('[SendScheduledMessages] ✗ General error:', message);
     return new Response(
       JSON.stringify({ error: message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
