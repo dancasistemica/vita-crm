@@ -200,6 +200,10 @@ export default function OrganizationSettingsPage() {
   const handleSaveBotconversaKey = async () => {
     if (!organizationId) return;
     const trimmedKey = botconversaKey.trim();
+    console.log('[BotconversaSettings] Salvando chave:', {
+      hasKey: !!trimmedKey,
+      keyLength: trimmedKey.length,
+    });
     if (!trimmedKey) {
       if (botconversaStatus !== 'valid') {
         setBotconversaStatus('invalid');
@@ -301,6 +305,7 @@ export default function OrganizationSettingsPage() {
   };
 
   const handleActivateAutomation = () => {
+    console.log('[BotconversaSettings] handleActivateAutomation chamado');
     if (!cronJobUrl) {
       toast.error('Token do cron não encontrado');
       return;
@@ -356,7 +361,14 @@ export default function OrganizationSettingsPage() {
     return <div className="py-10 text-muted-foreground">Nenhuma organização selecionada.</div>;
   }
 
-  const showActivateButton = !!savedApiKey && savedApiKey.length > 0;
+  const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
+  const botconversaError = null;
+  console.log('[BotconversaSettings] Estado antes de renderizar:', {
+    configId: botconversaConfigId,
+    showButton: showActivateButton,
+    loading: botconversaLoading,
+    error: botconversaError,
+  });
 
   return (
     <div className="space-y-6">
@@ -472,14 +484,14 @@ export default function OrganizationSettingsPage() {
                     'Salvar'
                   )}
                 </Button>
-                {showActivateButton && (
-                  <Button
-                    className="bg-emerald-600 text-white hover:bg-emerald-700"
-                    onClick={handleActivateAutomation}
-                  >
-                    Ativar Automação
-                  </Button>
-                )}
+                {/* TESTE: Botão sempre visível */}
+                <Button
+                  className="bg-emerald-600 text-white hover:bg-emerald-700"
+                  onClick={handleActivateAutomation}
+                  disabled={botconversaLoading}
+                >
+                  Ativar Automação
+                </Button>
               </div>
             </div>
           </div>
