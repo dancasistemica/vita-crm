@@ -14,8 +14,12 @@ export const useBotconversaConfig = (organizationId: string) => {
   const [error, setError] = useState<string | null>(null);
 
   const loadConfig = async () => {
+    console.log('[BotconversaConfig.loadConfig] INICIANDO');
+    console.log('[BotconversaConfig.loadConfig] organizationId:', organizationId);
+
     if (!organizationId) {
-      console.log('[BotconversaConfig] organizationId não fornecido');
+      console.log('[BotconversaConfig.loadConfig] organizationId vazio, abortando');
+      setLoading(false);
       return;
     }
 
@@ -23,44 +27,58 @@ export const useBotconversaConfig = (organizationId: string) => {
     setError(null);
 
     try {
-      console.log('[BotconversaConfig] Carregando config para org:', organizationId);
+      console.log('[BotconversaConfig.loadConfig] Iniciando query...');
 
-      const { data, error: queryError } = await supabase
+      const { data, error: queryError, status } = await supabase
         .from('botconversa_config')
         .select('*')
         .eq('organization_id', organizationId)
         .single();
 
-      console.log('[BotconversaConfig] Resposta da query:', { data, error: queryError });
+      console.log('[BotconversaConfig.loadConfig] Query retornou:', {
+        status,
+        dataExists: !!data,
+        errorCode: queryError?.code,
+        errorMessage: queryError?.message,
+        errorDetails: queryError?.details,
+      });
 
       if (queryError) {
         if (queryError.code === 'PGRST116') {
-          console.log('[BotconversaConfig] Nenhuma config encontrada (esperado)');
+          console.log('[BotconversaConfig.loadConfig] Nenhuma config encontrada (PGRST116 - esperado)');
           setConfig(null);
           setLoading(false);
           return;
         }
 
-        console.error(
-          '[BotconversaConfig] Erro na query:',
-          queryError.code,
-          queryError.message,
-        );
-        throw queryError;
+        console.error('[BotconversaConfig.loadConfig] Erro na query:', {
+          code: queryError.code,
+          message: queryError.message,
+          details: queryError.details,
+          status: queryError.status,
+        });
+        throw new Error(`Query error [${queryError.code}]: ${queryError.message}`);
       }
 
-      console.log('[BotconversaConfig] Config carregada:', data?.id);
+      console.log('[BotconversaConfig.loadConfig] Dados carregados com sucesso:', data?.id);
       setConfig(data || null);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-      console.error('[BotconversaConfig] Erro ao carregar:', errorMessage, err);
-      setError(errorMessage);
+      const errorObj = err instanceof Error ? err : new Error(String(err));
+      console.error('[BotconversaConfig.loadConfig] ERRO CAPTURADO:', {
+        message: errorObj.message,
+        stack: errorObj.stack,
+        type: errorObj.constructor.name,
+      });
+      setError(errorObj.message);
     } finally {
       setLoading(false);
+      console.log('[BotconversaConfig.loadConfig] FINALIZADO');
     }
   };
 
   const saveConfig = async (apiKey: string): Promise<boolean> => {
+    console.log('[BotconversaConfig.saveConfig] INICIANDO');
+
     setLoading(true);
     setError(null);
 
@@ -69,17 +87,19 @@ export const useBotconversaConfig = (organizationId: string) => {
         throw new Error('Chave API obrigatória');
       }
 
-      console.log('[BotconversaConfig] Salvando chave para org:', organizationId);
+      console.log('[BotconversaConfig.saveConfig] Validações OK');
 
       const user = await supabase.auth.getUser();
+      console.log('[BotconversaConfig.saveConfig] User:', user.data.user?.id);
+
       if (!user.data.user?.id) {
         throw new Error('Usuário não autenticado');
       }
 
-      let result: BotconversaConfig | null = null;
+      let result: BotconversaConfig | undefined;
 
       if (config?.id) {
-        console.log('[BotconversaConfig] Atualizando config existente:', config.id);
+        console.log('[BotconversaConfig.saveConfig] Atualizando config:', config.id);
 
         const { data, error: updateError } = await supabase
           .from('botconversa_config')
@@ -90,12 +110,16 @@ export const useBotconversaConfig = (organizationId: string) => {
           .eq('id', config.id)
           .select();
 
-        console.log('[BotconversaConfig] Resposta update:', { data, error: updateError });
+        console.log('[BotconversaConfig.saveConfig] Update response:', {
+          success: !updateError,
+          errorCode: updateError?.code,
+          errorMessage: updateError?.message,
+        });
 
         if (updateError) throw updateError;
-        result = data?.[0] || null;
+        result = data?.[0];
       } else {
-        console.log('[BotconversaConfig] Criando nova config');
+        console.log('[BotconversaConfig.saveConfig] Criando nova config');
 
         const { data, error: insertError } = await supabase
           .from('botconversa_config')
@@ -106,19 +130,26 @@ export const useBotconversaConfig = (organizationId: string) => {
           })
           .select();
 
-        console.log('[BotconversaConfig] Resposta insert:', { data, error: insertError });
+        console.log('[BotconversaConfig.saveConfig] Insert response:', {
+          success: !insertError,
+          errorCode: insertError?.code,
+          errorMessage: insertError?.message,
+        });
 
         if (insertError) throw insertError;
-        result = data?.[0] || null;
+        result = data?.[0];
       }
 
-      console.log('[BotconversaConfig] Salvo com sucesso:', result?.id);
-      setConfig(result);
+      console.log('[BotconversaConfig.saveConfig] Salvo com sucesso:', result?.id);
+      setConfig(result || null);
       return true;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erro ao salvar';
-      console.error('[BotconversaConfig] Erro:', msg, err);
-      setError(msg);
+      const errorObj = err instanceof Error ? err : new Error(String(err));
+      console.error('[BotconversaConfig.saveConfig] ERRO:', {
+        message: errorObj.message,
+        stack: errorObj.stack,
+      });
+      setError(errorObj.message);
       return false;
     } finally {
       setLoading(false);
@@ -126,27 +157,33 @@ export const useBotconversaConfig = (organizationId: string) => {
   };
 
   const deleteConfig = async (): Promise<boolean> => {
-    if (!config?.id) return false;
+    console.log('[BotconversaConfig.deleteConfig] INICIANDO');
+
+    if (!config?.id) {
+      console.log('[BotconversaConfig.deleteConfig] Sem config para deletar');
+      return false;
+    }
 
     setLoading(true);
 
     try {
-      console.log('[BotconversaConfig] Deletando:', config.id);
-
       const { error: deleteError } = await supabase
         .from('botconversa_config')
         .delete()
         .eq('id', config.id);
 
-      console.log('[BotconversaConfig] Resposta delete:', { error: deleteError });
+      console.log('[BotconversaConfig.deleteConfig] Delete response:', {
+        success: !deleteError,
+        errorCode: deleteError?.code,
+      });
 
       if (deleteError) throw deleteError;
       setConfig(null);
       return true;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erro ao deletar';
-      console.error('[BotconversaConfig] Erro ao deletar:', msg);
-      setError(msg);
+      const errorObj = err instanceof Error ? err : new Error(String(err));
+      console.error('[BotconversaConfig.deleteConfig] ERRO:', errorObj.message);
+      setError(errorObj.message);
       return false;
     } finally {
       setLoading(false);
@@ -154,7 +191,7 @@ export const useBotconversaConfig = (organizationId: string) => {
   };
 
   useEffect(() => {
-    console.log('[BotconversaConfig] useEffect: organizationId =', organizationId);
+    console.log('[BotconversaConfig] useEffect disparado, organizationId:', organizationId);
     if (organizationId) {
       loadConfig();
     }

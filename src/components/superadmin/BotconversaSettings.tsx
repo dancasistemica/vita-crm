@@ -16,7 +16,7 @@ export const BotconversaSettings = ({
   organizationId,
   organizationName,
 }: BotconversaSettingsProps) => {
-  console.log('[BotconversaSettings] Renderizando com org:', organizationId, organizationName);
+  console.log('[BotconversaSettings] Renderizando:', { organizationId, organizationName });
 
   const { config, loading, error, saveConfig, deleteConfig } = useBotconversaConfig(organizationId);
   const [apiKey, setApiKey] = useState('');
@@ -24,15 +24,15 @@ export const BotconversaSettings = ({
   const [isSaving, setSaving] = useState(false);
 
   useEffect(() => {
-    console.log('[BotconversaSettings] Config carregada:', config?.id, 'Loading:', loading);
+    console.log('[BotconversaSettings] Config mudou:', { configId: config?.id, loading, error });
     if (config) {
       setApiKey(config.api_key || '');
       setIsEditing(false);
     }
-  }, [config]);
+  }, [config, loading]);
 
   const handleSave = async () => {
-    console.log('[BotconversaSettings] Clicou em Salvar');
+    console.log('[BotconversaSettings] handleSave chamado');
     setSaving(true);
     const success = await saveConfig(apiKey);
     setSaving(false);
@@ -46,7 +46,6 @@ export const BotconversaSettings = ({
   };
 
   const handleDelete = async () => {
-    console.log('[BotconversaSettings] Clicou em Deletar');
     if (!confirm('Remover chave API?')) return;
 
     const success = await deleteConfig();
@@ -70,14 +69,28 @@ export const BotconversaSettings = ({
   if (error && !config) {
     console.log('[BotconversaSettings] Renderizando error state:', error);
     return (
-      <div className="p-6 border rounded-lg bg-card">
+      <div className="space-y-6 p-6 border rounded-lg bg-card">
+        <div>
+          <h3 className="font-semibold text-lg">🤖 Botconversa</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Organização: <strong>{organizationName}</strong>
+          </p>
+        </div>
+
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Erro ao carregar configurações: {error}
+            <p className="font-semibold mb-2">Erro ao carregar configurações:</p>
+            <p className="text-sm font-mono bg-destructive/10 p-2 rounded mb-2">
+              {error}
+            </p>
+            <p className="text-xs text-muted-foreground mb-3">
+              Abra o console (F12) e procure por logs [BotconversaConfig] para mais detalhes.
+            </p>
           </AlertDescription>
         </Alert>
-        <Button className="mt-4" onClick={() => window.location.reload()}>
+
+        <Button onClick={() => window.location.reload()}>
           Recarregar Página
         </Button>
       </div>
