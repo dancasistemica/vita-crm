@@ -477,11 +477,11 @@ export default function AdminUsersPage() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={(o) => { setEditOpen(o); if (!o) setEditUser(null); }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
+        <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
+          <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
             <DialogTitle>Editar Usuário</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="p-6 space-y-4">
             <div className="space-y-1">
               <Label>Nome</Label>
               <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
@@ -566,7 +566,7 @@ export default function AdminUsersPage() {
               </div>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
             <Button variant="outline" onClick={() => setEditOpen(false)}>Cancelar</Button>
             <Button onClick={handleEditSave} disabled={saving}>
               {saving && <Loader2 className="h-4 w-4 animate-spin mr-1" />}

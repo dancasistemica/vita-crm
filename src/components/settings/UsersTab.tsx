@@ -447,11 +447,11 @@ export default function UsersTab() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
+          <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
+            <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
               <DialogTitle>{editing ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
+            <div className="p-6 space-y-4">
               <div className="space-y-1">
                 <Label>Nome *</Label>
                 <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Nome completo" />
@@ -546,7 +546,7 @@ export default function UsersTab() {
                 </Select>
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
               <Button variant="outline" onClick={() => setFormOpen(false)}>Cancelar</Button>
               <Button onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}

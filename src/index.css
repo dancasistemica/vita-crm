@@ -112,6 +112,9 @@
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
   .interest-bar {
     @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-lg;
   }
@@ -143,4 +146,3 @@
     }
   }
 }
-
