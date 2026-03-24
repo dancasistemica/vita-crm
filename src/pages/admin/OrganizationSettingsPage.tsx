@@ -236,13 +236,18 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
   };
 
   const handleActivateAutomation = () => {
+    console.log('[BotconversaSettings] handleActivateAutomation chamado');
+    console.log('[BotconversaSettings] cron_secret_token:', cronSecretToken);
+
     if (!cronSecretToken) {
-      console.error('[BotconversaSettings] Erro: cron_secret_token não encontrado');
+      console.error('[BotconversaSettings] ERRO: cron_secret_token não encontrado');
+      alert('Erro: Token não encontrado. Recarregue a página.');
       return;
     }
 
     const url = `https://cron-job.org/en/members/jobs/create?url=${CRON_URL}&schedule=*/5 * * * *&headers=Authorization: Bearer ${cronSecretToken}`;
 
+    console.log('[BotconversaSettings] Abrindo URL:', url.substring(0, 100) + '...');
     window.open(url, '_blank');
   };
 
@@ -254,21 +259,20 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
   const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
   const botconversaError = null;
 
-  console.log('[BotconversaSettings] FINAL STATE:', {
-    botconversaConfigId,
-    showActivateButton,
-    cron_secret_token: cronSecretToken ? 'EXISTS' : 'MISSING',
-    loading: botconversaLoading,
-    error: botconversaError,
-  });
-
-  console.log('[BotconversaSettings] Renderizando com:', {
+  // DEBUG: Estado final antes de renderizar
+  const debugState = {
     organizationId,
     botconversaConfigId,
     showActivateButton,
     loading: botconversaLoading,
     error: botconversaError,
-  });
+    cron_secret_token: cronSecretToken ? 'EXISTS' : 'MISSING',
+    timestamp: new Date().toLocaleTimeString(),
+  };
+
+  console.log('[BotconversaSettings] ESTADO FINAL:', debugState);
+  console.log('[BotconversaSettings] showActivateButton é:', showActivateButton);
+  console.log('[BotconversaSettings] botconversaConfigId é:', botconversaConfigId);
 
   return (
     <Card>
@@ -300,19 +304,19 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                   'Salvar'
                 )}
               </Button>
-              {showActivateButton && (
-                <Button
-                  onClick={handleActivateAutomation}
-                  className="bg-green-600 hover:bg-green-700 w-full"
-                  data-testid="activate-automation-button"
-                  disabled={botconversaLoading}
-                >
-                  Ativar Automação
-                </Button>
-              )}
-              {!showActivateButton && botconversaConfigId === undefined && (
-                <div className="text-sm text-amber-600 p-2 bg-amber-50 rounded">
-                  ⚠️ Debug: configId não está definido
+              {/* TESTE: Botão SEM condição */}
+              <Button
+                onClick={handleActivateAutomation}
+                className="bg-green-600 hover:bg-green-700 w-full mt-4"
+                data-testid="activate-automation-button"
+              >
+                Ativar Automação (TESTE)
+              </Button>
+              {!showActivateButton && (
+                <div className="text-sm text-amber-600 p-3 bg-amber-50 rounded border border-amber-200">
+                  ⚠️ Debug: showActivateButton = {String(showActivateButton)}
+                  <br />
+                  configId = {botconversaConfigId || 'undefined'}
                 </div>
               )}
             </div>
