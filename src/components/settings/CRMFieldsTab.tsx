@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { useDataAccess } from "@/hooks/useDataAccess";
+import { useOrganization } from "@/contexts/OrganizationContext";
+import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +51,13 @@ const DEFAULT_FIELDS: CRMFieldDef[] = [
 export default function CRMFieldsTab() {
   const { tags, addTag, updateTag, removeTag } = useCRMStore();
   const dataAccess = useDataAccess();
+  const { organizationId } = useOrganization();
+
+  const originValidation = useValidateUniqueField('lead_origins', organizationId, 'name');
+  const levelValidation = useValidateUniqueField('interest_levels', organizationId, 'value');
+  const stageValidation = useValidateUniqueField('pipeline_stages', organizationId, 'name');
+
+  const getErrorCode = (err: unknown) => (err as { code?: string })?.code;
 
   // ── Tab ordering state ──
   const [orderedFields, setOrderedFields] = useState<CRMFieldDef[]>(DEFAULT_FIELDS);
@@ -167,7 +176,11 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadOrigins(); }, [loadOrigins]);
 
   const handleAddOrigin = async () => {
-    if (!newOrigin.trim()) return;
+    const validation = originValidation.validate(newOrigin);
+    if (!validation.valid) {
+      toast.error(validation.error || 'Valor inválido');
+      return;
+    }
     if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setOriginsSaving(true);
@@ -178,7 +191,11 @@ export default function CRMFieldsTab() {
       await loadOrigins();
     } catch (err) {
       console.error('[CRMFieldsTab] handleAddOrigin error:', err);
-      toast.error("Erro ao adicionar origem");
+      if (getErrorCode(err) === '23505') {
+        toast.error('Este valor já existe. Escolha outro.');
+      } else {
+        toast.error("Erro ao adicionar origem");
+      }
     } finally {
       setOriginsSaving(false);
     }
@@ -252,7 +269,11 @@ export default function CRMFieldsTab() {
   useEffect(() => { loadLevels(); }, [loadLevels]);
 
   const handleAddLevel = async () => {
-    if (!newLevel.value.trim() || !newLevel.label.trim()) return;
+    const validation = levelValidation.validate(newLevel.value);
+    if (!validation.valid || !newLevel.label.trim()) {
+      toast.error(validation.error || 'Campo obrigatório');
+      return;
+    }
     if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setLevelsSaving(true);
@@ -263,7 +284,11 @@ export default function CRMFieldsTab() {
       await loadLevels();
     } catch (err) {
       console.error('[CRMFieldsTab] handleAddLevel error:', err);
-      toast.error("Erro ao adicionar nível");
+      if (getErrorCode(err) === '23505') {
+        toast.error('Este valor já existe. Escolha outro.');
+      } else {
+        toast.error("Erro ao adicionar nível");
+      }
     } finally {
       setLevelsSaving(false);
     }
@@ -373,7 +398,11 @@ export default function CRMFieldsTab() {
   }, [dataAccess, loadOrigins, loadLevels, loadStages]);
 
   const handleAddStage = async () => {
-    if (!newStage.trim()) return;
+    const validation = stageValidation.validate(newStage);
+    if (!validation.valid) {
+      toast.error(validation.error || 'Valor inválido');
+      return;
+    }
     if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setStagesSaving(true);
@@ -384,7 +413,11 @@ export default function CRMFieldsTab() {
       await loadStages();
     } catch (err) {
       console.error('[CRMFieldsTab] handleAddStage error:', err);
-      toast.error("Erro ao adicionar etapa");
+      if (getErrorCode(err) === '23505') {
+        toast.error('Este valor já existe. Escolha outro.');
+      } else {
+        toast.error("Erro ao adicionar etapa");
+      }
     } finally {
       setStagesSaving(false);
     }

@@ -29,6 +29,7 @@ export interface ImportModalState {
   dateConversions: number;
   loading: boolean;
   error: string | null;
+  invalidRows: { rowIndex: number; errors: string[] }[] | null;
 }
 
 const INITIAL_STATE: ImportModalState = {
@@ -49,6 +50,7 @@ const INITIAL_STATE: ImportModalState = {
   dateConversions: 0,
   loading: false,
   error: null,
+  invalidRows: null,
 };
 
 export function useImportModal() {

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Check, X, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -90,18 +91,24 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
   const [dbOrigins, setDbOrigins] = useState<string[]>([]);
   const [dbInterestLevels, setDbInterestLevels] = useState<{ value: string }[]>([]);
   const [dbTags, setDbTags] = useState<{ name: string }[]>([]);
+  const [dbStages, setDbStages] = useState<{ id: string; name: string }[]>([]);
+  const [enumLoading, setEnumLoading] = useState(true);
 
   useEffect(() => {
     if (!organizationId) return;
     const fetch = async () => {
-      const [originsRes, levelsRes, tagsRes] = await Promise.all([
+      setEnumLoading(true);
+      const [originsRes, levelsRes, tagsRes, stagesRes] = await Promise.all([
         supabase.from('lead_origins').select('name').eq('organization_id', organizationId),
         supabase.from('interest_levels').select('value').eq('organization_id', organizationId),
         supabase.from('tags').select('name').eq('organization_id', organizationId),
+        supabase.from('pipeline_stages').select('id, name').eq('organization_id', organizationId),
       ]);
       setDbOrigins((originsRes.data || []).map(o => o.name));
       setDbInterestLevels(levelsRes.data || []);
       setDbTags(tagsRes.data || []);
+      setDbStages(stagesRes.data || []);
+      setEnumLoading(false);
     };
     fetch();
   }, [organizationId]);
@@ -124,9 +131,75 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       // Re-run duplicate detection with full lead objects
       const { duplicates } = detectDuplicates(results, mappedLeads);
 
-      update({ validationResults: results, newOptions: opts, duplicates });
+      update({
+        validationResults: results,
+        newOptions: { newOrigins: [], newInterestLevels: [], newTags: opts.newTags },
+        duplicates,
+      });
     }
   }, [existingLeads, dbOrigins, dbInterestLevels, dbTags]);
+
+  useEffect(() => {
+    if (state.validationResults.length === 0 || enumLoading) return;
+
+    const originNames = new Set(dbOrigins.map(o => o.toLowerCase()));
+    const levelValues = new Set(dbInterestLevels.map(l => l.value.toLowerCase()));
+    const stageIds = new Set(dbStages.map(s => s.id.toLowerCase()));
+    const stageNames = new Set(dbStages.map(s => s.name.toLowerCase()));
+
+    const errorRows: { rowIndex: number; errors: string[] }[] = [];
+    const updatedResults = state.validationResults.map(r => {
+      if (r.status !== 'success' || !r.data) return r;
+      const errors: string[] = [];
+
+      if (r.data.origin && !originNames.has(r.data.origin.toLowerCase())) {
+        errors.push(`Origem "${r.data.origin}" não existe`);
+      }
+
+      if (r.data.interestLevel && !levelValues.has(r.data.interestLevel.toLowerCase())) {
+        errors.push(`Nível de interesse "${r.data.interestLevel}" não existe`);
+      }
+
+      if (
+        r.data.pipelineStage &&
+        !stageIds.has(r.data.pipelineStage.toLowerCase()) &&
+        !stageNames.has(r.data.pipelineStage.toLowerCase())
+      ) {
+        errors.push(`Etapa "${r.data.pipelineStage}" não existe`);
+      }
+
+      if (errors.length > 0) {
+        errorRows.push({ rowIndex: r.row, errors });
+        return { ...r, status: 'error', message: errors.join(', ') };
+      }
+
+      return r;
+    });
+
+    const resultsChanged = updatedResults.some((r, i) => {
+      const prev = state.validationResults[i];
+      return r.status !== prev?.status || r.message !== prev?.message;
+    });
+
+    const nextInvalidRows = errorRows.length > 0 ? errorRows : null;
+    const invalidRowsChanged = JSON.stringify(nextInvalidRows) !== JSON.stringify(state.invalidRows || null);
+
+    if (resultsChanged || invalidRowsChanged) {
+      if (errorRows.length > 0) {
+        console.error('[ImportValidation] Erros encontrados:', errorRows);
+      } else {
+        console.log('[ImportValidation] Todos os valores são válidos');
+      }
+
+      update({
+        validationResults: updatedResults,
+        invalidRows: nextInvalidRows,
+        error: errorRows.length > 0
+          ? `${errorRows.length} linhas com valores inválidos. Verifique os dados.`
+          : null,
+      });
+    }
+  }, [state.validationResults, dbOrigins, dbInterestLevels, dbStages, enumLoading, state.invalidRows, update]);
 
   const successCount = useMemo(() => state.validationResults.filter(r => r.status === 'success').length - state.duplicates.length, [state.validationResults, state.duplicates]);
   const errorCount = useMemo(() => state.validationResults.filter(r => r.status === 'error').length, [state.validationResults]);
@@ -144,6 +217,13 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       return;
     }
 
+    if (state.invalidRows && state.invalidRows.length > 0) {
+      update({
+        error: `${state.invalidRows.length} linhas com valores inválidos. Verifique os dados.`,
+      });
+      return;
+    }
+
     update({
       importing: true,
       importProgress: 0,
@@ -152,17 +232,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       dateConversions: state.dateConversions,
     });
 
-    // Auto-create missing options in DB
-    for (const origin of state.newOptions.newOrigins) {
-      await supabase.from('lead_origins').insert({ name: origin, organization_id: organizationId });
-    }
-    for (const level of state.newOptions.newInterestLevels) {
-      await supabase.from('interest_levels').insert({
-        value: level.toLowerCase(),
-        label: level,
-        organization_id: organizationId,
-      });
-    }
+    // Auto-create missing tags in DB
     for (const tagName of state.newOptions.newTags) {
       await supabase.from('tags').insert({
         name: tagName,
@@ -274,22 +344,32 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
         {warningCount > 0 && <Badge variant="secondary" className="bg-accent/20 text-accent">{warningCount} avisos</Badge>}
       </div>
 
+      {state.error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erro na Importação</AlertTitle>
+          <AlertDescription>
+            {state.error}
+            {state.invalidRows && (
+              <div className="mt-2 text-sm">
+                <p>Linhas com problemas:</p>
+                <ul className="list-disc pl-5">
+                  {state.invalidRows.slice(0, 5).map(row => (
+                    <li key={row.rowIndex}>
+                      Linha {row.rowIndex}: {row.errors.join(', ')}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* New options */}
-      {(state.newOptions.newOrigins.length > 0 || state.newOptions.newInterestLevels.length > 0 || state.newOptions.newTags.length > 0) && (
+      {state.newOptions.newTags.length > 0 && (
         <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1.5">
-          <p className="text-xs font-semibold text-foreground">Novos registros a criar automaticamente:</p>
-          {state.newOptions.newOrigins.length > 0 && (
-            <div className="flex flex-wrap gap-1 items-center">
-              <span className="text-[11px] text-muted-foreground">Origens:</span>
-              {state.newOptions.newOrigins.map(o => <Badge key={o} variant="outline" className="text-[10px]">{o}</Badge>)}
-            </div>
-          )}
-          {state.newOptions.newInterestLevels.length > 0 && (
-            <div className="flex flex-wrap gap-1 items-center">
-              <span className="text-[11px] text-muted-foreground">Níveis:</span>
-              {state.newOptions.newInterestLevels.map(l => <Badge key={l} variant="outline" className="text-[10px]">{l}</Badge>)}
-            </div>
-          )}
+          <p className="text-xs font-semibold text-foreground">Novas tags a criar automaticamente:</p>
           {state.newOptions.newTags.length > 0 && (
             <div className="flex flex-wrap gap-1 items-center">
               <span className="text-[11px] text-muted-foreground">Tags:</span>
