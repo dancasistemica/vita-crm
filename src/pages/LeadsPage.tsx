@@ -103,20 +103,42 @@ export default function LeadsPage() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+
+      if (filterRef.current && !filterRef.current.contains(target)) {
         setOpenOrigin(false);
         setOpenInterest(false);
         setOpenStage(false);
         setOpenTags(false);
-        console.log('[LeadsFilters] Dropdowns fechados (clique fora)');
+        console.log('[LeadsFilters] Dropdowns fechados (clique fora detectado)');
       }
     };
 
     if (openOrigin || openInterest || openStage || openTags) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 0);
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
     }
   }, [openOrigin, openInterest, openStage, openTags]);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenOrigin(false);
+        setOpenInterest(false);
+        setOpenStage(false);
+        setOpenTags(false);
+        console.log('[LeadsFilters] Dropdowns fechados (ESC pressionado)');
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
 
   const closeDialog = () => {
     setEditingLead(null);
@@ -452,19 +474,9 @@ export default function LeadsPage() {
 
               {openTags && (
                 <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
-                  <label className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-200 font-semibold bg-gray-50">
-                    <input
-                      type="checkbox"
-                      checked={selectedTags.length === 0}
-                      onChange={() => {
-                        setSelectedTags([]);
-                        resetPage();
-                        console.log('[LeadsFilters] Tags selecionadas: []');
-                      }}
-                      className="w-4 h-4 rounded border-gray-300 text-orange-600"
-                    />
-                    <span className="text-sm text-gray-700">Todas as tags</span>
-                  </label>
+                  <div className="px-4 py-2 border-b border-gray-200 font-semibold bg-gray-50 text-sm text-gray-600">
+                    Selecione as tags desejadas
+                  </div>
                   {tags.map((tag) => (
                     <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
