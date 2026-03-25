@@ -28,6 +28,8 @@ export default function LeadsPage() {
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
 
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedStages, setSelectedStages] = useState<string[]>([]);
@@ -87,8 +89,49 @@ export default function LeadsPage() {
     return getFilteredLeads();
   }, [leads, search, selectedOrigins, selectedInterests, selectedStages, selectedTags]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+  const sortedLeads = useMemo(() => {
+    const sorted = [...filtered];
+
+    if (sortBy === 'date') {
+      sorted.sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+      });
+    } else if (sortBy === 'name') {
+      sorted.sort((a, b) => {
+        const nameA = (a.name || '').toLowerCase();
+        const nameB = (b.name || '').toLowerCase();
+        return sortOrder === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      });
+    }
+
+    console.log(`[LeadsList] Leads ordenados por: ${sortBy} (${sortOrder})`);
+    return sorted;
+  }, [filtered, sortBy, sortOrder]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedLeads.length / perPage));
+  const paginated = sortedLeads.slice((page - 1) * perPage, page * perPage);
+
+  useEffect(() => {
+    localStorage.setItem('leadsSortBy', sortBy);
+    localStorage.setItem('leadsSortOrder', sortOrder);
+  }, [sortBy, sortOrder]);
+
+  useEffect(() => {
+    const savedSort = localStorage.getItem('leadsSortBy');
+    const savedOrder = localStorage.getItem('leadsSortOrder');
+
+    if (savedSort === 'date' || savedSort === 'name') {
+      setSortBy(savedSort);
+    }
+
+    if (savedOrder === 'desc' || savedOrder === 'asc') {
+      setSortOrder(savedOrder);
+    }
+  }, []);
 
   useEffect(() => {
     const state = location.state as { leadId?: string } | null;
@@ -535,10 +578,35 @@ export default function LeadsPage() {
 
       <RecordCounter
         totalCount={leads.length}
-        filteredCount={filtered.length}
+        filteredCount={sortedLeads.length}
         perPage={perPage}
         onPerPageChange={setPerPage}
       />
+
+      <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 bg-gray-50 rounded-lg">
+        <label className="text-sm font-medium text-gray-700">Ordenar por:</label>
+        <select
+          value={sortBy}
+          onChange={(e) => {
+            setSortBy(e.target.value as 'date' | 'name');
+            resetPage();
+          }}
+          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="date">📅 Data de Cadastro (Padrão)</option>
+          <option value="name">🔤 Ordem Alfabética</option>
+        </select>
+        <button
+          type="button"
+          onClick={() => {
+            setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+            resetPage();
+          }}
+          className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center gap-2"
+        >
+          {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
+        </button>
+      </div>
 
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
