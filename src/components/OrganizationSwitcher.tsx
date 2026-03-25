@@ -75,14 +75,16 @@ export function OrganizationSwitcher() {
             {(!search || 'consolidado'.includes(search.toLowerCase())) && (
               <button
                 onClick={() => { switchOrganization(CONSOLIDATED_ORG_ID); setOpen(false); setSearch(''); }}
-                className={`w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-accent/50 transition-colors ${isConsolidated ? 'bg-accent' : ''}`}
+                className={`w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-accent/50 transition-colors hover:text-black ${isConsolidated ? 'bg-accent' : 'text-black'}`}
               >
                 <div className="h-7 w-7 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
                   <Globe className="h-4 w-4 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate">🌐 Consolidado</p>
-                  <p className="text-xs text-muted-foreground truncate">Visão de todas as organizações</p>
+                  <p className={`text-sm font-semibold truncate ${isConsolidated ? '' : 'text-black'}`}>🌐 Consolidado</p>
+                  <p className={`text-xs truncate ${isConsolidated ? 'text-muted-foreground' : 'text-black'}`}>
+                    Visão de todas as organizações
+                  </p>
                 </div>
                 {isConsolidated && <Check className="h-4 w-4 text-primary shrink-0" />}
               </button>
@@ -102,15 +104,19 @@ export function OrganizationSwitcher() {
                   <button
                     key={org.id}
                     onClick={() => { switchOrganization(org.id); setOpen(false); setSearch(''); }}
-                    className={`w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-accent/50 transition-colors ${active ? 'bg-accent' : ''}`}
+                    className={`w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-accent/50 transition-colors hover:text-black ${active ? 'bg-accent' : 'text-black'}`}
                   >
                     <Avatar className="h-7 w-7 shrink-0">
                       <AvatarImage src={org.logo_url || undefined} />
                       <AvatarFallback className="text-[10px] bg-muted">{org.name.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{org.name}</p>
-                      {org.description && <p className="text-xs text-muted-foreground truncate">{org.description}</p>}
+                      <p className={`text-sm font-medium truncate ${active ? '' : 'text-black'}`}>{org.name}</p>
+                      {org.description && (
+                        <p className={`text-xs truncate ${active ? 'text-muted-foreground' : 'text-black'}`}>
+                          {org.description}
+                        </p>
+                      )}
                     </div>
                     {active && <Check className="h-4 w-4 text-primary shrink-0" />}
                   </button>
@@ -126,5 +132,4 @@ export function OrganizationSwitcher() {
     </div>
   );
 }
-
 
