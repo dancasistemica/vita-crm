@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,7 +24,6 @@ import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
-import NotFound from "@/pages/NotFound";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
@@ -82,7 +81,8 @@ const App = () => (
                 </Route>
               </Route>
 
-              <Route path="*" element={<NotFound />} />
+              {/* Fallback - DEVE ser a última rota */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
