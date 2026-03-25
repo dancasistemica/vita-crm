@@ -111,6 +111,66 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const normalizeEmail = (email: string) => email.replace(/\s+/g, '').trim().toLowerCase();
 
+export const convertExcelDate = (excelValue: unknown): string | null => {
+  if (excelValue === null || excelValue === undefined || excelValue === '') return null;
+
+  try {
+    if (typeof excelValue === 'string') {
+      const trimmed = excelValue.trim();
+      if (!trimmed) return null;
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+        const date = new Date(trimmed);
+        if (!isNaN(date.getTime())) {
+          const year = date.getUTCFullYear();
+          if (year >= 1900 && year <= 2100) {
+            console.log(`[DateConversion] String ISO válida: "${trimmed}"`);
+            return trimmed;
+          }
+        }
+      }
+
+      if (/^\d+(\.\d+)?$/.test(trimmed)) {
+        const numeric = Number(trimmed);
+        return convertExcelDate(numeric);
+      }
+
+      const date = new Date(trimmed);
+      if (!isNaN(date.getTime())) {
+        const year = date.getUTCFullYear();
+        if (year >= 1900 && year <= 2100) {
+          const iso = date.toISOString().split('T')[0];
+          console.log(`[DateConversion] String convertida: "${trimmed}" → ${iso}`);
+          return iso;
+        }
+      }
+    }
+
+    if (typeof excelValue === 'number' && excelValue > 0) {
+      let excelDate = excelValue;
+      if (excelDate > 60) {
+        excelDate -= 1;
+      }
+
+      const baseDate = new Date(Date.UTC(1900, 0, 1));
+      const date = new Date(baseDate.getTime() + (excelDate - 1) * 24 * 60 * 60 * 1000);
+      const year = date.getUTCFullYear();
+
+      if (year >= 1900 && year <= 2100) {
+        const iso = date.toISOString().split('T')[0];
+        console.log(`[DateConversion] Serial Excel ${excelValue} → ${iso}`);
+        return iso;
+      }
+    }
+
+    console.warn(`[DateConversion] Valor inválido ou fora de range: ${excelValue} (tipo: ${typeof excelValue})`);
+    return null;
+  } catch (error) {
+    console.error(`[DateConversion] Erro ao converter data: ${excelValue}`, error);
+    return null;
+  }
+};
+
 export const parseTags = (tagsInput: string | string[] | null | undefined): string[] => {
   if (!tagsInput) return [];
   const raw = Array.isArray(tagsInput) ? tagsInput.join(',') : String(tagsInput);
@@ -244,50 +304,54 @@ export function getNewOptions(
 const ensureOriginExists = async (
   organizationId: string,
   originName: string,
-  originCache: Map<string, { id: string; name: string }>
+  originCache: Map<string, { id: string; value: string; label: string }>
 ) => {
-  if (!originName) return null;
+  const label = originName?.trim();
+  if (!label) return null;
 
-  const normalized = originName.toLowerCase();
-  if (originCache.has(normalized)) return originCache.get(normalized)!;
+  const value = label.toLowerCase();
+  if (originCache.has(value)) return originCache.get(value)!;
 
   try {
-    console.log(`[ImportService] Verificando origem: ${originName}`);
+    console.log(`[ImportService] Verificando origem: label="${label}", value="${value}"`);
 
     const { data: existingOrigin } = await supabase
       .from('lead_origins')
-      .select('id, name')
+      .select('id, value, label')
       .eq('organization_id', organizationId)
-      .eq('name', originName)
+      .eq('value', value)
       .maybeSingle();
 
     if (existingOrigin) {
-      originCache.set(existingOrigin.name.toLowerCase(), existingOrigin);
-      console.log(`[ImportService] Origem encontrada: ${originName} (ID: ${existingOrigin.id})`);
+      originCache.set(existingOrigin.value.toLowerCase(), existingOrigin);
+      console.log(`[ImportService] ✅ Origem já existe: "${label}" (ID: ${existingOrigin.id})`);
       return existingOrigin;
     }
 
-    console.log(`[ImportService] Origem não encontrada. Criando: ${originName}`);
+    console.log(`[ImportService] Criando origem: label="${label}", value="${value}"`);
 
     const { data: newOrigin, error: createError } = await supabase
       .from('lead_origins')
       .insert({
         organization_id: organizationId,
-        name: originName,
+        value,
+        label,
+        active: true,
+        sort_order: 0,
       })
-      .select('id, name')
+      .select('id, value, label')
       .single();
 
     if (createError || !newOrigin) {
-      console.error(`[ImportService] Erro ao criar origem "${originName}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar origem "${label}":`, createError);
       return null;
     }
 
-    originCache.set(newOrigin.name.toLowerCase(), newOrigin);
-    console.log(`[ImportService] Origem criada com sucesso: ${originName} (ID: ${newOrigin.id})`);
+    originCache.set(newOrigin.value.toLowerCase(), newOrigin);
+    console.log(`[ImportService] ✅ Origem criada: "${label}" (ID: ${newOrigin.id})`);
     return newOrigin;
   } catch (error) {
-    console.error(`[ImportService] Erro ao processar origem "${originName}":`, error);
+    console.error(`[ImportService] ❌ Erro ao processar origem "${originName}":`, error);
     return null;
   }
 };
@@ -295,50 +359,54 @@ const ensureOriginExists = async (
 const ensureInterestLevelExists = async (
   organizationId: string,
   levelName: string,
-  levelCache: Map<string, { id: string; name: string }>
+  levelCache: Map<string, { id: string; value: string; label: string }>
 ) => {
-  if (!levelName) return null;
+  const label = levelName?.trim();
+  if (!label) return null;
 
-  const normalized = levelName.toLowerCase();
-  if (levelCache.has(normalized)) return levelCache.get(normalized)!;
+  const value = label.toLowerCase();
+  if (levelCache.has(value)) return levelCache.get(value)!;
 
   try {
-    console.log(`[ImportService] Verificando nível de interesse: ${levelName}`);
+    console.log(`[ImportService] Verificando nível: label="${label}", value="${value}"`);
 
     const { data: existingLevel } = await supabase
       .from('interest_levels')
-      .select('id, name')
+      .select('id, value, label')
       .eq('organization_id', organizationId)
-      .eq('name', levelName)
+      .eq('value', value)
       .maybeSingle();
 
     if (existingLevel) {
-      levelCache.set(existingLevel.name.toLowerCase(), existingLevel);
-      console.log(`[ImportService] Nível encontrado: ${levelName} (ID: ${existingLevel.id})`);
+      levelCache.set(existingLevel.value.toLowerCase(), existingLevel);
+      console.log(`[ImportService] ✅ Nível já existe: "${label}" (ID: ${existingLevel.id})`);
       return existingLevel;
     }
 
-    console.log(`[ImportService] Nível não encontrado. Criando: ${levelName}`);
+    console.log(`[ImportService] Criando nível: label="${label}", value="${value}"`);
 
     const { data: newLevel, error: createError } = await supabase
       .from('interest_levels')
       .insert({
         organization_id: organizationId,
-        name: levelName,
+        value,
+        label,
+        active: true,
+        sort_order: 0,
       })
-      .select('id, name')
+      .select('id, value, label')
       .single();
 
     if (createError || !newLevel) {
-      console.error(`[ImportService] Erro ao criar nível "${levelName}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar nível "${label}":`, createError);
       return null;
     }
 
-    levelCache.set(newLevel.name.toLowerCase(), newLevel);
-    console.log(`[ImportService] Nível criado com sucesso: ${levelName} (ID: ${newLevel.id})`);
+    levelCache.set(newLevel.value.toLowerCase(), newLevel);
+    console.log(`[ImportService] ✅ Nível criado: "${label}" (ID: ${newLevel.id})`);
     return newLevel;
   } catch (error) {
-    console.error(`[ImportService] Erro ao processar nível "${levelName}":`, error);
+    console.error(`[ImportService] ❌ Erro ao processar nível "${levelName}":`, error);
     return null;
   }
 };
@@ -346,51 +414,54 @@ const ensureInterestLevelExists = async (
 const ensureTagExists = async (
   organizationId: string,
   tagName: string,
-  tagCache: Map<string, { id: string; name: string }>
+  tagCache: Map<string, { id: string; value: string; label: string }>
 ) => {
-  if (!tagName) return null;
+  const label = tagName?.trim();
+  if (!label) return null;
 
-  const normalized = tagName.toLowerCase();
-  if (tagCache.has(normalized)) return tagCache.get(normalized)!;
+  const value = label.toLowerCase();
+  if (tagCache.has(value)) return tagCache.get(value)!;
 
   try {
-    console.log(`[ImportService] Verificando tag: ${tagName}`);
+    console.log(`[ImportService] Verificando tag: label="${label}", value="${value}"`);
 
     const { data: existingTag } = await supabase
       .from('tags')
-      .select('id, name')
+      .select('id, value, label')
       .eq('organization_id', organizationId)
-      .eq('name', tagName)
+      .eq('value', value)
       .maybeSingle();
 
     if (existingTag) {
-      tagCache.set(existingTag.name.toLowerCase(), existingTag);
-      console.log(`[ImportService] Tag encontrada: ${tagName} (ID: ${existingTag.id})`);
+      tagCache.set(existingTag.value.toLowerCase(), existingTag);
+      console.log(`[ImportService] ✅ Tag já existe: "${label}" (ID: ${existingTag.id})`);
       return existingTag;
     }
 
-    console.log(`[ImportService] Tag não encontrada. Criando: ${tagName}`);
+    console.log(`[ImportService] Criando tag: label="${label}", value="${value}"`);
 
     const { data: newTag, error: createError } = await supabase
       .from('tags')
       .insert({
         organization_id: organizationId,
-        name: tagName,
-        color: 'hsl(var(--primary))',
+        value,
+        label,
+        active: true,
+        sort_order: 0,
       })
-      .select('id, name')
+      .select('id, value, label')
       .single();
 
     if (createError || !newTag) {
-      console.error(`[ImportService] Erro ao criar tag "${tagName}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar tag "${label}":`, createError);
       return null;
     }
 
-    tagCache.set(newTag.name.toLowerCase(), newTag);
-    console.log(`[ImportService] Tag criada com sucesso: ${tagName} (ID: ${newTag.id})`);
+    tagCache.set(newTag.value.toLowerCase(), newTag);
+    console.log(`[ImportService] ✅ Tag criada: "${label}" (ID: ${newTag.id})`);
     return newTag;
   } catch (error) {
-    console.error(`[ImportService] Erro ao processar tag "${tagName}":`, error);
+    console.error(`[ImportService] ❌ Erro ao processar tag "${tagName}":`, error);
     return null;
   }
 };
@@ -398,56 +469,59 @@ const ensureTagExists = async (
 const ensurePipelineStageExists = async (
   organizationId: string,
   stageName: string,
-  stageByName: Map<string, { id: string; name: string }>,
-  stageById: Map<string, { id: string; name: string }>,
+  stageByValue: Map<string, { id: string; value: string; label: string }>,
+  stageById: Map<string, { id: string; value: string; label: string }>,
   nextSortOrder: () => number
 ) => {
-  if (!stageName) return null;
+  const label = stageName?.trim();
+  if (!label) return null;
 
-  const normalized = stageName.toLowerCase();
-  if (stageById.has(stageName)) return stageById.get(stageName)!;
-  if (stageByName.has(normalized)) return stageByName.get(normalized)!;
+  const value = label.toLowerCase();
+  if (stageById.has(label)) return stageById.get(label)!;
+  if (stageByValue.has(value)) return stageByValue.get(value)!;
 
   try {
-    console.log(`[ImportService] Verificando etapa do funil: ${stageName}`);
+    console.log(`[ImportService] Verificando etapa: label="${label}", value="${value}"`);
 
     const { data: existingStage } = await supabase
       .from('pipeline_stages')
-      .select('id, name')
+      .select('id, value, label')
       .eq('organization_id', organizationId)
-      .eq('name', stageName)
+      .eq('value', value)
       .maybeSingle();
 
     if (existingStage) {
-      stageByName.set(existingStage.name.toLowerCase(), existingStage);
+      stageByValue.set(existingStage.value.toLowerCase(), existingStage);
       stageById.set(existingStage.id, existingStage);
-      console.log(`[ImportService] Etapa encontrada: ${stageName} (ID: ${existingStage.id})`);
+      console.log(`[ImportService] ✅ Etapa já existe: "${label}" (ID: ${existingStage.id})`);
       return existingStage;
     }
 
-    console.log(`[ImportService] Etapa não encontrada. Criando: ${stageName}`);
+    console.log(`[ImportService] Criando etapa: label="${label}", value="${value}"`);
 
     const { data: newStage, error: createError } = await supabase
       .from('pipeline_stages')
       .insert({
         organization_id: organizationId,
-        name: stageName,
+        value,
+        label,
+        active: true,
         sort_order: nextSortOrder(),
       })
-      .select('id, name')
+      .select('id, value, label')
       .single();
 
     if (createError || !newStage) {
-      console.error(`[ImportService] Erro ao criar etapa "${stageName}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar etapa "${label}":`, createError);
       return null;
     }
 
-    stageByName.set(newStage.name.toLowerCase(), newStage);
+    stageByValue.set(newStage.value.toLowerCase(), newStage);
     stageById.set(newStage.id, newStage);
-    console.log(`[ImportService] Etapa criada com sucesso: ${stageName} (ID: ${newStage.id})`);
+    console.log(`[ImportService] ✅ Etapa criada: "${label}" (ID: ${newStage.id})`);
     return newStage;
   } catch (error) {
-    console.error(`[ImportService] Erro ao processar etapa "${stageName}":`, error);
+    console.error(`[ImportService] ❌ Erro ao processar etapa "${stageName}":`, error);
     return null;
   }
 };
@@ -456,7 +530,7 @@ export const linkTagsToLead = async (
   leadId: string,
   tagNames: string[],
   organizationId: string,
-  tagCache?: Map<string, { id: string; name: string }>
+  tagCache?: Map<string, { id: string; value: string; label: string }>
 ): Promise<{ success: number; failed: number }> => {
   let success = 0;
   let failed = 0;
@@ -578,16 +652,16 @@ export const processImportedLeads = async (
   console.log(`[ImportService] Organização: ${organizationId}`);
 
   const [originsRes, levelsRes, tagsRes, stagesRes] = await Promise.all([
-    supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId),
-    supabase.from('interest_levels').select('id, name').eq('organization_id', organizationId),
-    supabase.from('tags').select('id, name').eq('organization_id', organizationId),
-    supabase.from('pipeline_stages').select('id, name, sort_order').eq('organization_id', organizationId),
+    supabase.from('lead_origins').select('id, value, label').eq('organization_id', organizationId),
+    supabase.from('interest_levels').select('id, value, label').eq('organization_id', organizationId),
+    supabase.from('tags').select('id, value, label').eq('organization_id', organizationId),
+    supabase.from('pipeline_stages').select('id, value, label, sort_order').eq('organization_id', organizationId),
   ]);
 
-  const originsCache = new Map((originsRes.data || []).map(o => [o.name.toLowerCase(), o]));
-  const levelsCache = new Map((levelsRes.data || []).map(l => [l.name.toLowerCase(), l]));
-  const tagsCache = new Map((tagsRes.data || []).map(t => [t.name.toLowerCase(), t]));
-  const stageByName = new Map((stagesRes.data || []).map(s => [s.name.toLowerCase(), s]));
+  const originsCache = new Map((originsRes.data || []).map(o => [o.value.toLowerCase(), o]));
+  const levelsCache = new Map((levelsRes.data || []).map(l => [l.value.toLowerCase(), l]));
+  const tagsCache = new Map((tagsRes.data || []).map(t => [t.value.toLowerCase(), t]));
+  const stageByValue = new Map((stagesRes.data || []).map(s => [s.value.toLowerCase(), s]));
   const stageById = new Map((stagesRes.data || []).map(s => [s.id, s]));
   let stageSort = Math.max(0, ...(stagesRes.data || []).map(s => s.sort_order || 0));
   const nextSortOrder = () => {
@@ -632,31 +706,36 @@ export const processImportedLeads = async (
         }
       }
 
-      const stageInput = String(row.etapa_funil || '').trim();
-      if (stageInput) {
-        const stageRecord = await ensurePipelineStageExists(organizationId, stageInput, stageByName, stageById, nextSortOrder);
-        if (!stageRecord) {
-          console.warn(`[ImportService] Não foi possível criar/validar etapa: ${stageInput}`);
-        }
-      }
+  const stageInput = String(row.etapa_funil || '').trim();
+  if (stageInput) {
+    const stageRecord = await ensurePipelineStageExists(organizationId, stageInput, stageByValue, stageById, nextSortOrder);
+    if (!stageRecord) {
+      console.warn(`[ImportService] Não foi possível criar/validar etapa: ${stageInput}`);
+    }
+  }
 
       const tagNames = parseTags(row.tags || '');
       for (const tagName of tagNames) {
         await ensureTagExists(organizationId, tagName, tagsCache);
       }
 
-      const leadPayload = {
-        organization_id: organizationId,
-        name: String(row.nome || '').trim(),
-        phone: String(row.telefone || '').replace(/\D/g, ''),
-        email: normalizedEmail,
-        instagram: String(row.instagram || '').trim(),
-        city: String(row.cidade || '').trim(),
-        entry_date: String(row.data_entrada || '').trim() || new Date().toISOString().split('T')[0],
-        origin: originName || null,
-        interest_level: interestLevel || null,
-        pipeline_stage: stageInput || null,
-        main_interest: String(row.interesse_principal || '').trim(),
+  const entryDate = convertExcelDate(row.data_entrada);
+  if (row.data_entrada && !entryDate) {
+    console.warn(`[ImportService] Data inválida na linha ${lineNumber}: ${row.data_entrada}`);
+  }
+
+  const leadPayload = {
+    organization_id: organizationId,
+    name: String(row.nome || '').trim(),
+    phone: String(row.telefone || '').replace(/\D/g, ''),
+    email: normalizedEmail,
+    instagram: String(row.instagram || '').trim(),
+    city: String(row.cidade || '').trim(),
+    entry_date: entryDate,
+    origin: originName || null,
+    interest_level: interestLevel || null,
+    pipeline_stage: stageInput || null,
+    main_interest: String(row.interesse_principal || '').trim(),
         notes: String(row.observacoes || '').trim(),
         tags: tagNames,
         custom_data: {

@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { parseCSVText, suggestMapping, getCRMFields, type CSVRow } from '@/services/importService';
+import { parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
 import { parseFile, getFileType } from '@/services/excelParser';
 import { ImportModalState } from '@/hooks/useImportModal';
-import { convertExcelSerialToISO, isExcelSerialDate } from '@/utils/dateConversion';
 
 interface Props {
   state: ImportModalState;
@@ -31,14 +30,12 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
       headers.forEach(header => {
         if (!isDateHeader(header)) return;
         const value = row[header];
-        if (!isExcelSerialDate(value)) return;
-
-        const iso = convertExcelSerialToISO(value);
+        const iso = convertExcelDate(value);
         if (iso) {
           console.log(`[DateConversion] ${header}: ${value} → ${iso}`);
           next[header] = iso;
           conversions++;
-        } else {
+        } else if (value !== undefined && value !== null && String(value).trim() !== '') {
           console.warn(`[DateConversion] Falha ao converter ${header}:`, value);
           next[header] = '';
         }
