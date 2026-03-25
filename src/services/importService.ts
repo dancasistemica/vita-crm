@@ -304,54 +304,53 @@ export function getNewOptions(
 const ensureOriginExists = async (
   organizationId: string,
   originName: string,
-  originCache: Map<string, { id: string; value: string; label: string }>
+  originCache: Map<string, { id: string; name?: string }>
 ) => {
-  const label = originName?.trim();
-  if (!label) return null;
+  const name = originName?.trim();
+  if (!name) return null;
 
-  const value = label.toLowerCase();
-  if (originCache.has(value)) return originCache.get(value)!;
+  const normalizedName = name.toLowerCase();
+  if (originCache.has(normalizedName)) return originCache.get(normalizedName)!;
 
   try {
-    console.log(`[ImportService] Verificando origem: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Verificando origem: name="${name}"`);
 
     const { data: existingOrigin } = await supabase
       .from('lead_origins')
-      .select('id, value, label')
+      .select('id, name')
       .eq('organization_id', organizationId)
-      .eq('value', value)
+      .eq('name', name)
       .maybeSingle();
 
     if (existingOrigin) {
-      originCache.set(existingOrigin.value.toLowerCase(), existingOrigin);
-      console.log(`[ImportService] ✅ Origem já existe: "${label}" (ID: ${existingOrigin.id})`);
+      originCache.set(existingOrigin.name.toLowerCase(), existingOrigin);
+      console.log(`[ImportService] ✅ Origem existe: "${name}" (ID: ${existingOrigin.id})`);
       return existingOrigin;
     }
 
-    console.log(`[ImportService] Criando origem: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Criando origem: name="${name}"`);
 
     const { data: newOrigin, error: createError } = await supabase
       .from('lead_origins')
       .insert({
         organization_id: organizationId,
-        value,
-        label,
+        name,
         active: true,
         sort_order: 0,
       })
-      .select('id, value, label')
+      .select('id, name')
       .single();
 
     if (createError || !newOrigin) {
-      console.error(`[ImportService] ❌ Erro ao criar origem "${label}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar origem:`, createError);
       return null;
     }
 
-    originCache.set(newOrigin.value.toLowerCase(), newOrigin);
-    console.log(`[ImportService] ✅ Origem criada: "${label}" (ID: ${newOrigin.id})`);
+    originCache.set(newOrigin.name.toLowerCase(), newOrigin);
+    console.log(`[ImportService] ✅ Origem criada: "${name}" (ID: ${newOrigin.id})`);
     return newOrigin;
   } catch (error) {
-    console.error(`[ImportService] ❌ Erro ao processar origem "${originName}":`, error);
+    console.error(`[ImportService] ❌ Erro:`, error);
     return null;
   }
 };
@@ -414,54 +413,51 @@ const ensureInterestLevelExists = async (
 const ensureTagExists = async (
   organizationId: string,
   tagName: string,
-  tagCache: Map<string, { id: string; value: string; label: string }>
+  tagCache: Map<string, { id: string; name?: string }>
 ) => {
-  const label = tagName?.trim();
-  if (!label) return null;
+  const name = tagName?.trim();
+  if (!name) return null;
 
-  const value = label.toLowerCase();
-  if (tagCache.has(value)) return tagCache.get(value)!;
+  const normalizedName = name.toLowerCase();
+  if (tagCache.has(normalizedName)) return tagCache.get(normalizedName)!;
 
   try {
-    console.log(`[ImportService] Verificando tag: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Verificando tag: name="${name}"`);
 
     const { data: existingTag } = await supabase
       .from('tags')
-      .select('id, value, label')
+      .select('id, name')
       .eq('organization_id', organizationId)
-      .eq('value', value)
+      .eq('name', name)
       .maybeSingle();
 
     if (existingTag) {
-      tagCache.set(existingTag.value.toLowerCase(), existingTag);
-      console.log(`[ImportService] ✅ Tag já existe: "${label}" (ID: ${existingTag.id})`);
+      tagCache.set(existingTag.name.toLowerCase(), existingTag);
+      console.log(`[ImportService] ✅ Tag existe: "${name}" (ID: ${existingTag.id})`);
       return existingTag;
     }
 
-    console.log(`[ImportService] Criando tag: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Criando tag: name="${name}"`);
 
     const { data: newTag, error: createError } = await supabase
       .from('tags')
       .insert({
         organization_id: organizationId,
-        value,
-        label,
-        active: true,
-        sort_order: 0,
+        name,
       })
-      .select('id, value, label')
+      .select('id, name')
       .single();
 
     if (createError || !newTag) {
-      console.error(`[ImportService] ❌ Erro ao criar tag "${label}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar tag:`, createError);
       return null;
     }
 
-    tagCache.set(newTag.value.toLowerCase(), newTag);
-    console.log(`[ImportService] ✅ Tag criada: "${label}" (ID: ${newTag.id})`);
+    tagCache.set(newTag.name.toLowerCase(), newTag);
+    console.log(`[ImportService] ✅ Tag criada: "${name}" (ID: ${newTag.id})`);
     return newTag;
   } catch (error) {
-    console.error(`[ImportService] ❌ Erro ao processar tag "${tagName}":`, error);
+    console.error(`[ImportService] ❌ Erro:`, error);
     return null;
   }
 };
@@ -469,59 +465,57 @@ const ensureTagExists = async (
 const ensurePipelineStageExists = async (
   organizationId: string,
   stageName: string,
-  stageByValue: Map<string, { id: string; value: string; label: string }>,
-  stageById: Map<string, { id: string; value: string; label: string }>,
+  stageByValue: Map<string, { id: string; name?: string }>,
+  stageById: Map<string, { id: string; name?: string }>,
   nextSortOrder: () => number
 ) => {
-  const label = stageName?.trim();
-  if (!label) return null;
+  const name = stageName?.trim();
+  if (!name) return null;
 
-  const value = label.toLowerCase();
-  if (stageById.has(label)) return stageById.get(label)!;
-  if (stageByValue.has(value)) return stageByValue.get(value)!;
+  const normalizedName = name.toLowerCase();
+  if (stageByValue.has(normalizedName)) return stageByValue.get(normalizedName)!;
 
   try {
-    console.log(`[ImportService] Verificando etapa: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Verificando etapa: name="${name}"`);
 
     const { data: existingStage } = await supabase
       .from('pipeline_stages')
-      .select('id, value, label')
+      .select('id, name')
       .eq('organization_id', organizationId)
-      .eq('value', value)
+      .eq('name', name)
       .maybeSingle();
 
     if (existingStage) {
-      stageByValue.set(existingStage.value.toLowerCase(), existingStage);
+      stageByValue.set(existingStage.name.toLowerCase(), existingStage);
       stageById.set(existingStage.id, existingStage);
-      console.log(`[ImportService] ✅ Etapa já existe: "${label}" (ID: ${existingStage.id})`);
+      console.log(`[ImportService] ✅ Etapa existe: "${name}" (ID: ${existingStage.id})`);
       return existingStage;
     }
 
-    console.log(`[ImportService] Criando etapa: label="${label}", value="${value}"`);
+    console.log(`[ImportService] Criando etapa: name="${name}"`);
 
     const { data: newStage, error: createError } = await supabase
       .from('pipeline_stages')
       .insert({
         organization_id: organizationId,
-        value,
-        label,
+        name,
         active: true,
         sort_order: nextSortOrder(),
       })
-      .select('id, value, label')
+      .select('id, name')
       .single();
 
     if (createError || !newStage) {
-      console.error(`[ImportService] ❌ Erro ao criar etapa "${label}":`, createError);
+      console.error(`[ImportService] ❌ Erro ao criar etapa:`, createError);
       return null;
     }
 
-    stageByValue.set(newStage.value.toLowerCase(), newStage);
+    stageByValue.set(newStage.name.toLowerCase(), newStage);
     stageById.set(newStage.id, newStage);
-    console.log(`[ImportService] ✅ Etapa criada: "${label}" (ID: ${newStage.id})`);
+    console.log(`[ImportService] ✅ Etapa criada: "${name}" (ID: ${newStage.id})`);
     return newStage;
   } catch (error) {
-    console.error(`[ImportService] ❌ Erro ao processar etapa "${stageName}":`, error);
+    console.error(`[ImportService] ❌ Erro:`, error);
     return null;
   }
 };
@@ -530,7 +524,7 @@ export const linkTagsToLead = async (
   leadId: string,
   tagNames: string[],
   organizationId: string,
-  tagCache?: Map<string, { id: string; value: string; label: string }>
+  tagCache?: Map<string, { id: string; name?: string }>
 ): Promise<{ success: number; failed: number }> => {
   let success = 0;
   let failed = 0;
