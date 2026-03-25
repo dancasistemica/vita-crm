@@ -83,6 +83,8 @@ export const useSearch = () => {
         }
 
         if (filter === "all" || filter === "task") {
+          console.log("[useSearch] Buscando tarefas com query:", query, "org:", organizationId);
+
           const { data: tasks, error: tasksError } = await supabase
             .from("tasks")
             .select("id, title, description")
@@ -91,7 +93,9 @@ export const useSearch = () => {
             .limit(5);
 
           if (tasksError) {
-            console.error("[useSearch] Erro ao buscar tasks:", tasksError);
+            console.error("[useSearch] Erro ao buscar tarefas:", tasksError);
+          } else {
+            console.log("[useSearch] Tarefas encontradas:", tasks?.length || 0, tasks);
           }
 
           if (tasks) {
