@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
@@ -29,9 +28,9 @@ export default function LeadsPage() {
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
 
   const [search, setSearch] = useState("");
-  const [selectedOrigin, setSelectedOrigin] = useState<string>('all');
-  const [selectedInterest, setSelectedInterest] = useState<string>('all');
-  const [selectedStage, setSelectedStage] = useState<string>('all');
+  const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [selectedStages, setSelectedStages] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -51,15 +50,15 @@ export default function LeadsPage() {
         return false;
       }
 
-      if (selectedOrigin !== 'all' && lead.origin !== selectedOrigin) {
+      if (selectedOrigins.length > 0 && !selectedOrigins.includes(lead.origin)) {
         return false;
       }
 
-      if (selectedInterest !== 'all' && lead.interestLevel !== selectedInterest) {
+      if (selectedInterests.length > 0 && !selectedInterests.includes(lead.interestLevel)) {
         return false;
       }
 
-      if (selectedStage !== 'all' && lead.pipelineStage !== selectedStage) {
+      if (selectedStages.length > 0 && !selectedStages.includes(lead.pipelineStage)) {
         return false;
       }
 
@@ -76,17 +75,12 @@ export default function LeadsPage() {
   };
 
   const getActiveFiltersCount = (): number => {
-    let count = 0;
-    if (selectedOrigin !== 'all') count++;
-    if (selectedInterest !== 'all') count++;
-    if (selectedStage !== 'all') count++;
-    if (selectedTags.length > 0) count++;
-    return count;
+    return selectedOrigins.length + selectedInterests.length + selectedStages.length + selectedTags.length;
   };
 
   const filtered = useMemo(() => {
     return getFilteredLeads();
-  }, [leads, search, selectedOrigin, selectedInterest, selectedStage, selectedTags]);
+  }, [leads, search, selectedOrigins, selectedInterests, selectedStages, selectedTags]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
@@ -145,6 +139,20 @@ export default function LeadsPage() {
 
   const getStageName = (id: string) => pipelineStages.find(s => s.id === id)?.name || '';
   const getInterestLabel = (value: string) => interestLevels.find(l => l.value === value)?.label || value;
+
+  const toggleSelection = (
+    value: string,
+    selectedArray: string[],
+    setSelectedArray: (arr: string[]) => void,
+    label: string
+  ) => {
+    const next = selectedArray.includes(value)
+      ? selectedArray.filter(item => item !== value)
+      : [...selectedArray, value];
+    setSelectedArray(next);
+    resetPage();
+    console.log(`[LeadsFilters] ${label} selecionado(s):`, next);
+  };
 
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -238,80 +246,147 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Origem</label>
-              <Select value={selectedOrigin} onValueChange={(value) => {
-                setSelectedOrigin(value);
-                resetPage();
-                console.log('[LeadsFilters] Origem selecionada:', value);
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione uma origem..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as origens</SelectItem>
-                  {origins.map((origin) => (
-                    <SelectItem key={origin} value={origin}>{origin}</SelectItem>
+              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
+                {origins.map((origin) => (
+                  <label key={origin} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                    <input
+                      type="checkbox"
+                      checked={selectedOrigins.includes(origin)}
+                      onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
+                      className="w-4 h-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">{origin}</span>
+                  </label>
+                ))}
+              </div>
+              {selectedOrigins.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-2">
+                  {selectedOrigins.map((origin) => (
+                    <span key={origin} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                      {origin}
+                      <button
+                        onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
+                        className="ml-1 hover:text-blue-900"
+                      >
+                        ×
+                      </button>
+                    </span>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
-              <Select value={selectedInterest} onValueChange={(value) => {
-                setSelectedInterest(value);
-                resetPage();
-                console.log('[LeadsFilters] Nível de interesse selecionado:', value);
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione um nível..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os níveis</SelectItem>
-                  {interestLevels.map((level) => (
-                    <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
+                {interestLevels.map((level) => (
+                  <label key={level.value} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                    <input
+                      type="checkbox"
+                      checked={selectedInterests.includes(level.value)}
+                      onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
+                      className="w-4 h-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">{level.label}</span>
+                  </label>
+                ))}
+              </div>
+              {selectedInterests.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-2">
+                  {selectedInterests.map((interest) => (
+                    <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                      {getInterestLabel(interest)}
+                      <button
+                        onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
+                        className="ml-1 hover:text-green-900"
+                      >
+                        ×
+                      </button>
+                    </span>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
-              <Select value={selectedStage} onValueChange={(value) => {
-                setSelectedStage(value);
-                resetPage();
-                console.log('[LeadsFilters] Etapa do funil selecionada:', value);
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione uma etapa..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as etapas</SelectItem>
-                  {pipelineStages.map((stage) => (
-                    <SelectItem key={stage.id} value={stage.id}>{stage.name}</SelectItem>
+              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
+                {pipelineStages.map((stage) => (
+                  <label key={stage.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                    <input
+                      type="checkbox"
+                      checked={selectedStages.includes(stage.id)}
+                      onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
+                      className="w-4 h-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">{stage.name}</span>
+                  </label>
+                ))}
+              </div>
+              {selectedStages.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-2">
+                  {selectedStages.map((stage) => (
+                    <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                      {getStageName(stage)}
+                      <button
+                        onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
+                        className="ml-1 hover:text-purple-900"
+                      >
+                        ×
+                      </button>
+                    </span>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Tags</label>
-              <Select value={selectedTags.join(',')} onValueChange={(value) => {
-                const nextTags = value ? value.split(',') : [];
-                setSelectedTags(nextTags);
-                resetPage();
-                console.log('[LeadsFilters] Tags selecionadas:', nextTags);
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione tags..." />
-                </SelectTrigger>
-                <SelectContent>
+              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
+                <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded font-semibold">
+                  <input
+                    type="checkbox"
+                    checked={selectedTags.length === 0}
+                    onChange={() => {
+                      setSelectedTags([]);
+                      resetPage();
+                      console.log('[LeadsFilters] Tags selecionadas: []');
+                    }}
+                    className="w-4 h-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm text-gray-700">Todas as tags</span>
+                </label>
+                <div className="border-t border-gray-200 pt-2">
                   {tags.map((tag) => (
-                    <SelectItem key={tag.name} value={tag.name}>{tag.name}</SelectItem>
+                    <label key={tag.name} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                      <input
+                        type="checkbox"
+                        checked={selectedTags.includes(tag.name)}
+                        onChange={() => toggleSelection(tag.name, selectedTags, setSelectedTags, 'Tags')}
+                        className="w-4 h-4 rounded border-gray-300"
+                      />
+                      <span className="text-sm text-gray-700">{tag.name}</span>
+                    </label>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+              </div>
+              {selectedTags.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-2">
+                  {selectedTags.map((tag) => (
+                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
+                      {tag}
+                      <button
+                        onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
+                        className="ml-1 hover:text-orange-900"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -320,9 +395,9 @@ export default function LeadsPage() {
               variant="outline"
               size="sm"
               onClick={() => {
-                setSelectedOrigin('all');
-                setSelectedInterest('all');
-                setSelectedStage('all');
+                setSelectedOrigins([]);
+                setSelectedInterests([]);
+                setSelectedStages([]);
                 setSelectedTags([]);
                 resetPage();
                 console.log('[LeadsFilters] Todos os filtros foram limpos');
