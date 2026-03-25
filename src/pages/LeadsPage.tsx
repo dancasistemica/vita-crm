@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2, FilterX } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
@@ -15,7 +16,6 @@ import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
-import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
 
@@ -29,10 +29,10 @@ export default function LeadsPage() {
   const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
 
   const [search, setSearch] = useState("");
-  const [filterOrigins, setFilterOrigins] = useState<string[]>([]);
-  const [filterInterests, setFilterInterests] = useState<string[]>([]);
-  const [filterStages, setFilterStages] = useState<string[]>([]);
-  const [filterTags, setFilterTags] = useState<string[]>([]);
+  const [selectedOrigin, setSelectedOrigin] = useState<string>('all');
+  const [selectedInterest, setSelectedInterest] = useState<string>('all');
+  const [selectedStage, setSelectedStage] = useState<string>('all');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -42,31 +42,42 @@ export default function LeadsPage() {
   const [detailLead, setDetailLead] = useState<LeadView | null>(null);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
-  const activeFiltersCount = filterOrigins.length + filterInterests.length + filterStages.length + filterTags.length;
+  const getFilteredLeads = () => {
+    if (!leads) return [];
 
-  const clearAllFilters = () => {
-    setFilterOrigins([]);
-    setFilterInterests([]);
-    setFilterStages([]);
-    setFilterTags([]);
-    resetPage();
-  };
+    return leads.filter((lead) => {
+      const matchSearch = !search || lead.name.toLowerCase().includes(search.toLowerCase()) || lead.email.toLowerCase().includes(search.toLowerCase()) || lead.phone.includes(search);
+      if (!matchSearch) {
+        return false;
+      }
 
-  const handleMultiFilterChange = (setter: (v: string[]) => void) => (values: string[]) => {
-    setter(values);
-    resetPage();
+      if (selectedOrigin !== 'all' && lead.origin !== selectedOrigin) {
+        return false;
+      }
+
+      if (selectedInterest !== 'all' && lead.interestLevel !== selectedInterest) {
+        return false;
+      }
+
+      if (selectedStage !== 'all' && lead.pipelineStage !== selectedStage) {
+        return false;
+      }
+
+      if (selectedTags.length > 0) {
+        const leadTags = Array.isArray(lead.tags) ? lead.tags : [];
+        const hasAnyTag = selectedTags.some(tag => leadTags.includes(tag));
+        if (!hasAnyTag) {
+          return false;
+        }
+      }
+
+      return true;
+    });
   };
 
   const filtered = useMemo(() => {
-    return leads.filter(l => {
-      const matchSearch = !search || l.name.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || l.phone.includes(search);
-      const matchOrigin = filterOrigins.length === 0 || filterOrigins.includes(l.origin);
-      const matchInterest = filterInterests.length === 0 || filterInterests.includes(l.interestLevel);
-      const matchStage = filterStages.length === 0 || filterStages.includes(l.pipelineStage);
-      const matchTag = filterTags.length === 0 || l.tags.some(t => filterTags.includes(t));
-      return matchSearch && matchOrigin && matchInterest && matchStage && matchTag;
-    });
-  }, [leads, search, filterOrigins, filterInterests, filterStages, filterTags]);
+    return getFilteredLeads();
+  }, [leads, search, selectedOrigin, selectedInterest, selectedStage, selectedTags]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
@@ -188,48 +199,120 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      {/* Search + Multi-Select Filters */}
-      <div className="space-y-3 p-4 rounded-lg bg-muted/30 border border-border/40">
+      {/* Search + Filters */}
+      <div className="space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar por nome, email ou telefone..." value={search} onChange={e => { setSearch(e.target.value); resetPage(); }} className="pl-9" />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <MultiSelectFilter
-            label="Origem"
-            options={origins.map(o => ({ value: o, label: o }))}
-            selected={filterOrigins}
-            onChange={handleMultiFilterChange(setFilterOrigins)}
-          />
-          <MultiSelectFilter
-            label="Nível de Interesse"
-            options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
-            selected={filterInterests}
-            onChange={handleMultiFilterChange(setFilterInterests)}
-          />
-          <MultiSelectFilter
-            label="Etapa do Pipeline"
-            options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
-            selected={filterStages}
-            onChange={handleMultiFilterChange(setFilterStages)}
-          />
-          <MultiSelectFilter
-            label="Tags"
-            options={tags.map(t => ({ value: t.name, label: t.name }))}
-            selected={filterTags}
-            onChange={handleMultiFilterChange(setFilterTags)}
+          <Input
+            placeholder="Buscar por nome, email ou telefone..."
+            value={search}
+            onChange={e => {
+              setSearch(e.target.value);
+              resetPage();
+            }}
+            className="pl-9"
           />
         </div>
 
-        {activeFiltersCount > 0 && (
-          <div className="flex items-center gap-2 pt-1">
-            <Badge variant="secondary" className="text-xs">{activeFiltersCount} filtro(s) ativo(s)</Badge>
-            <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground" onClick={clearAllFilters}>
-              <FilterX className="h-3 w-3 mr-1" /> Limpar todos
+        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">Origem</label>
+              <Select value={selectedOrigin} onValueChange={(value) => {
+                setSelectedOrigin(value);
+                resetPage();
+                console.log('[LeadsFilters] Origem selecionada:', value);
+              }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione uma origem..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as origens</SelectItem>
+                  {origins.map((origin) => (
+                    <SelectItem key={origin} value={origin}>{origin}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
+              <Select value={selectedInterest} onValueChange={(value) => {
+                setSelectedInterest(value);
+                resetPage();
+                console.log('[LeadsFilters] Nível de interesse selecionado:', value);
+              }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um nível..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os níveis</SelectItem>
+                  {interestLevels.map((level) => (
+                    <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
+              <Select value={selectedStage} onValueChange={(value) => {
+                setSelectedStage(value);
+                resetPage();
+                console.log('[LeadsFilters] Etapa do funil selecionada:', value);
+              }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione uma etapa..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as etapas</SelectItem>
+                  {pipelineStages.map((stage) => (
+                    <SelectItem key={stage.id} value={stage.id}>{stage.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">Tags</label>
+              <Select value={selectedTags.join(',')} onValueChange={(value) => {
+                const nextTags = value ? value.split(',') : [];
+                setSelectedTags(nextTags);
+                resetPage();
+                console.log('[LeadsFilters] Tags selecionadas:', nextTags);
+              }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione tags..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas as tags</SelectItem>
+                  {tags.map((tag) => (
+                    <SelectItem key={tag.name} value={tag.name}>{tag.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedOrigin('all');
+                setSelectedInterest('all');
+                setSelectedStage('all');
+                setSelectedTags([]);
+                resetPage();
+                console.log('[LeadsFilters] Todos os filtros foram limpos');
+              }}
+            >
+              Limpar Filtros
             </Button>
           </div>
-        )}
+        </div>
       </div>
 
       <RecordCounter
