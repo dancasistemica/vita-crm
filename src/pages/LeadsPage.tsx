@@ -307,7 +307,6 @@ export default function LeadsPage() {
                   <SelectValue placeholder="Selecione tags..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas as tags</SelectItem>
                   {tags.map((tag) => (
                     <SelectItem key={tag.name} value={tag.name}>{tag.name}</SelectItem>
                   ))}
