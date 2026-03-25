@@ -3,7 +3,6 @@ import { useOrganization } from "@/contexts/OrganizationContext";
 import { supabase } from "@/integrations/supabase/client";
 
 type SearchResultType = "lead" | "client" | "task";
-type SearchType = "all" | SearchResultType;
 
 interface SearchResult {
   id: string;
@@ -16,12 +15,11 @@ interface SearchResult {
 export const useSearch = () => {
   const { organizationId } = useOrganization();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState<SearchType>("all");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
 
   const performSearch = useCallback(
-    async (query: string, filter: SearchType) => {
+    async (query: string) => {
       if (!query.trim() || !organizationId) {
         setResults([]);
         setLoading(false);
@@ -30,89 +28,65 @@ export const useSearch = () => {
 
       setLoading(true);
       try {
-        const searchResults: SearchResult[] = [];
+        const { data: leads, error: leadsError } = await supabase
+          .from("leads")
+          .select("id, name, email, phone")
+          .eq("organization_id", organizationId)
+          .or(`name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
+          .limit(5);
 
-        if (filter === "all" || filter === "lead") {
-          const { data: leads, error: leadsError } = await supabase
-            .from("leads")
-            .select("id, name, email, phone")
-            .eq("organization_id", organizationId)
-            .or(`name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
-            .limit(5);
-
-          if (leadsError) {
-            console.error("[useSearch] Erro ao buscar leads:", leadsError);
-          }
-
-          if (leads) {
-            searchResults.push(
-              ...leads.map((lead) => ({
-                id: lead.id,
-                type: "lead",
-                title: lead.name,
-                subtitle: lead.email || lead.phone,
-                organizationId,
-              }))
-            );
-          }
+        if (leadsError) {
+          console.error("[useSearch] Erro ao buscar leads:", leadsError);
         }
 
-        if (filter === "all" || filter === "client") {
-          const { data: clients, error: clientsError } = await supabase
-            .from("clients")
-            .select("id, name, email")
-            .eq("organization_id", organizationId)
-            .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
-            .limit(5);
+        const { data: clients, error: clientsError } = await supabase
+          .from("clients")
+          .select("id, name, email")
+          .eq("organization_id", organizationId)
+          .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+          .limit(5);
 
-          if (clientsError) {
-            console.error("[useSearch] Erro ao buscar clients:", clientsError);
-          }
-
-          if (clients) {
-            searchResults.push(
-              ...clients.map((client) => ({
-                id: client.id,
-                type: "client",
-                title: client.name,
-                subtitle: client.email,
-                organizationId,
-              }))
-            );
-          }
+        if (clientsError) {
+          console.error("[useSearch] Erro ao buscar clients:", clientsError);
         }
 
-        if (filter === "all" || filter === "task") {
-          console.log("[useSearch] Buscando tarefas com query:", query, "org:", organizationId);
+        const { data: tasks, error: tasksError } = await supabase
+          .from("tasks")
+          .select("id, title, description")
+          .eq("organization_id", organizationId)
+          .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+          .limit(5);
 
-          const { data: tasks, error: tasksError } = await supabase
-            .from("tasks")
-            .select("id, title")
-            .eq("organization_id", organizationId)
-            .ilike("title", `%${query}%`)
-            .limit(5);
-
-          if (tasksError) {
-            console.error("[useSearch] Erro ao buscar tarefas:", tasksError);
-          } else {
-            console.log("[useSearch] Tarefas encontradas:", tasks?.length || 0, tasks);
-          }
-
-          if (tasks) {
-            searchResults.push(
-                ...tasks.map((task) => ({
-                  id: task.id,
-                  type: "task",
-                  title: task.title,
-                  subtitle: undefined,
-                  organizationId,
-                }))
-            );
-          }
+        if (tasksError) {
+          console.error("[useSearch] Erro ao buscar tarefas:", tasksError);
         }
+
+        const searchResults: SearchResult[] = [
+          ...(leads?.map((lead) => ({
+            id: lead.id,
+            type: "lead",
+            title: lead.name,
+            subtitle: lead.email || lead.phone,
+            organizationId,
+          })) || []),
+          ...(clients?.map((client) => ({
+            id: client.id,
+            type: "client",
+            title: client.name,
+            subtitle: client.email,
+            organizationId,
+          })) || []),
+          ...(tasks?.map((task) => ({
+            id: task.id,
+            type: "task",
+            title: task.title,
+            subtitle: task.description,
+            organizationId,
+          })) || []),
+        ];
 
         setResults(searchResults);
-        console.log("[useSearch] Resultados encontrados:", searchResults.length, "Filtro:", filter);
+        console.log("[useSearch] Resultados encontrados:", searchResults.length);
       } catch (error) {
         console.error("[useSearch] Erro ao buscar:", error);
         setResults([]);
@@ -126,24 +100,14 @@ export const useSearch = () => {
   const handleSearchChange = useCallback(
     (query: string) => {
       setSearchQuery(query);
-      performSearch(query, selectedFilter);
+      performSearch(query);
     },
-    [performSearch, selectedFilter]
-  );
-
-  const handleFilterChange = useCallback(
-    (filter: SearchType) => {
-      setSelectedFilter(filter);
-      performSearch(searchQuery, filter);
-    },
-    [performSearch, searchQuery]
+    [performSearch]
   );
 
   return {
     searchQuery,
     setSearchQuery: handleSearchChange,
-    selectedFilter,
-    setSelectedFilter: handleFilterChange,
     results,
     loading,
   };
