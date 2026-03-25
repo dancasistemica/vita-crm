@@ -90,6 +90,15 @@ jobs:
         run: npm run lint
 ```
 
+## Integrações em Standby
+
+### Botconversa
+- Status: Desativado
+- Localização: `src/pages/admin/OrganizationSettingsPage.tsx`
+- Hook: `src/hooks/useBotconversaConfig.ts`
+- Motivo: Aguardando decisão sobre ferramenta final
+- Reativar: Descomente componente em OrganizationSettingsPage
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).

@@ -36,6 +36,13 @@ interface BotconversaSettingsProps {
   cronSecretToken?: string | null;
 }
 
+/**
+ * STANDBY: Integração com Botconversa
+ * Status: Desativado (aguardando decisão sobre ferramenta final)
+ * Reativar: Descomente em OrganizationSettingsPage.tsx
+ * Dependências: useBotconversaConfig hook
+ * Último teste: 2026-03-25
+ */
 const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSettingsProps) => {
   const [botconversaKey, setBotconversaKey] = useState('');
   const [botconversaConfigId, setBotconversaConfigId] = useState<string | null>(null);
@@ -536,11 +543,17 @@ export default function OrganizationSettingsPage() {
         </AlertDialog>
       </Card>
 
-      <BotconversaSettings
+      {/*
+        STANDBY: Integração Botconversa desativada
+        Reativar quando decidir usar Botconversa ou ferramenta similar
+        Código mantido em: src/pages/admin/OrganizationSettingsPage.tsx (linhas 552-556)
+        Hook: src/hooks/useBotconversaConfig.ts
+      */}
+      {/* <BotconversaSettings
         organizationId={organizationId}
         organizationName={organization?.name ?? null}
         cronSecretToken={token}
-      />
+      /> */}
     </div>
   );
 }
