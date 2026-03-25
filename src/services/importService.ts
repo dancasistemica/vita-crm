@@ -539,7 +539,7 @@ export const processImportedLeads = async (
       const rawEmail = String(row.email || '');
       const normalizedEmail = normalizeEmail(rawEmail);
 
-      if (!normalizedEmail || !normalizedEmail.includes('@')) {
+      if (!normalizedEmail || !EMAIL_REGEX.test(normalizedEmail)) {
         result.errors.push({
           linha: lineNumber,
           erro: `Email inválido: ${rawEmail}`,
@@ -549,18 +549,39 @@ export const processImportedLeads = async (
 
       const originName = String(row.origem || '').trim();
       if (originName) {
-        await ensureOrigin(originName, organizationId, originsCache);
+        const originRecord = await ensureOrigin(originName, organizationId, originsCache);
+        if (!originRecord) {
+          result.errors.push({
+            linha: lineNumber,
+            erro: `Erro ao criar/validar origem: ${originName}`,
+          });
+          continue;
+        }
       }
 
       const interestLevel = String(row.nivel_interesse || '').trim();
       if (interestLevel) {
-        await ensureInterestLevel(interestLevel, organizationId, levelsCache);
+        const levelRecord = await ensureInterestLevel(interestLevel, organizationId, levelsCache);
+        if (!levelRecord) {
+          result.errors.push({
+            linha: lineNumber,
+            erro: `Erro ao criar/validar nível de interesse: ${interestLevel}`,
+          });
+          continue;
+        }
       }
 
       const stageInput = String(row.etapa_funil || '').trim();
       let stageRecord: { id: string; name: string } | null = null;
       if (stageInput) {
         stageRecord = await ensurePipelineStage(stageInput, organizationId, stageByName, stageById, nextSortOrder);
+        if (!stageRecord) {
+          result.errors.push({
+            linha: lineNumber,
+            erro: `Erro ao criar/validar etapa do funil: ${stageInput}`,
+          });
+          continue;
+        }
       }
 
       const tagNames = parseTags(row.tags || '');
