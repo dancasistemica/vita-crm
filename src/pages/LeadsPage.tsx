@@ -32,6 +32,10 @@ export default function LeadsPage() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedStages, setSelectedStages] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [openOrigin, setOpenOrigin] = useState(false);
+  const [openInterest, setOpenInterest] = useState(false);
+  const [openStage, setOpenStage] = useState(false);
+  const [openTags, setOpenTags] = useState(false);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -95,6 +99,21 @@ export default function LeadsPage() {
       navigate(location.pathname, { replace: true, state: null });
     }
   }, [location.state, leads, navigate, location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-filter-dropdown]')) {
+        setOpenOrigin(false);
+        setOpenInterest(false);
+        setOpenStage(false);
+        setOpenTags(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const closeDialog = () => {
     setEditingLead(null);
@@ -233,7 +252,7 @@ export default function LeadsPage() {
           />
         </div>
 
-        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6">
+        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" data-filter-dropdown>
           {activeFiltersCount > 0 && (
             <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-sm font-semibold text-gray-700">Filtros</h3>
@@ -244,27 +263,44 @@ export default function LeadsPage() {
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="relative space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Origem</label>
-              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-                {origins.map((origin) => (
-                  <label key={origin} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={selectedOrigins.includes(origin)}
-                      onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{origin}</span>
-                  </label>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => setOpenOrigin(!openOrigin)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm text-gray-700">
+                  {selectedOrigins.length === 0 ? 'Selecione origens...' : `${selectedOrigins.length} selecionado(s)`}
+                </span>
+                <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
+
+              {openOrigin && (
+                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  {origins.map((origin) => (
+                    <label key={origin} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                      <input
+                        type="checkbox"
+                        checked={selectedOrigins.includes(origin)}
+                        onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
+                        className="w-4 h-4 rounded border-gray-300 text-blue-600"
+                      />
+                      <span className="text-sm text-gray-700">{origin}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+
               {selectedOrigins.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedOrigins.map((origin) => (
                     <span key={origin} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
                       {origin}
                       <button
+                        type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
                         className="ml-1 hover:text-blue-900"
                       >
@@ -276,27 +312,44 @@ export default function LeadsPage() {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="relative space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
-              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-                {interestLevels.map((level) => (
-                  <label key={level.value} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={selectedInterests.includes(level.value)}
-                      onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{level.label}</span>
-                  </label>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => setOpenInterest(!openInterest)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm text-gray-700">
+                  {selectedInterests.length === 0 ? 'Selecione níveis...' : `${selectedInterests.length} selecionado(s)`}
+                </span>
+                <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
+
+              {openInterest && (
+                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  {interestLevels.map((level) => (
+                    <label key={level.value} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                      <input
+                        type="checkbox"
+                        checked={selectedInterests.includes(level.value)}
+                        onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
+                        className="w-4 h-4 rounded border-gray-300 text-green-600"
+                      />
+                      <span className="text-sm text-gray-700">{level.label}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+
               {selectedInterests.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedInterests.map((interest) => (
                     <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                       {getInterestLabel(interest)}
                       <button
+                        type="button"
                         onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
                         className="ml-1 hover:text-green-900"
                       >
@@ -310,27 +363,44 @@ export default function LeadsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="relative space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
-              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-                {pipelineStages.map((stage) => (
-                  <label key={stage.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={selectedStages.includes(stage.id)}
-                      onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
-                      className="w-4 h-4 rounded border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{stage.name}</span>
-                  </label>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => setOpenStage(!openStage)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm text-gray-700">
+                  {selectedStages.length === 0 ? 'Selecione etapas...' : `${selectedStages.length} selecionado(s)`}
+                </span>
+                <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
+
+              {openStage && (
+                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  {pipelineStages.map((stage) => (
+                    <label key={stage.id} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                      <input
+                        type="checkbox"
+                        checked={selectedStages.includes(stage.id)}
+                        onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
+                        className="w-4 h-4 rounded border-gray-300 text-purple-600"
+                      />
+                      <span className="text-sm text-gray-700">{stage.name}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+
               {selectedStages.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedStages.map((stage) => (
                     <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
                       {getStageName(stage)}
                       <button
+                        type="button"
                         onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
                         className="ml-1 hover:text-purple-900"
                       >
@@ -342,42 +412,57 @@ export default function LeadsPage() {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="relative space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Tags</label>
-              <div className="border border-gray-200 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-                <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded font-semibold">
-                  <input
-                    type="checkbox"
-                    checked={selectedTags.length === 0}
-                    onChange={() => {
-                      setSelectedTags([]);
-                      resetPage();
-                      console.log('[LeadsFilters] Tags selecionadas: []');
-                    }}
-                    className="w-4 h-4 rounded border-gray-300"
-                  />
-                  <span className="text-sm text-gray-700">Todas as tags</span>
-                </label>
-                <div className="border-t border-gray-200 pt-2">
+              <button
+                type="button"
+                onClick={() => setOpenTags(!openTags)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm text-gray-700">
+                  {selectedTags.length === 0 ? 'Selecione tags...' : `${selectedTags.length} selecionado(s)`}
+                </span>
+                <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
+
+              {openTags && (
+                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  <label className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-200 font-semibold bg-gray-50">
+                    <input
+                      type="checkbox"
+                      checked={selectedTags.length === 0}
+                      onChange={() => {
+                        setSelectedTags([]);
+                        resetPage();
+                        console.log('[LeadsFilters] Tags selecionadas: []');
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 text-orange-600"
+                    />
+                    <span className="text-sm text-gray-700">Todas as tags</span>
+                  </label>
                   {tags.map((tag) => (
-                    <label key={tag.name} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                    <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedTags.includes(tag.name)}
                         onChange={() => toggleSelection(tag.name, selectedTags, setSelectedTags, 'Tags')}
-                        className="w-4 h-4 rounded border-gray-300"
+                        className="w-4 h-4 rounded border-gray-300 text-orange-600"
                       />
                       <span className="text-sm text-gray-700">{tag.name}</span>
                     </label>
                   ))}
                 </div>
-              </div>
+              )}
+
               {selectedTags.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedTags.map((tag) => (
                     <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                       {tag}
                       <button
+                        type="button"
                         onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
                         className="ml-1 hover:text-orange-900"
                       >
