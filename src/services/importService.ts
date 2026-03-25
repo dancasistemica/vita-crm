@@ -573,7 +573,9 @@ export const processImportedLeads = async (
     errors: [],
   };
 
-  console.log(`[ImportService] Iniciando importação de ${rows.length} leads...`);
+  console.log('[ImportService] ===== INICIANDO IMPORTAÇÃO =====');
+  console.log(`[ImportService] Total de linhas: ${rows.length}`);
+  console.log(`[ImportService] Organização: ${organizationId}`);
 
   const [originsRes, levelsRes, tagsRes, stagesRes] = await Promise.all([
     supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId),
@@ -730,6 +732,17 @@ export const processImportedLeads = async (
     }
   }
 
-  console.log('[ImportService] Resumo:', result);
+  console.log('[ImportService] ===== RESUMO FINAL =====');
+  console.log(`[ImportService] Criados: ${result.created}`);
+  console.log(`[ImportService] Atualizados: ${result.updated}`);
+  console.log(`[ImportService] Erros: ${result.errors.length}`);
+  console.log(`[ImportService] Convertidos para cliente: ${result.converted}`);
+
+  if (result.errors.length > 0) {
+    console.log('[ImportService] Erros encontrados:');
+    result.errors.forEach(err => {
+      console.log(`  Linha ${err.linha}: ${err.erro}`);
+    });
+  }
   return result;
 };

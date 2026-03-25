@@ -42,23 +42,20 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
   const [dbOrigins, setDbOrigins] = useState<string[]>([]);
   const [dbInterestLevels, setDbInterestLevels] = useState<{ value: string }[]>([]);
   const [dbTags, setDbTags] = useState<{ name: string }[]>([]);
-  const [dbStages, setDbStages] = useState<{ id: string; name: string }[]>([]);
   const [enumLoading, setEnumLoading] = useState(true);
 
   useEffect(() => {
     if (!organizationId) return;
     const fetch = async () => {
       setEnumLoading(true);
-      const [originsRes, levelsRes, tagsRes, stagesRes] = await Promise.all([
+      const [originsRes, levelsRes, tagsRes] = await Promise.all([
         supabase.from('lead_origins').select('name').eq('organization_id', organizationId),
         supabase.from('interest_levels').select('value').eq('organization_id', organizationId),
         supabase.from('tags').select('name').eq('organization_id', organizationId),
-        supabase.from('pipeline_stages').select('id, name').eq('organization_id', organizationId),
       ]);
       setDbOrigins((originsRes.data || []).map(o => o.name));
       setDbInterestLevels(levelsRes.data || []);
       setDbTags(tagsRes.data || []);
-      setDbStages(stagesRes.data || []);
       setEnumLoading(false);
     };
     fetch();
@@ -92,65 +89,11 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
   useEffect(() => {
     if (state.validationResults.length === 0 || enumLoading) return;
-
-    const originNames = new Set(dbOrigins.map(o => o.toLowerCase()));
-    const levelValues = new Set(dbInterestLevels.map(l => l.value.toLowerCase()));
-    const stageIds = new Set(dbStages.map(s => s.id.toLowerCase()));
-    const stageNames = new Set(dbStages.map(s => s.name.toLowerCase()));
-
-    const errorRows: { rowIndex: number; errors: string[] }[] = [];
-    const updatedResults = state.validationResults.map(r => {
-      if (r.status !== 'success' || !r.data) return r;
-      const errors: string[] = [];
-
-      if (r.data.origin && !originNames.has(r.data.origin.toLowerCase())) {
-        errors.push(`Origem "${r.data.origin}" não existe`);
-      }
-
-      if (r.data.interestLevel && !levelValues.has(r.data.interestLevel.toLowerCase())) {
-        errors.push(`Nível de interesse "${r.data.interestLevel}" não existe`);
-      }
-
-      if (
-        r.data.pipelineStage &&
-        !stageIds.has(r.data.pipelineStage.toLowerCase()) &&
-        !stageNames.has(r.data.pipelineStage.toLowerCase())
-      ) {
-        errors.push(`Etapa "${r.data.pipelineStage}" não existe`);
-      }
-
-      if (errors.length > 0) {
-        errorRows.push({ rowIndex: r.row, errors });
-        return { ...r, status: 'error', message: errors.join(', ') };
-      }
-
-      return r;
-    });
-
-    const resultsChanged = updatedResults.some((r, i) => {
-      const prev = state.validationResults[i];
-      return r.status !== prev?.status || r.message !== prev?.message;
-    });
-
-    const nextInvalidRows = errorRows.length > 0 ? errorRows : null;
-    const invalidRowsChanged = JSON.stringify(nextInvalidRows) !== JSON.stringify(state.invalidRows || null);
-
-    if (resultsChanged || invalidRowsChanged) {
-      if (errorRows.length > 0) {
-        console.error('[ImportValidation] Erros encontrados:', errorRows);
-      } else {
-        console.log('[ImportValidation] Todos os valores são válidos');
-      }
-
-      update({
-        validationResults: updatedResults,
-        invalidRows: nextInvalidRows,
-        error: errorRows.length > 0
-          ? `${errorRows.length} linhas com valores inválidos. Verifique os dados.`
-          : null,
-      });
+    if (state.invalidRows || state.error) {
+      update({ invalidRows: null, error: null });
     }
-  }, [state.validationResults, dbOrigins, dbInterestLevels, dbStages, enumLoading, state.invalidRows, update]);
+    console.log('[ImportValidation] Validação concluída sem bloqueios de origem/nível/etapa');
+  }, [state.validationResults, enumLoading, state.invalidRows, state.error, update]);
 
   const successCount = useMemo(() => state.validationResults.filter(r => r.status === 'success').length - state.duplicates.length, [state.validationResults, state.duplicates]);
   const errorCount = useMemo(() => state.validationResults.filter(r => r.status === 'error').length, [state.validationResults]);
