@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,6 +36,7 @@ export default function LeadsPage() {
   const [openInterest, setOpenInterest] = useState(false);
   const [openStage, setOpenStage] = useState(false);
   const [openTags, setOpenTags] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
   const [editingLead, setEditingLead] = useState<LeadView | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -102,18 +103,20 @@ export default function LeadsPage() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('[data-filter-dropdown]')) {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
         setOpenOrigin(false);
         setOpenInterest(false);
         setOpenStage(false);
         setOpenTags(false);
+        console.log('[LeadsFilters] Dropdowns fechados (clique fora)');
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    if (openOrigin || openInterest || openStage || openTags) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [openOrigin, openInterest, openStage, openTags]);
 
   const closeDialog = () => {
     setEditingLead(null);
@@ -252,7 +255,7 @@ export default function LeadsPage() {
           />
         </div>
 
-        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" data-filter-dropdown>
+        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" ref={filterRef}>
           {activeFiltersCount > 0 && (
             <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-sm font-semibold text-gray-700">Filtros</h3>
@@ -267,7 +270,12 @@ export default function LeadsPage() {
               <label className="block text-sm font-semibold text-gray-700">Origem</label>
               <button
                 type="button"
-                onClick={() => setOpenOrigin(!openOrigin)}
+                onClick={() => {
+                  setOpenOrigin(!openOrigin);
+                  setOpenInterest(false);
+                  setOpenStage(false);
+                  setOpenTags(false);
+                }}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="text-sm text-gray-700">
@@ -316,7 +324,12 @@ export default function LeadsPage() {
               <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
               <button
                 type="button"
-                onClick={() => setOpenInterest(!openInterest)}
+                onClick={() => {
+                  setOpenInterest(!openInterest);
+                  setOpenOrigin(false);
+                  setOpenStage(false);
+                  setOpenTags(false);
+                }}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="text-sm text-gray-700">
@@ -367,7 +380,12 @@ export default function LeadsPage() {
               <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
               <button
                 type="button"
-                onClick={() => setOpenStage(!openStage)}
+                onClick={() => {
+                  setOpenStage(!openStage);
+                  setOpenOrigin(false);
+                  setOpenInterest(false);
+                  setOpenTags(false);
+                }}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="text-sm text-gray-700">
@@ -416,7 +434,12 @@ export default function LeadsPage() {
               <label className="block text-sm font-semibold text-gray-700">Tags</label>
               <button
                 type="button"
-                onClick={() => setOpenTags(!openTags)}
+                onClick={() => {
+                  setOpenTags(!openTags);
+                  setOpenOrigin(false);
+                  setOpenInterest(false);
+                  setOpenStage(false);
+                }}
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="text-sm text-gray-700">
@@ -484,6 +507,10 @@ export default function LeadsPage() {
                 setSelectedInterests([]);
                 setSelectedStages([]);
                 setSelectedTags([]);
+                setOpenOrigin(false);
+                setOpenInterest(false);
+                setOpenStage(false);
+                setOpenTags(false);
                 resetPage();
                 console.log('[LeadsFilters] Todos os filtros foram limpos');
               }}
