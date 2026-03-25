@@ -25,7 +25,13 @@ export interface ImportModalState {
   importProgress: number;
   importProcessed: number;
   importTotal: number;
-  importResult: { created: number; updated: number; duplicated: number; errors: number; dateConversions: number } | null;
+  importResult: {
+    created: number;
+    updated: number;
+    converted: number;
+    errors: Array<{ linha: number; erro: string }>;
+    dateConversions: number;
+  } | null;
   dateConversions: number;
   loading: boolean;
   error: string | null;

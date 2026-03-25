@@ -7,11 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { validateRows, getNewOptions } from '@/services/importService';
+import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
 import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
-import { convertExcelSerialToISO, isExcelSerialDate } from '@/utils/dateConversion';
 
 interface Props {
   state: ImportModalState;
@@ -20,58 +19,10 @@ interface Props {
   onBack: () => void;
 }
 
-/** Map camelCase lead data to snake_case DB columns */
-function toDbRecord(data: Partial<Lead>, organizationId: string) {
-  return {
-    organization_id: organizationId,
-    name: data.name || '',
-    phone: data.phone || '',
-    email: data.email || '',
-    instagram: data.instagram || '',
-    city: data.city || '',
-    rg: data.rg || '',
-    cpf: data.cpf || '',
-    entry_date: data.entryDate || new Date().toISOString().split('T')[0],
-    origin: data.origin || '',
-    interest_level: data.interestLevel || 'frio',
-    main_interest: data.mainInterest || '',
-    tags: data.tags || [],
-    custom_data: {
-      pain_point: (data as any).painPoint || '',
-      body_tension_area: (data as any).bodyTensionArea || '',
-      emotional_goal: (data as any).emotionalGoal || '',
-    },
-    pipeline_stage: data.pipelineStage || '1',
-    responsible: data.responsible || '',
-    notes: data.notes || '',
-  };
-}
 
 export default function Step5Import({ state, update, onNext, onBack }: Props) {
   const { organizationId } = useOrganization();
   const [existingLeads, setExistingLeads] = useState<any[]>([]);
-
-  const convertRecordDates = (record: Record<string, any>) => {
-    const dateColumns = ['entry_date', 'created_at', 'updated_at', 'due_date'];
-    let convertedCount = 0;
-
-    dateColumns.forEach(col => {
-      if (!record[col]) return;
-      if (!isExcelSerialDate(record[col])) return;
-
-      const iso = convertExcelSerialToISO(record[col]);
-      if (iso) {
-        console.log(`[DateConversion] ${col}: ${record[col]} → ${iso}`);
-        record[col] = iso;
-        convertedCount++;
-      } else {
-        console.warn(`[DateConversion] Falha ao converter ${col}:`, record[col]);
-        record[col] = null;
-      }
-    });
-
-    return convertedCount;
-  };
 
   // Fetch existing leads from DB for duplicate detection
   useEffect(() => {
@@ -133,7 +84,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
       update({
         validationResults: results,
-        newOptions: { newOrigins: [], newInterestLevels: [], newTags: opts.newTags },
+        newOptions: { newOrigins: opts.newOrigins, newInterestLevels: opts.newInterestLevels, newTags: opts.newTags },
         duplicates,
       });
     }
@@ -224,95 +175,64 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       return;
     }
 
+    const duplicateMap = new Map(state.duplicates.map(d => [d.rowIndex, d]));
+    const rowsToImport = state.validationResults
+      .filter(r => r.status !== 'error' && r.data)
+      .filter(r => {
+        const dup = duplicateMap.get(r.row);
+        return !dup || dup.action !== 'skip';
+      })
+      .map(r => {
+        const data = r.data as Partial<Lead>;
+        const tagsValue = Array.isArray(data.tags) ? data.tags.join(',') : (data.tags || '');
+
+        return {
+          __lineNumber: r.row,
+          nome: data.name || '',
+          telefone: data.phone || '',
+          email: data.email || '',
+          instagram: data.instagram || '',
+          cidade: data.city || '',
+          data_entrada: data.entryDate || '',
+          origem: data.origin || '',
+          nivel_interesse: data.interestLevel || '',
+          etapa_funil: data.pipelineStage || '',
+          interesse_principal: data.mainInterest || '',
+          dor_principal: (data as any).painPoint || '',
+          area_tensao: (data as any).bodyTensionArea || '',
+          objetivo_emocional: (data as any).emotionalGoal || '',
+          tags: tagsValue,
+          observacoes: data.notes || '',
+        };
+      });
+
     update({
       importing: true,
       importProgress: 0,
       importProcessed: 0,
-      importTotal: 0,
+      importTotal: rowsToImport.length,
       dateConversions: state.dateConversions,
     });
 
-    // Auto-create missing tags in DB
-    for (const tagName of state.newOptions.newTags) {
-      await supabase.from('tags').insert({
-        name: tagName,
-        color: 'hsl(var(--primary))',
-        organization_id: organizationId,
-      });
-    }
-
-    const toImport = state.validationResults.filter(r => r.status === 'success' && r.data);
-    const dupRows = new Set(state.duplicates.map(d => d.rowIndex));
-    const cleanToImport = toImport.filter(r => !dupRows.has(r.row));
-
-    let created = 0, updated = 0, duplicated = 0, errors = 0;
-    let dateConversions = state.dateConversions;
-    const total = cleanToImport.length + state.duplicates.filter(d => d.action !== 'skip').length;
-    let processed = 0;
-
-    update({ importTotal: total });
-
-    // Batch insert clean leads (chunks of 50)
-    const BATCH_SIZE = 50;
-    for (let i = 0; i < cleanToImport.length; i += BATCH_SIZE) {
-      const batch = cleanToImport.slice(i, i + BATCH_SIZE);
-      const records = batch.map(item => {
-        const record = toDbRecord(item.data!, organizationId);
-        dateConversions += convertRecordDates(record);
-        return record;
-      });
-
-      const { data, error } = await supabase.from('leads').insert(records).select('id');
-
-      if (error) {
-        console.error('[Step5Import] Batch insert error:', error);
-        errors += batch.length;
-      } else {
-        created += data?.length || batch.length;
-      }
-
-      processed += batch.length;
+    try {
+      const result = await processImportedLeads(organizationId, rowsToImport);
       update({
-        importProgress: Math.round((processed / Math.max(total, 1)) * 100),
-        importProcessed: processed,
-        dateConversions,
+        importProgress: 100,
+        importProcessed: rowsToImport.length,
+        importResult: {
+          created: result.created,
+          updated: result.updated,
+          converted: result.converted,
+          errors: result.errors,
+          dateConversions: state.dateConversions,
+        },
+        importing: false,
       });
+      console.log('[Step5Import] ✅ Import done:', result);
+      onNext();
+    } catch (error) {
+      update({ importing: false, error: error instanceof Error ? error.message : 'Erro ao importar leads' });
     }
-
-    // Handle duplicates
-    for (const dup of state.duplicates) {
-      if (dup.action === 'skip') continue;
-      try {
-        if (dup.action === 'update') {
-          const updateData = toDbRecord(dup.newData as Partial<Lead>, organizationId);
-          delete (updateData as any).organization_id; // Don't update org_id
-          dateConversions += convertRecordDates(updateData as Record<string, any>);
-          const { error } = await supabase
-            .from('leads')
-            .update(updateData)
-            .eq('id', dup.existingLeadId)
-            .eq('organization_id', organizationId);
-          if (error) { console.error('[Step5Import] Update error:', error); errors++; }
-          else updated++;
-        } else if (dup.action === 'duplicate') {
-          const record = toDbRecord(dup.newData as Partial<Lead>, organizationId);
-          dateConversions += convertRecordDates(record as Record<string, any>);
-          const { error } = await supabase.from('leads').insert(record);
-          if (error) { console.error('[Step5Import] Duplicate insert error:', error); errors++; }
-          else duplicated++;
-        }
-      } catch { errors++; }
-      processed++;
-      update({
-        importProgress: Math.round((processed / Math.max(total, 1)) * 100),
-        importProcessed: processed,
-        dateConversions,
-      });
-    }
-
-    update({ importResult: { created, updated, duplicated, errors, dateConversions }, importing: false });
-    console.log('[Step5Import] ✅ Import done (Supabase):', { created, updated, duplicated, errors, dateConversions });
-    onNext();
   };
 
   if (state.importing) {

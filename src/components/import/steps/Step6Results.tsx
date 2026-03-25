@@ -12,7 +12,8 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
   const result = state.importResult;
   if (!result) return null;
 
-  const total = result.created + result.updated + result.duplicated;
+  const errorCount = result.errors.length;
+  const total = result.created + result.updated + result.converted + errorCount;
 
   return (
     <div className="text-center py-6 space-y-5">
@@ -41,19 +42,32 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
             <p className="text-xs text-muted-foreground">atualizados</p>
           </div>
         )}
-        {result.duplicated > 0 && (
+        {result.converted > 0 && (
           <div className="text-center">
-            <p className="text-2xl font-bold text-warning">{result.duplicated}</p>
-            <p className="text-xs text-muted-foreground">duplicados</p>
+            <p className="text-2xl font-bold text-success">{result.converted}</p>
+            <p className="text-xs text-muted-foreground">convertidos</p>
           </div>
         )}
-        {result.errors > 0 && (
+        {errorCount > 0 && (
           <div className="text-center">
-            <p className="text-2xl font-bold text-destructive">{result.errors}</p>
+            <p className="text-2xl font-bold text-destructive">{errorCount}</p>
             <p className="text-xs text-muted-foreground">erros</p>
           </div>
         )}
       </div>
+
+      {errorCount > 0 && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-left">
+          <p className="text-xs font-semibold text-foreground mb-2">Erros encontrados</p>
+          <div className="max-h-[160px] overflow-y-auto space-y-1">
+            {result.errors.map((err, index) => (
+              <p key={`${err.linha}-${index}`} className="text-[11px] text-destructive">
+                Linha {err.linha}: {err.erro}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-center gap-3 pt-2">
         <Button variant="outline" onClick={onImportMore}>Importar mais</Button>
