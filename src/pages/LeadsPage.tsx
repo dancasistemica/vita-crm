@@ -75,6 +75,15 @@ export default function LeadsPage() {
     });
   };
 
+  const getActiveFiltersCount = (): number => {
+    let count = 0;
+    if (selectedOrigin !== 'all') count++;
+    if (selectedInterest !== 'all') count++;
+    if (selectedStage !== 'all') count++;
+    if (selectedTags.length > 0) count++;
+    return count;
+  };
+
   const filtered = useMemo(() => {
     return getFilteredLeads();
   }, [leads, search, selectedOrigin, selectedInterest, selectedStage, selectedTags]);
@@ -167,6 +176,8 @@ export default function LeadsPage() {
     );
   }
 
+  const activeFiltersCount = getActiveFiltersCount();
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -215,6 +226,15 @@ export default function LeadsPage() {
         </div>
 
         <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6">
+          {activeFiltersCount > 0 && (
+            <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
+              <h3 className="text-sm font-semibold text-gray-700">Filtros</h3>
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold sm:ml-auto">
+                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} ativo{activeFiltersCount !== 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Origem</label>
