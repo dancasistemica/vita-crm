@@ -124,23 +124,35 @@ export const tagsService = {
     try {
       console.log('[TagsService] Deletando tag:', tagId);
 
+      console.log('[TagsService] Removendo relacionamentos em lead_tags...');
+
       const { error: deleteRelError } = await supabase
         .from('lead_tags')
         .delete()
         .eq('tag_id', tagId);
 
-      if (deleteRelError) throw deleteRelError;
+      if (deleteRelError) {
+        console.warn('[TagsService] ⚠️ Aviso ao deletar relacionamentos:', deleteRelError);
+      } else {
+        console.log('[TagsService] ✅ Relacionamentos deletados (ou não havia nenhum)');
+      }
+
+      console.log('[TagsService] Deletando tag da tabela tags...');
 
       const { error: deleteTagError } = await supabase
         .from('tags')
         .delete()
         .eq('id', tagId);
 
-      if (deleteTagError) throw deleteTagError;
+      if (deleteTagError) {
+        console.error('[TagsService] ❌ Erro ao deletar tag:', deleteTagError);
+        throw new Error(`Erro ao deletar tag: ${deleteTagError.message}`);
+      }
 
-      console.log('[TagsService] Tag deletada:', tagId);
+      console.log('[TagsService] ✅ Tag deletada com sucesso:', tagId);
+      return true;
     } catch (error) {
-      console.error('[TagsService] Erro ao deletar tag:', error);
+      console.error('[TagsService] ❌ Erro crítico ao deletar tag:', error);
       throw error;
     }
   },

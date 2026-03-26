@@ -24,6 +24,7 @@ export const TagsManagement = () => {
   const [newTagColor, setNewTagColor] = useState('#3b82f6');
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const loadTags = useCallback(async () => {
     if (!organization?.id) {
@@ -129,16 +130,36 @@ export const TagsManagement = () => {
   };
 
   const handleDeleteTag = async (tagId: string) => {
+    if (!tagId) {
+      console.error('[TagsManagement] ❌ ID da tag inválido');
+      toast.error('ID da tag inválido');
+      return;
+    }
+
+    console.log('[TagsManagement] Iniciando deleção de tag:', tagId);
     setIsSaving(true);
+    setDeleteError(null);
+
     try {
-      console.log('[TagsManagement] Deletando tag:', tagId);
+      const tag = tags.find((t) => t.id === tagId);
+      if (!tag) {
+        throw new Error('Tag não encontrada');
+      }
+
+      console.log('[TagsManagement] Deletando tag:', tag.name);
       await tagsService.deleteTag(tagId);
+      console.log('[TagsManagement] ✅ Tag deletada com sucesso');
       setShowDeleteModal(null);
-      toast.success('Tag deletada com sucesso');
+      setDeleteError(null);
+      toast.success(`Tag "${tag.name}" deletada com sucesso`);
       await loadTags();
     } catch (error) {
-      console.error('[TagsManagement] Erro ao deletar tag:', error);
-      toast.error('Erro ao deletar tag');
+      console.error('[TagsManagement] ❌ Erro ao deletar tag:', error);
+
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido ao deletar tag';
+
+      setDeleteError(errorMessage);
+      toast.error(`Erro ao deletar tag: ${errorMessage}`);
     } finally {
       setIsSaving(false);
     }
@@ -257,7 +278,10 @@ export const TagsManagement = () => {
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => setShowDeleteModal(tag.id)}
+                      onClick={() => {
+                        setShowDeleteModal(tag.id);
+                        setDeleteError(null);
+                      }}
                       className="p-2 min-h-[44px] min-w-[44px] text-red-600 hover:bg-red-50 rounded transition-colors"
                       title="Deletar tag"
                     >
@@ -286,11 +310,20 @@ export const TagsManagement = () => {
               <p className="text-sm text-gray-500">
                 ⚠️ A tag será removida de todos os leads que a usam.
               </p>
+              {deleteError && (
+                <div className="mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md text-sm">
+                  <p className="font-semibold mb-1">❌ Erro ao deletar:</p>
+                  <p>{deleteError}</p>
+                </div>
+              )}
             </div>
 
             <div className="bg-gray-50 border-t border-gray-200 p-4 flex gap-3 justify-end">
               <button
-                onClick={() => setShowDeleteModal(null)}
+                onClick={() => {
+                  setShowDeleteModal(null);
+                  setDeleteError(null);
+                }}
                 disabled={isSaving}
                 className="px-4 py-2 min-h-[44px] bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
               >
@@ -302,7 +335,7 @@ export const TagsManagement = () => {
                 className="px-4 py-2 min-h-[44px] bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {isSaving && <Loader className="w-4 h-4 animate-spin" />}
-                Deletar
+                {deleteError ? 'Tentar Novamente' : 'Deletar'}
               </button>
             </div>
           </div>
