@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type DragEvent, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -6,15 +6,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Edit, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
 import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
+import { useOrganization } from "@/contexts/OrganizationContext";
 
 export default function ProdutosPage() {
+  const { organizationId } = useOrganization();
   const { products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProductView | null>(null);
-  const [sortOrder, setSortOrder] = useState("recent_desc");
+  const [orderedProducts, setOrderedProducts] = useState<ProductView[]>([]);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+
+  const orderStorageKey = organizationId ? `products-order:${organizationId}` : "products-order";
+
+  useEffect(() => {
+    if (products.length === 0) {
+      setOrderedProducts([]);
+      return;
+    }
+    let storedIds: string[] = [];
+    try {
+      const raw = localStorage.getItem(orderStorageKey);
+      storedIds = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(storedIds)) storedIds = [];
+    } catch {
+      storedIds = [];
+    }
+
+    if (storedIds.length === 0) {
+      setOrderedProducts(products);
+      return;
+    }
+
+    const byId = new Map(products.map((p) => [p.id, p]));
+    const storedSet = new Set(storedIds);
+    const ordered = storedIds.map((id) => byId.get(id)).filter(Boolean) as ProductView[];
+    const missing = products.filter((p) => !storedSet.has(p.id));
+    setOrderedProducts([...ordered, ...missing]);
+  }, [products, orderStorageKey]);
 
   const handleSave = async (data: ProductInput) => {
     if (editing) {
@@ -26,29 +56,35 @@ export default function ProdutosPage() {
     setEditing(null);
   };
 
-  const orderedProducts = [...products].sort((a, b) => {
-    if (sortOrder === "name_asc") return a.name.localeCompare(b.name, "pt-BR");
-    if (sortOrder === "name_desc") return b.name.localeCompare(a.name, "pt-BR");
-    if (sortOrder === "recent_asc") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  const handleDragStart = (index: number) => setDragIndex(index);
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>, index: number) => {
+    event.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    setOrderedProducts((current) => {
+      const next = [...current];
+      const [moved] = next.splice(dragIndex, 1);
+      next.splice(index, 0, moved);
+      return next;
+    });
+    setDragIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDragIndex(null);
+    try {
+      localStorage.setItem(orderStorageKey, JSON.stringify(orderedProducts.map((p) => p.id)));
+    } catch {
+      // ignore storage errors
+    }
+  };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display text-foreground">Produtos</h1>
-        <div className="flex items-center gap-2">
-          <Select value={sortOrder} onValueChange={setSortOrder}>
-            <SelectTrigger className="w-[210px]">
-              <SelectValue placeholder="Ordenar" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recent_desc">Mais recentes</SelectItem>
-              <SelectItem value="recent_asc">Mais antigos</SelectItem>
-              <SelectItem value="name_asc">Nome A-Z</SelectItem>
-              <SelectItem value="name_desc">Nome Z-A</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex items-center justify-between">
+         <h1 className="text-2xl font-display text-foreground">Produtos</h1>
+         <div className="flex items-center gap-3 text-sm text-muted-foreground">
+          <span>Arraste para ordenar</span>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
             <DialogTrigger asChild>
               <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</Button>
@@ -69,11 +105,22 @@ export default function ProdutosPage() {
         <p className="text-muted-foreground text-center py-12">Nenhum produto cadastrado</p>
       ) : (
         <div className="space-y-3">
-          {orderedProducts.map(product => (
-            <Card key={product.id}>
+          {orderedProducts.map((product, index) => (
+            <Card
+              key={product.id}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={(event) => handleDragOver(event, index)}
+              onDragEnd={handleDragEnd}
+              className={dragIndex === index ? "opacity-60" : undefined}
+            >
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-4">
-                  <div>
+                  <div className="flex gap-3">
+                    <div className="pt-1 text-muted-foreground cursor-grab">
+                      <GripVertical className="h-4 w-4" />
+                    </div>
+                    <div>
                     <CardTitle className="text-lg font-display">{product.name}</CardTitle>
                     <div className="flex flex-wrap items-center gap-2 mt-1">
                       {product.type && <Badge variant="secondary">{product.type}</Badge>}
@@ -82,6 +129,7 @@ export default function ProdutosPage() {
                           Criado em {new Date(product.createdAt).toLocaleDateString("pt-BR")}
                         </span>
                       )}
+                    </div>
                     </div>
                   </div>
                   <div className="flex gap-1">

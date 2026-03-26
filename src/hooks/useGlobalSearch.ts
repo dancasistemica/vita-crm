@@ -50,6 +50,17 @@ export function useGlobalSearch(organizationId?: string | null) {
   const [results, setResults] = useState<GlobalSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const filterProductsByTerm = useCallback((items: ProductResult[], term: string) => {
+    const filterTerm = term.toLowerCase();
+    return items.filter((product) => {
+      const haystack = [product.name, product.type, product.description, product.notes]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(filterTerm);
+    }).slice(0, 5);
+  }, []);
+
   const clearResults = useCallback(() => {
     setResults([]);
   }, []);
@@ -125,15 +136,10 @@ export function useGlobalSearch(organizationId?: string | null) {
           if (fallback.error) {
             console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
           } else {
-            const filterTerm = term.toLowerCase();
-            products = (fallback.data || []).filter((product: ProductResult) => {
-              const haystack = [product.name, product.type, product.description, product.notes]
-                .filter(Boolean)
-                .join(" ")
-                .toLowerCase();
-              return haystack.includes(filterTerm);
-            }).slice(0, 5);
+            products = filterProductsByTerm(fallback.data || [], term);
           }
+        } else {
+          products = filterProductsByTerm(products, term);
         }
 
         const allResults: GlobalSearchResult[] = [
@@ -180,7 +186,7 @@ export function useGlobalSearch(organizationId?: string | null) {
         setLoading(false);
       }
     },
-    [organizationId],
+    [filterProductsByTerm, organizationId],
   );
 
   return {
