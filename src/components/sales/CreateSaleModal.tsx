@@ -15,8 +15,8 @@ interface ProductSalesStage {
   id: string;
   product_id: string;
   product_name: string;
-  stage_name: string;
-  stage_value: number;
+  name: string;
+  value: number;
 }
 
 interface Product {
@@ -119,18 +119,26 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         setProducts(productsData || []);
       }
 
-      // Carregar etapas de venda (CORRIGIDO: product_sales_stages, não sales_stages)
+      // Carregar etapas de venda por produto (product_sales_stages)
       const { data: stagesData, error: stagesError } = await supabase
         .from('product_sales_stages')
-        .select('id, product_id, product_name, stage_name, stage_value')
-        .eq('organization_id', organization.id)
-        .order('product_name, stage_value', { ascending: true });
+        .select('id, product_id, name, value, products!inner(id, name, organization_id)')
+        .eq('products.organization_id', organization.id)
+        .order('name', { foreignTable: 'products', ascending: true })
+        .order('value', { ascending: true });
 
       if (stagesError) {
         console.error('[CreateSaleModal] Erro ao carregar etapas:', stagesError);
       } else {
-        console.log('[CreateSaleModal] Etapas de venda carregadas:', stagesData?.length || 0);
-        setProductSalesStages(stagesData || []);
+        const mappedStages: ProductSalesStage[] = (stagesData || []).map((stage: any) => ({
+          id: stage.id,
+          product_id: stage.product_id,
+          product_name: stage.products?.name || '',
+          name: stage.name,
+          value: Number(stage.value) || 0,
+        }));
+        console.log('[CreateSaleModal] Etapas de venda carregadas:', mappedStages.length);
+        setProductSalesStages(mappedStages);
       }
 
       // Carregar formas de pagamento
@@ -459,7 +467,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                             setFormData({
                               ...formData,
                               sales_stage_id: stage.id,
-                              stage_value: stage.stage_value,
+                              stage_value: stage.value,
                             });
                           }}
                           className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
@@ -468,8 +476,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                               : 'border-gray-300 hover:border-blue-400'
                           }`}
                         >
-                          <p className="font-semibold text-gray-900">{stage.stage_name}</p>
-                          <p className="text-lg font-bold text-blue-600">R$ {stage.stage_value.toFixed(2)}</p>
+                          <p className="font-semibold text-gray-900">{stage.name}</p>
+                          <p className="text-lg font-bold text-blue-600">R$ {stage.value.toFixed(2)}</p>
                         </button>
                       ))
                   )}
