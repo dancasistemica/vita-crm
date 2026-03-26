@@ -3,7 +3,6 @@ import { X, Loader, ChevronRight, Check, Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { useCRMStore } from '@/store/crmStore';
 import { toast } from 'sonner';
 
 interface CreateSaleModalProps {
@@ -33,11 +32,11 @@ interface Client {
 
 export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalProps) => {
   const { organization } = useOrganization();
-  const { paymentMethods: storedPaymentMethods } = useCRMStore();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   // Busca de cliente
@@ -74,8 +73,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   }, [clients, clientSearch]);
 
   const activePaymentMethods = useMemo(
-    () => storedPaymentMethods.filter((method) => method.active),
-    [storedPaymentMethods]
+    () => paymentMethods.filter((method) => method.active),
+    [paymentMethods]
   );
 
   // Carregar dados iniciais
@@ -84,11 +83,6 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       loadAllData();
     }
   }, [isOpen, organization?.id]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    console.log('[CreateSaleModal] Formas de pagamento (store):', storedPaymentMethods.length);
-  }, [isOpen, storedPaymentMethods.length]);
 
   const loadAllData = async () => {
     if (!organization?.id) return;
@@ -123,6 +117,21 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       } else {
         console.log('[CreateSaleModal] Produtos carregados:', productsData?.length || 0);
         setProducts(productsData || []);
+      }
+
+      // Carregar formas de pagamento
+      const { data: paymentMethodsData, error: paymentMethodsError } = await supabase
+        .from('payment_methods')
+        .select('id, name, active')
+        .eq('organization_id', organization.id)
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true });
+
+      if (paymentMethodsError) {
+        console.error('[CreateSaleModal] Erro ao carregar formas de pagamento:', paymentMethodsError);
+      } else {
+        console.log('[CreateSaleModal] Formas de pagamento carregadas:', paymentMethodsData?.length || 0);
+        setPaymentMethods(paymentMethodsData || []);
       }
 
       // Carregar etapas de venda por produto (product_sales_stages)
