@@ -1,6 +1,6 @@
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ export default function CRMLayout() {
   const { brand } = useBrand();
   const { currentOrganization } = useOrganizationSwitch();
   const { searchQuery, setSearchQuery, results, loading } = useSearch();
+  const navigate = useNavigate();
   const organizationName = currentOrganization?.name || brand.org_display_name || "CRM";
 
   return (
@@ -64,11 +65,11 @@ export default function CRMLayout() {
                       key={`${result.type}-${result.id}`}
                       onClick={() => {
                         if (result.type === "lead") {
-                          window.location.href = `/leads/${result.id}`;
+                          navigate("/leads", { state: { leadId: result.id } });
                         } else if (result.type === "client") {
-                          window.location.href = `/clients/${result.id}`;
+                          navigate(`/clientes/${result.id}`);
                         } else if (result.type === "task") {
-                          window.location.href = `/tasks/${result.id}`;
+                          navigate("/tarefas", { state: { taskId: result.id } });
                         }
                         setSearchQuery("");
                       }}
