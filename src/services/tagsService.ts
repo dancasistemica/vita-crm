@@ -12,14 +12,29 @@ export const tagsService = {
         .eq('organization_id', organizationId)
         .order('name', { ascending: true });
 
-      if (tagsError) throw tagsError;
+      if (tagsError) {
+        console.error('[TagsService] Erro ao buscar tags:', tagsError);
+        throw tagsError;
+      }
+
+      if (!tags || tags.length === 0) {
+        console.log('[TagsService] Nenhuma tag encontrada');
+        return [];
+      }
 
       const tagsWithUsage = await Promise.all(
-        (tags || []).map(async (tag) => {
-          const { count } = await supabase
+        tags.map(async (tag) => {
+          const { count, error: countError } = await supabase
             .from('lead_tags')
             .select('*', { count: 'exact', head: true })
             .eq('tag_id', tag.id);
+
+          if (countError) {
+            console.error(`[TagsService] Erro ao contar leads para tag ${tag.id}:`, countError);
+            return { ...tag, usageCount: 0 };
+          }
+
+          console.log(`[TagsService] Tag "${tag.name}" (${tag.id}): ${count || 0} leads`);
 
           return {
             ...tag,
@@ -28,7 +43,7 @@ export const tagsService = {
         })
       );
 
-      console.log('[TagsService] Tags carregadas:', tagsWithUsage.length);
+      console.log('[TagsService] Tags carregadas com contagem:', tagsWithUsage.length);
       return tagsWithUsage;
     } catch (error) {
       console.error('[TagsService] Erro ao listar tags:', error);

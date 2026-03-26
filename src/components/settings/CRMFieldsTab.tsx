@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useCRMStore, CRMTag } from "@/store/crmStore";
+import { TagsManagement } from "@/components/settings/TagsManagement";
 import { useDataAccess } from "@/hooks/useDataAccess";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
@@ -34,7 +33,7 @@ interface DBInterestLevel {
   active: boolean;
 }
 
-type FieldKey = "origin" | "interest_level" | "funnel_stages";
+type FieldKey = "origin" | "interest_level" | "funnel_stages" | "tags";
 
 interface CRMFieldDef {
   key: FieldKey;
@@ -46,10 +45,10 @@ const DEFAULT_FIELDS: CRMFieldDef[] = [
   { key: "origin", label: "Origem do Lead", icon: "🌐" },
   { key: "interest_level", label: "Nível de Interesse", icon: "⭐" },
   { key: "funnel_stages", label: "Etapas do Funil", icon: "📈" },
+  { key: "tags", label: "Tags", icon: "🏷️" },
 ];
 
 export default function CRMFieldsTab() {
-  const { tags, addTag, updateTag, removeTag } = useCRMStore();
   const dataAccess = useDataAccess();
   const { organizationId } = useOrganization();
 
@@ -64,10 +63,6 @@ export default function CRMFieldsTab() {
   const [activeTab, setActiveTab] = useState<FieldKey>("origin");
   const [draggedField, setDraggedField] = useState<FieldKey | null>(null);
   const [orderLoading, setOrderLoading] = useState(true);
-
-  // ── Tags (Zustand) ──
-  const [newTag, setNewTag] = useState('');
-  const [editingTag, setEditingTag] = useState<CRMTag | null>(null);
 
   // ── DB-based origins ──
   const [origins, setOrigins] = useState<DBLeadOrigin[]>([]);
@@ -98,7 +93,7 @@ export default function CRMFieldsTab() {
     isOpen: boolean;
     id: string;
     name: string;
-    type: 'origem' | 'nível de interesse' | 'etapa do funil' | 'tag';
+    type: 'origem' | 'nível de interesse' | 'etapa do funil';
   }>({ isOpen: false, id: '', name: '', type: 'origem' });
 
   const openDeleteConfirm = (id: string, name: string, type: typeof deleteConfirm.type) => {
@@ -116,7 +111,6 @@ export default function CRMFieldsTab() {
     if (type === 'origem') await handleDeleteOrigin(id);
     else if (type === 'nível de interesse') await handleDeleteLevel(id);
     else if (type === 'etapa do funil') await handleDeleteStage(id);
-    else if (type === 'tag') { removeTag(id); toast.success("Tag removida"); }
   };
 
 
@@ -663,6 +657,7 @@ export default function CRMFieldsTab() {
     origin: renderOriginSection,
     interest_level: renderInterestLevelSection,
     funnel_stages: renderFunnelStagesSection,
+    tags: () => <TagsManagement />,
   };
 
   if (orderLoading) {
@@ -718,34 +713,6 @@ export default function CRMFieldsTab() {
 
       {/* Active Tab Content */}
       <div>{SECTION_RENDERERS[activeTab]()}</div>
-
-      {/* Tags section (always visible below) */}
-      <Card>
-        <CardHeader><CardTitle className="text-lg">🏷️ Tags Personalizadas</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.map(t => (
-              <div key={t.id} className="flex items-center gap-1 bg-muted/50 rounded-full px-3 py-1">
-                {editingTag?.id === t.id ? (
-                  <Input value={editingTag.name} onChange={e => setEditingTag({ ...editingTag, name: e.target.value })} className="h-6 text-xs w-32" />
-                ) : (
-                  <Badge variant="secondary">{t.name}</Badge>
-                )}
-                {editingTag?.id === t.id ? (
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { updateTag(t.id, editingTag); toast.success("Tag atualizada"); setEditingTag(null); }}>✓</Button>
-                ) : (
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></Button>
-                )}
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => openDeleteConfirm(t.id, t.name, 'tag')}><Trash2 className="h-3 w-3" /></Button>
-              </div>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input placeholder="Nova tag..." value={newTag} onChange={e => setNewTag(e.target.value)} />
-            <Button onClick={() => { if (newTag.trim()) { addTag({ id: crypto.randomUUID(), name: newTag.trim(), color: 'hsl(var(--primary))' }); setNewTag(''); toast.success("Tag adicionada"); } }} disabled={!newTag.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
