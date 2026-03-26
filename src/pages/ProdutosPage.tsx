@@ -6,15 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Edit, Trash2, ExternalLink, Loader2 } from "lucide-react";
-import { useProductsData, ProductView } from "@/hooks/useProductsData";
+import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
 
 export default function ProdutosPage() {
   const { products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProductView | null>(null);
+  const [sortOrder, setSortOrder] = useState("recent_desc");
 
-  const handleSave = async (data: Omit<ProductView, 'id'>) => {
+  const handleSave = async (data: ProductInput) => {
     if (editing) {
       await updateProduct(editing.id, data);
     } else {
@@ -24,19 +26,39 @@ export default function ProdutosPage() {
     setEditing(null);
   };
 
+  const orderedProducts = [...products].sort((a, b) => {
+    if (sortOrder === "name_asc") return a.name.localeCompare(b.name, "pt-BR");
+    if (sortOrder === "name_desc") return b.name.localeCompare(a.name, "pt-BR");
+    if (sortOrder === "recent_asc") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display text-foreground">Produtos</h1>
-        <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
-          <DialogTrigger asChild>
-            <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader><DialogTitle className="font-display">{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle></DialogHeader>
-            <ProductForm product={editing} onSave={handleSave} />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-2">
+          <Select value={sortOrder} onValueChange={setSortOrder}>
+            <SelectTrigger className="w-[210px]">
+              <SelectValue placeholder="Ordenar" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent_desc">Mais recentes</SelectItem>
+              <SelectItem value="recent_asc">Mais antigos</SelectItem>
+              <SelectItem value="name_asc">Nome A-Z</SelectItem>
+              <SelectItem value="name_desc">Nome Z-A</SelectItem>
+            </SelectContent>
+          </Select>
+          <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
+            <DialogTrigger asChild>
+              <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+              <DialogHeader><DialogTitle className="font-display">{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle></DialogHeader>
+              <ProductForm product={editing} onSave={handleSave} />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {loading ? (
@@ -46,34 +68,59 @@ export default function ProdutosPage() {
       ) : products.length === 0 ? (
         <p className="text-muted-foreground text-center py-12">Nenhum produto cadastrado</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {products.map(product => (
+        <div className="space-y-3">
+          {orderedProducts.map(product => (
             <Card key={product.id}>
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg font-display">{product.name}</CardTitle>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-lg font-display">{product.name}</CardTitle>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      {product.type && <Badge variant="secondary">{product.type}</Badge>}
+                      {product.createdAt && (
+                        <span className="text-xs text-muted-foreground">
+                          Criado em {new Date(product.createdAt).toLocaleDateString("pt-BR")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
-                {product.type && <Badge variant="secondary" className="w-fit">{product.type}</Badge>}
               </CardHeader>
-              <CardContent>
-                {product.description && <p className="text-sm text-muted-foreground mb-3">{product.description}</p>}
-                <div className="space-y-1">
-                  {product.salesStages.map(stage => (
-                    <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
-                      <span>{stage.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">R$ {stage.value.toLocaleString('pt-BR')}</span>
-                        {stage.link && (
-                          <a href={stage.link} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3 text-primary" /></a>
-                        )}
-                      </div>
+              <CardContent className="space-y-3">
+                {product.description && (
+                  <div>
+                    <div className="text-xs uppercase text-muted-foreground mb-1">Descrição</div>
+                    <p className="text-sm text-foreground/90">{product.description}</p>
+                  </div>
+                )}
+                {product.notes && (
+                  <div>
+                    <div className="text-xs uppercase text-muted-foreground mb-1">Observações</div>
+                    <p className="text-sm text-muted-foreground">{product.notes}</p>
+                  </div>
+                )}
+                {product.salesStages.length > 0 && (
+                  <div>
+                    <div className="text-xs uppercase text-muted-foreground mb-2">Etapas de venda</div>
+                    <div className="space-y-1">
+                      {product.salesStages.map(stage => (
+                        <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
+                          <span>{stage.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold">R$ {stage.value.toLocaleString('pt-BR')}</span>
+                            {stage.link && (
+                              <a href={stage.link} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3 text-primary" /></a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -91,7 +138,7 @@ interface ProductFormData {
   salesStages: { id: string; name: string; value: number; link: string }[];
 }
 
-function ProductForm({ product, onSave }: { product: ProductView | null; onSave: (data: Omit<ProductView, 'id'>) => void }) {
+function ProductForm({ product, onSave }: { product: ProductView | null; onSave: (data: ProductInput) => void }) {
   const [form, setForm] = useState<ProductFormData>(
     product
       ? { name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }

@@ -11,12 +11,15 @@ export interface ProductStageView {
 
 export interface ProductView {
   id: string;
+  createdAt: string;
   name: string;
   type: string;
   description: string;
   notes: string;
   salesStages: ProductStageView[];
 }
+
+export type ProductInput = Omit<ProductView, "id" | "createdAt">;
 
 export function useProductsData() {
   const dataAccess = useDataAccess();
@@ -30,6 +33,7 @@ export function useProductsData() {
       const data = await dataAccess.getProducts();
       const mapped: ProductView[] = (data || []).map((p: any) => ({
         id: p.id,
+        createdAt: p.created_at,
         name: p.name || '',
         type: p.type || '',
         description: p.description || '',
@@ -54,7 +58,7 @@ export function useProductsData() {
     fetchAll();
   }, [fetchAll]);
 
-  const createProduct = async (product: Omit<ProductView, 'id'>) => {
+  const createProduct = async (product: ProductInput) => {
     if (!dataAccess) return;
     try {
       const created = await dataAccess.createProduct({
@@ -74,7 +78,7 @@ export function useProductsData() {
     }
   };
 
-  const updateProduct = async (id: string, product: Omit<ProductView, 'id'>) => {
+  const updateProduct = async (id: string, product: ProductInput) => {
     if (!dataAccess) return;
     try {
       await dataAccess.updateProduct(id, {

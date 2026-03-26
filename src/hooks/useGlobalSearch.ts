@@ -65,7 +65,7 @@ export function useGlobalSearch(organizationId?: string | null) {
       }
 
       setLoading(true);
-      const term = normalized.toLowerCase();
+      const term = normalized;
 
       try {
         const [leadsResponse, clientsResponse, tasksResponse, productsResponse] = await Promise.all([
@@ -110,14 +110,31 @@ export function useGlobalSearch(organizationId?: string | null) {
         if (tasksResponse.error) {
           console.error("[GlobalSearch] Erro ao buscar tarefas:", tasksResponse.error);
         }
-        if (productsResponse.error) {
-          console.error("[GlobalSearch] Erro ao buscar produtos:", productsResponse.error);
-        }
-
         const leads = (leadsResponse.data || []) as LeadResult[];
         const clients = (clientsResponse.data || []) as ClientResult[];
         const tasks = (tasksResponse.data || []) as TaskResult[];
-        const products = (productsResponse.data || []) as ProductResult[];
+        let products = (productsResponse.data || []) as ProductResult[];
+
+        if (productsResponse.error) {
+          console.error("[GlobalSearch] Erro ao buscar produtos:", productsResponse.error);
+          const fallback = await supabase
+            .from("products")
+            .select("id, name, type, description, notes")
+            .eq("organization_id", organizationId)
+            .limit(50);
+          if (fallback.error) {
+            console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
+          } else {
+            const filterTerm = term.toLowerCase();
+            products = (fallback.data || []).filter((product: ProductResult) => {
+              const haystack = [product.name, product.type, product.description, product.notes]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+              return haystack.includes(filterTerm);
+            }).slice(0, 5);
+          }
+        }
 
         const allResults: GlobalSearchResult[] = [
           ...leads.map((lead) => ({
