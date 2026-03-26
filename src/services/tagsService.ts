@@ -25,9 +25,10 @@ export const tagsService = {
       const tagsWithUsage = await Promise.all(
         tags.map(async (tag) => {
           const { count, error: countError } = await supabase
-            .from('lead_tags')
+            .from('leads')
             .select('*', { count: 'exact', head: true })
-            .eq('tag_id', tag.id);
+            .eq('organization_id', organizationId)
+            .contains('tags', [tag.name]);
 
           if (countError) {
             console.error(`[TagsService] Erro ao contar leads para tag ${tag.id}:`, countError);
