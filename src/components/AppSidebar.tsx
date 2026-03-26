@@ -19,7 +19,7 @@ import {
 const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Leads", url: "/leads", icon: Users },
-  { title: "Pipeline", url: "/pipeline", icon: Columns3 },
+  { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },

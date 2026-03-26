@@ -27,13 +27,13 @@ export default function PipelinePage() {
     try {
       await updateLead(leadId, { pipelineStage: stageId });
     } catch (err) {
-      toast.error('Erro ao mover lead no pipeline');
+      toast.error('Erro ao mover lead no funil de vendas');
     }
   };
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-display text-foreground">Pipeline de Vendas</h1>
+      <h1 className="text-2xl font-display text-foreground">Funil de Vendas</h1>
       <ScrollArea className="w-full">
         <div className="flex gap-4 pb-4 min-w-max">
           {pipelineStages.sort((a, b) => a.order - b.order).map(stage => {

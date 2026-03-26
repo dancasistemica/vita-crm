@@ -10,7 +10,7 @@ export interface DashboardCardConfig {
 export const DASHBOARD_CARDS: DashboardCardConfig[] = [
   // Grupo: Leads
   { id: 'metrics_grid',        title: 'Cards de Métricas',       description: 'Total de leads, clientes, conversão, receita e ticket médio', defaultPosition: 0,  defaultVisible: true,  group: 'leads' },
-  { id: 'leads_por_estagio',   title: 'Leads por Estágio',       description: 'Gráfico de barras com distribuição dos leads no pipeline',     defaultPosition: 1,  defaultVisible: true,  group: 'leads' },
+  { id: 'leads_por_estagio',   title: 'Leads por Estágio',       description: 'Gráfico de barras com distribuição dos leads no funil de vendas',     defaultPosition: 1,  defaultVisible: true,  group: 'leads' },
   { id: 'leads_por_origem',    title: 'Leads por Origem',        description: 'Gráfico de pizza com leads por canal de origem',               defaultPosition: 2,  defaultVisible: true,  group: 'leads' },
 
   // Grupo: Financeiro
@@ -22,7 +22,7 @@ export const DASHBOARD_CARDS: DashboardCardConfig[] = [
   { id: 'tarefas_metricas',    title: 'Tarefas Vencidas e Pendentes', description: 'Cards com tarefas vencidas e pendentes da organização', defaultPosition: 6,  defaultVisible: true,  group: 'tarefas' },
 
   // Grupo: Pipeline
-  { id: 'leads_parados',       title: 'Leads Parados',           description: 'Alerta de leads sem atividade recente no pipeline',            defaultPosition: 7,  defaultVisible: true,  group: 'pipeline' },
+  { id: 'leads_parados',       title: 'Leads Parados',           description: 'Alerta de leads sem atividade recente no funil de vendas',            defaultPosition: 7,  defaultVisible: true,  group: 'pipeline' },
   { id: 'metricas_estagio',    title: 'Métricas por Etapa',      description: 'Tempo médio e taxa de conversão por etapa do funil',           defaultPosition: 8,  defaultVisible: true,  group: 'pipeline' },
 
   // Grupo: Analytics
@@ -35,6 +35,6 @@ export const GROUP_LABELS: Record<string, string> = {
   financeiro: '💰 Financeiro',
   tarefas: '✅ Tarefas',
   clientes: '👥 Clientes',
-  pipeline: '🔄 Pipeline',
+  pipeline: '🔄 Funil de Vendas',
   analytics: '🤖 Analytics',
 };

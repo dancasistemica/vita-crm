@@ -388,7 +388,7 @@ export default function CustomizePage() {
                 </span>
               </div>
               <div className="space-y-1">
-                {['Dashboard', 'Leads', 'Pipeline'].map((item, i) => (
+                {['Dashboard', 'Leads', 'Funil de Vendas'].map((item, i) => (
                   <div key={item} className={`px-3 py-1.5 rounded text-xs ${i === 0 ? 'font-medium' : ''}`}
                     style={{
                       backgroundColor: i === 0 ? 'rgba(255,255,255,0.1)' : 'transparent',

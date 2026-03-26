@@ -493,7 +493,7 @@ export function SystemSettings() {
                 </span>
               </div>
               <div className="space-y-1">
-                {['Dashboard', 'Leads', 'Pipeline'].map((item, i) => (
+                {['Dashboard', 'Leads', 'Funil de Vendas'].map((item, i) => (
                   <div key={item} className={`px-3 py-1.5 rounded text-xs ${i === 0 ? 'font-medium' : ''}`}
                     style={{
                       backgroundColor: i === 0 ? settings.color_sidebar_selected : 'transparent',

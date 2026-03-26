@@ -41,9 +41,9 @@ const MODULES: PermissionModule[] = [
     ],
   },
   {
-    label: 'Pipeline', icon: '📈',
+    label: 'Funil de Vendas', icon: '📈',
     permissions: [
-      { key: 'pipeline.view', label: 'Visualizar pipeline' },
+      { key: 'pipeline.view', label: 'Visualizar funil de vendas' },
       { key: 'pipeline.move', label: 'Mover cards entre etapas' },
       { key: 'pipeline.edit_stages', label: 'Editar etapas do funil' },
     ],
