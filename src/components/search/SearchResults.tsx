@@ -1,4 +1,4 @@
-import { CheckSquare, User, UserPlus } from "lucide-react";
+import { CheckSquare, Package, User, UserPlus } from "lucide-react";
 import type { GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
 
 interface SearchResultsProps {
@@ -12,12 +12,14 @@ const typeLabels: Record<GlobalSearchResultType, string> = {
   lead: "Leads",
   client: "Clientes",
   task: "Tarefas",
+  product: "Produtos",
 };
 
 const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
   lead: <UserPlus className="h-4 w-4 text-muted-foreground" />,
   client: <User className="h-4 w-4 text-muted-foreground" />,
   task: <CheckSquare className="h-4 w-4 text-muted-foreground" />,
+  product: <Package className="h-4 w-4 text-muted-foreground" />,
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
@@ -43,14 +45,20 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
 
   return (
     <div className="divide-y max-h-[60vh] overflow-y-auto">
-      {(["lead", "client", "task"] as GlobalSearchResultType[]).map((type) => {
+      {(["lead", "client", "task", "product"] as GlobalSearchResultType[]).map((type) => {
         const typeResults = results.filter((result) => result.type === type);
         if (typeResults.length === 0) return null;
 
         return (
           <div key={type}>
             <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase">
-              {type === "lead" ? "👤" : type === "client" ? "👥" : "✓"} {typeLabels[type]}
+              {type === "lead"
+                ? "👤"
+                : type === "client"
+                  ? "👥"
+                  : type === "task"
+                    ? "✓"
+                    : "📦"} {typeLabels[type]}
             </div>
             {typeResults.map((result) => (
               <button

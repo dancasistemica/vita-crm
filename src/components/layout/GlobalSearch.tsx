@@ -66,6 +66,9 @@ export function GlobalSearch() {
     } else if (result.type === "task") {
       console.log("[GlobalSearch] Navegando para:", "/tarefas");
       navigate("/tarefas", { state: { taskId: result.id } });
+    } else if (result.type === "product") {
+      console.log("[GlobalSearch] Navegando para:", "/produtos");
+      navigate("/produtos", { state: { productId: result.id } });
     }
 
     setOpen(false);
@@ -103,7 +106,7 @@ export function GlobalSearch() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             ref={inputRef}
-            placeholder="Buscar leads, clientes, tarefas..."
+            placeholder="Buscar leads, clientes, tarefas, produtos..."
             value={query}
             onChange={(event) => handleSearchChange(event.target.value)}
             onFocus={() => setOpen(true)}

@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type GlobalSearchResultType = "lead" | "client" | "task";
+export type GlobalSearchResultType = "lead" | "client" | "task" | "product";
 
 export interface GlobalSearchResult {
   id: string;
@@ -37,6 +37,14 @@ interface TaskResult {
   priority: string | null;
 }
 
+interface ProductResult {
+  id: string;
+  name: string;
+  type: string | null;
+  description: string | null;
+  notes: string | null;
+}
+
 export function useGlobalSearch(organizationId?: string | null) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GlobalSearchResult[]>([]);
@@ -60,7 +68,7 @@ export function useGlobalSearch(organizationId?: string | null) {
       const term = normalized.toLowerCase();
 
       try {
-        const [leadsResponse, clientsResponse, tasksResponse] = await Promise.all([
+        const [leadsResponse, clientsResponse, tasksResponse, productsResponse] = await Promise.all([
           supabase
             .from("leads")
             .select("id, name, email, phone, company, pipeline_stage")
@@ -83,6 +91,14 @@ export function useGlobalSearch(organizationId?: string | null) {
             .eq("organization_id", organizationId)
             .ilike("title", `%${term}%`)
             .limit(5),
+          supabase
+            .from("products")
+            .select("id, name, type, description, notes")
+            .eq("organization_id", organizationId)
+            .or(
+              `name.ilike.%${term}%,type.ilike.%${term}%,description.ilike.%${term}%,notes.ilike.%${term}%`,
+            )
+            .limit(5),
         ]);
 
         if (leadsResponse.error) {
@@ -94,10 +110,14 @@ export function useGlobalSearch(organizationId?: string | null) {
         if (tasksResponse.error) {
           console.error("[GlobalSearch] Erro ao buscar tarefas:", tasksResponse.error);
         }
+        if (productsResponse.error) {
+          console.error("[GlobalSearch] Erro ao buscar produtos:", productsResponse.error);
+        }
 
         const leads = (leadsResponse.data || []) as LeadResult[];
         const clients = (clientsResponse.data || []) as ClientResult[];
         const tasks = (tasksResponse.data || []) as TaskResult[];
+        const products = (productsResponse.data || []) as ProductResult[];
 
         const allResults: GlobalSearchResult[] = [
           ...leads.map((lead) => ({
@@ -120,12 +140,19 @@ export function useGlobalSearch(organizationId?: string | null) {
               ? `Prazo: ${new Date(task.due_date).toLocaleDateString("pt-BR")}`
               : "Sem prazo",
           })),
+          ...products.map((product) => ({
+            id: product.id,
+            type: "product" as const,
+            title: product.name,
+            subtitle: product.type || product.description || product.notes || undefined,
+          })),
         ];
 
         console.log("[GlobalSearch] Resultados encontrados:", allResults.length, {
           leads: leads.length,
           clientes: clients.length,
           tarefas: tasks.length,
+          produtos: products.length,
         });
 
         setResults(allResults);
