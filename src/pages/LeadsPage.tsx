@@ -15,8 +15,10 @@ import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
+import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { useUserRole } from "@/hooks/useUserRole";
+import { canDeleteLead } from "@/services/leadsService";
 
 const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
 const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
@@ -25,7 +27,8 @@ export default function LeadsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
-  const { canCreate: userCanCreate, canEdit: userCanEdit, canDelete: userCanDelete } = useUserRole();
+  const { role, canCreate: userCanCreate, canEdit: userCanEdit } = useUserRole();
+  const userCanDelete = canDeleteLead(role);
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
@@ -46,6 +49,9 @@ export default function LeadsPage() {
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [detailLead, setDetailLead] = useState<LeadView | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<LeadView | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
   const getFilteredLeads = () => {
@@ -132,6 +138,38 @@ export default function LeadsPage() {
       setSortOrder(savedOrder);
     }
   }, []);
+
+  const handleDeleteClick = (lead: LeadView) => {
+    if (!userCanDelete) {
+      console.warn('[LeadsPage] Usuario sem permissao para excluir lead');
+      return;
+    }
+    console.log('[LeadsPage] Confirmacao de exclusao aberta:', lead.id);
+    setDeleteTarget(lead);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
+    try {
+      console.log('[LeadsPage] Deletando lead:', deleteTarget.id);
+      await deleteLead(deleteTarget.id);
+      console.log('[LeadsPage] Lead deletado com sucesso:', deleteTarget.id);
+      toast.success('Lead removido');
+      setDeleteModalOpen(false);
+      setDeleteTarget(null);
+      if (detailLead?.id === deleteTarget.id) {
+        setDetailLead(null);
+      }
+      navigate('/leads');
+    } catch (err) {
+      console.error('[LeadsPage] Erro ao deletar lead:', err);
+      throw err;
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   useEffect(() => {
     const state = location.state as { leadId?: string } | null;
@@ -686,14 +724,12 @@ export default function LeadsPage() {
                   </Button>
                 )}
                 {userCanDelete && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={async () => {
-                    try {
-                      await deleteLead(lead.id);
-                      toast.success("Lead removido");
-                    } catch {
-                      toast.error("Erro ao remover lead");
-                    }
-                  }}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => handleDeleteClick(lead)}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
@@ -724,7 +760,23 @@ export default function LeadsPage() {
         stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
         interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
         onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
-        onDelete={userCanDelete ? async (id) => { setDetailLead(null); await deleteLead(id); toast.success('Lead removido'); } : undefined}
+        onDelete={userCanDelete ? async (id) => {
+          await deleteLead(id);
+          toast.success('Lead removido');
+          navigate('/leads');
+        } : undefined}
+      />
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        title="Excluir lead"
+        message="Esta acao e permanente"
+        itemName={deleteTarget?.name || 'Lead'}
+        isLoading={deleteLoading}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+          setDeleteTarget(null);
+        }}
       />
     </div>
   );

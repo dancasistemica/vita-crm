@@ -4,6 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { useUserRole } from '@/hooks/useUserRole';
+import { assertCanDeleteLead } from '@/services/leadsService';
 
 interface DbLead {
   id: string;
@@ -81,6 +83,7 @@ function toLeadView(db: DbLead): LeadView {
 export function useLeadsData() {
   const dataAccess = useDataAccess();
   const { organizationId } = useOrganization();
+  const { role } = useUserRole();
   const { user } = useAuth();
   const [leads, setLeads] = useState<LeadView[]>([]);
   const [origins, setOrigins] = useState<string[]>([]);
@@ -158,13 +161,15 @@ export function useLeadsData() {
   const deleteLead = useCallback(async (leadId: string) => {
     if (!dataAccess) return;
     try {
+      console.log('[useLeadsData] deleteLead chamado:', { leadId, role });
+      assertCanDeleteLead(role);
       await dataAccess.deleteLead(leadId);
       setLeads(prev => prev.filter(l => l.id !== leadId));
     } catch (err) {
       console.error('[useLeadsData] Erro ao deletar:', err);
       throw err;
     }
-  }, [dataAccess]);
+  }, [dataAccess, role]);
 
   const updateLead = useCallback(async (leadId: string, updates: Partial<LeadView>) => {
     if (!dataAccess) {

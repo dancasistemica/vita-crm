@@ -11,6 +11,7 @@ import LeadTimeline from '@/components/leads/LeadTimeline';
 import type { LeadView } from '@/hooks/useLeadsData';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
+import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -19,7 +20,7 @@ interface LeadDetailSheetProps {
   stageName?: string;
   interestLabel?: string;
   onEdit?: (lead: LeadView) => void;
-  onDelete?: (leadId: string) => void;
+  onDelete?: (leadId: string) => Promise<void> | void;
 }
 
 interface TaskRow {
@@ -48,6 +49,8 @@ export default function LeadDetailSheet({
   const [loadingInteractions, setLoadingInteractions] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const loadTasks = useCallback(async () => {
     if (!lead || !organizationId) return;
@@ -101,6 +104,32 @@ export default function LeadDetailSheet({
     if (t.completed) return { label: 'Concluída', color: 'text-success', icon: CheckCircle };
     if (t.due_date && new Date(t.due_date) < new Date()) return { label: 'Vencida', color: 'text-destructive', icon: AlertTriangle };
     return { label: 'Pendente', color: 'text-warning', icon: Clock };
+  };
+
+  const handleDeleteClick = () => {
+    if (!onDelete) {
+      console.warn('[LeadDetailSheet] Usuario sem permissao para excluir lead');
+      return;
+    }
+    console.log('[LeadDetailSheet] Confirmacao de exclusao aberta:', lead.id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!onDelete) return;
+    setDeleteLoading(true);
+    try {
+      console.log('[LeadDetailSheet] Deletando lead:', lead.id);
+      await onDelete(lead.id);
+      console.log('[LeadDetailSheet] Lead deletado com sucesso:', lead.id);
+      setDeleteModalOpen(false);
+      onClose();
+    } catch (err) {
+      console.error('[LeadDetailSheet] Erro ao deletar lead:', err);
+      throw err;
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   return (
@@ -210,7 +239,7 @@ export default function LeadDetailSheet({
                 </Button>
               )}
               {onDelete && (
-                <Button variant="destructive" size="sm" onClick={() => onDelete(lead.id)}>
+                <Button variant="destructive" size="sm" onClick={handleDeleteClick} disabled={deleteLoading}>
                   <Trash2 className="h-4 w-4 mr-1" /> Excluir
                 </Button>
               )}
@@ -279,6 +308,15 @@ export default function LeadDetailSheet({
           </TabsContent>
         </Tabs>
       </SheetContent>
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        title="Excluir lead"
+        message="Esta acao e permanente"
+        itemName={lead.name}
+        isLoading={deleteLoading}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
