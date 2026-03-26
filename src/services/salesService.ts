@@ -8,6 +8,11 @@ interface CreateSaleInput {
   first_payment_date: string;
   auto_payment_enabled: boolean;
   notes?: string;
+  items?: Array<{
+    product_id: string;
+    quantity: number;
+    unit_price: number;
+  }>;
 }
 
 export const createSaleWithInstallments = async (organizationId: string, saleData: CreateSaleInput) => {
@@ -17,6 +22,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       client_id: saleData.client_id,
       value: saleData.value,
       installments: saleData.installments,
+      items: saleData.items?.length || 0,
       auto_payment: saleData.auto_payment_enabled,
       first_payment_date: saleData.first_payment_date,
     });
@@ -44,6 +50,11 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     if (!Number.isFinite(saleData.installments) || saleData.installments < 1) {
       console.error('[SalesService] ❌ Parcelas inválidas:', saleData.installments);
       throw new Error('Parcelas inválidas');
+    }
+
+    if (!saleData.items || saleData.items.length === 0) {
+      console.error('[SalesService] ❌ Nenhum item informado');
+      throw new Error('Nenhum item informado');
     }
 
     console.log('[SalesService] Validando cliente no banco...');
@@ -86,6 +97,28 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     }
 
     console.log('[SalesService] ✅ Venda criada:', sale.id);
+
+    if (saleData.items && saleData.items.length > 0) {
+      console.log('[SalesService] Criando itens da venda:', saleData.items.length);
+      const saleItems = saleData.items.map(item => ({
+        sale_id: sale.id,
+        organization_id: organizationId,
+        product_id: item.product_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('sale_items')
+        .insert(saleItems);
+
+      if (itemsError) {
+        console.error('[SalesService] ❌ Erro ao criar itens:', itemsError);
+        throw itemsError;
+      }
+
+      console.log('[SalesService] ✅ Itens criados');
+    }
 
     // PASSO 2: Calcular e criar parcelas (mensal fixo de 30 dias)
     console.log('[SalesService] Calculando parcelas...');
