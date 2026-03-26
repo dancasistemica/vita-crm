@@ -1,0 +1,19 @@
+{
+  "functions": [
+    {
+      "key": "process-auto-payments",
+      "name": "process-auto-payments",
+      "file": "supabase/functions/process-auto-payments",
+      "entrypoint": "index.ts",
+      "memory": 256,
+      "timeout": 60,
+      "import_map": "./import_map.json"
+    }
+  ],
+  "schedules": [
+    {
+      "function": "process-auto-payments",
+      "cron": "0 0 * * *"
+    }
+  ]
+}
