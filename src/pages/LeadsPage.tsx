@@ -139,9 +139,17 @@ export default function LeadsPage() {
     }
   }, []);
 
+  useEffect(() => {
+    console.log('[LeadsPage] User role:', role);
+    console.log('[LeadsPage] Can delete:', userCanDelete);
+  }, [role, userCanDelete]);
+
   const handleDeleteClick = (lead: LeadView) => {
+    console.log('[LeadsPage] Delete clicked for lead:', lead.id);
+    console.log('[LeadsPage] Can delete:', userCanDelete);
     if (!userCanDelete) {
       console.warn('[LeadsPage] Usuario sem permissao para excluir lead');
+      toast.error('Voce nao tem permissao para excluir leads');
       return;
     }
     console.log('[LeadsPage] Confirmacao de exclusao aberta:', lead.id);
@@ -723,16 +731,16 @@ export default function LeadsPage() {
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
-                {userCanDelete && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10"
-                    onClick={() => handleDeleteClick(lead)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10"
+                  onClick={() => handleDeleteClick(lead)}
+                  disabled={!userCanDelete || deleteLoading}
+                  title={userCanDelete ? 'Excluir lead' : 'Voce nao tem permissao'}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -760,11 +768,17 @@ export default function LeadsPage() {
         stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
         interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
         onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
-        onDelete={userCanDelete ? async (id) => {
+        onDelete={async (id) => {
+          if (!userCanDelete) {
+            console.warn('[LeadsPage] Usuario sem permissao para excluir lead');
+            toast.error('Voce nao tem permissao para excluir leads');
+            return;
+          }
           await deleteLead(id);
           toast.success('Lead removido');
           navigate('/leads');
-        } : undefined}
+        }}
+        canDelete={userCanDelete}
       />
       <DeleteConfirmationModal
         isOpen={deleteModalOpen}

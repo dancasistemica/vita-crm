@@ -12,6 +12,7 @@ import type { LeadView } from '@/hooks/useLeadsData';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
+import { toast } from 'sonner';
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -21,6 +22,7 @@ interface LeadDetailSheetProps {
   interestLabel?: string;
   onEdit?: (lead: LeadView) => void;
   onDelete?: (leadId: string) => Promise<void> | void;
+  canDelete?: boolean;
 }
 
 interface TaskRow {
@@ -40,7 +42,7 @@ interface InteractionRow {
 }
 
 export default function LeadDetailSheet({
-  lead, open, onClose, stageName, interestLabel, onEdit, onDelete,
+  lead, open, onClose, stageName, interestLabel, onEdit, onDelete, canDelete = false,
 }: LeadDetailSheetProps) {
   const { organizationId } = useOrganization();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
@@ -107,8 +109,11 @@ export default function LeadDetailSheet({
   };
 
   const handleDeleteClick = () => {
-    if (!onDelete) {
+    console.log('[LeadDetailSheet] Delete clicked for lead:', lead.id);
+    console.log('[LeadDetailSheet] Can delete:', canDelete);
+    if (!canDelete || !onDelete) {
       console.warn('[LeadDetailSheet] Usuario sem permissao para excluir lead');
+      toast.error('Voce nao tem permissao para excluir leads');
       return;
     }
     console.log('[LeadDetailSheet] Confirmacao de exclusao aberta:', lead.id);
@@ -238,11 +243,15 @@ export default function LeadDetailSheet({
                   <Edit className="h-4 w-4 mr-1" /> Editar
                 </Button>
               )}
-              {onDelete && (
-                <Button variant="destructive" size="sm" onClick={handleDeleteClick} disabled={deleteLoading}>
-                  <Trash2 className="h-4 w-4 mr-1" /> Excluir
-                </Button>
-              )}
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDeleteClick}
+                disabled={!canDelete || deleteLoading}
+                title={canDelete ? 'Excluir lead' : 'Voce nao tem permissao'}
+              >
+                <Trash2 className="h-4 w-4 mr-1" /> Excluir
+              </Button>
             </div>
           </TabsContent>
 
