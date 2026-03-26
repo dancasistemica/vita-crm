@@ -8,6 +8,9 @@ interface CreateSaleInput {
   first_payment_date: string;
   auto_payment_enabled: boolean;
   notes?: string;
+  payment_method_id?: string;
+  initial_payment?: number;
+  sales_stage_id?: string;
   items?: Array<{
     product_id: string;
     quantity: number;
@@ -52,6 +55,18 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       throw new Error('Parcelas inválidas');
     }
 
+    if (saleData.initial_payment !== undefined) {
+      if (!Number.isFinite(saleData.initial_payment) || saleData.initial_payment < 0) {
+        console.error('[SalesService] ❌ Entrada inválida:', saleData.initial_payment);
+        throw new Error('Entrada inválida');
+      }
+
+      if (saleData.initial_payment >= saleData.value) {
+        console.error('[SalesService] ❌ Entrada maior/igual ao valor total:', saleData.initial_payment);
+        throw new Error('Entrada inválida');
+      }
+    }
+
     if (!saleData.items || saleData.items.length === 0) {
       console.error('[SalesService] ❌ Nenhum item informado');
       throw new Error('Nenhum item informado');
@@ -87,6 +102,9 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
         value: saleData.value,
         status: saleData.status || 'pendente',
         notes: saleData.notes,
+        payment_method_id: saleData.payment_method_id,
+        initial_payment: saleData.initial_payment || 0,
+        sales_stage_id: saleData.sales_stage_id,
       })
       .select()
       .single();
@@ -120,15 +138,16 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       console.log('[SalesService] ✅ Itens criados');
     }
 
-    // PASSO 2: Calcular e criar parcelas (mensal fixo de 30 dias)
+    // PASSO 2: Calcular e criar parcelas
     console.log('[SalesService] Calculando parcelas...');
     const installmentRecords = [] as Array<Record<string, unknown>>;
+    const valueToInstall = saleData.value - (saleData.initial_payment || 0);
     const firstPaymentDate = new Date(saleData.first_payment_date);
-    const installmentAmount = saleData.value / saleData.installments;
+    const installmentAmount = valueToInstall / saleData.installments;
 
     for (let i = 1; i <= saleData.installments; i += 1) {
       const dueDate = new Date(firstPaymentDate);
-      dueDate.setDate(dueDate.getDate() + 30 * (i - 1));
+      dueDate.setMonth(dueDate.getMonth() + (i - 1));
 
       installmentRecords.push({
         sale_id: sale.id,
@@ -141,7 +160,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       });
 
       console.log(
-        `[SalesService] Parcela ${i}/${saleData.installments}: ${dueDate.toISOString().split('T')[0]} - R$ ${installmentAmount.toFixed(2)}`
+         `[SalesService] Parcela ${i}/${saleData.installments}: ${dueDate.toISOString().split('T')[0]} - R$ ${installmentAmount.toFixed(2)}`
       );
     }
 

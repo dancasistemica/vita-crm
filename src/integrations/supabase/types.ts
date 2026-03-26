@@ -742,6 +742,54 @@ export type Database = {
           },
         ]
       }
+      sales_stages: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          product_id: string
+          product_name: string
+          stage_name: string
+          stage_value: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          product_id: string
+          product_name: string
+          stage_name: string
+          stage_value: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          product_id?: string
+          product_name?: string
+          stage_name?: string
+          stage_value?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_stages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_stages_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pipeline_stage_history: {
         Row: {
           changed_at: string | null
@@ -982,12 +1030,12 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          lead_id: string
+          client_id: string
+          initial_payment: number
           notes: string | null
           organization_id: string
-          payment_method: string | null
-          product_id: string | null
-          sale_date: string | null
+          payment_method_id: string | null
+          sales_stage_id: string | null
           status: string
           updated_at: string
           value: number
@@ -995,12 +1043,12 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          lead_id: string
+          client_id: string
+          initial_payment?: number
           notes?: string | null
           organization_id: string
-          payment_method?: string | null
-          product_id?: string | null
-          sale_date?: string | null
+          payment_method_id?: string | null
+          sales_stage_id?: string | null
           status?: string
           updated_at?: string
           value?: number
@@ -1008,20 +1056,20 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          lead_id?: string
+          client_id?: string
+          initial_payment?: number
           notes?: string | null
           organization_id?: string
-          payment_method?: string | null
-          product_id?: string | null
-          sale_date?: string | null
+          payment_method_id?: string | null
+          sales_stage_id?: string | null
           status?: string
           updated_at?: string
           value?: number
         }
         Relationships: [
           {
-            foreignKeyName: "sales_lead_id_fkey"
-            columns: ["lead_id"]
+            foreignKeyName: "sales_client_id_fkey"
+            columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "leads"
             referencedColumns: ["id"]
@@ -1034,10 +1082,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "sales_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: "sales_payment_method_id_fkey"
+            columns: ["payment_method_id"]
             isOneToOne: false
-            referencedRelation: "products"
+            referencedRelation: "payment_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_sales_stage_id_fkey"
+            columns: ["sales_stage_id"]
+            isOneToOne: false
+            referencedRelation: "sales_stages"
             referencedColumns: ["id"]
           },
         ]
