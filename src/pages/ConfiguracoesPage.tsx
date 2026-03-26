@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
+import { TagsManagement } from "@/components/settings/TagsManagement";
 import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
 import UserRolesManager from "@/components/settings/UserRolesManager";
 import CustomRolesTab from "@/components/settings/CustomRolesTab";
@@ -29,6 +30,7 @@ export default function ConfiguracoesPage() {
             <TabsTrigger value="usuarios">👥 Usuários</TabsTrigger>
             <TabsTrigger value="campos">📋 Campos do CRM</TabsTrigger>
             <TabsTrigger value="pagamento">💳 Pagamento</TabsTrigger>
+            <TabsTrigger value="tags">🏷️ Tags</TabsTrigger>
             {canAccessSettings && <TabsTrigger value="roles">🏷️ Roles</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="permissoes">🔐 Permissões</TabsTrigger>}
             {canAccessSettings && <TabsTrigger value="organizacao">🏢 Organização</TabsTrigger>}
@@ -39,6 +41,7 @@ export default function ConfiguracoesPage() {
         <TabsContent value="usuarios"><UsersTab /></TabsContent>
         <TabsContent value="campos"><CRMFieldsTab /></TabsContent>
         <TabsContent value="pagamento"><PaymentMethodsTab /></TabsContent>
+        <TabsContent value="tags"><TagsManagement /></TabsContent>
         {canAccessSettings && <TabsContent value="roles"><CustomRolesTab onRoleCreated={handleRoleCreated} /></TabsContent>}
         {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager preselectedRole={preselectedRole} /></TabsContent>}
         {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}

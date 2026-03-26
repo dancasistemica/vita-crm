@@ -1,0 +1,132 @@
+import { supabase } from '@/integrations/supabase/client';
+
+export const tagsService = {
+  // Listar todas as tags com contagem de uso
+  listTagsWithUsage: async (organizationId: string) => {
+    try {
+      console.log('[TagsService] Listando tags para org:', organizationId);
+
+      const { data: tags, error: tagsError } = await supabase
+        .from('tags')
+        .select('id, name, color, created_at')
+        .eq('organization_id', organizationId)
+        .order('name', { ascending: true });
+
+      if (tagsError) throw tagsError;
+
+      const tagsWithUsage = await Promise.all(
+        (tags || []).map(async (tag) => {
+          const { count } = await supabase
+            .from('lead_tags')
+            .select('*', { count: 'exact', head: true })
+            .eq('tag_id', tag.id);
+
+          return {
+            ...tag,
+            usageCount: count || 0,
+          };
+        })
+      );
+
+      console.log('[TagsService] Tags carregadas:', tagsWithUsage.length);
+      return tagsWithUsage;
+    } catch (error) {
+      console.error('[TagsService] Erro ao listar tags:', error);
+      throw error;
+    }
+  },
+
+  // Criar nova tag
+  createTag: async (organizationId: string, name: string, color?: string) => {
+    try {
+      const tagName = name.trim().toLowerCase();
+      console.log('[TagsService] Criando tag:', tagName);
+
+      const { data: existing } = await supabase
+        .from('tags')
+        .select('id')
+        .eq('organization_id', organizationId)
+        .eq('name', tagName)
+        .maybeSingle();
+
+      if (existing) {
+        console.warn('[TagsService] Tag já existe:', tagName);
+        throw new Error('Esta tag já existe');
+      }
+
+      const { data: newTag, error } = await supabase
+        .from('tags')
+        .insert({
+          organization_id: organizationId,
+          name: tagName,
+          color: color || '#3b82f6',
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      console.log('[TagsService] Tag criada:', newTag.id);
+      return newTag;
+    } catch (error) {
+      console.error('[TagsService] Erro ao criar tag:', error);
+      throw error;
+    }
+  },
+
+  // Atualizar tag
+  updateTag: async (tagId: string, updates: { name?: string; color?: string }) => {
+    try {
+      console.log('[TagsService] Atualizando tag:', tagId);
+
+      const updateData: { name?: string; color?: string } = {};
+      if (updates.name) {
+        updateData.name = updates.name.trim().toLowerCase();
+      }
+      if (updates.color) {
+        updateData.color = updates.color;
+      }
+
+      const { data: updated, error } = await supabase
+        .from('tags')
+        .update(updateData)
+        .eq('id', tagId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      console.log('[TagsService] Tag atualizada:', tagId);
+      return updated;
+    } catch (error) {
+      console.error('[TagsService] Erro ao atualizar tag:', error);
+      throw error;
+    }
+  },
+
+  // Deletar tag
+  deleteTag: async (tagId: string) => {
+    try {
+      console.log('[TagsService] Deletando tag:', tagId);
+
+      const { error: deleteRelError } = await supabase
+        .from('lead_tags')
+        .delete()
+        .eq('tag_id', tagId);
+
+      if (deleteRelError) throw deleteRelError;
+
+      const { error: deleteTagError } = await supabase
+        .from('tags')
+        .delete()
+        .eq('id', tagId);
+
+      if (deleteTagError) throw deleteTagError;
+
+      console.log('[TagsService] Tag deletada:', tagId);
+    } catch (error) {
+      console.error('[TagsService] Erro ao deletar tag:', error);
+      throw error;
+    }
+  },
+};
