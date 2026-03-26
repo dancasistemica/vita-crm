@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, type DragEvent } from "react";
 import { useCRMStore, PaymentMethod } from "@/store/crmStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { ArrowDown, ArrowUp, Check, Edit, Plus, Trash2, X } from "lucide-react";
+import { Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 
 export default function PaymentMethodsTab() {
   const { paymentMethods, addPaymentMethod, updatePaymentMethod, removePaymentMethod, reorderPaymentMethods } = useCRMStore();
   const [newMethod, setNewMethod] = useState('');
   const [editingMethod, setEditingMethod] = useState<PaymentMethod | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   const handleAdd = () => {
     if (!newMethod.trim()) return;
@@ -43,10 +44,16 @@ export default function PaymentMethodsTab() {
     console.log('[PaymentMethodsTab] Atualizada:', nextName);
   };
 
-  const handleMove = (index: number, direction: 'up' | 'down') => {
-    const nextIndex = direction === 'up' ? index - 1 : index + 1;
-    reorderPaymentMethods(index, nextIndex);
+  const handleDragStart = (index: number) => setDragIndex(index);
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>, index: number) => {
+    event.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    reorderPaymentMethods(dragIndex, index);
+    setDragIndex(index);
   };
+
+  const handleDragEnd = () => setDragIndex(null);
 
   const handleDelete = (method: PaymentMethod) => {
     removePaymentMethod(method.id);
@@ -83,8 +90,18 @@ export default function PaymentMethodsTab() {
         <CardHeader><CardTitle className="text-lg">Formas de Pagamento Cadastradas</CardTitle></CardHeader>
         <CardContent className="space-y-2">
           {paymentMethods.map((m, index) => (
-            <div key={m.id} className="flex flex-col gap-2 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between">
+            <div
+              key={m.id}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={event => handleDragOver(event, index)}
+              onDragEnd={handleDragEnd}
+              className={`flex flex-col gap-2 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between ${dragIndex === index ? 'opacity-60' : ''}`}
+            >
               <div className="flex items-center gap-2 flex-1">
+                <span className="cursor-grab text-muted-foreground">
+                  <GripVertical className="h-4 w-4" />
+                </span>
                 <span className="text-xs font-medium text-muted-foreground w-6">{index + 1}.</span>
                 {editingMethod?.id === m.id ? (
                   <Input
@@ -98,26 +115,6 @@ export default function PaymentMethodsTab() {
                 )}
               </div>
               <div className="flex items-center gap-2 justify-between sm:justify-end">
-                <div className="flex items-center gap-1">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-7 w-7"
-                    onClick={() => handleMove(index, 'up')}
-                    disabled={index === 0}
-                  >
-                    <ArrowUp className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-7 w-7"
-                    onClick={() => handleMove(index, 'down')}
-                    disabled={index === paymentMethods.length - 1}
-                  >
-                    <ArrowDown className="h-3 w-3" />
-                  </Button>
-                </div>
                 <div className="flex items-center gap-2">
                   <Switch checked={m.active} onCheckedChange={() => handleToggle(m)} />
                   <span className={`text-xs font-medium ${m.active ? 'text-primary' : 'text-muted-foreground'}`}>
