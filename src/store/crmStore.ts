@@ -105,6 +105,7 @@ interface CRMState {
   addPaymentMethod: (method: PaymentMethod) => void;
   updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => void;
   removePaymentMethod: (id: string) => void;
+  reorderPaymentMethods: (fromIndex: number, toIndex: number) => void;
 }
 
 const uid = () => crypto.randomUUID();
@@ -208,6 +209,13 @@ export const useCRMStore = create<CRMState>()(
       addPaymentMethod: (method: PaymentMethod) => set((s) => ({ paymentMethods: [...s.paymentMethods, method] })),
       updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => set((s) => ({ paymentMethods: s.paymentMethods.map((m) => m.id === id ? { ...m, ...data } : m) })),
       removePaymentMethod: (id: string) => set((s) => ({ paymentMethods: s.paymentMethods.filter((m) => m.id !== id) })),
+      reorderPaymentMethods: (fromIndex: number, toIndex: number) => set((s) => {
+        const next = [...s.paymentMethods];
+        if (fromIndex < 0 || fromIndex >= next.length || toIndex < 0 || toIndex >= next.length) return s;
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
+        return { paymentMethods: next };
+      }),
     }),
     { name: 'danca-sistematica-crm' }
   )
