@@ -12,6 +12,7 @@ import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import RecordCounter from '@/components/common/RecordCounter';
 import NewSaleModal from '@/components/sales/NewSaleModal';
+import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
@@ -21,6 +22,7 @@ export default function ClientesPage() {
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleNewSale = (leadId?: string) => {
     setSaleLeadId(leadId);
@@ -81,7 +83,7 @@ export default function ClientesPage() {
               </Button>
             </>
           )}
-          <Button size="sm" onClick={() => handleNewSale()}>
+          <Button size="sm" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
           </Button>
         </div>
@@ -172,6 +174,11 @@ export default function ClientesPage() {
         onOpenChange={setSaleModalOpen}
         preSelectedLeadId={saleLeadId}
         onSaleCreated={() => hook.refetchData()}
+      />
+      <CreateSaleModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={() => hook.refetchData()}
       />
     </div>
   );
