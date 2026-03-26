@@ -10,6 +10,13 @@ export interface GlobalSearchResult {
   subtitle?: string;
 }
 
+const normalizeSearchValue = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
 interface LeadResult {
   id: string;
   name: string;
@@ -51,13 +58,16 @@ export function useGlobalSearch(organizationId?: string | null) {
   const [loading, setLoading] = useState(false);
 
   const filterProductsByTerm = useCallback((items: ProductResult[], term: string) => {
-    const filterTerm = term.toLowerCase();
+    const filterTerm = normalizeSearchValue(term);
+    if (!filterTerm) return [];
+    const tokens = filterTerm.split(/\s+/).filter(Boolean);
     return items.filter((product) => {
-      const haystack = [product.name, product.type, product.description, product.notes]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(filterTerm);
+      const haystack = normalizeSearchValue(
+        [product.name, product.type, product.description, product.notes]
+          .filter(Boolean)
+          .join(" "),
+      );
+      return tokens.every((token) => haystack.includes(token));
     }).slice(0, 5);
   }, []);
 
@@ -132,7 +142,7 @@ export function useGlobalSearch(organizationId?: string | null) {
             .from("products")
             .select("id, name, type, description, notes")
             .eq("organization_id", organizationId)
-            .limit(50);
+            .limit(200);
           if (fallback.error) {
             console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
           } else {
@@ -140,6 +150,18 @@ export function useGlobalSearch(organizationId?: string | null) {
           }
         } else {
           products = filterProductsByTerm(products, term);
+          if (products.length === 0 && (productsResponse.data || []).length > 0) {
+            const fallback = await supabase
+              .from("products")
+              .select("id, name, type, description, notes")
+              .eq("organization_id", organizationId)
+              .limit(200);
+            if (fallback.error) {
+              console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
+            } else {
+              products = filterProductsByTerm(fallback.data || [], term);
+            }
+          }
         }
 
         const allResults: GlobalSearchResult[] = [
