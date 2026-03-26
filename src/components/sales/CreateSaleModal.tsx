@@ -3,6 +3,7 @@ import { X, Loader, ChevronRight, Check, Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
+import { useCRMStore } from '@/store/crmStore';
 import { toast } from 'sonner';
 
 interface CreateSaleModalProps {
@@ -24,11 +25,6 @@ interface Product {
   name: string;
 }
 
-interface PaymentMethod {
-  id: string;
-  name: string;
-}
-
 interface Client {
   id: string;
   name: string;
@@ -37,11 +33,11 @@ interface Client {
 
 export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalProps) => {
   const { organization } = useOrganization();
+  const { paymentMethods: storedPaymentMethods } = useCRMStore();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   // Busca de cliente
@@ -77,12 +73,22 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
     );
   }, [clients, clientSearch]);
 
+  const activePaymentMethods = useMemo(
+    () => storedPaymentMethods.filter((method) => method.active),
+    [storedPaymentMethods]
+  );
+
   // Carregar dados iniciais
   useEffect(() => {
     if (isOpen && organization?.id) {
       loadAllData();
     }
   }, [isOpen, organization?.id]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    console.log('[CreateSaleModal] Formas de pagamento (store):', storedPaymentMethods.length);
+  }, [isOpen, storedPaymentMethods.length]);
 
   const loadAllData = async () => {
     if (!organization?.id) return;
@@ -141,19 +147,6 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         setProductSalesStages(mappedStages);
       }
 
-      // Carregar formas de pagamento
-      const { data: methodsData, error: methodsError } = await supabase
-        .from('payment_methods')
-        .select('id, name')
-        .eq('organization_id', organization.id)
-        .order('name', { ascending: true });
-
-      if (methodsError) {
-        console.error('[CreateSaleModal] Erro ao carregar formas de pagamento:', methodsError);
-      } else {
-        console.log('[CreateSaleModal] Formas de pagamento carregadas:', methodsData?.length || 0);
-        setPaymentMethods(methodsData || []);
-      }
     } catch (error) {
       console.error('[CreateSaleModal] Erro crítico ao carregar dados:', error);
       toast.error('Erro ao carregar dados');
@@ -498,7 +491,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                 <div className="flex items-center justify-center p-4">
                   <Loader className="w-5 h-5 animate-spin text-blue-600" />
                 </div>
-              ) : paymentMethods.length === 0 ? (
+              ) : activePaymentMethods.length === 0 ? (
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700">
                   ⚠️ Nenhuma forma de pagamento cadastrada.
                 </div>
@@ -509,7 +502,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                 >
                   <option value="">Escolha a forma de pagamento...</option>
-                  {paymentMethods.map((method) => (
+                  {activePaymentMethods.map((method) => (
                     <option key={method.id} value={method.id}>
                       {method.name}
                     </option>
