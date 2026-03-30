@@ -109,7 +109,7 @@ export default function ClientsTable({
   sortField, sortDir, toggleSort,
   selectedIds, toggleSelect, toggleSelectAll,
   page, setPage, perPage, setPerPage, totalPages, totalFiltered,
-  loading, onNewSale, products = [],
+  loading, onNewSale, products = [], onSelectClient,
 }: Props) {
   const navigate = useNavigate();
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || '—';
