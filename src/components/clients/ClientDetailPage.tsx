@@ -16,10 +16,10 @@ import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
 import EditSaleModal from '@/components/sales/EditSaleModal';
-import { useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
+import { deleteSale } from '@/services/saleService';
 
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success',
