@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen, RotateCcw, ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -75,6 +75,17 @@ export default function ClientesPage() {
             </SheetTrigger>
             <SheetContent side="left" className="w-[320px] p-4 overflow-y-auto">
               <SheetHeader className="sr-only"><SheetTitle>Filtros</SheetTitle></SheetHeader>
+              <div className="mb-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => { hook.resetFilters(); }}
+                >
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  Limpar Filtros
+                </Button>
+              </div>
               {filterPanel}
             </SheetContent>
           </Sheet>
@@ -133,6 +144,17 @@ export default function ClientesPage() {
         {showFilters && (
           <aside className="hidden lg:block w-[320px] shrink-0 transition-all duration-300">
             <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
+              <div className="mb-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={hook.resetFilters}
+                >
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  Limpar Filtros
+                </Button>
+              </div>
               {filterPanel}
             </div>
           </aside>
