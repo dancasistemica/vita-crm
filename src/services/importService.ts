@@ -541,12 +541,21 @@ export const linkTagsToLead = async (
         continue;
       }
 
-      const { error: linkError } = await supabase
+      // Tags are stored as text[] on leads table directly
+      const { data: currentLead } = await supabase
         .from('leads')
-        .update({
-          tags: [...(await getLeadTags(leadId)), tagName],
-        })
-        .eq('id', leadId);
+        .select('tags')
+        .eq('id', leadId)
+        .single();
+      const currentTags = (currentLead?.tags || []) as string[];
+      if (!currentTags.includes(tag.name || tagName)) {
+        const { error: linkError } = await supabase
+          .from('leads')
+          .update({ tags: [...currentTags, tag.name || tagName] })
+          .eq('id', leadId);
+      } else {
+        const linkError = null;
+      }
 
       if (linkError) {
         console.warn(`[ImportService] Erro ao vincular tag "${tagName}":`, linkError);
