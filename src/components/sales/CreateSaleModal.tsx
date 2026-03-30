@@ -17,6 +17,7 @@ interface ProductSalesStage {
   product_name: string;
   name: string;
   value: number;
+  sale_type: 'unica' | 'mensalidade';
 }
 
 interface Product {
