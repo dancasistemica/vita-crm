@@ -64,23 +64,23 @@ export const useSearch = () => {
         const searchResults: SearchResult[] = [
           ...(leads?.map((lead) => ({
             id: lead.id,
-            type: "lead",
+            type: "lead" as SearchResultType,
             title: lead.name,
             subtitle: lead.email || lead.phone,
             organizationId,
           })) || []),
           ...(clients?.map((client) => ({
             id: client.id,
-            type: "client",
+            type: "client" as SearchResultType,
             title: client.name,
             subtitle: client.email,
             organizationId,
           })) || []),
-          ...(tasks?.map((task) => ({
+          ...(tasks?.map((task: any) => ({
             id: task.id,
-            type: "task",
+            type: "task" as SearchResultType,
             title: task.title,
-            subtitle: task.description,
+            subtitle: undefined,
             organizationId,
           })) || []),
         ];

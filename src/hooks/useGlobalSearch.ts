@@ -87,23 +87,23 @@ export function useGlobalSearch(organizationId?: string | null) {
         const [leadsResponse, clientsResponse, tasksResponse, productsResponse] = await Promise.all([
           supabase
             .from("leads")
-            .select("id, name, email, phone, company, pipeline_stage")
+            .select("id, name, email, phone, pipeline_stage")
             .eq("organization_id", organizationId)
             .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%,company.ilike.%${term}%`,
+              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
             )
             .limit(5),
           supabase
             .from("clients")
-            .select("id, name, email, phone, company, status")
+            .select("id, name, email, phone")
             .eq("organization_id", organizationId)
             .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%,company.ilike.%${term}%`,
+              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
             )
             .limit(5),
           supabase
             .from("tasks")
-            .select("id, title, lead_id, due_date, status, priority")
+            .select("id, title, lead_id, due_date")
             .eq("organization_id", organizationId)
             .ilike("title", `%${term}%`)
             .limit(5),

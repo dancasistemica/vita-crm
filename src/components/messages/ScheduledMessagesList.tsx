@@ -22,10 +22,10 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
   }, [messages, leadId, clientId]);
 
   const pendingMessages = filteredMessages.filter(
-    m => (m.status === 'pending' || m.status === 'scheduled') && m.status !== 'cancelled'
+    m => m.status === 'pending' || m.status === 'scheduled'
   );
-  const sentMessages = filteredMessages.filter(m => m.status === 'sent' && m.status !== 'cancelled');
-  const failedMessages = filteredMessages.filter(m => m.status === 'failed' && m.status !== 'cancelled');
+  const sentMessages = filteredMessages.filter(m => m.status === 'sent');
+  const failedMessages = filteredMessages.filter(m => m.status === 'failed');
 
   const getRecipientName = (msg: ScheduledMessage) => {
     return msg.lead?.name || msg.client?.name || 'Desconhecido';

@@ -55,7 +55,6 @@ export const useBotconversaConfig = (organizationId: string) => {
           code: queryError.code,
           message: queryError.message,
           details: queryError.details,
-          status: queryError.status,
         });
         throw new Error(`Query error [${queryError.code}]: ${queryError.message}`);
       }

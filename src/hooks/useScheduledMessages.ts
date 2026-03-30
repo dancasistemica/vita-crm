@@ -107,7 +107,7 @@ export const useScheduledMessages = (organizationId: string | null) => {
         if (insertError) throw insertError
 
         console.log('[useScheduledMessages.scheduleMessage] Agendada:', data?.[0]?.id)
-        setMessages([...messages, data[0]])
+        setMessages([...messages, data[0] as ScheduledMessage])
         return true
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Erro ao agendar'
