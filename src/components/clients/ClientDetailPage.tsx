@@ -36,6 +36,9 @@ interface SaleView {
   date: string;
   paymentMethod: string;
   status: string;
+  sale_type: 'unica' | 'mensalidade';
+  created_at: string;
+  updated_at: string;
 }
 
 interface InteractionView {
