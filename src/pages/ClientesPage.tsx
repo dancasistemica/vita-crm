@@ -74,18 +74,19 @@ export default function ClientesPage() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[320px] p-4 overflow-y-auto">
-              <SheetHeader className="sr-only"><SheetTitle>Filtros</SheetTitle></SheetHeader>
-              <div className="mb-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => { hook.resetFilters(); }}
-                >
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Limpar Filtros
-                </Button>
-              </div>
+              <SheetHeader className="mb-4">
+                <div className="flex items-center justify-between">
+                  <SheetTitle className="text-sm font-semibold">Filtros</SheetTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => { hook.resetFilters(); }}
+                  >
+                    <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                    Limpar
+                  </Button>
+                </div>
+              </SheetHeader>
               {filterPanel}
             </SheetContent>
           </Sheet>
@@ -144,15 +145,15 @@ export default function ClientesPage() {
         {showFilters && (
           <aside className="hidden lg:block w-[320px] shrink-0 transition-all duration-300">
             <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
-              <div className="mb-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-foreground">Filtros</h3>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  className="w-full"
                   onClick={hook.resetFilters}
                 >
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Limpar Filtros
+                  <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                  Limpar
                 </Button>
               </div>
               {filterPanel}
