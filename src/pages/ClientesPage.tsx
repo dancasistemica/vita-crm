@@ -225,6 +225,12 @@ export default function ClientesPage() {
                     <div>
                       <p className="text-sm text-gray-600">Nome</p>
                       <p className="font-semibold text-gray-900">{selectedClient.name}</p>
+                      {selectedClient.is_client && selectedClient.became_client_at && (
+                        <div className="mt-1 flex items-center gap-2 text-xs text-green-700 bg-green-50 px-2 py-1 rounded w-fit">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Cliente desde {new Date(selectedClient.became_client_at).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Email</p>
