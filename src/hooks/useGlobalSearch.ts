@@ -164,7 +164,7 @@ export function useGlobalSearch(organizationId?: string | null) {
             id: lead.id,
             type: "lead" as const,
             title: lead.name,
-            subtitle: lead.company || lead.email || lead.phone || undefined,
+            subtitle: lead.email || lead.phone || undefined,
           })),
           ...clients.map((client) => ({
             id: client.id,
