@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Plus, Filter, X, FileDown, Pencil, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
