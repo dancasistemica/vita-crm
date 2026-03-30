@@ -311,11 +311,13 @@ export default function ClientDetailPage() {
         </TabsContent>
       </Tabs>
 
-      <EditSaleModal
-        open={!!editSaleId}
-        onOpenChange={(o) => { if (!o) setEditSaleId(null); }}
-        saleId={editSaleId}
-      />
+      {editSaleId && (
+        <EditSaleModal
+          isOpen={!!editSaleId}
+          onClose={() => setEditSaleId(null)}
+          sale={sales.find(s => s.id === editSaleId) as any}
+        />
+      )}
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
