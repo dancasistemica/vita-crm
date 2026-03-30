@@ -644,11 +644,11 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           )}
 
           {/* FASE 6: Configuração de Pagamento e Resumo (Para Unica) / Configuração (Para Mensalidade) */}
-          {((currentPhase === 6 && saleType === 'unica') || (currentPhase === 6 && saleType === 'mensalidade')) && (
+          {currentPhase === 6 && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
-                Configuração de Pagamento
+                {saleType === 'unica' ? 'Finalização da Venda' : 'Configuração de Pagamento'}
               </h3>
 
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
@@ -669,23 +669,32 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
               </div>
 
               {saleType === 'unica' && (
-                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
+                <div className="space-y-4">
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    placeholder="Adicione observações (opcional)..."
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
                     <h4 className="font-semibold text-gray-900">Resumo da Venda</h4>
                     <div className="text-sm space-y-1">
                       <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
                       <p>Valor Total: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
                       <p>Parcelas: <span className="font-semibold">{formData.installments}x de R$ {installmentValue.toFixed(2)}</span></p>
                     </div>
-                 </div>
+                  </div>
+                </div>
               )}
             </div>
           )}
 
-          {/* FASE 7: Observações e Resumo Final */}
-          {((currentPhase === 6 && saleType === 'unica') || (currentPhase === 7)) && (
+          {/* FASE 7: Observações e Resumo Final (Apenas Mensalidade) */}
+          {currentPhase === 7 && saleType === 'mensalidade' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">{currentPhase}</span>
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
                 Observações e Finalização
               </h3>
 
@@ -700,9 +709,9 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
               <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
                 <h4 className="font-semibold text-gray-900">Resumo Final</h4>
                 <div className="text-sm space-y-1">
-                  <p>Tipo: <span className="font-semibold">{saleType === 'unica' ? '💳 Venda Única' : '📅 Mensalidade'}</span></p>
+                  <p>Tipo: <span className="font-semibold">📅 Mensalidade</span></p>
                   <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
-                  <p>Valor: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
+                  <p>Valor Mensal: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
                 </div>
               </div>
             </div>
