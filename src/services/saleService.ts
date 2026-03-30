@@ -151,16 +151,36 @@ export const updateSale = async (
   data: any
 ) => {
   try {
+    console.log('[SaleService] Iniciando atualização:', { saleId, saleType, data });
+    
     const table = saleType === 'unica' ? 'sales' : 'subscriptions';
+    const updateData: any = { ...data, updated_at: new Date().toISOString() };
     
-    // Mapear campos se necessário para a tabela 'sales'
-    const updateData = { ...data, updated_at: new Date().toISOString() };
-    
+    // Mapear campos para a tabela 'sales' (unica)
     if (saleType === 'unica') {
-      if (data.payment_method_id !== undefined) {
-        updateData.payment_method = data.payment_method_id;
-        delete updateData.payment_method_id;
+      // Se tiver payment_method_id (UUID), tentar buscar o nome para salvar no campo de texto payment_method
+      if (data.payment_method_id) {
+        try {
+          const { data: pm } = await supabase
+            .from('payment_methods')
+            .select('name')
+            .eq('id', data.payment_method_id)
+            .maybeSingle();
+          
+          if (pm) {
+            updateData.payment_method = pm.name;
+          } else {
+            updateData.payment_method = data.payment_method_id; // Fallback para o valor original se não encontrar
+          }
+        } catch (pmErr) {
+          console.warn('[SaleService] Erro ao buscar nome do método de pagamento:', pmErr);
+          updateData.payment_method = data.payment_method_id;
+        }
+      } else if (data.payment_method_id === null || data.payment_method_id === '') {
+        updateData.payment_method = null;
       }
+      
+      delete updateData.payment_method_id;
     }
 
     const { error } = await supabase
@@ -168,10 +188,15 @@ export const updateSale = async (
       .update(updateData)
       .eq('id', saleId);
 
-    if (error) throw error;
+    if (error) {
+      console.error(`[SaleService] ❌ Erro ao atualizar ${table}:`, error);
+      throw new Error(`Erro ao atualizar: ${error.message}`);
+    }
+
+    console.log(`[SaleService] ✅ ${table} atualizada com sucesso`);
     return true;
   } catch (error) {
-    console.error('[SaleService] ❌ Erro ao atualizar venda:', error);
+    console.error('[SaleService] ❌ Erro crítico ao atualizar:', error);
     throw error;
   }
 };
