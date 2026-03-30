@@ -285,7 +285,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         lead_id,
         leads(name),
         product_id,
-        product_sales_stages(stage_name, stage_value, sale_type),
+        product_sales_stages(name, value, sale_type),
         payment_method,
         status,
         created_at,
