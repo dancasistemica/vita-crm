@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Loader, Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { getSaleById, updateSale } from '@/services/saleService';
+import { getSaleById, updateSale, deleteSale } from '@/services/saleService';
 import { toast } from 'sonner';
 
 interface Sale {
