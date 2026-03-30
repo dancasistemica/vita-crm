@@ -52,10 +52,14 @@ export const VendasPage = () => {
   }, [organization?.id]);
 
   const loadSales = async () => {
-    if (!organization?.id) return;
+    if (!organization?.id) {
+      console.error('[VendasPage] ❌ Organization ID não disponível');
+      return;
+    }
 
     try {
       setLoading(true);
+      setError(null);
       console.log('[VendasPage] Carregando vendas para org:', organization.id);
 
       const allSales = await getSalesAndSubscriptions(organization.id);
@@ -63,8 +67,11 @@ export const VendasPage = () => {
       console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
       setSales(allSales as Sale[]);
     } catch (error) {
-      console.error('[VendasPage] ❌ Erro ao carregar vendas:', error);
-      toast.error('Erro ao carregar vendas');
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('[VendasPage] ❌ Erro ao carregar vendas:', errorMessage);
+      setError(errorMessage);
+      toast.error(`Erro ao carregar vendas: ${errorMessage}`);
+      setSales([]);
     } finally {
       setLoading(false);
     }
