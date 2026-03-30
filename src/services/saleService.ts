@@ -272,3 +272,101 @@ export const deleteSale = async (
     throw error;
   }
 };
+
+export const getSalesAndSubscriptions = async (organizationId: string) => {
+  try {
+    console.log('[SaleService] Buscando vendas e mensalidades para org:', organizationId);
+
+    // PASSO 1: Buscar vendas únicas
+    const { data: salesData, error: salesError } = await supabase
+      .from('sales')
+      .select(`
+        id,
+        lead_id,
+        leads(name),
+        product_id,
+        product_sales_stages(name, value, sale_type),
+        payment_method,
+        status,
+        created_at,
+        updated_at
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (salesError) {
+      console.error('[SaleService] ❌ Erro ao buscar vendas:', salesError.message);
+      throw new Error(`Erro ao buscar vendas: ${salesError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Vendas carregadas:', salesData?.length || 0);
+
+    // PASSO 2: Buscar mensalidades
+    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+      .from('subscriptions')
+      .select(`
+        id,
+        client_id,
+        leads(name),
+        sales_stage_id,
+        product_sales_stages(name, value, sale_type),
+        monthly_value,
+        payment_method_id,
+        payment_methods(name),
+        status,
+        created_at,
+        updated_at
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (subscriptionsError) {
+      console.error('[SaleService] ❌ Erro ao buscar mensalidades:', subscriptionsError.message);
+      throw new Error(`Erro ao buscar mensalidades: ${subscriptionsError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Mensalidades carregadas:', subscriptionsData?.length || 0);
+
+    // PASSO 3: Transformar dados para formato unificado
+    const formattedSales = (salesData || []).map((sale: any) => ({
+      id: sale.id,
+      client_id: sale.lead_id,
+      client_name: sale.leads?.name || 'Cliente desconhecido',
+      sales_stage_id: sale.product_id,
+      stage_name: sale.product_sales_stages?.name || 'Etapa desconhecida',
+      stage_value: Number(sale.product_sales_stages?.value || 0),
+      sale_type: 'unica' as const,
+      payment_method_id: sale.payment_method,
+      payment_method_name: sale.payment_method || 'Não definida',
+      status: sale.status,
+      created_at: sale.created_at,
+      updated_at: sale.updated_at,
+    }));
+
+    const formattedSubscriptions = (subscriptionsData || []).map((sub: any) => ({
+      id: sub.id,
+      client_id: sub.client_id,
+      client_name: sub.leads?.name || 'Cliente desconhecido',
+      sales_stage_id: sub.sales_stage_id,
+      stage_name: sub.product_sales_stages?.name || 'Etapa desconhecida',
+      stage_value: Number(sub.monthly_value || 0),
+      sale_type: 'mensalidade' as const,
+      payment_method_id: sub.payment_method_id,
+      payment_method_name: sub.payment_methods?.name || 'Não definida',
+      status: sub.status,
+      created_at: sub.created_at,
+      updated_at: sub.updated_at,
+    }));
+
+    // PASSO 4: Combinar e ordenar
+    const allSales = [...formattedSales, ...formattedSubscriptions].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    console.log('[SaleService] ✅ Total de vendas:', allSales.length);
+    return allSales;
+  } catch (error) {
+    console.error('[SaleService] ❌ Erro crítico ao buscar vendas:', error);
+    throw error;
+  }
+};

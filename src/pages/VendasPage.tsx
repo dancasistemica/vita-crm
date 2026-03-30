@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { deleteSale } from '@/services/salesService';
 import { deleteSubscription } from '@/services/subscriptionService';
+import { getSalesAndSubscriptions } from '@/services/saleService';
 
 interface Sale {
   id: string;
@@ -56,83 +57,10 @@ export const VendasPage = () => {
       setLoading(true);
       console.log('[VendasPage] Carregando vendas para org:', organization.id);
 
-      // Query para vendas únicas
-      const { data: uniqueSalesData, error: uniqueSalesError } = await supabase
-        .from('sales')
-        .select(`
-          id,
-          lead_id,
-          leads(name),
-          product_id,
-          product_sales_stages(name, value, sale_type),
-          payment_method,
-          status,
-          created_at,
-          updated_at
-        `)
-        .eq('organization_id', organization.id)
-        .order('created_at', { ascending: false });
-
-      if (uniqueSalesError) throw uniqueSalesError;
-
-      // Query para mensalidades
-      const { data: subscriptionsData, error: subscriptionsError } = await supabase
-        .from('subscriptions')
-        .select(`
-          id,
-          client_id,
-          leads(name),
-          sales_stage_id,
-          product_sales_stages(name, value, sale_type),
-          monthly_value,
-          payment_method_id,
-          payment_methods(name),
-          status,
-          created_at,
-          updated_at
-        `)
-        .eq('organization_id', organization.id)
-        .order('created_at', { ascending: false });
-
-      if (subscriptionsError) throw subscriptionsError;
-
-      // Transformar dados para formato unificado
-      const formattedUniqueSales = (uniqueSalesData || []).map((sale: any) => ({
-        id: sale.id,
-        client_id: sale.lead_id,
-        client_name: sale.leads?.name || 'Cliente desconhecido',
-        sales_stage_id: sale.product_id,
-        stage_name: sale.product_sales_stages?.name || 'Etapa desconhecida',
-        stage_value: sale.product_sales_stages?.value || 0,
-        sale_type: 'unica' as const,
-        payment_method_id: sale.payment_method,
-        payment_method_name: sale.payment_method || 'Não definida',
-        status: sale.status,
-        created_at: sale.created_at,
-        updated_at: sale.updated_at,
-      }));
-
-      const formattedSubscriptions = (subscriptionsData || []).map((sub: any) => ({
-        id: sub.id,
-        client_id: sub.client_id,
-        client_name: sub.leads?.name || 'Cliente desconhecido',
-        sales_stage_id: sub.sales_stage_id,
-        stage_name: sub.product_sales_stages?.name || 'Etapa desconhecida',
-        stage_value: sub.monthly_value || 0,
-        sale_type: 'mensalidade' as const,
-        payment_method_id: sub.payment_method_id,
-        payment_method_name: sub.payment_methods?.name || 'Não definida',
-        status: sub.status,
-        created_at: sub.created_at,
-        updated_at: sub.updated_at,
-      }));
-
-      const allSales = [...formattedUniqueSales, ...formattedSubscriptions].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
+      const allSales = await getSalesAndSubscriptions(organization.id);
 
       console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
-      setSales(allSales);
+      setSales(allSales as Sale[]);
     } catch (error) {
       console.error('[VendasPage] ❌ Erro ao carregar vendas:', error);
       toast.error('Erro ao carregar vendas');
