@@ -93,6 +93,9 @@ export default function ClientDetailPage() {
           id: s.id, leadId: s.lead_id, productId: s.product_id || '',
           value: Number(s.value) || 0, date: s.sale_date || '',
           paymentMethod: s.payment_method || '', status: s.status || 'ativo',
+          sale_type: 'unica',
+          created_at: s.created_at,
+          updated_at: s.updated_at,
         })));
       }
       if (intRes.status === 'fulfilled') {
