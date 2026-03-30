@@ -130,11 +130,13 @@ export default function ClientesPage() {
       {/* Layout: sidebar + table */}
       <div className="flex gap-6">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:block w-[320px] shrink-0">
-          <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
-            {filterPanel}
-          </div>
-        </aside>
+        {showFilters && (
+          <aside className="hidden lg:block w-[320px] shrink-0 transition-all duration-300">
+            <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
+              {filterPanel}
+            </div>
+          </aside>
+        )}
 
         {/* Table */}
         <div className="flex-1 min-w-0">
