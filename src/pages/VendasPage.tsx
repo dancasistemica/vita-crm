@@ -381,10 +381,13 @@ export const VendasPage = () => {
         onSuccess={loadSales}
       />
       
-      {showEditModal && selectedSaleId && (
+      {showEditModal && selectedSaleId && sales.find(s => s.id === selectedSaleId) && (
         <EditSaleModal
           isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedSaleId(null);
+          }}
           sale={sales.find(s => s.id === selectedSaleId)!}
           onSuccess={loadSales}
         />
