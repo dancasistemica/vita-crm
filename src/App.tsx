@@ -71,6 +71,8 @@ const App = () => (
                   <Route path="/leads" element={<LeadsPage />} />
                   <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                   <Route path="/pipeline" element={<PipelinePage />} />
+                  <Route path="/vendas" element={<VendasPage />} />
+
                   <Route path="/clientes" element={<ClientesPage />} />
                   <Route path="/clientes/:id" element={<ClientDetailPage />} />
                   <Route path="/interacoes" element={<InteracoesPage />} />

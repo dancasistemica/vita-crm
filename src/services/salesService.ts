@@ -171,4 +171,38 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     console.error('[SalesService] ❌ Erro crítico ao criar venda com parcelamento:', error);
     throw error;
   }
+
+export const deleteSale = async (saleId: string) => {
+  try {
+    console.log('[SalesService] Excluindo venda e parcelas:', saleId);
+    
+    // Primeiro excluímos as parcelas devido à constraint de FK
+    const { error: installmentsError } = await supabase
+      .from('sale_installments')
+      .delete()
+      .eq('sale_id', saleId);
+
+    if (installmentsError) {
+      console.error('[SalesService] ❌ Erro ao excluir parcelas:', installmentsError);
+      throw installmentsError;
+    }
+
+    // Depois a venda principal
+    const { error: saleError } = await supabase
+      .from('sales')
+      .delete()
+      .eq('id', saleId);
+
+    if (saleError) {
+      console.error('[SalesService] ❌ Erro ao excluir venda:', saleError);
+      throw saleError;
+    }
+
+    console.log('[SalesService] ✅ Venda excluída com sucesso');
+    return true;
+  } catch (error) {
+    console.error('[SalesService] ❌ Erro crítico ao excluir venda:', error);
+    throw error;
+  }
 };
+

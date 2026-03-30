@@ -85,4 +85,38 @@ export const cancelSubscription = async (subscriptionId: string) => {
 
   if (error) throw error;
   console.log('[SubscriptionService] ✅ Mensalidade cancelada');
+
+export const deleteSubscription = async (subscriptionId: string) => {
+  try {
+    console.log('[SubscriptionService] Excluindo mensalidade e pagamentos:', subscriptionId);
+    
+    // Excluir pagamentos primeiro
+    const { error: paymentsError } = await supabase
+      .from('subscription_payments')
+      .delete()
+      .eq('subscription_id', subscriptionId);
+
+    if (paymentsError) {
+      console.error('[SubscriptionService] ❌ Erro ao excluir pagamentos:', paymentsError);
+      throw paymentsError;
+    }
+
+    // Excluir mensalidade
+    const { error: subscriptionError } = await supabase
+      .from('subscriptions')
+      .delete()
+      .eq('id', subscriptionId);
+
+    if (subscriptionError) {
+      console.error('[SubscriptionService] ❌ Erro ao excluir mensalidade:', subscriptionError);
+      throw subscriptionError;
+    }
+
+    console.log('[SubscriptionService] ✅ Mensalidade excluída com sucesso');
+    return true;
+  } catch (error) {
+    console.error('[SubscriptionService] ❌ Erro crítico ao excluir mensalidade:', error);
+    throw error;
+  }
 };
+
