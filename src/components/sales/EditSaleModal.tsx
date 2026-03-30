@@ -215,8 +215,8 @@ export const EditSaleModal = ({
               {/* Info do Cliente (ReadOnly) */}
               <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
                 <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
-                <p className="text-gray-900 font-semibold">{sale.client_name}</p>
-                <p className="text-xs text-gray-500">{sale.stage_name} • {sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                <p className="text-gray-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
+                <p className="text-xs text-gray-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
               </div>
 
               <div>
