@@ -52,9 +52,9 @@ export const useSearch = () => {
 
         const { data: tasks, error: tasksError } = await supabase
           .from("tasks")
-          .select("id, title, description")
+          .select("id, title")
           .eq("organization_id", organizationId)
-          .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+          .ilike("title", `%${query}%`)
           .limit(5);
 
         if (tasksError) {
