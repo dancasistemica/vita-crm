@@ -55,7 +55,7 @@ export const useScheduledMessages = (organizationId: string | null) => {
       if (queryError) throw queryError
 
       console.log('[useScheduledMessages.loadMessages] Carregadas:', data?.length)
-      setMessages(data || [])
+      setMessages((data || []) as ScheduledMessage[])
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Erro ao carregar'
       console.error('[useScheduledMessages.loadMessages] Erro:', errorMsg)
