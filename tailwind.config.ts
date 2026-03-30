@@ -14,12 +14,12 @@ export default {
     extend: {
       colors: {
         ...designTokens.colors,
-        // Aliases para compatibilidade com Shadcn/ui
-        border: designTokens.colors.border.default,
-        input: designTokens.colors.border.light,
-        ring: designTokens.colors.primary[500],
-        background: designTokens.colors.background.white,
-        foreground: designTokens.colors.foreground.default,
+        // Aliases para Shadcn/ui (se usar)
+        border: '#d4d4d4',
+        input: '#e5e5e5',
+        ring: '#0ea5e9',
+        background: '#ffffff',
+        foreground: '#171717',
         primary: {
           DEFAULT: designTokens.colors.primary[500],
           foreground: '#ffffff',
