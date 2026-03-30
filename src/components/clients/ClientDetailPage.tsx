@@ -79,21 +79,22 @@ export default function ClientDetailPage() {
 
   const client = leads.find(l => l.id === id);
 
-  // Fetch related data from DB
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!dataAccess || !id) return;
-    Promise.allSettled([
-      dataAccess.getSales(),
-      dataAccess.getInteractions(),
-      dataAccess.getProducts(),
-      dataAccess.getTasks(),
-    ]).then(([salesRes, intRes, prodRes, tasksRes]) => {
+    try {
+      const [salesRes, intRes, prodRes, tasksRes] = await Promise.allSettled([
+        dataAccess.getSales(),
+        dataAccess.getInteractions(),
+        dataAccess.getProducts(),
+        dataAccess.getTasks(),
+      ]);
+
       if (salesRes.status === 'fulfilled') {
         setSales((salesRes.value as any[]).filter(s => s.lead_id === id).map(s => ({
           id: s.id, leadId: s.lead_id, productId: s.product_id || '',
           value: Number(s.value) || 0, date: s.sale_date || '',
           paymentMethod: s.payment_method || '', status: s.status || 'ativo',
-          sale_type: 'unica',
+          sale_type: s.sale_type || 'unica',
           created_at: s.created_at,
           updated_at: s.updated_at,
         })));
@@ -112,8 +113,31 @@ export default function ClientDetailPage() {
           dueDate: t.due_date || '', completed: t.completed || false,
         })));
       }
-    });
+    } catch (error) {
+      console.error('[ClientDetailPage] Error fetching data:', error);
+    }
   }, [dataAccess, id]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleDeleteSale = async (e: React.MouseEvent, saleId: string, saleType: 'unica' | 'mensalidade') => {
+    e.stopPropagation();
+    
+    if (!window.confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {
+      return;
+    }
+
+    try {
+      await deleteSale(saleId, saleType);
+      toast.success('Venda excluída com sucesso!');
+      fetchData();
+    } catch (error) {
+      console.error('[ClientDetailPage] Erro ao excluir venda:', error);
+      toast.error('Erro ao excluir venda.');
+    }
+  };
 
   // Sync notes from client
   useEffect(() => {
