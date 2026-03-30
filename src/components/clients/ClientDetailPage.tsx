@@ -254,9 +254,14 @@ export default function ClientDetailPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-success">R$ {sale.value.toLocaleString('pt-BR')}</span>
                     <Badge className={statusColors[sale.status] || ''}>{sale.status}</Badge>
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
-                      <Edit2 className="h-3.5 w-3.5" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
+                        <Edit2 className="h-3.5 w-3.5 text-blue-500" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => handleDeleteSale(e, sale.id, sale.sale_type)}>
+                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
