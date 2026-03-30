@@ -16,7 +16,7 @@ export interface Lead {
   pipelineStage: string;
   responsible: string;
   notes: string;
-  is_client: boolean;
+  is_client?: boolean;
   became_client_at?: string;
   organization_id?: string;
   created_at?: string;
