@@ -277,16 +277,15 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
   try {
     console.log('[SaleService] Buscando vendas e mensalidades para org:', organizationId);
 
-    // PASSO 1: Buscar vendas únicas
+    // PASSO 1: Buscar vendas únicas com relacionamentos corretos
     const { data: salesData, error: salesError } = await supabase
       .from('sales')
       .select(`
         id,
-        lead_id,
+        client_id:lead_id,
         leads(name),
-        product_id,
-        product_sales_stages(name, value, sale_type),
-        payment_method,
+        sales_stage_id:product_id,
+        payment_method_id:payment_method,
         status,
         created_at,
         updated_at
@@ -301,7 +300,20 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
 
     console.log('[SaleService] ✅ Vendas carregadas:', salesData?.length || 0);
 
-    // PASSO 2: Buscar mensalidades
+    // PASSO 2: Buscar etapas de venda para obter nomes e valores
+    const { data: stagesData, error: stagesError } = await supabase
+      .from('product_sales_stages')
+      .select('id, stage_name, stage_value, sale_type')
+      .eq('organization_id', organizationId);
+
+    if (stagesError) {
+      console.error('[SaleService] ❌ Erro ao buscar etapas:', stagesError.message);
+      throw new Error(`Erro ao buscar etapas: ${stagesError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
+
+    // PASSO 3: Buscar mensalidades
     const { data: subscriptionsData, error: subscriptionsError } = await supabase
       .from('subscriptions')
       .select(`
@@ -309,7 +321,6 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         client_id,
         leads(name),
         sales_stage_id,
-        product_sales_stages(name, value, sale_type),
         monthly_value,
         payment_method_id,
         payment_methods(name),
@@ -327,38 +338,51 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
 
     console.log('[SaleService] ✅ Mensalidades carregadas:', subscriptionsData?.length || 0);
 
-    // PASSO 3: Transformar dados para formato unificado
-    const formattedSales = (salesData || []).map((sale: any) => ({
-      id: sale.id,
-      client_id: sale.lead_id,
-      client_name: sale.leads?.name || 'Cliente desconhecido',
-      sales_stage_id: sale.product_id,
-      stage_name: sale.product_sales_stages?.name || 'Etapa desconhecida',
-      stage_value: Number(sale.product_sales_stages?.value || 0),
-      sale_type: 'unica' as const,
-      payment_method_id: sale.payment_method,
-      payment_method_name: sale.payment_method || 'Não definida',
-      status: sale.status,
-      created_at: sale.created_at,
-      updated_at: sale.updated_at,
-    }));
+    // PASSO 4: Criar mapa de etapas para lookup rápido
+    const stagesMap = new Map();
+    (stagesData || []).forEach(stage => {
+      stagesMap.set(stage.id, stage);
+    });
 
-    const formattedSubscriptions = (subscriptionsData || []).map((sub: any) => ({
-      id: sub.id,
-      client_id: sub.client_id,
-      client_name: sub.leads?.name || 'Cliente desconhecido',
-      sales_stage_id: sub.sales_stage_id,
-      stage_name: sub.product_sales_stages?.name || 'Etapa desconhecida',
-      stage_value: Number(sub.monthly_value || 0),
-      sale_type: 'mensalidade' as const,
-      payment_method_id: sub.payment_method_id,
-      payment_method_name: sub.payment_methods?.name || 'Não definida',
-      status: sub.status,
-      created_at: sub.created_at,
-      updated_at: sub.updated_at,
-    }));
+    // PASSO 5: Transformar vendas únicas com dados de etapas
+    const formattedSales = (salesData || []).map((sale: any) => {
+      const stage = stagesMap.get(sale.sales_stage_id);
+      return {
+        id: sale.id,
+        client_id: sale.client_id,
+        client_name: sale.leads?.name || 'Cliente desconhecido',
+        sales_stage_id: sale.sales_stage_id,
+        stage_name: stage?.stage_name || 'Etapa desconhecida',
+        stage_value: stage?.stage_value || 0,
+        sale_type: 'unica' as const,
+        payment_method_id: sale.payment_method_id,
+        payment_method_name: sale.payment_method_id || 'Não definida',
+        status: sale.status,
+        created_at: sale.created_at,
+        updated_at: sale.updated_at,
+      };
+    });
 
-    // PASSO 4: Combinar e ordenar
+    // PASSO 6: Transformar mensalidades com dados de etapas
+    const formattedSubscriptions = (subscriptionsData || []).map((sub: any) => {
+      const stage = stagesMap.get(sub.sales_stage_id);
+      return {
+        id: sub.id,
+        client_id: sub.client_id,
+        client_name: sub.leads?.name || 'Cliente desconhecido',
+        sales_stage_id: sub.sales_stage_id,
+        stage_name: stage?.stage_name || 'Etapa desconhecida',
+        stage_value: sub.monthly_value || 0,
+        sale_type: 'mensalidade' as const,
+        payment_method_id: sub.payment_method_id,
+        payment_method_name: sub.payment_methods?.name || 'Não definida',
+        status: sub.status,
+        created_at: sub.created_at,
+        updated_at: sub.updated_at,
+      };
+    });
+
+    // PASSO 7: Combinar e ordenar
     const allSales = [...formattedSales, ...formattedSubscriptions].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
