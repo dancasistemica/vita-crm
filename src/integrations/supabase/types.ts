@@ -908,6 +908,7 @@ export type Database = {
           link: string | null
           name: string
           product_id: string
+          sale_type: string | null
           value: number
         }
         Insert: {
@@ -916,6 +917,7 @@ export type Database = {
           link?: string | null
           name: string
           product_id: string
+          sale_type?: string | null
           value?: number
         }
         Update: {
@@ -924,6 +926,7 @@ export type Database = {
           link?: string | null
           name?: string
           product_id?: string
+          sale_type?: string | null
           value?: number
         }
         Relationships: [
