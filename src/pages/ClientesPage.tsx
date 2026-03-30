@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen, RotateCcw, ChevronUp, ChevronDown, ArrowLeft, Package, DollarSign, CreditCard, Calendar } from 'lucide-react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen, RotateCcw, ChevronUp, ChevronDown, ArrowLeft, Package, DollarSign, CreditCard, Calendar, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { deleteSale, getClientSales } from '@/services/saleService';
 import { format } from 'date-fns';
