@@ -242,53 +242,51 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !organization?.id ||
-      !formData.client_id ||
-      !formData.product_id ||
-      !formData.sales_stage_id ||
-      !formData.payment_method_id ||
-      !formData.first_payment_date ||
-      !formData.installments ||
-      formData.stage_value <= 0 ||
-      formData.initial_payment < 0 ||
-      formData.initial_payment >= formData.stage_value
-    ) {
-      toast.error('Preencha todos os campos obrigatórios');
+    if (!organization?.id || !formData.client_id || !formData.product_id || !formData.sales_stage_id || !formData.payment_method_id) {
+      toast.error('Preencha os campos obrigatórios');
       return;
     }
 
     setLoading(true);
     try {
-      console.log('[CreateSaleModal] Criando venda:', {
-        client_id: formData.client_id,
-        stage_value: formData.stage_value,
-        initial_payment: formData.initial_payment,
-        installments: formData.installments,
-      });
+      if (saleType === 'unica') {
+        await createSaleWithInstallments(organization!.id, {
+          client_id: formData.client_id,
+          value: formData.stage_value,
+          status: 'pendente',
+          installments: parseInt(formData.installments),
+          first_payment_date: formData.first_payment_date,
+          auto_payment_enabled: formData.auto_payment_enabled,
+          notes: formData.notes,
+          payment_method_id: formData.payment_method_id,
+          initial_payment: formData.initial_payment,
+          sales_stage_id: formData.sales_stage_id,
+          items: [
+            {
+              product_id: formData.product_id,
+              quantity: 1,
+              unit_price: formData.stage_value,
+            },
+          ],
+        });
+        toast.success('Venda criada com sucesso!');
+      } else {
+        const { createSubscription } = await import('@/services/subscriptionService');
+        await createSubscription(organization!.id, {
+          client_id: formData.client_id,
+          product_id: formData.product_id,
+          sales_stage_id: formData.sales_stage_id,
+          monthly_value: formData.stage_value,
+          start_date: formData.start_date,
+          end_date: formData.end_date || undefined,
+          payment_method_id: formData.payment_method_id,
+          auto_payment_enabled: formData.auto_payment_enabled,
+          notes: formData.notes,
+          first_payment_due_date: formData.first_payment_due_date,
+        });
+        toast.success('Mensalidade criada com sucesso!');
+      }
 
-      await createSaleWithInstallments(organization!.id, {
-        client_id: formData.client_id,
-        value: formData.stage_value,
-        status: 'pendente',
-        installments: parseInt(formData.installments),
-        first_payment_date: formData.first_payment_date,
-        auto_payment_enabled: formData.auto_payment_enabled,
-        notes: formData.notes,
-        payment_method_id: formData.payment_method_id,
-        initial_payment: formData.initial_payment,
-        sales_stage_id: formData.sales_stage_id,
-        items: [
-          {
-            product_id: formData.product_id,
-            quantity: 1,
-            unit_price: formData.stage_value,
-          },
-        ],
-      });
-
-      toast.success('Venda criada com sucesso!');
-      
       // Resetar form
       setFormData({
         client_id: '',
@@ -299,6 +297,9 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         initial_payment: 0,
         installments: '1',
         first_payment_date: '',
+        start_date: '',
+        end_date: '',
+        first_payment_due_date: '',
         auto_payment_enabled: true,
         notes: '',
       });
@@ -307,8 +308,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       onClose();
       onSuccess?.();
     } catch (error) {
-      console.error('[CreateSaleModal] Erro ao criar venda:', error);
-      toast.error('Erro ao criar venda');
+      console.error('[CreateSaleModal] Erro ao criar:', error);
+      toast.error('Erro ao processar a operação');
     } finally {
       setLoading(false);
     }
