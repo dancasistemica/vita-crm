@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { deleteSale } from '@/services/salesService';
 import { deleteSubscription } from '@/services/subscriptionService';
+import { getSalesAndSubscriptions } from '@/services/saleService';
 
 interface Sale {
   id: string;
