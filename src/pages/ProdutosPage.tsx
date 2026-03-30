@@ -188,18 +188,18 @@ interface ProductFormData {
   type: string;
   description: string;
   notes: string;
-  salesStages: { id: string; name: string; value: number; link: string }[];
+  salesStages: { id: string; name: string; value: number; link: string; sale_type: 'unica' | 'mensalidade' }[];
 }
 
 function ProductForm({ product, onSave }: { product: ProductView | null; onSave: (data: ProductInput) => void }) {
   const [form, setForm] = useState<ProductFormData>(
     product
       ? { name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }
-      : { name: '', type: '', description: '', notes: '', salesStages: [{ id: crypto.randomUUID(), name: '', value: 0, link: '' }] }
+      : { name: '', type: '', description: '', notes: '', salesStages: [{ id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }] }
   );
   const set = (k: keyof ProductFormData, v: any) => setForm(f => ({ ...f, [k]: v }));
 
-  const addStage = () => set('salesStages', [...form.salesStages, { id: crypto.randomUUID(), name: '', value: 0, link: '' }]);
+  const addStage = () => set('salesStages', [...form.salesStages, { id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }]);
   const updateStage = (id: string, key: string, val: any) =>
     set('salesStages', form.salesStages.map(s => s.id === id ? { ...s, [key]: val } : s));
   const removeStage = (id: string) => set('salesStages', form.salesStages.filter(s => s.id !== id));
@@ -216,11 +216,26 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
           <Button variant="outline" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</Button>
         </div>
         {form.salesStages.map(stage => (
-          <div key={stage.id} className="grid grid-cols-[1fr_80px_1fr_auto] gap-2 mb-2 items-end">
-            <div><Input placeholder="Nome" value={stage.name} onChange={e => updateStage(stage.id, 'name', e.target.value)} /></div>
-            <div><Input type="number" placeholder="R$" value={stage.value || ''} onChange={e => updateStage(stage.id, 'value', Number(e.target.value))} /></div>
-            <div><Input placeholder="Link" value={stage.link} onChange={e => updateStage(stage.id, 'link', e.target.value)} /></div>
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></Button>
+          <div key={stage.id} className="p-3 border rounded-lg bg-muted/20 mb-3 space-y-3">
+            <div className="grid grid-cols-[1fr_80px_auto] gap-2 items-end">
+              <div><Label className="text-xs">Nome</Label><Input placeholder="Nome" value={stage.name} onChange={e => updateStage(stage.id, 'name', e.target.value)} /></div>
+              <div><Label className="text-xs">R$</Label><Input type="number" placeholder="R$" value={stage.value || ''} onChange={e => updateStage(stage.id, 'value', Number(e.target.value))} /></div>
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></Button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+               <div>
+                  <Label className="text-xs">Tipo de Venda</Label>
+                  <select
+                    value={stage.sale_type}
+                    onChange={(e) => updateStage(stage.id, 'sale_type', e.target.value as 'unica' | 'mensalidade')}
+                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="unica">💳 Única</option>
+                    <option value="mensalidade">📅 Mensal</option>
+                  </select>
+               </div>
+               <div><Label className="text-xs">Link</Label><Input placeholder="Link" value={stage.link} onChange={e => updateStage(stage.id, 'link', e.target.value)} /></div>
+            </div>
           </div>
         ))}
       </div>
