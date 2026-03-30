@@ -7,6 +7,7 @@ export interface ProductStageView {
   name: string;
   value: number;
   link: string;
+  sale_type: 'unica' | 'mensalidade';
 }
 
 export interface ProductView {
