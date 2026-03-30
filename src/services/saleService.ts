@@ -5,74 +5,142 @@ export const getSaleById = async (
   saleType: 'unica' | 'mensalidade'
 ) => {
   try {
-    console.log('[SaleService] Buscando venda:', { saleId, saleType });
+    console.log('[SaleService] Iniciando busca de venda:', {
+      saleId,
+      saleType,
+      timestamp: new Date().toISOString(),
+    });
+
+    if (!saleId || !saleType) {
+      throw new Error('saleId ou saleType inválidos');
+    }
 
     if (saleType === 'unica') {
-      // Buscar venda única
-      const { data, error } = await supabase
+      console.log('[SaleService] Buscando venda única...');
+
+      // Query simplificada para debug
+      const { data, error, status } = await supabase
         .from('sales')
-        .select(`
-          id,
-          lead_id,
-          leads(name),
-          product_id,
-          product_sales_stages(name, value),
-          payment_method,
-          status,
-          notes,
-          created_at,
-          updated_at
-        `)
+        .select('*')
         .eq('id', saleId)
         .single();
 
       if (error) {
-        console.error('[SaleService] ❌ Erro ao buscar venda única:', error);
-        throw error;
+        console.error('[SaleService] ❌ Erro na query principal (unica):', {
+          error: error.message,
+          code: error.code,
+          status,
+        });
+        throw new Error(`Erro ao buscar venda: ${error.message}`);
       }
 
-      console.log('[SaleService] ✅ Venda única encontrada:', data);
-      
-      // Adaptar nomes de campos para consistência se necessário
-      return {
+      if (!data) {
+        console.error('[SaleService] ❌ Venda não encontrada no banco');
+        throw new Error('Venda não encontrada');
+      }
+
+      console.log('[SaleService] ✅ Venda única encontrada:', data.id);
+
+      // Agora buscar relacionamentos
+      // Adaptar para colunas reais: lead_id, product_id, payment_method
+      const { data: clientData } = await supabase
+        .from('leads')
+        .select('id, name, email')
+        .eq('id', data.lead_id)
+        .maybeSingle();
+
+      const { data: stageData } = await supabase
+        .from('product_sales_stages')
+        .select('id, stage_name, stage_value, sale_type')
+        .eq('id', data.product_id)
+        .maybeSingle();
+
+      // Para sales, payment_method é um texto. Tentamos encontrar por nome na tabela payment_methods
+      let paymentData = null;
+      if (data.payment_method) {
+        const { data: pData } = await supabase
+          .from('payment_methods')
+          .select('id, name')
+          .eq('name', data.payment_method)
+          .maybeSingle();
+        paymentData = pData || { id: null, name: data.payment_method };
+      }
+
+      const fullData = {
         ...data,
-        client_id: data.lead_id,
-        sales_stage_id: data.product_id,
-        payment_method_id: data.payment_method,
+        client_id: data.lead_id, // Unificar com subscriptions
+        sales_stage_id: data.product_id, // Unificar com subscriptions
+        payment_method_id: paymentData?.id || null,
+        leads: clientData,
+        product_sales_stages: stageData,
+        payment_methods: paymentData,
       };
+
+      console.log('[SaleService] ✅ Venda única com relacionamentos carregada');
+      return fullData;
     } else {
-      // Buscar mensalidade
-      const { data, error } = await supabase
+      console.log('[SaleService] Buscando mensalidade...');
+
+      // Query simplificada para debug
+      const { data, error, status } = await supabase
         .from('subscriptions')
-        .select(`
-          id,
-          client_id,
-          leads(name),
-          sales_stage_id,
-          product_sales_stages(name, value),
-          monthly_value,
-          payment_method_id,
-          payment_methods(name),
-          status,
-          notes,
-          start_date,
-          end_date,
-          created_at,
-          updated_at
-        `)
+        .select('*')
         .eq('id', saleId)
         .single();
 
       if (error) {
-        console.error('[SaleService] ❌ Erro ao buscar mensalidade:', error);
-        throw error;
+        console.error('[SaleService] ❌ Erro na query principal (mensalidade):', {
+          error: error.message,
+          code: error.code,
+          status,
+        });
+        throw new Error(`Erro ao buscar mensalidade: ${error.message}`);
       }
 
-      console.log('[SaleService] ✅ Mensalidade encontrada:', data);
-      return data;
+      if (!data) {
+        console.error('[SaleService] ❌ Mensalidade não encontrada no banco');
+        throw new Error('Mensalidade não encontrada');
+      }
+
+      console.log('[SaleService] ✅ Mensalidade encontrada:', data.id);
+
+      // Agora buscar relacionamentos
+      // Adaptar para colunas reais: client_id, sales_stage_id, payment_method_id
+      const { data: clientData } = await supabase
+        .from('leads')
+        .select('id, name, email')
+        .eq('id', data.client_id)
+        .maybeSingle();
+
+      const { data: stageData } = await supabase
+        .from('product_sales_stages')
+        .select('id, stage_name, stage_value, sale_type')
+        .eq('id', data.sales_stage_id)
+        .maybeSingle();
+
+      const { data: paymentData } = await supabase
+        .from('payment_methods')
+        .select('id, name')
+        .eq('id', data.payment_method_id)
+        .maybeSingle();
+
+      const fullData = {
+        ...data,
+        leads: clientData,
+        product_sales_stages: stageData,
+        payment_methods: paymentData,
+      };
+
+      console.log('[SaleService] ✅ Mensalidade com relacionamentos carregada');
+      return fullData;
     }
   } catch (error) {
-    console.error('[SaleService] ❌ Erro crítico ao buscar venda:', error);
+    console.error('[SaleService] ❌ Erro crítico ao buscar venda:', {
+      error: error instanceof Error ? error.message : String(error),
+      saleId,
+      saleType,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     throw error;
   }
 };
