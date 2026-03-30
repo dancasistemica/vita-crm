@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Plus, Filter, X, FileDown, Pencil, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Filter, X, FileDown, Pencil, Trash2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +23,14 @@ export default function ClientesPage() {
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showFilters, setShowFilters] = useState(() => {
+    const saved = localStorage.getItem('clientesPageShowFilters');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('clientesPageShowFilters', JSON.stringify(showFilters));
+  }, [showFilters]);
 
   const handleNewSale = (leadId?: string) => {
     setSaleLeadId(leadId);
@@ -83,6 +91,16 @@ export default function ClientesPage() {
               </Button>
             </>
           )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden lg:flex"
+            onClick={() => setShowFilters(!showFilters)}
+            title={showFilters ? 'Esconder filtros' : 'Mostrar filtros'}
+          >
+            {showFilters ? <PanelLeftClose className="h-4 w-4 mr-1" /> : <PanelLeftOpen className="h-4 w-4 mr-1" />}
+            {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
+          </Button>
           <Button size="sm" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
           </Button>
@@ -112,11 +130,13 @@ export default function ClientesPage() {
       {/* Layout: sidebar + table */}
       <div className="flex gap-6">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:block w-[320px] shrink-0">
-          <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
-            {filterPanel}
-          </div>
-        </aside>
+        {showFilters && (
+          <aside className="hidden lg:block w-[320px] shrink-0 transition-all duration-300">
+            <div className="sticky top-4 rounded-xl border border-border/60 bg-card p-4 max-h-[calc(100vh-160px)] overflow-y-auto shadow-card">
+              {filterPanel}
+            </div>
+          </aside>
+        )}
 
         {/* Table */}
         <div className="flex-1 min-w-0">
