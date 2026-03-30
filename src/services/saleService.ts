@@ -395,3 +395,130 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     throw error;
   }
 };
+
+export const getClientSales = async (
+  organizationId: string,
+  clientId: string
+) => {
+  try {
+    console.log('[SaleService] Buscando vendas do cliente:', {
+      organizationId,
+      clientId,
+    });
+
+    // PASSO 1: Buscar vendas únicas do cliente
+    // Corrigido: lead_id e product_id para a tabela 'sales'
+    const { data: salesData, error: salesError } = await supabase
+      .from('sales')
+      .select(`
+        id,
+        lead_id,
+        product_id,
+        payment_method,
+        status,
+        created_at,
+        updated_at
+      `)
+      .eq('organization_id', organizationId)
+      .eq('lead_id', clientId)
+      .order('created_at', { ascending: false });
+
+    if (salesError) {
+      console.error('[SaleService] ❌ Erro ao buscar vendas do cliente:', salesError.message);
+      throw new Error(`Erro ao buscar vendas: ${salesError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Vendas do cliente carregadas:', salesData?.length || 0);
+
+    // PASSO 2: Buscar etapas de venda
+    // Corrigido: name e value para 'product_sales_stages'
+    const { data: stagesData, error: stagesError } = await supabase
+      .from('product_sales_stages')
+      .select('id, name, value, sale_type');
+
+    if (stagesError) {
+      console.error('[SaleService] ❌ Erro ao buscar etapas:', stagesError.message);
+      throw new Error(`Erro ao buscar etapas: ${stagesError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
+
+    // PASSO 3: Buscar mensalidades do cliente
+    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+      .from('subscriptions')
+      .select(`
+        id,
+        client_id,
+        sales_stage_id,
+        monthly_value,
+        payment_method_id,
+        payment_methods(name),
+        status,
+        created_at,
+        updated_at
+      `)
+      .eq('organization_id', organizationId)
+      .eq('client_id', clientId)
+      .order('created_at', { ascending: false });
+
+    if (subscriptionsError) {
+      console.error('[SaleService] ❌ Erro ao buscar mensalidades:', subscriptionsError.message);
+      throw new Error(`Erro ao buscar mensalidades: ${subscriptionsError.message}`);
+    }
+
+    console.log('[SaleService] ✅ Mensalidades do cliente carregadas:', subscriptionsData?.length || 0);
+
+    // PASSO 4: Criar mapa de etapas para lookup
+    const stagesMap = new Map();
+    (stagesData || []).forEach(stage => {
+      stagesMap.set(stage.id, stage);
+    });
+
+    // PASSO 5: Transformar vendas únicas
+    const formattedSales = (salesData || []).map((sale: any) => {
+      const stage = stagesMap.get(sale.product_id);
+      return {
+        id: sale.id,
+        client_id: sale.lead_id,
+        sales_stage_id: sale.product_id,
+        stage_name: stage?.name || 'Etapa desconhecida',
+        stage_value: Number(stage?.value || 0),
+        sale_type: 'unica' as const,
+        payment_method_id: null,
+        payment_method_name: sale.payment_method || 'Não definida',
+        status: sale.status,
+        created_at: sale.created_at,
+        updated_at: sale.updated_at,
+      };
+    });
+
+    // PASSO 6: Transformar mensalidades
+    const formattedSubscriptions = (subscriptionsData || []).map((sub: any) => {
+      const stage = stagesMap.get(sub.sales_stage_id);
+      return {
+        id: sub.id,
+        client_id: sub.client_id,
+        sales_stage_id: sub.sales_stage_id,
+        stage_name: stage?.name || 'Etapa desconhecida',
+        stage_value: Number(sub.monthly_value || 0),
+        sale_type: 'mensalidade' as const,
+        payment_method_id: sub.payment_method_id,
+        payment_method_name: sub.payment_methods?.name || 'Não definida',
+        status: sub.status,
+        created_at: sub.created_at,
+        updated_at: sub.updated_at,
+      };
+    });
+
+    // PASSO 7: Combinar e ordenar
+    const allSales = [...formattedSales, ...formattedSubscriptions].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    console.log('[SaleService] ✅ Total de vendas do cliente:', allSales.length);
+    return allSales;
+  } catch (error) {
+    console.error('[SaleService] ❌ Erro crítico ao buscar vendas do cliente:', error);
+    throw error;
+  }
+};
