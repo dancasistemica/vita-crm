@@ -157,7 +157,12 @@ export default function ProdutosPage() {
                     <div className="space-y-1">
                       {product.salesStages.map(stage => (
                         <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
-                          <span>{stage.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span>{stage.name}</span>
+                            <Badge variant="outline" className="text-[10px] py-0 px-1">
+                              {stage.sale_type === 'mensalidade' ? '📅 Mensal' : '💳 Única'}
+                            </Badge>
+                          </div>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">R$ {stage.value.toLocaleString('pt-BR')}</span>
                             {stage.link && (
