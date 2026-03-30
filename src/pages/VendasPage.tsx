@@ -30,6 +30,7 @@ export const VendasPage = () => {
   const { organization } = useOrganization();
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
@@ -51,10 +52,14 @@ export const VendasPage = () => {
   }, [organization?.id]);
 
   const loadSales = async () => {
-    if (!organization?.id) return;
+    if (!organization?.id) {
+      console.error('[VendasPage] ❌ Organization ID não disponível');
+      return;
+    }
 
     try {
       setLoading(true);
+      setError(null);
       console.log('[VendasPage] Carregando vendas para org:', organization.id);
 
       const allSales = await getSalesAndSubscriptions(organization.id);
@@ -62,8 +67,11 @@ export const VendasPage = () => {
       console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
       setSales(allSales as Sale[]);
     } catch (error) {
-      console.error('[VendasPage] ❌ Erro ao carregar vendas:', error);
-      toast.error('Erro ao carregar vendas');
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('[VendasPage] ❌ Erro ao carregar vendas:', errorMessage);
+      setError(errorMessage);
+      toast.error(`Erro ao carregar vendas: ${errorMessage}`);
+      setSales([]);
     } finally {
       setLoading(false);
     }
@@ -205,6 +213,23 @@ export const VendasPage = () => {
             </div>
           </div>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-red-700 font-semibold">❌ Erro ao carregar vendas</p>
+                <p className="text-red-600 text-sm mt-1">{error}</p>
+              </div>
+              <button
+                onClick={() => loadSales()}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium whitespace-nowrap ml-4"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Results List */}
         {loading ? (
