@@ -98,13 +98,12 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       .from('sales')
       .insert({
         organization_id: organizationId,
-        client_id: saleData.client_id,
+        lead_id: saleData.client_id,
         value: saleData.value,
         status: saleData.status || 'pendente',
         notes: saleData.notes,
-        payment_method_id: saleData.payment_method_id,
-        initial_payment: saleData.initial_payment || 0,
-        sales_stage_id: saleData.sales_stage_id,
+        payment_method: saleData.payment_method_id || '',
+        product_id: saleData.sales_stage_id || null,
       })
       .select()
       .single();
