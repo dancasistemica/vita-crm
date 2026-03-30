@@ -24,6 +24,7 @@ export default function ClientesPage() {
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showFilters, setShowFilters] = useState(() => {
     const saved = localStorage.getItem('clientesPageShowFilters');
     return saved !== null ? JSON.parse(saved) : true;
