@@ -115,11 +115,6 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
 
     console.log('[SalesService] ✅ Venda criada:', sale.id);
 
-    // sale_items table doesn't exist, skip item creation
-    if (saleData.items && saleData.items.length > 0) {
-      console.log('[SalesService] Nota: sale_items não disponível, itens ignorados');
-    }
-
     // PASSO 2: Calcular e criar parcelas
     console.log('[SalesService] Calculando parcelas...');
     const installmentRecords: Array<{
@@ -171,6 +166,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     console.error('[SalesService] ❌ Erro crítico ao criar venda com parcelamento:', error);
     throw error;
   }
+};
 
 export const deleteSale = async (saleId: string) => {
   try {
@@ -205,4 +201,3 @@ export const deleteSale = async (saleId: string) => {
     throw error;
   }
 };
-

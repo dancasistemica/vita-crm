@@ -85,6 +85,7 @@ export const cancelSubscription = async (subscriptionId: string) => {
 
   if (error) throw error;
   console.log('[SubscriptionService] ✅ Mensalidade cancelada');
+};
 
 export const deleteSubscription = async (subscriptionId: string) => {
   try {
@@ -119,4 +120,3 @@ export const deleteSubscription = async (subscriptionId: string) => {
     throw error;
   }
 };
-
