@@ -22,6 +22,7 @@ import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionMo
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
+  const { organization } = useOrganization();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
@@ -30,6 +31,9 @@ export default function ClientesPage() {
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [clientSales, setClientSales] = useState<any[]>([]);
+  const [loadingSales, setLoadingSales] = useState(false);
   const [showFilters, setShowFilters] = useState(() => {
     const saved = localStorage.getItem('clientesPageShowFilters');
     return saved !== null ? JSON.parse(saved) : true;
