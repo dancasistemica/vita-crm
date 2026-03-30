@@ -120,12 +120,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       }
 
       // Carregar formas de pagamento
+      console.log('[CreateSaleModal] 🔍 Iniciando carregamento de payment_methods...');
+      console.log('[CreateSaleModal] 🔍 organization_id:', organization.id);
       const { data: paymentMethodsData, error: paymentMethodsError } = await supabase
         .from('payment_methods')
         .select('id, name, active')
         .eq('organization_id', organization.id)
-        .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
+
+      console.log('[CreateSaleModal] 📊 Erro:', paymentMethodsError);
+      console.log('[CreateSaleModal] 📊 Dados retornados:', paymentMethodsData);
+      console.log('[CreateSaleModal] 📊 Quantidade:', paymentMethodsData?.length || 0);
 
       if (paymentMethodsError) {
         console.error('[CreateSaleModal] Erro ao carregar formas de pagamento:', paymentMethodsError);
