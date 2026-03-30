@@ -43,6 +43,35 @@ export default function ClientesPage() {
     localStorage.setItem('clientesPageShowFilters', JSON.stringify(showFilters));
   }, [showFilters]);
 
+  const loadClientSales = async (clientId: string) => {
+    if (!organization?.id) return;
+
+    try {
+      setLoadingSales(true);
+      console.log('[ClientesPage] Carregando vendas do cliente:', clientId);
+
+      const sales = await getClientSales(organization.id, clientId);
+
+      console.log('[ClientesPage] ✅ Vendas carregadas:', sales.length);
+      setClientSales(sales);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar vendas';
+      console.error('[ClientesPage] ❌ Erro ao carregar vendas:', errorMessage);
+      toast.error(errorMessage);
+      setClientSales([]);
+    } finally {
+      setLoadingSales(false);
+    }
+  };
+
+  const handleSelectClient = async (client: any) => {
+    console.log('[ClientesPage] Cliente selecionado:', client.id);
+    setSelectedClient(client);
+    
+    // Carregar vendas do cliente
+    await loadClientSales(client.id);
+  };
+
   const handleNewSale = (leadId?: string) => {
     setSaleLeadId(leadId);
     setSaleModalOpen(true);
