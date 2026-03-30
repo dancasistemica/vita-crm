@@ -13,6 +13,7 @@ import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import RecordCounter from '@/components/common/RecordCounter';
 import NewSaleModal from '@/components/sales/NewSaleModal';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();

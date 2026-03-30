@@ -24,3 +24,6 @@ crons = ["*/5 * * * *"]
 
 [functions.process-auto-payments]
 crons = ["0 0 * * *"]
+
+[functions.generate-subscription-payments]
+crons = ["0 1 * * *"]
