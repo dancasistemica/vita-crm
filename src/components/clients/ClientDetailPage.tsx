@@ -263,9 +263,13 @@ export default function ClientDetailPage() {
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
                         <Edit2 className="h-3.5 w-3.5 text-blue-500" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => handleDeleteSale(e, sale.id, sale.sale_type)}>
-                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                      </Button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Excluir venda"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
