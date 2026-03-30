@@ -96,6 +96,7 @@ interface Props {
   loading?: boolean;
   onNewSale?: (leadId?: string) => void;
   products?: SimpleProduct[];
+  onSelectClient?: (client: ClientLead) => void;
 }
 
 function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
