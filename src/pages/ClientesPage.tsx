@@ -228,6 +228,11 @@ export default function ClientesPage() {
         onClose={() => setShowCreateModal(false)}
         onSuccess={() => hook.refetchData()}
       />
+      <CreateSubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        onSuccess={() => hook.refetchData()}
+      />
     </div>
   );
 }
