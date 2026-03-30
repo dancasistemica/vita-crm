@@ -309,7 +309,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         client_id,
         leads(name),
         sales_stage_id,
-        product_sales_stages(stage_name, stage_value, sale_type),
+        product_sales_stages(name, value, sale_type),
         monthly_value,
         payment_method_id,
         payment_methods(name),
