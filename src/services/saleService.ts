@@ -209,6 +209,18 @@ export const deleteSale = async (
     console.log('[SaleService] Deletando venda:', { saleId, saleType });
 
     if (saleType === 'unica') {
+      // Verificar se há parcelas pagas
+      const { data: paidInstallments, error: checkError } = await supabase
+        .from('sale_installments')
+        .select('id')
+        .eq('sale_id', saleId)
+        .eq('status', 'pago');
+
+      if (checkError) throw checkError;
+      if (paidInstallments && paidInstallments.length > 0) {
+        throw new Error('Não é possível excluir uma venda que possui parcelas pagas.');
+      }
+
       // Deletar parcelas primeiro
       const { error: installmentsError } = await supabase
         .from('sale_installments')
@@ -225,6 +237,18 @@ export const deleteSale = async (
 
       if (saleError) throw saleError;
     } else {
+      // Verificar se há pagamentos realizados
+      const { data: paidPayments, error: checkError } = await supabase
+        .from('subscription_payments')
+        .select('id')
+        .eq('subscription_id', saleId)
+        .eq('status', 'pago');
+
+      if (checkError) throw checkError;
+      if (paidPayments && paidPayments.length > 0) {
+        throw new Error('Não é possível excluir uma mensalidade que possui pagamentos confirmados.');
+      }
+
       // Deletar parcelas de mensalidade primeiro
       const { error: paymentsError } = await supabase
         .from('subscription_payments')

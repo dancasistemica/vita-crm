@@ -122,20 +122,25 @@ export default function ClientDetailPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleDeleteSale = async (e: React.MouseEvent, saleId: string, saleType: 'unica' | 'mensalidade') => {
-    e.stopPropagation();
-    
-    if (!window.confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {
+  const handleDeleteClientSale = async (saleId: string, saleType: 'unica' | 'mensalidade') => {
+    if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {
       return;
     }
 
     try {
+      console.log('[ClientDetailPage] Deletando venda:', saleId);
+
       await deleteSale(saleId, saleType);
-      toast.success('Venda excluída com sucesso!');
+
+      console.log('[ClientDetailPage] ✅ Venda deletada com sucesso');
+      toast.success('Venda deletada com sucesso!');
+      
+      // Recarregar vendas do cliente
       fetchData();
     } catch (error) {
-      console.error('[ClientDetailPage] Erro ao excluir venda:', error);
-      toast.error('Erro ao excluir venda.');
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao deletar venda';
+      console.error('[ClientDetailPage] ❌ Erro ao deletar venda:', errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -258,9 +263,13 @@ export default function ClientDetailPage() {
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
                         <Edit2 className="h-3.5 w-3.5 text-blue-500" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => handleDeleteSale(e, sale.id, sale.sale_type)}>
-                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                      </Button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Excluir venda"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
