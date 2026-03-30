@@ -349,7 +349,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
       client_name: sub.leads?.name || 'Cliente desconhecido',
       sales_stage_id: sub.sales_stage_id,
       stage_name: sub.product_sales_stages?.name || 'Etapa desconhecida',
-      stage_value: sub.monthly_value || 0,
+      stage_value: Number(sub.monthly_value || 0),
       sale_type: 'mensalidade' as const,
       payment_method_id: sub.payment_method_id,
       payment_method_name: sub.payment_methods?.name || 'Não definida',
