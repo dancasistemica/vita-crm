@@ -163,7 +163,13 @@ export default function ClientsTable({
                 </div>
                 <div>
                   <p className="font-medium text-foreground text-sm">{client.name}</p>
-                  <p className="text-xs text-muted-foreground">{client.email}</p>
+                   <p className="text-xs text-muted-foreground">{client.email}</p>
+                   {client.is_client && client.became_client_at && (
+                     <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
+                       <CheckCircle className="w-2.5 h-2.5" />
+                       <span>Cliente desde {new Date(client.became_client_at).toLocaleDateString('pt-BR')}</span>
+                     </div>
+                   )}
                 </div>
               </div>
               <DropdownMenu>
