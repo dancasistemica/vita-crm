@@ -555,61 +555,28 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             </div>
           )}
 
-          {/* FASE 5: Valor de Entrada */}
-          {currentPhase === 5 && (
+          {/* FASE 5: Detalhes Financeiros conforme Tipo */}
+          {currentPhase === 5 && saleType === 'unica' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
-                Valor de Entrada Inicial
-              </h3>
-
-              <p className="text-sm text-gray-600">
-                Valor total da venda: <span className="font-bold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span>
-              </p>
-
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max={formData.stage_value}
-                value={formData.initial_payment}
-                onChange={(e) => setFormData({ ...formData, initial_payment: parseFloat(e.target.value) || 0 })}
-                placeholder="0.00"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
-              />
-
-              <p className="text-sm text-gray-600">
-                Valor a parcelar: <span className="font-bold text-green-600">R$ {valueToInstall.toFixed(2)}</span>
-              </p>
-            </div>
-          )}
-
-          {/* FASE 6: Parcelas e Data */}
-          {currentPhase === 6 && (
-            <div className="space-y-4">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
                 Parcelas e Data da 1ª Parcela
               </h3>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nº de Parcelas *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nº de Parcelas *</label>
                   <input
                     type="number"
                     min="1"
-                    max="60"
+                    max="120"
                     value={formData.installments}
                     onChange={(e) => setFormData({ ...formData, installments: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Data da 1ª Parcela *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data da 1ª Parcela *</label>
                   <input
                     type="date"
                     value={formData.first_payment_date}
@@ -617,6 +584,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                   />
                 </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Valor de Entrada Opcional (R$)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.initial_payment}
+                  onChange={(e) => setFormData({ ...formData, initial_payment: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                />
               </div>
 
               {valueToInstall > 0 && formData.installments && (
@@ -627,11 +605,49 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             </div>
           )}
 
-          {/* FASE 7: Baixa Automática */}
-          {currentPhase === 7 && (
+          {currentPhase === 5 && saleType === 'mensalidade' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
+                Datas da Mensalidade
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data de Início *</label>
+                  <input
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data de Término (Opcional)</label>
+                  <input
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Data de Vencimento da 1ª Parcela *</label>
+                <input
+                  type="date"
+                  value={formData.first_payment_due_date}
+                  onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* FASE 6: Configuração de Pagamento e Resumo (Para Unica) / Configuração (Para Mensalidade) */}
+          {((currentPhase === 6 && saleType === 'unica') || (currentPhase === 6 && saleType === 'mensalidade')) && (
+            <div className="space-y-4">
+              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
                 Configuração de Pagamento
               </h3>
 
@@ -646,40 +662,47 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                   <div>
                     <p className="font-semibold text-gray-900">Baixa Automática no Vencimento</p>
                     <p className="text-sm text-gray-600 mt-1">
-                      O sistema marcará automaticamente como pago na data de vencimento. Você só precisará gerenciar os inadimplentes.
+                      O sistema marcará automaticamente como pago na data de vencimento.
                     </p>
                   </div>
                 </label>
               </div>
+
+              {saleType === 'unica' && (
+                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
+                    <h4 className="font-semibold text-gray-900">Resumo da Venda</h4>
+                    <div className="text-sm space-y-1">
+                      <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
+                      <p>Valor Total: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
+                      <p>Parcelas: <span className="font-semibold">{formData.installments}x de R$ {installmentValue.toFixed(2)}</span></p>
+                    </div>
+                 </div>
+              )}
             </div>
           )}
 
-          {/* FASE 8: Observações */}
-          {currentPhase === 8 && (
+          {/* FASE 7: Observações e Resumo Final */}
+          {((currentPhase === 6 && saleType === 'unica') || (currentPhase === 7)) && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">8</span>
-                Observações (Opcional)
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">{currentPhase}</span>
+                Observações e Finalização
               </h3>
 
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Adicione observações sobre esta venda..."
-                rows={5}
+                placeholder="Adicione observações (opcional)..."
+                rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
               />
 
-              {/* Resumo da Venda */}
               <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
-                <h4 className="font-semibold text-gray-900">Resumo da Venda</h4>
+                <h4 className="font-semibold text-gray-900">Resumo Final</h4>
                 <div className="text-sm space-y-1">
+                  <p>Tipo: <span className="font-semibold">{saleType === 'unica' ? '💳 Venda Única' : '📅 Mensalidade'}</span></p>
                   <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
-                  <p>Valor Total: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
-                  <p>Entrada: <span className="font-semibold">R$ {formData.initial_payment.toFixed(2)}</span></p>
-                  <p>A Parcelar: <span className="font-semibold text-green-600">R$ {valueToInstall.toFixed(2)}</span></p>
-                  <p>Parcelas: <span className="font-semibold">{formData.installments}x de R$ {installmentValue.toFixed(2)}</span></p>
-                  <p>Baixa Automática: <span className="font-semibold">{formData.auto_payment_enabled ? 'Ativada ✅' : 'Desativada ❌'}</span></p>
+                  <p>Valor: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
                 </div>
               </div>
             </div>
