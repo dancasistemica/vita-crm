@@ -115,6 +115,9 @@ export default function ClientesPage() {
             {showFilters ? <PanelLeftClose className="h-4 w-4 mr-1" /> : <PanelLeftOpen className="h-4 w-4 mr-1" />}
             {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
           </Button>
+          <Button size="sm" variant="outline" onClick={() => setShowSubscriptionModal(true)}>
+            <Plus className="h-4 w-4 mr-1" /> Nova Mensalidade
+          </Button>
           <Button size="sm" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
           </Button>
