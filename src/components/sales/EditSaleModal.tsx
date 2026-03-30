@@ -298,34 +298,39 @@ export const EditSaleModal = ({
                 />
               </div>
 
-              <div className="flex flex-col gap-3 pt-2">
-                <div className="flex gap-3">
+              <div className="flex gap-3 pt-4 border-t mt-4">
+                {/* Botão Excluir à esquerda */}
+                <button
+                  type="button"
+                  onClick={handleDeleteSale}
+                  disabled={loading || deleting}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+                  title="Excluir esta venda"
+                >
+                  {deleting && <Loader className="w-4 h-4 animate-spin" />}
+                  <Trash2 className="w-4 h-4" />
+                  <span>Excluir</span>
+                </button>
+
+                {/* Botões Cancelar e Salvar à direita */}
+                <div className="flex gap-2 flex-1">
                   <button
                     type="button"
                     onClick={onClose}
-                    disabled={loading}
-                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors disabled:opacity-50"
+                    disabled={loading || deleting}
+                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                    disabled={loading || deleting}
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
                   >
-                    {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+                    {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar
                   </button>
                 </div>
-                
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={loading}
-                  className="w-full px-4 py-2 text-destructive hover:bg-red-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm border border-transparent hover:border-red-100"
-                >
-                  <Trash2 className="w-4 h-4" /> Excluir Venda
-                </button>
               </div>
             </form>
           )}
