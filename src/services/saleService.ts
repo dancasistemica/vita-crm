@@ -606,7 +606,7 @@ const createSubscriptionSale = async (organizationId: string, saleData: any) => 
   const { error: paymentError } = await supabase
     .from('subscription_payments')
     .insert({
-      subscription_id: subscription.id,
+      subscription_id: (subscription as any).id,
       organization_id: organizationId,
       payment_number: 1,
       due_date: saleData.first_payment_due_date || new Date().toISOString(),
