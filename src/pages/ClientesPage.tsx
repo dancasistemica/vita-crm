@@ -225,6 +225,7 @@ export default function ClientesPage() {
             onNewSale={handleNewSale}
             loading={hook.loading}
             products={hook.products}
+            onSelectClient={handleSelectClient}
           />
         </div>
       </div>
