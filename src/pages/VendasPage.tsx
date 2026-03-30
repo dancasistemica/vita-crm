@@ -383,9 +383,9 @@ export const VendasPage = () => {
       
       {showEditModal && selectedSaleId && (
         <EditSaleModal
-          open={showEditModal}
-          onOpenChange={setShowEditModal}
-          saleId={selectedSaleId}
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          sale={sales.find(s => s.id === selectedSaleId)!}
           onSuccess={loadSales}
         />
       )}

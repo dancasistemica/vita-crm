@@ -36,6 +36,9 @@ interface SaleView {
   date: string;
   paymentMethod: string;
   status: string;
+  sale_type: 'unica' | 'mensalidade';
+  created_at: string;
+  updated_at: string;
 }
 
 interface InteractionView {
@@ -90,6 +93,9 @@ export default function ClientDetailPage() {
           id: s.id, leadId: s.lead_id, productId: s.product_id || '',
           value: Number(s.value) || 0, date: s.sale_date || '',
           paymentMethod: s.payment_method || '', status: s.status || 'ativo',
+          sale_type: 'unica',
+          created_at: s.created_at,
+          updated_at: s.updated_at,
         })));
       }
       if (intRes.status === 'fulfilled') {
@@ -305,11 +311,13 @@ export default function ClientDetailPage() {
         </TabsContent>
       </Tabs>
 
-      <EditSaleModal
-        open={!!editSaleId}
-        onOpenChange={(o) => { if (!o) setEditSaleId(null); }}
-        saleId={editSaleId}
-      />
+      {editSaleId && (
+        <EditSaleModal
+          isOpen={!!editSaleId}
+          onClose={() => setEditSaleId(null)}
+          sale={sales.find(s => s.id === editSaleId) as any}
+        />
+      )}
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
