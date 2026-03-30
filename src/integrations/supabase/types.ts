@@ -49,6 +49,44 @@ export type Database = {
           },
         ]
       }
+      botconversa_config: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          created_by: string
+          id: string
+          is_active: boolean | null
+          organization_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          created_by: string
+          id?: string
+          is_active?: boolean | null
+          organization_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "botconversa_config_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_settings: {
         Row: {
           accent_color: string
@@ -106,6 +144,44 @@ export type Database = {
             foreignKeyName: "brand_settings_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          organization_id: string
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -717,7 +793,6 @@ export type Database = {
           id: string
           name: string
           organization_id: string
-          sort_order: number
         }
         Insert: {
           active?: boolean
@@ -725,7 +800,6 @@ export type Database = {
           id?: string
           name: string
           organization_id: string
-          sort_order?: number
         }
         Update: {
           active?: boolean
@@ -733,7 +807,6 @@ export type Database = {
           id?: string
           name?: string
           organization_id?: string
-          sort_order?: number
         }
         Relationships: [
           {
@@ -741,54 +814,6 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sales_stages: {
-        Row: {
-          created_at: string
-          id: string
-          organization_id: string
-          product_id: string
-          product_name: string
-          stage_name: string
-          stage_value: number
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          organization_id: string
-          product_id: string
-          product_name: string
-          stage_name: string
-          stage_value: number
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          organization_id?: string
-          product_id?: string
-          product_name?: string
-          stage_name?: string
-          stage_value?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sales_stages_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sales_stages_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -1029,16 +1054,79 @@ export type Database = {
           },
         ]
       }
+      sale_installments: {
+        Row: {
+          amount: number
+          auto_payment_enabled: boolean | null
+          created_at: string | null
+          due_date: string
+          id: string
+          installment_number: number
+          notes: string | null
+          organization_id: string
+          paid_date: string | null
+          payment_method: string | null
+          sale_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          auto_payment_enabled?: boolean | null
+          created_at?: string | null
+          due_date: string
+          id?: string
+          installment_number: number
+          notes?: string | null
+          organization_id: string
+          paid_date?: string | null
+          payment_method?: string | null
+          sale_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          auto_payment_enabled?: boolean | null
+          created_at?: string | null
+          due_date?: string
+          id?: string
+          installment_number?: number
+          notes?: string | null
+          organization_id?: string
+          paid_date?: string | null
+          payment_method?: string | null
+          sale_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_installments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_installments_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sales: {
         Row: {
           created_at: string
           id: string
-          client_id: string
-          initial_payment: number
+          lead_id: string
           notes: string | null
           organization_id: string
-          payment_method_id: string | null
-          sales_stage_id: string | null
+          payment_method: string | null
+          product_id: string | null
+          sale_date: string | null
           status: string
           updated_at: string
           value: number
@@ -1046,12 +1134,12 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          client_id: string
-          initial_payment?: number
+          lead_id: string
           notes?: string | null
           organization_id: string
-          payment_method_id?: string | null
-          sales_stage_id?: string | null
+          payment_method?: string | null
+          product_id?: string | null
+          sale_date?: string | null
           status?: string
           updated_at?: string
           value?: number
@@ -1059,20 +1147,20 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          client_id?: string
-          initial_payment?: number
+          lead_id?: string
           notes?: string | null
           organization_id?: string
-          payment_method_id?: string | null
-          sales_stage_id?: string | null
+          payment_method?: string | null
+          product_id?: string | null
+          sale_date?: string | null
           status?: string
           updated_at?: string
           value?: number
         }
         Relationships: [
           {
-            foreignKeyName: "sales_client_id_fkey"
-            columns: ["client_id"]
+            foreignKeyName: "sales_lead_id_fkey"
+            columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
             referencedColumns: ["id"]
@@ -1085,25 +1173,19 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "sales_payment_method_id_fkey"
-            columns: ["payment_method_id"]
+            foreignKeyName: "sales_product_id_fkey"
+            columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "payment_methods"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sales_sales_stage_id_fkey"
-            columns: ["sales_stage_id"]
-            isOneToOne: false
-            referencedRelation: "sales_stages"
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
       }
       scheduled_messages: {
         Row: {
+          botconversa_message_id: string | null
           client_id: string | null
-          created_at: string
+          created_at: string | null
           created_by: string
           error_message: string | null
           id: string
@@ -1114,11 +1196,12 @@ export type Database = {
           scheduled_at: string
           sent_at: string | null
           status: string | null
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
+          botconversa_message_id?: string | null
           client_id?: string | null
-          created_at?: string
+          created_at?: string | null
           created_by: string
           error_message?: string | null
           id?: string
@@ -1129,11 +1212,12 @@ export type Database = {
           scheduled_at: string
           sent_at?: string | null
           status?: string | null
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
+          botconversa_message_id?: string | null
           client_id?: string | null
-          created_at?: string
+          created_at?: string | null
           created_by?: string
           error_message?: string | null
           id?: string
@@ -1144,9 +1228,16 @@ export type Database = {
           scheduled_at?: string
           sent_at?: string | null
           status?: string | null
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "scheduled_messages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "scheduled_messages_lead_id_fkey"
             columns: ["lead_id"]
