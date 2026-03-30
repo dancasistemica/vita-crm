@@ -1,0 +1,1 @@
+ALTER TABLE public.payment_methods ADD COLUMN IF NOT EXISTS sort_order integer NOT NULL DEFAULT 0;
