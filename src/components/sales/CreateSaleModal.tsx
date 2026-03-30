@@ -17,6 +17,7 @@ interface ProductSalesStage {
   product_name: string;
   name: string;
   value: number;
+  sale_type: 'unica' | 'mensalidade';
 }
 
 interface Product {
@@ -45,7 +46,9 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
   // Controle de fase
   const [currentPhase, setCurrentPhase] = useState(1);
-  const totalPhases = 8;
+  const [saleType, setSaleType] = useState<'unica' | 'mensalidade'>('unica');
+
+  const totalPhases = saleType === 'unica' ? 6 : 7;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -57,9 +60,23 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
     initial_payment: 0,
     installments: '1',
     first_payment_date: '',
+    start_date: '', // NOVO
+    end_date: '',   // NOVO
+    first_payment_due_date: '', // NOVO
     auto_payment_enabled: true,
     notes: '',
   });
+
+  // Detectar tipo quando etapa é selecionada
+  useEffect(() => {
+    if (formData.sales_stage_id) {
+      const selectedStage = productSalesStages.find(s => s.id === formData.sales_stage_id);
+      if (selectedStage) {
+        setSaleType(selectedStage.sale_type);
+        console.log('[CreateSaleModal] Tipo de venda detectado:', selectedStage.sale_type);
+      }
+    }
+  }, [formData.sales_stage_id, productSalesStages]);
 
   // Filtrar clientes por busca
   const filteredClients = useMemo(() => {
@@ -150,7 +167,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       // Carregar etapas de venda por produto (product_sales_stages)
       const { data: stagesData, error: stagesError } = await supabase
         .from('product_sales_stages')
-        .select('id, product_id, name, value, products!inner(id, name, organization_id)')
+        .select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)')
         .eq('products.organization_id', organization.id)
         .order('name', { foreignTable: 'products', ascending: true })
         .order('value', { ascending: true });
@@ -164,6 +181,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           product_name: stage.products?.name || '',
           name: stage.name,
           value: Number(stage.value) || 0,
+          sale_type: stage.sale_type || 'unica',
         }));
         console.log('[CreateSaleModal] Etapas de venda carregadas:', mappedStages.length);
         setProductSalesStages(mappedStages);
@@ -193,12 +211,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       case 4:
         return formData.payment_method_id !== '';
       case 5:
-        return formData.initial_payment >= 0 && formData.initial_payment < formData.stage_value;
+        if (saleType === 'unica') {
+          return formData.installments && formData.first_payment_date !== '';
+        } else {
+          return formData.start_date !== '' && formData.first_payment_due_date !== '';
+        }
       case 6:
-        return formData.installments && formData.first_payment_date !== '';
-      case 7:
         return true;
-      case 8:
+      case 7:
         return true;
       default:
         return false;
@@ -222,53 +242,51 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !organization?.id ||
-      !formData.client_id ||
-      !formData.product_id ||
-      !formData.sales_stage_id ||
-      !formData.payment_method_id ||
-      !formData.first_payment_date ||
-      !formData.installments ||
-      formData.stage_value <= 0 ||
-      formData.initial_payment < 0 ||
-      formData.initial_payment >= formData.stage_value
-    ) {
-      toast.error('Preencha todos os campos obrigatórios');
+    if (!organization?.id || !formData.client_id || !formData.product_id || !formData.sales_stage_id || !formData.payment_method_id) {
+      toast.error('Preencha os campos obrigatórios');
       return;
     }
 
     setLoading(true);
     try {
-      console.log('[CreateSaleModal] Criando venda:', {
-        client_id: formData.client_id,
-        stage_value: formData.stage_value,
-        initial_payment: formData.initial_payment,
-        installments: formData.installments,
-      });
+      if (saleType === 'unica') {
+        await createSaleWithInstallments(organization!.id, {
+          client_id: formData.client_id,
+          value: formData.stage_value,
+          status: 'pendente',
+          installments: parseInt(formData.installments),
+          first_payment_date: formData.first_payment_date,
+          auto_payment_enabled: formData.auto_payment_enabled,
+          notes: formData.notes,
+          payment_method_id: formData.payment_method_id,
+          initial_payment: formData.initial_payment,
+          sales_stage_id: formData.sales_stage_id,
+          items: [
+            {
+              product_id: formData.product_id,
+              quantity: 1,
+              unit_price: formData.stage_value,
+            },
+          ],
+        });
+        toast.success('Venda criada com sucesso!');
+      } else {
+        const { createSubscription } = await import('@/services/subscriptionService');
+        await createSubscription(organization!.id, {
+          client_id: formData.client_id,
+          product_id: formData.product_id,
+          sales_stage_id: formData.sales_stage_id,
+          monthly_value: formData.stage_value,
+          start_date: formData.start_date,
+          end_date: formData.end_date || undefined,
+          payment_method_id: formData.payment_method_id,
+          auto_payment_enabled: formData.auto_payment_enabled,
+          notes: formData.notes,
+          first_payment_due_date: formData.first_payment_due_date,
+        });
+        toast.success('Mensalidade criada com sucesso!');
+      }
 
-      await createSaleWithInstallments(organization!.id, {
-        client_id: formData.client_id,
-        value: formData.stage_value,
-        status: 'pendente',
-        installments: parseInt(formData.installments),
-        first_payment_date: formData.first_payment_date,
-        auto_payment_enabled: formData.auto_payment_enabled,
-        notes: formData.notes,
-        payment_method_id: formData.payment_method_id,
-        initial_payment: formData.initial_payment,
-        sales_stage_id: formData.sales_stage_id,
-        items: [
-          {
-            product_id: formData.product_id,
-            quantity: 1,
-            unit_price: formData.stage_value,
-          },
-        ],
-      });
-
-      toast.success('Venda criada com sucesso!');
-      
       // Resetar form
       setFormData({
         client_id: '',
@@ -279,6 +297,9 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         initial_payment: 0,
         installments: '1',
         first_payment_date: '',
+        start_date: '',
+        end_date: '',
+        first_payment_due_date: '',
         auto_payment_enabled: true,
         notes: '',
       });
@@ -287,8 +308,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       onClose();
       onSuccess?.();
     } catch (error) {
-      console.error('[CreateSaleModal] Erro ao criar venda:', error);
-      toast.error('Erro ao criar venda');
+      console.error('[CreateSaleModal] Erro ao criar:', error);
+      toast.error('Erro ao processar a operação');
     } finally {
       setLoading(false);
     }
@@ -534,61 +555,28 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             </div>
           )}
 
-          {/* FASE 5: Valor de Entrada */}
-          {currentPhase === 5 && (
+          {/* FASE 5: Detalhes Financeiros conforme Tipo */}
+          {currentPhase === 5 && saleType === 'unica' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
-                Valor de Entrada Inicial
-              </h3>
-
-              <p className="text-sm text-gray-600">
-                Valor total da venda: <span className="font-bold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span>
-              </p>
-
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max={formData.stage_value}
-                value={formData.initial_payment}
-                onChange={(e) => setFormData({ ...formData, initial_payment: parseFloat(e.target.value) || 0 })}
-                placeholder="0.00"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
-              />
-
-              <p className="text-sm text-gray-600">
-                Valor a parcelar: <span className="font-bold text-green-600">R$ {valueToInstall.toFixed(2)}</span>
-              </p>
-            </div>
-          )}
-
-          {/* FASE 6: Parcelas e Data */}
-          {currentPhase === 6 && (
-            <div className="space-y-4">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
                 Parcelas e Data da 1ª Parcela
               </h3>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nº de Parcelas *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nº de Parcelas *</label>
                   <input
                     type="number"
                     min="1"
-                    max="60"
+                    max="120"
                     value={formData.installments}
                     onChange={(e) => setFormData({ ...formData, installments: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Data da 1ª Parcela *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data da 1ª Parcela *</label>
                   <input
                     type="date"
                     value={formData.first_payment_date}
@@ -596,6 +584,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                   />
                 </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Valor de Entrada Opcional (R$)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.initial_payment}
+                  onChange={(e) => setFormData({ ...formData, initial_payment: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                />
               </div>
 
               {valueToInstall > 0 && formData.installments && (
@@ -606,12 +605,50 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             </div>
           )}
 
-          {/* FASE 7: Baixa Automática */}
-          {currentPhase === 7 && (
+          {currentPhase === 5 && saleType === 'mensalidade' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
-                Configuração de Pagamento
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
+                Datas da Mensalidade
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data de Início *</label>
+                  <input
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Data de Término (Opcional)</label>
+                  <input
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Data de Vencimento da 1ª Parcela *</label>
+                <input
+                  type="date"
+                  value={formData.first_payment_due_date}
+                  onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* FASE 6: Configuração de Pagamento e Resumo (Para Unica) / Configuração (Para Mensalidade) */}
+          {currentPhase === 6 && (
+            <div className="space-y-4">
+              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
+                {saleType === 'unica' ? 'Finalização da Venda' : 'Configuração de Pagamento'}
               </h3>
 
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
@@ -625,40 +662,56 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                   <div>
                     <p className="font-semibold text-gray-900">Baixa Automática no Vencimento</p>
                     <p className="text-sm text-gray-600 mt-1">
-                      O sistema marcará automaticamente como pago na data de vencimento. Você só precisará gerenciar os inadimplentes.
+                      O sistema marcará automaticamente como pago na data de vencimento.
                     </p>
                   </div>
                 </label>
               </div>
+
+              {saleType === 'unica' && (
+                <div className="space-y-4">
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    placeholder="Adicione observações (opcional)..."
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                  />
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
+                    <h4 className="font-semibold text-gray-900">Resumo da Venda</h4>
+                    <div className="text-sm space-y-1">
+                      <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
+                      <p>Valor Total: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
+                      <p>Parcelas: <span className="font-semibold">{formData.installments}x de R$ {installmentValue.toFixed(2)}</span></p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          {/* FASE 8: Observações */}
-          {currentPhase === 8 && (
+          {/* FASE 7: Observações e Resumo Final (Apenas Mensalidade) */}
+          {currentPhase === 7 && saleType === 'mensalidade' && (
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">8</span>
-                Observações (Opcional)
+                <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
+                Observações e Finalização
               </h3>
 
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Adicione observações sobre esta venda..."
-                rows={5}
+                placeholder="Adicione observações (opcional)..."
+                rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
               />
 
-              {/* Resumo da Venda */}
               <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-2">
-                <h4 className="font-semibold text-gray-900">Resumo da Venda</h4>
+                <h4 className="font-semibold text-gray-900">Resumo Final</h4>
                 <div className="text-sm space-y-1">
+                  <p>Tipo: <span className="font-semibold">📅 Mensalidade</span></p>
                   <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
-                  <p>Valor Total: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
-                  <p>Entrada: <span className="font-semibold">R$ {formData.initial_payment.toFixed(2)}</span></p>
-                  <p>A Parcelar: <span className="font-semibold text-green-600">R$ {valueToInstall.toFixed(2)}</span></p>
-                  <p>Parcelas: <span className="font-semibold">{formData.installments}x de R$ {installmentValue.toFixed(2)}</span></p>
-                  <p>Baixa Automática: <span className="font-semibold">{formData.auto_payment_enabled ? 'Ativada ✅' : 'Desativada ❌'}</span></p>
+                  <p>Valor Mensal: <span className="font-semibold text-blue-600">R$ {formData.stage_value.toFixed(2)}</span></p>
                 </div>
               </div>
             </div>

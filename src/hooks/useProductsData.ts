@@ -7,6 +7,7 @@ export interface ProductStageView {
   name: string;
   value: number;
   link: string;
+  sale_type: 'unica' | 'mensalidade';
 }
 
 export interface ProductView {
@@ -43,6 +44,7 @@ export function useProductsData() {
           name: s.name,
           value: Number(s.value) || 0,
           link: s.link || '',
+          sale_type: s.sale_type || 'unica',
         })),
       }));
       setProducts(mapped);
