@@ -214,6 +214,23 @@ export const VendasPage = () => {
           </div>
         </div>
 
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-red-700 font-semibold">❌ Erro ao carregar vendas</p>
+                <p className="text-red-600 text-sm mt-1">{error}</p>
+              </div>
+              <button
+                onClick={() => loadSales()}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium whitespace-nowrap ml-4"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Results List */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-gray-200 shadow-sm">

@@ -278,14 +278,15 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] Buscando vendas e mensalidades para org:', organizationId);
 
     // PASSO 1: Buscar vendas únicas com relacionamentos corretos
+    // Em 'sales', client_id mapeia para 'lead_id' e sales_stage_id para 'product_id'
     const { data: salesData, error: salesError } = await supabase
       .from('sales')
       .select(`
         id,
-        client_id:lead_id,
+        lead_id,
         leads(name),
-        sales_stage_id:product_id,
-        payment_method_id:payment_method,
+        product_id,
+        payment_method,
         status,
         created_at,
         updated_at
@@ -301,10 +302,10 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] ✅ Vendas carregadas:', salesData?.length || 0);
 
     // PASSO 2: Buscar etapas de venda para obter nomes e valores
+    // As colunas reais na tabela são 'name' e 'value'
     const { data: stagesData, error: stagesError } = await supabase
       .from('product_sales_stages')
-      .select('id, stage_name, stage_value, sale_type')
-      .eq('organization_id', organizationId);
+      .select('id, name, value, sale_type');
 
     if (stagesError) {
       console.error('[SaleService] ❌ Erro ao buscar etapas:', stagesError.message);
@@ -346,17 +347,17 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
 
     // PASSO 5: Transformar vendas únicas com dados de etapas
     const formattedSales = (salesData || []).map((sale: any) => {
-      const stage = stagesMap.get(sale.sales_stage_id);
+      const stage = stagesMap.get(sale.product_id);
       return {
         id: sale.id,
-        client_id: sale.client_id,
+        client_id: sale.lead_id,
         client_name: sale.leads?.name || 'Cliente desconhecido',
-        sales_stage_id: sale.sales_stage_id,
-        stage_name: stage?.stage_name || 'Etapa desconhecida',
-        stage_value: stage?.stage_value || 0,
+        sales_stage_id: sale.product_id,
+        stage_name: stage?.name || 'Etapa desconhecida',
+        stage_value: Number(stage?.value || 0),
         sale_type: 'unica' as const,
-        payment_method_id: sale.payment_method_id,
-        payment_method_name: sale.payment_method_id || 'Não definida',
+        payment_method_id: sale.payment_method,
+        payment_method_name: sale.payment_method || 'Não definida',
         status: sale.status,
         created_at: sale.created_at,
         updated_at: sale.updated_at,
@@ -371,8 +372,8 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         client_id: sub.client_id,
         client_name: sub.leads?.name || 'Cliente desconhecido',
         sales_stage_id: sub.sales_stage_id,
-        stage_name: stage?.stage_name || 'Etapa desconhecida',
-        stage_value: sub.monthly_value || 0,
+        stage_name: stage?.name || 'Etapa desconhecida',
+        stage_value: Number(sub.monthly_value || 0),
         sale_type: 'mensalidade' as const,
         payment_method_id: sub.payment_method_id,
         payment_method_name: sub.payment_methods?.name || 'Não definida',
