@@ -295,22 +295,33 @@ export const EditSaleModal = ({
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-col gap-3 pt-2">
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={loading}
+                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors disabled:opacity-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+                    Salvar
+                  </button>
+                </div>
+                
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleDelete}
                   disabled={loading}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-2 text-destructive hover:bg-red-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm border border-transparent hover:border-red-100"
                 >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
-                  Salvar
+                  <Trash2 className="w-4 h-4" /> Excluir Venda
                 </button>
               </div>
             </form>
