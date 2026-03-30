@@ -60,19 +60,6 @@ function FilterSection({ title, count, children, defaultOpen = false }: { title:
 export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilters, activeFilterCount, products, origins, users, saleStatuses }: Props) {
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium text-foreground text-sm">Filtros</span>
-          {activeFilterCount > 0 && (
-            <Badge variant="secondary" className="text-[10px]">{activeFilterCount} ativos</Badge>
-          )}
-        </div>
-        <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 px-2 text-xs text-muted-foreground">
-          <RotateCcw className="h-3 w-3 mr-1" /> Reset
-        </Button>
-      </div>
 
       {/* Search */}
       <div className="relative mb-4">
