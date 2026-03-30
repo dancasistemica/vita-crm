@@ -149,7 +149,10 @@ export default function ClientsTable({
           <div
             key={client.id}
             className="rounded-xl border border-border/60 bg-card p-4 cursor-pointer hover-lift shadow-card transition-all"
-            onClick={() => navigate(`/clientes/${client.id}`)}
+            onClick={() => {
+              if (onSelectClient) onSelectClient(client as any);
+              else navigate(`/clientes/${client.id}`);
+            }}
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-3">
