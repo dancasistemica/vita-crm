@@ -200,3 +200,51 @@ export const updateSale = async (
     throw error;
   }
 };
+
+export const deleteSale = async (
+  saleId: string,
+  saleType: 'unica' | 'mensalidade'
+) => {
+  try {
+    console.log('[SaleService] Deletando venda:', { saleId, saleType });
+
+    if (saleType === 'unica') {
+      // Deletar parcelas primeiro
+      const { error: installmentsError } = await supabase
+        .from('sale_installments')
+        .delete()
+        .eq('sale_id', saleId);
+
+      if (installmentsError) throw installmentsError;
+
+      // Depois deletar venda
+      const { error: saleError } = await supabase
+        .from('sales')
+        .delete()
+        .eq('id', saleId);
+
+      if (saleError) throw saleError;
+    } else {
+      // Deletar parcelas de mensalidade primeiro
+      const { error: paymentsError } = await supabase
+        .from('subscription_payments')
+        .delete()
+        .eq('subscription_id', saleId);
+
+      if (paymentsError) throw paymentsError;
+
+      // Depois deletar mensalidade
+      const { error: subscriptionError } = await supabase
+        .from('subscriptions')
+        .delete()
+        .eq('id', saleId);
+
+      if (subscriptionError) throw subscriptionError;
+    }
+
+    console.log('[SaleService] ✅ Venda deletada com sucesso');
+  } catch (error) {
+    console.error('[SaleService] ❌ Erro ao deletar venda:', error);
+    throw error;
+  }
+};
