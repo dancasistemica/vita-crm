@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { convertLeadToClient } from './saleService';
 
 interface CreateSubscriptionInput {
   client_id: string;
@@ -70,6 +71,12 @@ export const createSubscription = async (
     }
 
     console.log('[SubscriptionService] ✅ Primeira parcela criada');
+
+    // ✨ NOVO: Converter lead em cliente
+    console.log('[SubscriptionService] Convertendo lead em cliente...');
+    await convertLeadToClient(data.client_id, organizationId);
+
+    console.log('[SubscriptionService] ✅ Mensalidade criada e lead convertido em cliente');
     return subscription;
   } catch (error) {
     console.error('[SubscriptionService] ❌ Erro crítico:', error);
