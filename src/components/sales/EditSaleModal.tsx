@@ -36,6 +36,7 @@ export const EditSaleModal = ({
   const { organization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
   const [saleData, setSaleData] = useState<any>(null);
