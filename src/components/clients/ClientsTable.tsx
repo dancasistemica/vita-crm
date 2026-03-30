@@ -236,7 +236,10 @@ export default function ClientsTable({
               <TableRow
                 key={client.id}
                 className="cursor-pointer hover:bg-muted/40 transition-colors group"
-                onClick={() => navigate(`/clientes/${client.id}`)}
+                onClick={() => {
+                  if (onSelectClient) onSelectClient(client as any);
+                  else navigate(`/clientes/${client.id}`);
+                }}
               >
                 <TableCell onClick={e => e.stopPropagation()}>
                   <Checkbox checked={selectedIds.includes(client.id)} onCheckedChange={() => toggleSelect(client.id)} />
