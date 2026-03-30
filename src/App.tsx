@@ -28,7 +28,7 @@ import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
-import VendasPage from "@/pages/VendasPage";
+import { VendasPage } from "@/pages/VendasPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 

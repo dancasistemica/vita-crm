@@ -121,8 +121,13 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg"
-                      activeClassName="bg-sidebar-accent text-sidebar-primary font-medium shadow-sm"
+                      className={cn(
+                        "hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg",
+                        item.url === '/vendas' && location.pathname === '/vendas' 
+                          ? 'bg-blue-100 text-blue-700 font-semibold' 
+                          : ''
+                      )}
+                      activeClassName={item.url === '/vendas' ? '' : "bg-sidebar-accent text-sidebar-primary font-medium shadow-sm"}
                     >
                       <item.icon className="mr-2 h-4 w-4" />
                       {!collapsed && <span className="text-sm">{item.title}</span>}

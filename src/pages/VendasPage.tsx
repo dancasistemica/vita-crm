@@ -40,6 +40,10 @@ export const VendasPage = () => {
   const [statusFilter, setStatusFilter] = useState('todos');
 
   useEffect(() => {
+    console.log('[VendasPage] ✅ Página carregada com sucesso');
+    console.log('[VendasPage] URL atual:', window.location.pathname);
+    console.log('[VendasPage] Organization:', organization?.id);
+    
     if (organization?.id) {
       loadSales();
     }
