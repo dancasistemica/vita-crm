@@ -521,6 +521,7 @@ export const getClientSales = async (
     console.error('[SaleService] ❌ Erro crítico ao buscar vendas do cliente:', error);
     throw error;
   }
+};
 
 const createUniqueSale = async (organizationId: string, saleData: any) => {
   console.log('[SaleService] Criando venda única...');
