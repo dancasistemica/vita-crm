@@ -382,6 +382,7 @@ export const VendasPage = () => {
           open={showEditModal}
           onOpenChange={setShowEditModal}
           saleId={selectedSaleId}
+          onSuccess={loadSales}
         />
       )}
     </div>
