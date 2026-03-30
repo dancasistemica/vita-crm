@@ -39,11 +39,12 @@ export default function PaymentMethodsTab() {
     loadPaymentMethods();
   }, [organization?.id]);
 
-  const persistOrder = async (next: Array<{ id: string; organization_id: string; sort_order: number }>) => {
-    const { error } = await supabase
-      .from('payment_methods')
-      .upsert(next, { onConflict: 'id' });
-
+  const persistOrder = async (methods: Array<{ id: string; sort_order: number }>) => {
+    const promises = methods.map(m =>
+      supabase.from('payment_methods').update({ sort_order: m.sort_order }).eq('id', m.id)
+    );
+    const results = await Promise.all(promises);
+    const error = results.find(r => r.error)?.error;
     if (error) {
       console.error('[PaymentMethodsTab] Erro ao reordenar:', error);
       toast.error('Erro ao reordenar formas de pagamento');
