@@ -523,6 +523,148 @@ export const getClientSales = async (
   }
 };
 
+const createUniqueSale = async (organizationId: string, saleData: any) => {
+  console.log('[SaleService] Criando venda única...');
+  
+  // Buscar valor da etapa
+  const { data: stage } = await supabase
+    .from('product_sales_stages')
+    .select('value')
+    .eq('id', saleData.sales_stage_id)
+    .single();
+
+  const { data: sale, error: saleError } = await supabase
+    .from('sales')
+    .insert({
+      organization_id: organizationId,
+      lead_id: saleData.client_id,
+      product_id: saleData.sales_stage_id,
+      value: stage?.value || 0,
+      status: 'pendente',
+      payment_method: saleData.payment_method_id,
+      notes: saleData.notes,
+    })
+    .select()
+    .single();
+
+  if (saleError) throw saleError;
+
+  // Criar parcelas
+  if (saleData.installments && saleData.installments > 0) {
+    const installmentRecords = [];
+    const installmentAmount = (stage?.value || 0) / saleData.installments;
+    const firstPaymentDate = new Date(saleData.first_payment_due_date || new Date());
+
+    for (let i = 1; i <= saleData.installments; i++) {
+      const dueDate = new Date(firstPaymentDate);
+      dueDate.setMonth(dueDate.getMonth() + (i - 1));
+
+      installmentRecords.push({
+        sale_id: sale.id,
+        organization_id: organizationId,
+        installment_number: i,
+        due_date: dueDate.toISOString().split('T')[0],
+        amount: parseFloat(installmentAmount.toFixed(2)),
+        status: 'pendente',
+        auto_payment_enabled: saleData.auto_payment_enabled,
+      });
+    }
+
+    const { error: installmentsError } = await supabase
+      .from('sale_installments')
+      .insert(installmentRecords);
+
+    if (installmentsError) throw installmentsError;
+  }
+
+  return sale;
+};
+
+const createSubscriptionSale = async (organizationId: string, saleData: any) => {
+  console.log('[SaleService] Criando mensalidade...');
+  
+  const { data: subscription, error: subscriptionError } = await supabase
+    .from('subscriptions' as any)
+    .insert({
+      organization_id: organizationId,
+      client_id: saleData.client_id,
+      sales_stage_id: saleData.sales_stage_id,
+      monthly_value: saleData.monthly_value,
+      start_date: saleData.start_date || new Date().toISOString(),
+      end_date: saleData.end_date,
+      status: 'ativa',
+      payment_method_id: saleData.payment_method_id,
+      auto_payment_enabled: saleData.auto_payment_enabled,
+      notes: saleData.notes || '',
+    })
+    .select()
+    .single();
+
+  if (subscriptionError) throw subscriptionError;
+
+  // Criar primeira parcela
+  const { error: paymentError } = await supabase
+    .from('subscription_payments')
+    .insert({
+      subscription_id: (subscription as any).id,
+      organization_id: organizationId,
+      payment_number: 1,
+      due_date: saleData.first_payment_due_date || new Date().toISOString(),
+      amount: saleData.monthly_value,
+      status: 'pendente',
+      auto_payment_enabled: saleData.auto_payment_enabled,
+    });
+
+  if (paymentError) throw paymentError;
+
+  return subscription;
+};
+
+export const createSale = async (
+  organizationId: string,
+  saleData: {
+    client_id: string;
+    sales_stage_id: string;
+    sale_type: 'unica' | 'mensalidade';
+    monthly_value?: number;
+    installments?: number;
+    start_date?: string;
+    end_date?: string;
+    first_payment_due_date?: string;
+    payment_method_id: string;
+    auto_payment_enabled: boolean;
+    notes?: string;
+  }
+) => {
+  try {
+    console.log('[SaleService] Criando venda:', {
+      sale_type: saleData.sale_type,
+      client_id: saleData.client_id,
+    });
+
+    let sale;
+
+    // VENDA ÚNICA: criar em sales + sale_installments
+    if (saleData.sale_type === 'unica') {
+      sale = await createUniqueSale(organizationId, saleData);
+    }
+
+    // MENSALIDADE: criar em subscriptions + subscription_payments
+    if (saleData.sale_type === 'mensalidade') {
+      sale = await createSubscriptionSale(organizationId, saleData);
+    }
+
+    // ✨ NOVO: Converter lead em cliente
+    console.log('[SaleService] Convertendo lead em cliente...');
+    await convertLeadToClient(saleData.client_id, organizationId);
+
+    console.log('[SaleService] ✅ Venda criada e lead convertido em cliente');
+    return sale;
+  } catch (error) {
+    console.error('[SaleService] ❌ Erro ao criar venda:', error);
+    throw error;
+  }
+};
 export const convertLeadToClient = async (
   leadId: string,
   organizationId: string
