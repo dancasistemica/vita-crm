@@ -664,7 +664,7 @@ export const createSale = async (
     throw error;
   }
 };
-
+export const convertLeadToClient = async (
   leadId: string,
   organizationId: string
 ) => {
