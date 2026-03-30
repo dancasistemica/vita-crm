@@ -91,6 +91,16 @@ export default function ClientesPage() {
               </Button>
             </>
           )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden lg:flex"
+            onClick={() => setShowFilters(!showFilters)}
+            title={showFilters ? 'Esconder filtros' : 'Mostrar filtros'}
+          >
+            {showFilters ? <PanelLeftClose className="h-4 w-4 mr-1" /> : <PanelLeftOpen className="h-4 w-4 mr-1" />}
+            {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
+          </Button>
           <Button size="sm" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
           </Button>
