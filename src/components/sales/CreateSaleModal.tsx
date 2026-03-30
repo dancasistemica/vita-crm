@@ -120,23 +120,31 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       }
 
       // Carregar formas de pagamento
-      console.log('[CreateSaleModal] 🔍 Iniciando carregamento de payment_methods...');
-      console.log('[CreateSaleModal] 🔍 organization_id:', organization.id);
       const { data: paymentMethodsData, error: paymentMethodsError } = await supabase
         .from('payment_methods')
         .select('id, name, active')
         .eq('organization_id', organization.id)
-        .order('name', { ascending: true });
-
-      console.log('[CreateSaleModal] 📊 Erro:', paymentMethodsError);
-      console.log('[CreateSaleModal] 📊 Dados retornados:', paymentMethodsData);
-      console.log('[CreateSaleModal] 📊 Quantidade:', paymentMethodsData?.length || 0);
+        .order('sort_order', { ascending: true });
 
       if (paymentMethodsError) {
         console.error('[CreateSaleModal] Erro ao carregar formas de pagamento:', paymentMethodsError);
+      } else if (!paymentMethodsData || paymentMethodsData.length === 0) {
+        // Seed automático: criar formas de pagamento padrão
+        console.log('[CreateSaleModal] Nenhuma forma encontrada, criando padrão...');
+        const defaults = ['Pix', 'Cartão de Crédito', 'Cartão de Débito', 'Boleto', 'Transferência'];
+        const { data: seeded, error: seedError } = await supabase
+          .from('payment_methods')
+          .insert(defaults.map((name, i) => ({ organization_id: organization.id, name, active: true, sort_order: i })))
+          .select('id, name, active');
+        if (seedError) {
+          console.error('[CreateSaleModal] Erro ao criar formas padrão:', seedError);
+        } else {
+          console.log('[CreateSaleModal] Formas padrão criadas:', seeded?.length);
+          setPaymentMethods(seeded || []);
+        }
       } else {
-        console.log('[CreateSaleModal] Formas de pagamento carregadas:', paymentMethodsData?.length || 0);
-        setPaymentMethods(paymentMethodsData || []);
+        console.log('[CreateSaleModal] Formas de pagamento carregadas:', paymentMethodsData.length);
+        setPaymentMethods(paymentMethodsData);
       }
 
       // Carregar etapas de venda por produto (product_sales_stages)
