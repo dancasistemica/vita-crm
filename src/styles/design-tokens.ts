@@ -76,6 +76,48 @@ export const designTokens = {
     white: '#ffffff',
     black: '#000000',
     transparent: 'transparent',
+
+    // CORES DE BORDA
+    border: {
+      light: '#e5e5e5',      // neutral-200
+      default: '#d4d4d4',    // neutral-300
+      dark: '#a3a3a3',       // neutral-400
+      darker: '#737373',     // neutral-500
+    },
+
+    // CORES DE BACKGROUND
+    background: {
+      white: '#ffffff',
+      light: '#fafafa',      // neutral-50
+      lighter: '#f5f5f5',    // neutral-100
+      muted: '#f0f7ff',      // primary-50
+      success: '#f0fdf4',    // success-50
+      error: '#fef2f2',      // error-50
+      warning: '#fff7ed',    // warning-50
+    },
+
+    // CORES DE FOREGROUND (Texto)
+    foreground: {
+      default: '#171717',    // neutral-900
+      secondary: '#525252',  // neutral-600
+      muted: '#737373',      // neutral-500
+      light: '#a3a3a3',      // neutral-400
+    },
+
+    // CORES DE OVERLAY/BACKDROP
+    overlay: {
+      light: 'rgba(0, 0, 0, 0.25)',
+      medium: 'rgba(0, 0, 0, 0.5)',
+      dark: 'rgba(0, 0, 0, 0.75)',
+    },
+
+    // CORES DE ESTADO
+    state: {
+      disabled: '#d4d4d4',
+      hover: '#f5f5f5',
+      active: '#e5e5e5',
+      focus: '#0ea5e9',
+    },
   },
 
   // TIPOGRAFIAS

@@ -12,7 +12,35 @@ export default {
       screens: designTokens.breakpoints,
     },
     extend: {
-      colors: designTokens.colors,
+      colors: {
+        ...designTokens.colors,
+        // Aliases para compatibilidade com Shadcn/ui
+        border: designTokens.colors.border.default,
+        input: designTokens.colors.border.light,
+        ring: designTokens.colors.primary[500],
+        background: designTokens.colors.background.white,
+        foreground: designTokens.colors.foreground.default,
+        primary: {
+          DEFAULT: designTokens.colors.primary[500],
+          foreground: '#ffffff',
+        },
+        secondary: {
+          DEFAULT: designTokens.colors.neutral[200],
+          foreground: designTokens.colors.foreground.default,
+        },
+        destructive: {
+          DEFAULT: designTokens.colors.error[500],
+          foreground: '#ffffff',
+        },
+        muted: {
+          DEFAULT: designTokens.colors.neutral[100],
+          foreground: designTokens.colors.foreground.secondary,
+        },
+        accent: {
+          DEFAULT: designTokens.colors.primary[500],
+          foreground: '#ffffff',
+        },
+      },
       fontFamily: designTokens.typography.fonts,
       fontSize: designTokens.typography.fontSizes,
       fontWeight: designTokens.typography.fontWeights,
