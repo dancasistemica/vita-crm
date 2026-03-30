@@ -44,6 +44,7 @@ export function useProductsData() {
           name: s.name,
           value: Number(s.value) || 0,
           link: s.link || '',
+          sale_type: s.sale_type || 'unica',
         })),
       }));
       setProducts(mapped);
