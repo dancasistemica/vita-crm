@@ -30,6 +30,7 @@ export const VendasPage = () => {
   const { organization } = useOrganization();
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
