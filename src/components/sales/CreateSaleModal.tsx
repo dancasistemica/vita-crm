@@ -211,12 +211,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       case 4:
         return formData.payment_method_id !== '';
       case 5:
-        return formData.initial_payment >= 0 && formData.initial_payment < formData.stage_value;
+        if (saleType === 'unica') {
+          return formData.installments && formData.first_payment_date !== '';
+        } else {
+          return formData.start_date !== '' && formData.first_payment_due_date !== '';
+        }
       case 6:
-        return formData.installments && formData.first_payment_date !== '';
-      case 7:
         return true;
-      case 8:
+      case 7:
         return true;
       default:
         return false;
