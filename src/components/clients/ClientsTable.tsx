@@ -15,6 +15,8 @@ interface ClientLead {
   name: string;
   email: string;
   phone: string;
+  is_client?: boolean;
+  became_client_at?: string;
 }
 
 interface ClientSale {
