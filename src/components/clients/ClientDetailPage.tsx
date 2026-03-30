@@ -345,6 +345,7 @@ export default function ClientDetailPage() {
           isOpen={!!editSaleId}
           onClose={() => setEditSaleId(null)}
           sale={sales.find(s => s.id === editSaleId) as any}
+          onSuccess={fetchData}
         />
       )}
       <ScheduleMessageDialog
