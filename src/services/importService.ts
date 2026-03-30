@@ -542,11 +542,11 @@ export const linkTagsToLead = async (
       }
 
       const { error: linkError } = await supabase
-        .from('lead_tags')
-        .insert({
-          lead_id: leadId,
-          tag_id: tag.id,
-        });
+        .from('leads')
+        .update({
+          tags: [...(await getLeadTags(leadId)), tagName],
+        })
+        .eq('id', leadId);
 
       if (linkError) {
         console.warn(`[ImportService] Erro ao vincular tag "${tagName}":`, linkError);

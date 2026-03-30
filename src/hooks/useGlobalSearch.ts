@@ -170,7 +170,7 @@ export function useGlobalSearch(organizationId?: string | null) {
             id: client.id,
             type: "client" as const,
             title: client.name,
-            subtitle: client.company || client.email || client.phone || undefined,
+            subtitle: client.email || client.phone || undefined,
           })),
           ...tasks.map((task) => ({
             id: task.id,
