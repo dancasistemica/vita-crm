@@ -584,7 +584,7 @@ const createSubscriptionSale = async (organizationId: string, saleData: any) => 
   console.log('[SaleService] Criando mensalidade...');
   
   const { data: subscription, error: subscriptionError } = await supabase
-    .from('subscriptions')
+    .from('subscriptions' as any)
     .insert({
       organization_id: organizationId,
       client_id: saleData.client_id,
