@@ -46,7 +46,9 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
   // Controle de fase
   const [currentPhase, setCurrentPhase] = useState(1);
-  const totalPhases = 8;
+  const [saleType, setSaleType] = useState<'unica' | 'mensalidade'>('unica');
+
+  const totalPhases = saleType === 'unica' ? 6 : 7;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -58,9 +60,23 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
     initial_payment: 0,
     installments: '1',
     first_payment_date: '',
+    start_date: '', // NOVO
+    end_date: '',   // NOVO
+    first_payment_due_date: '', // NOVO
     auto_payment_enabled: true,
     notes: '',
   });
+
+  // Detectar tipo quando etapa é selecionada
+  useEffect(() => {
+    if (formData.sales_stage_id) {
+      const selectedStage = productSalesStages.find(s => s.id === formData.sales_stage_id);
+      if (selectedStage) {
+        setSaleType(selectedStage.sale_type);
+        console.log('[CreateSaleModal] Tipo de venda detectado:', selectedStage.sale_type);
+      }
+    }
+  }, [formData.sales_stage_id, productSalesStages]);
 
   // Filtrar clientes por busca
   const filteredClients = useMemo(() => {
