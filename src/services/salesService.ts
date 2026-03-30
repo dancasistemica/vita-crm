@@ -122,7 +122,15 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
 
     // PASSO 2: Calcular e criar parcelas
     console.log('[SalesService] Calculando parcelas...');
-    const installmentRecords = [] as Array<Record<string, unknown>>;
+    const installmentRecords: Array<{
+      sale_id: string;
+      organization_id: string;
+      installment_number: number;
+      due_date: string;
+      amount: number;
+      status: string;
+      auto_payment_enabled: boolean;
+    }> = [];
     const valueToInstall = saleData.value - (saleData.initial_payment || 0);
     const firstPaymentDate = new Date(saleData.first_payment_date);
     const installmentAmount = valueToInstall / saleData.installments;

@@ -548,13 +548,14 @@ export const linkTagsToLead = async (
         .eq('id', leadId)
         .single();
       const currentTags = (currentLead?.tags || []) as string[];
-      if (!currentTags.includes(tag.name || tagName)) {
-        const { error: linkError } = await supabase
+      const tagLabel = tag.name || tagName;
+      let linkError: any = null;
+      if (!currentTags.includes(tagLabel)) {
+        const result = await supabase
           .from('leads')
-          .update({ tags: [...currentTags, tag.name || tagName] })
+          .update({ tags: [...currentTags, tagLabel] })
           .eq('id', leadId);
-      } else {
-        const linkError = null;
+        linkError = result.error;
       }
 
       if (linkError) {
