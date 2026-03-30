@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 
-interface ScheduledMessage {
+export interface ScheduledMessage {
   id: string
   organization_id: string
   lead_id?: string
@@ -55,7 +55,7 @@ export const useScheduledMessages = (organizationId: string | null) => {
       if (queryError) throw queryError
 
       console.log('[useScheduledMessages.loadMessages] Carregadas:', data?.length)
-      setMessages(data || [])
+      setMessages((data || []) as ScheduledMessage[])
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Erro ao carregar'
       console.error('[useScheduledMessages.loadMessages] Erro:', errorMsg)
@@ -107,7 +107,7 @@ export const useScheduledMessages = (organizationId: string | null) => {
         if (insertError) throw insertError
 
         console.log('[useScheduledMessages.scheduleMessage] Agendada:', data?.[0]?.id)
-        setMessages([...messages, data[0]])
+        setMessages([...messages, data[0] as ScheduledMessage])
         return true
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Erro ao agendar'

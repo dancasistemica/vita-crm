@@ -125,18 +125,8 @@ export const tagsService = {
     try {
       console.log('[TagsService] Deletando tag:', tagId);
 
-      console.log('[TagsService] Removendo relacionamentos em lead_tags...');
-
-      const { error: deleteRelError } = await supabase
-        .from('lead_tags')
-        .delete()
-        .eq('tag_id', tagId);
-
-      if (deleteRelError) {
-        console.warn('[TagsService] ⚠️ Aviso ao deletar relacionamentos:', deleteRelError);
-      } else {
-        console.log('[TagsService] ✅ Relacionamentos deletados (ou não havia nenhum)');
-      }
+      // Tags are stored as text[] on leads, no separate lead_tags table
+      console.log('[TagsService] Nota: tags são armazenadas como array no lead, sem tabela de relacionamento separada');
 
       console.log('[TagsService] Deletando tag da tabela tags...');
 

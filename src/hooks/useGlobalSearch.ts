@@ -22,7 +22,6 @@ interface LeadResult {
   name: string;
   email: string | null;
   phone: string | null;
-  company: string | null;
   pipeline_stage: string | null;
 }
 
@@ -31,8 +30,6 @@ interface ClientResult {
   name: string;
   email: string | null;
   phone: string | null;
-  company: string | null;
-  status: string | null;
 }
 
 interface TaskResult {
@@ -40,8 +37,6 @@ interface TaskResult {
   title: string;
   lead_id: string | null;
   due_date: string | null;
-  status: string | null;
-  priority: string | null;
 }
 
 interface ProductResult {
@@ -92,23 +87,23 @@ export function useGlobalSearch(organizationId?: string | null) {
         const [leadsResponse, clientsResponse, tasksResponse, productsResponse] = await Promise.all([
           supabase
             .from("leads")
-            .select("id, name, email, phone, company, pipeline_stage")
+            .select("id, name, email, phone, pipeline_stage")
             .eq("organization_id", organizationId)
             .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%,company.ilike.%${term}%`,
+              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
             )
             .limit(5),
           supabase
             .from("clients")
-            .select("id, name, email, phone, company, status")
+            .select("id, name, email, phone")
             .eq("organization_id", organizationId)
             .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%,company.ilike.%${term}%`,
+              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
             )
             .limit(5),
           supabase
             .from("tasks")
-            .select("id, title, lead_id, due_date, status, priority")
+            .select("id, title, lead_id, due_date")
             .eq("organization_id", organizationId)
             .ilike("title", `%${term}%`)
             .limit(5),
@@ -169,13 +164,13 @@ export function useGlobalSearch(organizationId?: string | null) {
             id: lead.id,
             type: "lead" as const,
             title: lead.name,
-            subtitle: lead.company || lead.email || lead.phone || undefined,
+            subtitle: lead.email || lead.phone || undefined,
           })),
           ...clients.map((client) => ({
             id: client.id,
             type: "client" as const,
             title: client.name,
-            subtitle: client.company || client.email || client.phone || undefined,
+            subtitle: client.email || client.phone || undefined,
           })),
           ...tasks.map((task) => ({
             id: task.id,

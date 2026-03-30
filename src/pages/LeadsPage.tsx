@@ -100,8 +100,8 @@ export default function LeadsPage() {
 
     if (sortBy === 'date') {
       sorted.sort((a, b) => {
-        const dateA = new Date(a.created_at).getTime();
-        const dateB = new Date(b.created_at).getTime();
+        const dateA = new Date(a.entryDate || '').getTime();
+        const dateB = new Date(b.entryDate || '').getTime();
         return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
       });
     } else if (sortBy === 'name') {

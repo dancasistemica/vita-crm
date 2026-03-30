@@ -541,12 +541,22 @@ export const linkTagsToLead = async (
         continue;
       }
 
-      const { error: linkError } = await supabase
-        .from('lead_tags')
-        .insert({
-          lead_id: leadId,
-          tag_id: tag.id,
-        });
+      // Tags are stored as text[] on leads table directly
+      const { data: currentLead } = await supabase
+        .from('leads')
+        .select('tags')
+        .eq('id', leadId)
+        .single();
+      const currentTags = (currentLead?.tags || []) as string[];
+      const tagLabel = tag.name || tagName;
+      let linkError: any = null;
+      if (!currentTags.includes(tagLabel)) {
+        const result = await supabase
+          .from('leads')
+          .update({ tags: [...currentTags, tagLabel] })
+          .eq('id', leadId);
+        linkError = result.error;
+      }
 
       if (linkError) {
         console.warn(`[ImportService] Erro ao vincular tag "${tagName}":`, linkError);
@@ -646,16 +656,16 @@ export const processImportedLeads = async (
   console.log(`[ImportService] Organização: ${organizationId}`);
 
   const [originsRes, levelsRes, tagsRes, stagesRes] = await Promise.all([
-    supabase.from('lead_origins').select('id, value, label').eq('organization_id', organizationId),
+    supabase.from('lead_origins').select('id, name').eq('organization_id', organizationId),
     supabase.from('interest_levels').select('id, value, label').eq('organization_id', organizationId),
-    supabase.from('tags').select('id, value, label').eq('organization_id', organizationId),
-    supabase.from('pipeline_stages').select('id, value, label, sort_order').eq('organization_id', organizationId),
+    supabase.from('tags').select('id, name').eq('organization_id', organizationId),
+    supabase.from('pipeline_stages').select('id, name, sort_order').eq('organization_id', organizationId),
   ]);
 
-  const originsCache = new Map((originsRes.data || []).map(o => [o.value.toLowerCase(), o]));
+  const originsCache = new Map((originsRes.data || []).map(o => [o.name.toLowerCase(), o]));
   const levelsCache = new Map((levelsRes.data || []).map(l => [l.value.toLowerCase(), l]));
-  const tagsCache = new Map((tagsRes.data || []).map(t => [t.value.toLowerCase(), t]));
-  const stageByValue = new Map((stagesRes.data || []).map(s => [s.value.toLowerCase(), s]));
+  const tagsCache = new Map((tagsRes.data || []).map(t => [t.name.toLowerCase(), t]));
+  const stageByValue = new Map((stagesRes.data || []).map(s => [s.name.toLowerCase(), s]));
   const stageById = new Map((stagesRes.data || []).map(s => [s.id, s]));
   let stageSort = Math.max(0, ...(stagesRes.data || []).map(s => s.sort_order || 0));
   const nextSortOrder = () => {
