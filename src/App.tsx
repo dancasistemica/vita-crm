@@ -28,6 +28,8 @@ import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
+import VendasPage from "@/pages/VendasPage";
+
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
@@ -69,6 +71,8 @@ const App = () => (
                   <Route path="/leads" element={<LeadsPage />} />
                   <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                   <Route path="/pipeline" element={<PipelinePage />} />
+                  <Route path="/vendas" element={<VendasPage />} />
+
                   <Route path="/clientes" element={<ClientesPage />} />
                   <Route path="/clientes/:id" element={<ClientDetailPage />} />
                   <Route path="/interacoes" element={<InteracoesPage />} />

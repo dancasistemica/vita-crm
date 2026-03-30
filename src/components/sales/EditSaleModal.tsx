@@ -1,232 +1,210 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { useCRMStore } from '@/store/crmStore';
-import { Sale } from '@/types/crm';
+import { useState, useEffect } from 'react';
+import { X, Loader, Check } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-
-const PAYMENT_METHODS = [
-  'Dinheiro', 'Cartão Crédito', 'Cartão Débito', 'Pix',
-  'Transferência Bancária', 'Boleto', 'Outro',
-];
 
 interface EditSaleModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   saleId: string | null;
+  onSuccess?: () => void;
 }
 
-export default function EditSaleModal({ open, onOpenChange, saleId }: EditSaleModalProps) {
-  const store = useCRMStore();
-  const [saving, setSaving] = useState(false);
+export default function EditSaleModal({ open, onOpenChange, saleId, onSuccess }: EditSaleModalProps) {
+  const { organization } = useOrganization();
+  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  
+  const [saleData, setSaleData] = useState<any>(null);
+  const [status, setStatus] = useState('');
+  const [notes, setNotes] = useState('');
 
-  const sale = useMemo(() => store.sales.find(s => s.id === saleId) || null, [saleId, store.sales]);
-  const lead = useMemo(() => sale ? store.leads.find(l => l.id === sale.leadId) : null, [sale, store.leads]);
-
-  const [productId, setProductId] = useState('');
-  const [value, setValue] = useState('');
-  const [saleDate, setSaleDate] = useState<Date>(new Date());
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [status, setStatus] = useState<Sale['status']>('ativo');
-  const [customPayment, setCustomPayment] = useState('');
-
-  // Load sale data when modal opens
   useEffect(() => {
-    if (open && sale) {
-      setProductId(sale.productId);
-      const formatted = sale.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      setValue(formatted);
-      setSaleDate(parseISO(sale.date));
-      const isStandard = PAYMENT_METHODS.includes(sale.paymentMethod);
-      setPaymentMethod(isStandard ? sale.paymentMethod : 'Outro');
-      setCustomPayment(isStandard ? '' : sale.paymentMethod);
-      setStatus(sale.status);
-      console.log('[EditSaleModal] Dados carregados:', sale.id);
+    if (open && saleId && organization?.id) {
+      loadSaleDetails();
     }
-  }, [open, sale]);
+  }, [open, saleId, organization?.id]);
 
-  const formatCurrency = (val: string) => {
-    const num = val.replace(/\D/g, '');
-    if (!num) return '';
-    const cents = parseInt(num) / 100;
-    return cents.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const loadSaleDetails = async () => {
+    try {
+      setLoadingData(true);
+      console.log('[EditSaleModal] Carregando detalhes da venda:', saleId);
+
+      // Tentar carregar de 'sales' primeiro
+      const { data: sale, error: saleError } = await supabase
+        .from('sales')
+        .select(`
+          *,
+          leads(name),
+          product_sales_stages(name, value)
+        `)
+        .eq('id', saleId)
+        .maybeSingle();
+
+      if (sale) {
+        setSaleData({ ...sale, type: 'unica' });
+        setStatus(sale.status || '');
+        setNotes(sale.notes || '');
+        return;
+      }
+
+      // Se não encontrar, tentar em 'subscriptions'
+      const { data: subscription, error: subError } = await supabase
+        .from('subscriptions')
+        .select(`
+          *,
+          leads(name),
+          product_sales_stages(name, value)
+        `)
+        .eq('id', saleId)
+        .maybeSingle();
+
+      if (subscription) {
+        setSaleData({ ...subscription, type: 'mensalidade' });
+        setStatus(subscription.status || '');
+        setNotes(subscription.notes || '');
+      } else {
+        toast.error('Venda não encontrada');
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.error('[EditSaleModal] Erro ao carregar:', error);
+      toast.error('Erro ao carregar dados da venda');
+    } finally {
+      setLoadingData(false);
+    }
   };
 
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, '');
-    setValue(formatCurrency(raw));
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!saleData) return;
+
+    setLoading(true);
+    try {
+      const table = saleData.type === 'unica' ? 'sales' : 'subscriptions';
+      
+      const { error } = await supabase
+        .from(table)
+        .update({
+          status: status,
+          notes: notes,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', saleId);
+
+      if (error) throw error;
+
+      toast.success('Venda atualizada com sucesso!');
+      onSuccess?.();
+      onOpenChange(false);
+    } catch (error) {
+      console.error('[EditSaleModal] Erro ao atualizar:', error);
+      toast.error('Erro ao atualizar venda');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const parseValue = (formatted: string): number => {
-    if (!formatted) return 0;
-    return parseFloat(formatted.replace(/\./g, '').replace(',', '.'));
-  };
-
-  const hasChanges = useMemo(() => {
-    if (!sale) return false;
-    const currentPayment = paymentMethod === 'Outro' ? customPayment || 'Outro' : paymentMethod;
-    return (
-      productId !== sale.productId ||
-      parseValue(value) !== sale.value ||
-      format(saleDate, 'yyyy-MM-dd') !== sale.date ||
-      currentPayment !== sale.paymentMethod ||
-      status !== sale.status
-    );
-  }, [sale, productId, value, saleDate, paymentMethod, customPayment, status]);
-
-  const handleSubmit = () => {
-    if (!sale) return;
-    if (!productId) { toast.error('Selecione um produto'); return; }
-    if (!value || parseValue(value) <= 0) { toast.error('Informe um valor válido'); return; }
-
-    setSaving(true);
-    const finalPayment = paymentMethod === 'Outro' ? customPayment || 'Outro' : paymentMethod;
-
-    store.updateSale(sale.id, {
-      productId,
-      value: parseValue(value),
-      date: format(saleDate, 'yyyy-MM-dd'),
-      paymentMethod: finalPayment,
-      status,
-    });
-
-    console.log('[EditSaleModal] Venda atualizada:', sale.id);
-    toast.success('Venda atualizada com sucesso!');
-    setSaving(false);
-    onOpenChange(false);
-  };
-
-  if (!sale) return null;
+  if (!open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Editar Venda</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-5 py-2">
-          {/* Client (readonly) */}
-          {lead && (
-            <div className="space-y-2">
-              <Label>Cliente</Label>
-              <div className="rounded-lg border border-border bg-muted/30 p-3">
-                <p className="text-sm font-medium text-foreground">{lead.name}</p>
-                <p className="text-xs text-muted-foreground">{lead.email} • {lead.phone}</p>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Product */}
-            <div className="space-y-2 sm:col-span-2">
-              <Label>Produto/Serviço *</Label>
-              <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um produto" />
-                </SelectTrigger>
-                <SelectContent>
-                  {store.products.map(p => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Value */}
-            <div className="space-y-2">
-              <Label>Valor (R$) *</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">R$</span>
-                <Input value={value} onChange={handleValueChange} placeholder="0,00" className="pl-10" />
-              </div>
-            </div>
-
-            {/* Date */}
-            <div className="space-y-2">
-              <Label>Data da Venda *</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={saleDate}
-                    onSelect={d => d && setSaleDate(d)}
-                    disabled={date => date > new Date()}
-                    locale={ptBR}
-                    className="p-3 pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            {/* Payment method */}
-            <div className="space-y-2">
-              <Label>Forma de Pagamento *</Label>
-              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PAYMENT_METHODS.map(m => (
-                    <SelectItem key={m} value={m}>{m}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {paymentMethod === 'Outro' && (
-                <Input value={customPayment} onChange={e => setCustomPayment(e.target.value)} placeholder="Especifique..." className="mt-2" />
-              )}
-            </div>
-
-            {/* Status */}
-            <div className="space-y-2">
-              <Label>Status da Venda *</Label>
-              <Select value={status} onValueChange={v => setStatus(v as Sale['status'])}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {store.saleStatuses.map(s => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Change indicator */}
-          {hasChanges && (
-            <div className="rounded-lg border border-info/30 bg-info/10 p-3">
-              <p className="text-xs text-info">ℹ️ Você tem alterações não salvas</p>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSubmit} disabled={saving || !hasChanges}>
-              {saving ? 'Salvando...' : hasChanges ? 'Salvar Alterações' : 'Sem Alterações'}
-            </Button>
-          </div>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4 backdrop-blur-sm">
+      <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+        {/* Header */}
+        <div className="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">Editar Venda</h2>
+          <button
+            onClick={() => onOpenChange(false)}
+            className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-400" />
+          </button>
         </div>
-      </DialogContent>
-    </Dialog>
+
+        {loadingData ? (
+          <div className="p-12 flex flex-col items-center justify-center">
+            <Loader className="w-10 h-10 text-blue-600 animate-spin mb-4" />
+            <p className="text-gray-500 font-medium">Buscando informações...</p>
+          </div>
+        ) : saleData ? (
+          <form onSubmit={handleUpdate} className="p-6 space-y-6">
+            {/* Resumo (Readonly) */}
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+              <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Informações da Venda</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-blue-400 font-medium">Cliente</p>
+                  <p className="text-sm font-bold text-blue-900 truncate">{saleData.leads?.name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-blue-400 font-medium">Produto/Etapa</p>
+                  <p className="text-sm font-bold text-blue-900 truncate">{saleData.product_sales_stages?.name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-blue-400 font-medium">Tipo</p>
+                  <p className="text-sm font-bold text-blue-900 capitalize">{saleData.type}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-blue-400 font-medium">Valor</p>
+                  <p className="text-sm font-bold text-blue-900">
+                    {Number(saleData.monthly_value || saleData.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Campos Editáveis */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Status da Venda</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                >
+                  <option value="pendente">Pendente</option>
+                  <option value="pago">Pago</option>
+                  <option value="concluido">Concluído</option>
+                  <option value="cancelado">Cancelado</option>
+                  <option value="atrasado">Atrasado</option>
+                  <option value="ativo">Ativo</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Observações Internas</label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={4}
+                  placeholder="Adicione detalhes sobre a negociação, pagamentos, etc..."
+                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Botões */}
+            <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+                Salvar Alterações
+              </button>
+            </div>
+          </form>
+        ) : null}
+      </div>
+    </div>
   );
 }

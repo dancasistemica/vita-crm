@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette,
+  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart
 } from "lucide-react";
+
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -20,7 +21,9 @@ const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Leads", url: "/leads", icon: Users },
   { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
+  { title: "Vendas", url: "/vendas", icon: ShoppingCart },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
+
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
   { title: "Produtos", url: "/produtos", icon: Package },
