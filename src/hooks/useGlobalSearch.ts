@@ -22,7 +22,6 @@ interface LeadResult {
   name: string;
   email: string | null;
   phone: string | null;
-  company: string | null;
   pipeline_stage: string | null;
 }
 
@@ -31,8 +30,6 @@ interface ClientResult {
   name: string;
   email: string | null;
   phone: string | null;
-  company: string | null;
-  status: string | null;
 }
 
 interface TaskResult {
@@ -40,8 +37,6 @@ interface TaskResult {
   title: string;
   lead_id: string | null;
   due_date: string | null;
-  status: string | null;
-  priority: string | null;
 }
 
 interface ProductResult {
