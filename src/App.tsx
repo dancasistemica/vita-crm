@@ -28,6 +28,8 @@ import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
+import VendasPage from "@/pages/VendasPage";
+
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
