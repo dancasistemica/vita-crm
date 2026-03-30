@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2 } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
