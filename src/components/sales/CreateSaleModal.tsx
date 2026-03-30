@@ -167,7 +167,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       // Carregar etapas de venda por produto (product_sales_stages)
       const { data: stagesData, error: stagesError } = await supabase
         .from('product_sales_stages')
-        .select('id, product_id, name, value, products!inner(id, name, organization_id)')
+        .select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)')
         .eq('products.organization_id', organization.id)
         .order('name', { foreignTable: 'products', ascending: true })
         .order('value', { ascending: true });
@@ -181,6 +181,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           product_name: stage.products?.name || '',
           name: stage.name,
           value: Number(stage.value) || 0,
+          sale_type: stage.sale_type || 'unica',
         }));
         console.log('[CreateSaleModal] Etapas de venda carregadas:', mappedStages.length);
         setProductSalesStages(mappedStages);
