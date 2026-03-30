@@ -522,3 +522,55 @@ export const getClientSales = async (
     throw error;
   }
 };
+
+export const convertLeadToClient = async (
+  leadId: string,
+  organizationId: string
+) => {
+  try {
+    console.log('[SaleService] Convertendo lead em cliente:', {
+      leadId,
+      organizationId,
+    });
+
+    // PASSO 1: Verificar se lead já é cliente
+    const { data: leadData, error: leadError } = await supabase
+      .from('leads')
+      .select('is_client, became_client_at')
+      .eq('id', leadId)
+      .eq('organization_id', organizationId)
+      .single();
+
+    if (leadError) {
+      console.error('[SaleService] ❌ Erro ao buscar lead:', leadError.message);
+      throw leadError;
+    }
+
+    // Se já é cliente, não fazer nada
+    if (leadData?.is_client) {
+      console.log('[SaleService] ℹ️ Lead já é cliente');
+      return;
+    }
+
+    // PASSO 2: Converter lead em cliente
+    const { error: updateError } = await supabase
+      .from('leads')
+      .update({
+        is_client: true,
+        became_client_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', leadId)
+      .eq('organization_id', organizationId);
+
+    if (updateError) {
+      console.error('[SaleService] ❌ Erro ao converter lead:', updateError.message);
+      throw updateError;
+    }
+
+    console.log('[SaleService] ✅ Lead convertido em cliente com sucesso');
+  } catch (error) {
+    console.error('[SaleService] ❌ Erro crítico ao converter lead:', error);
+    throw error;
+  }
+};

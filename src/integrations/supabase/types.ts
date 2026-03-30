@@ -527,6 +527,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          became_client_at: string | null
           city: string | null
           cpf: string | null
           created_at: string
@@ -537,6 +538,7 @@ export type Database = {
           id: string
           instagram: string | null
           interest_level: string | null
+          is_client: boolean | null
           main_interest: string | null
           name: string
           notes: string | null
@@ -550,6 +552,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          became_client_at?: string | null
           city?: string | null
           cpf?: string | null
           created_at?: string
@@ -560,6 +563,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           interest_level?: string | null
+          is_client?: boolean | null
           main_interest?: string | null
           name: string
           notes?: string | null
@@ -573,6 +577,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          became_client_at?: string | null
           city?: string | null
           cpf?: string | null
           created_at?: string
@@ -583,6 +588,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           interest_level?: string | null
+          is_client?: boolean | null
           main_interest?: string | null
           name?: string
           notes?: string | null
