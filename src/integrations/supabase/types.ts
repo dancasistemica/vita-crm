@@ -1257,6 +1257,156 @@ export type Database = {
           },
         ]
       }
+      subscription_payments: {
+        Row: {
+          amount: number
+          auto_payment_enabled: boolean | null
+          created_at: string | null
+          due_date: string
+          id: string
+          notes: string | null
+          organization_id: string
+          paid_date: string | null
+          payment_method: string | null
+          payment_number: number
+          status: string
+          subscription_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          auto_payment_enabled?: boolean | null
+          created_at?: string | null
+          due_date: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          paid_date?: string | null
+          payment_method?: string | null
+          payment_number: number
+          status?: string
+          subscription_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          auto_payment_enabled?: boolean | null
+          created_at?: string | null
+          due_date?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          paid_date?: string | null
+          payment_method?: string | null
+          payment_number?: number
+          status?: string
+          subscription_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_payments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_payments_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          auto_payment_enabled: boolean | null
+          client_id: string
+          created_at: string | null
+          end_date: string | null
+          id: string
+          monthly_value: number
+          notes: string | null
+          organization_id: string
+          payment_method_id: string | null
+          product_id: string
+          sales_stage_id: string
+          start_date: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          auto_payment_enabled?: boolean | null
+          client_id: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value: number
+          notes?: string | null
+          organization_id: string
+          payment_method_id?: string | null
+          product_id: string
+          sales_stage_id: string
+          start_date: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          auto_payment_enabled?: boolean | null
+          client_id?: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value?: number
+          notes?: string | null
+          organization_id?: string
+          payment_method_id?: string | null
+          product_id?: string
+          sales_stage_id?: string
+          start_date?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_payment_method_id_fkey"
+            columns: ["payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_sales_stage_id_fkey"
+            columns: ["sales_stage_id"]
+            isOneToOne: false
+            referencedRelation: "product_sales_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       superadmin_roles: {
         Row: {
           created_at: string

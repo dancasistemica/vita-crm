@@ -13,6 +13,7 @@ import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import RecordCounter from '@/components/common/RecordCounter';
 import NewSaleModal from '@/components/sales/NewSaleModal';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
@@ -23,6 +24,7 @@ export default function ClientesPage() {
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showFilters, setShowFilters] = useState(() => {
     const saved = localStorage.getItem('clientesPageShowFilters');
     return saved !== null ? JSON.parse(saved) : true;
@@ -112,6 +114,9 @@ export default function ClientesPage() {
           >
             {showFilters ? <PanelLeftClose className="h-4 w-4 mr-1" /> : <PanelLeftOpen className="h-4 w-4 mr-1" />}
             {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setShowSubscriptionModal(true)}>
+            <Plus className="h-4 w-4 mr-1" /> Nova Mensalidade
           </Button>
           <Button size="sm" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-1" /> Nova Venda
@@ -221,6 +226,11 @@ export default function ClientesPage() {
       <CreateSaleModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
+        onSuccess={() => hook.refetchData()}
+      />
+      <CreateSubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
         onSuccess={() => hook.refetchData()}
       />
     </div>
