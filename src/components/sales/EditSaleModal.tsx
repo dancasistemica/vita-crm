@@ -160,25 +160,27 @@ export const EditSaleModal = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!sale?.id || !sale?.sale_type) return;
-
-    if (!window.confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {
+  const handleDeleteSale = async () => {
+    if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {
       return;
     }
 
-    setLoading(true);
+    setDeleting(true);
     try {
-      console.log('[EditSaleModal] Excluindo venda:', { id: sale.id, type: sale.sale_type });
+      console.log('[EditSaleModal] Deletando venda:', sale.id);
+
       await deleteSale(sale.id, sale.sale_type);
-      toast.success('Venda excluída com sucesso!');
+
+      console.log('[EditSaleModal] ✅ Venda deletada com sucesso');
+      toast.success('Venda deletada com sucesso!');
       onSuccess?.();
       onClose();
-    } catch (err) {
-      console.error('[EditSaleModal] Erro ao excluir venda:', err);
-      toast.error('Erro ao excluir venda.');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao deletar venda';
+      console.error('[EditSaleModal] ❌ Erro ao deletar:', errorMessage);
+      toast.error(errorMessage);
     } finally {
-      setLoading(false);
+      setDeleting(false);
     }
   };
 
