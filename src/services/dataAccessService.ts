@@ -260,7 +260,7 @@ export class DataAccessService {
   }
 
   // ── PRODUCT SALES STAGES ──────────────────────────────
-  async upsertProductStages(productId: string, stages: { id?: string; name: string; value: number; link?: string }[]) {
+  async upsertProductStages(productId: string, stages: { id?: string; name: string; value: number; link?: string; sale_type?: 'unica' | 'mensalidade' }[]) {
     // Delete existing stages for this product
     const { error: deleteError } = await supabase
       .from('product_sales_stages')
@@ -275,6 +275,7 @@ export class DataAccessService {
       name: s.name,
       value: s.value,
       link: s.link || '',
+      sale_type: s.sale_type || 'unica',
     }));
 
     const { data, error } = await supabase
