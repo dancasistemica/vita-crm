@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 
-interface ScheduledMessage {
+export interface ScheduledMessage {
   id: string
   organization_id: string
   lead_id?: string
