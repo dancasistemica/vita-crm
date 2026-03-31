@@ -1,61 +1,31 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Plus, Edit2, Trash2, Search, Filter, ChevronDown, Calendar, CreditCard, User, Tag, ArrowUpRight, DollarSign, Package, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
+import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
+import { Button, Card, Input, Select, Badge, Alert } from '@/components/ui/ds';
+import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
+import { toast } from 'sonner';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import EditSaleModal from '@/components/sales/EditSaleModal';
-import { toast } from 'sonner';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { deleteSale } from '@/services/salesService';
-import { deleteSubscription } from '@/services/subscriptionService';
-import { getSalesAndSubscriptions } from '@/services/saleService';
 
-interface Sale {
-  id: string;
-  client_id: string;
-  client_name: string;
-  sales_stage_id: string;
-  stage_name: string;
-  stage_value: number;
-  sale_type: 'unica' | 'mensalidade';
-  payment_method_id: string;
-  payment_method_name: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export const VendasPage = () => {
+export function VendasPage() {
   const { organization } = useOrganization();
-  const [sales, setSales] = useState<Sale[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  const [sales, setSales] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('todos');
+  const [typeFilter, setTypeFilter] = useState('todos');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
-
-  // Filtros
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showFilters, setShowFilters] = useState(true);
-  const [saleTypeFilter, setSaleTypeFilter] = useState<'todos' | 'unica' | 'mensalidade'>('todos');
-  const [statusFilter, setStatusFilter] = useState('todos');
+  const [selectedSale, setSelectedSale] = useState<any>(null);
 
   useEffect(() => {
-    console.log('[VendasPage] ✅ Página carregada com sucesso');
-    console.log('[VendasPage] URL atual:', window.location.pathname);
-    console.log('[VendasPage] Organization:', organization?.id);
-    
-    if (organization?.id) {
-      loadSales();
-    }
+    loadSales();
   }, [organization?.id]);
 
   const loadSales = async () => {
-    if (!organization?.id) {
-      console.error('[VendasPage] ❌ Organization ID não disponível');
-      return;
-    }
+    if (!organization?.id) return;
 
     try {
       setLoading(true);
@@ -63,269 +33,195 @@ export const VendasPage = () => {
       console.log('[VendasPage] Carregando vendas para org:', organization.id);
 
       const allSales = await getSalesAndSubscriptions(organization.id);
-
       console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
-      setSales(allSales as Sale[]);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-      console.error('[VendasPage] ❌ Erro ao carregar vendas:', errorMessage);
+      setSales(allSales);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar vendas';
+      console.error('[VendasPage] ❌ Erro:', errorMessage);
       setError(errorMessage);
-      toast.error(`Erro ao carregar vendas: ${errorMessage}`);
+      toast.error(errorMessage);
       setSales([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredSales = useMemo(() => {
-    return sales.filter(sale => {
-      const matchesSearch = 
-        sale.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        sale.stage_name.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesSaleType = saleTypeFilter === 'todos' || sale.sale_type === saleTypeFilter;
-      const matchesStatus = statusFilter === 'todos' || sale.status === statusFilter;
-
-      return matchesSearch && matchesSaleType && matchesStatus;
-    });
-  }, [sales, searchTerm, saleTypeFilter, statusFilter]);
-
-  const handleEditSale = (saleId: string) => {
-    console.log('[VendasPage] Abrindo modal de edição para venda:', saleId);
-    setSelectedSaleId(saleId);
-    setShowEditModal(true);
-  };
-
-  const handleDeleteSale = async (sale: Sale) => {
+  const handleDeleteSale = async (sale: any) => {
     if (!confirm(`Tem certeza que deseja excluir esta venda de ${sale.client_name}?`)) return;
 
     try {
-      if (sale.sale_type === 'unica') {
-        await deleteSale(sale.id);
-      } else {
-        await deleteSubscription(sale.id);
-      }
-
+      await deleteSale(sale.id, sale.sale_type);
       toast.success('Venda excluída com sucesso');
-      setSales(sales.filter(s => s.id !== sale.id));
-    } catch (error) {
-      console.error('[VendasPage] ❌ Erro ao excluir venda:', error);
-      toast.error('Erro ao excluir venda');
+      loadSales();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir venda';
+      toast.error(errorMessage);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const s = status.toLowerCase();
-    if (s.includes('pago') || s.includes('ativ') || s.includes('concluid')) {
-      return (
-        <span className="flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded-full">
-          <CheckCircle2 className="w-3 h-3" /> {status}
-        </span>
-      );
-    }
-    if (s.includes('pendent') || s.includes('esper')) {
-      return (
-        <span className="flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-1 rounded-full">
-          <Clock className="w-3 h-3" /> {status}
-        </span>
-      );
-    }
-    return (
-      <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
-        <AlertCircle className="w-3 h-3" /> {status}
-      </span>
-    );
+  const handleEditSale = (sale: any) => {
+    setSelectedSale(sale);
+    setShowEditModal(true);
   };
+
+  // Filtrar vendas
+  const filteredSales = sales.filter(sale => {
+    const matchesSearch = 
+      sale.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sale.stage_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'todos' || sale.status === statusFilter;
+    const matchesType = typeFilter === 'todos' || sale.sale_type === typeFilter;
+
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 pb-20">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Vendas</h1>
-            <p className="text-gray-500 mt-1">Gerencie todas as suas vendas e mensalidades em um só lugar.</p>
-          </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Nova Venda
-          </button>
+    <div className="p-4 md:p-6 space-y-6">
+      {/* PAGE HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-bold text-neutral-900">Vendas</h1>
+          <p className="text-sm text-neutral-600 mt-1">
+            {filteredSales.length} {filteredSales.length === 1 ? 'venda' : 'vendas'}
+          </p>
         </div>
-
-        {/* Search and Filter Bar */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Buscar por cliente ou produto..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-              />
-            </div>
-            
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center bg-gray-100 p-1 rounded-lg">
-                <button
-                  onClick={() => setSaleTypeFilter('todos')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${saleTypeFilter === 'todos' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  Todos
-                </button>
-                <button
-                  onClick={() => setSaleTypeFilter('unica')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${saleTypeFilter === 'unica' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  Únicas
-                </button>
-                <button
-                  onClick={() => setSaleTypeFilter('mensalidade')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${saleTypeFilter === 'mensalidade' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  Mensalidades
-                </button>
-              </div>
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              >
-                <option value="todos">Todos os Status</option>
-                <option value="pago">Pago</option>
-                <option value="pendente">Pendente</option>
-                <option value="cancelada">Cancelada</option>
-                <option value="atrasado">Atrasado</option>
-              </select>
-
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`p-2.5 rounded-lg border transition-all ${showFilters ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
-                title="Mais filtros"
-              >
-                <Filter className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-red-700 font-semibold">❌ Erro ao carregar vendas</p>
-                <p className="text-red-600 text-sm mt-1">{error}</p>
-              </div>
-              <button
-                onClick={() => loadSales()}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium whitespace-nowrap ml-4"
-              >
-                Tentar Novamente
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Results List */}
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 font-medium">Carregando suas vendas...</p>
-          </div>
-        ) : filteredSales.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-gray-200 shadow-sm px-4 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <Tag className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">Nenhuma venda encontrada</h3>
-            <p className="text-gray-500 max-w-xs mx-auto mt-2">
-              Não encontramos nenhuma venda com os filtros aplicados. Tente ajustar sua busca ou criar uma nova venda.
-            </p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="mt-6 text-blue-600 font-semibold hover:underline"
-            >
-              Criar minha primeira venda
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {filteredSales.map((sale) => (
-              <div
-                key={sale.id}
-                className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all group"
-              >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  {/* Informações Principais */}
-                  <div className="flex items-start gap-4 flex-1">
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${sale.sale_type === 'unica' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
-                      {sale.sale_type === 'unica' ? <Package className="w-6 h-6" /> : <DollarSign className="w-6 h-6" />}
-                    </div>
-                    
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <h3 className="text-lg font-bold text-gray-900 truncate">{sale.client_name}</h3>
-                        {getStatusBadge(sale.status)}
-                        <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${sale.sale_type === 'unica' ? 'bg-purple-50 text-purple-700 border border-purple-100' : 'bg-blue-50 text-blue-700 border border-blue-100'}`}>
-                          {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
-                        </span>
-                      </div>
-                      
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
-                        <div className="flex items-center gap-1.5">
-                          <Tag className="w-4 h-4" />
-                          <span>{sale.stage_name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <CreditCard className="w-4 h-4" />
-                          <span>{sale.payment_method_name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="w-4 h-4" />
-                          <span>{format(new Date(sale.created_at), "dd 'de' MMM, yyyy", { locale: ptBR })}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Valor e Ações */}
-                  <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0">
-                    <div className="text-right">
-                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Valor Total</p>
-                      <p className="text-xl font-extrabold text-gray-900">
-                        {sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                        {sale.sale_type === 'mensalidade' && <span className="text-xs font-normal text-gray-400 ml-1">/mês</span>}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleEditSale(sale.id)}
-                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="Editar"
-                      >
-                        <Edit2 className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteSale(sale)}
-                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                        title="Excluir"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <Button 
+          variant="primary" 
+          size="lg"
+          icon={<Plus className="w-5 h-5" />}
+          onClick={() => setShowCreateModal(true)}
+          className="w-full md:w-auto"
+        >
+          Nova Venda
+        </Button>
       </div>
+
+      {/* ERROR ALERT */}
+      {error && (
+        <Alert variant="error" title="Erro ao carregar vendas" closeable onClose={() => setError(null)}>
+          {error}
+          <div className="mt-3">
+            <Button variant="error" size="sm" onClick={loadSales}>
+              Tentar Novamente
+            </Button>
+          </div>
+        </Alert>
+      )}
+
+      {/* FILTER BAR */}
+      <Card variant="default" padding="md">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Input
+            placeholder="Buscar por cliente ou etapa..."
+            icon={<Search className="w-4 h-4" />}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Select
+            label="Status"
+            options={[
+              { value: 'todos', label: 'Todos' },
+              { value: 'ativa', label: 'Ativa' },
+              { value: 'cancelada', label: 'Cancelada' },
+            ]}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          />
+          <Select
+            label="Tipo"
+            options={[
+              { value: 'todos', label: 'Todos' },
+              { value: 'unica', label: 'Venda Única' },
+              { value: 'mensalidade', label: 'Mensalidade' },
+            ]}
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          />
+          <div className="flex items-end">
+            <Button variant="secondary" size="md" className="w-full">
+              <Filter className="w-4 h-4" />
+              Mais Filtros
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* CONTENT AREA */}
+      {loading ? (
+        <Card variant="elevated" padding="lg" className="flex items-center justify-center min-h-96">
+          <div className="flex flex-col items-center gap-4">
+            <Loader className="w-8 h-8 animate-spin text-primary-600" />
+            <p className="text-neutral-600">Carregando vendas...</p>
+          </div>
+        </Card>
+      ) : filteredSales.length === 0 ? (
+        <Card variant="elevated" padding="lg" className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <p className="text-neutral-600 mb-4">Nenhuma venda encontrada</p>
+            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+              + Criar Primeira Venda
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <Card variant="elevated" padding="lg">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-neutral-200">
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Cliente</th>
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Etapa</th>
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Tipo</th>
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Valor</th>
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Status</th>
+                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSales.map((sale) => (
+                  <tr key={sale.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors">
+                    <td className="py-3 px-4 text-neutral-900">{sale.client_name}</td>
+                    <td className="py-3 px-4 text-neutral-900">{sale.stage_name}</td>
+                    <td className="py-3 px-4">
+                      <Badge variant={sale.sale_type === 'unica' ? 'primary' : 'warning'} size="sm">
+                        {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4 text-neutral-900 font-semibold">
+                      R$ {Number(sale.stage_value).toFixed(2)}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge 
+                        variant={sale.status === 'ativa' ? 'success' : 'error'} 
+                        size="sm"
+                      >
+                        {sale.status === 'ativa' ? '✅ Ativa' : '❌ Cancelada'}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          icon={<Edit2 className="w-4 h-4" />} 
+                          onClick={() => handleEditSale(sale)}
+                        />
+                        <Button 
+                          variant="error" 
+                          size="sm" 
+                          icon={<Trash2 className="w-4 h-4" />} 
+                          onClick={() => handleDeleteSale(sale)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
 
       {/* Modais */}
       <CreateSaleModal 
@@ -334,19 +230,19 @@ export const VendasPage = () => {
         onSuccess={loadSales}
       />
       
-      {showEditModal && selectedSaleId && sales.find(s => s.id === selectedSaleId) && (
+      {showEditModal && selectedSale && (
         <EditSaleModal
           isOpen={showEditModal}
           onClose={() => {
             setShowEditModal(false);
-            setSelectedSaleId(null);
+            setSelectedSale(null);
           }}
-          sale={sales.find(s => s.id === selectedSaleId)!}
+          sale={selectedSale}
           onSuccess={loadSales}
         />
       )}
     </div>
   );
-};
+}
 
 export default VendasPage;
