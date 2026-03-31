@@ -109,7 +109,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
 
   return (
     <div className="space-y-4 py-2">
-      <h3 className="text-lg font-semibold text-neutral-700 text-center">Upload e Mapeamento</h3>
+      <h3 className="text-lg font-semibold text-neutral-700">Upload e Mapeamento</h3>
 
       {/* Upload area */}
       {state.csvRows.length === 0 ? (

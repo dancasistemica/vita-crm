@@ -28,7 +28,7 @@ export default function ConsolidatedDashboardPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard Consolidado</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Carregando...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -57,7 +57,7 @@ export default function ConsolidatedDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard Consolidado</h1>
+        <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
 
@@ -108,7 +108,7 @@ export default function ConsolidatedDashboardPage() {
 
       {stageMetrics.length > 0 && (
         <>
-          <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Métricas por Etapa</h2>
+          <h2 className="text-2xl font-semibold text-neutral-900">Métricas por Etapa</h2>
           <StageMetrics metrics={stageMetrics} />
         </>
       )}

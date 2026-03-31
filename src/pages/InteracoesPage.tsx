@@ -39,7 +39,7 @@ export default function InteracoesPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Interações</h1>
+        <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Interação</Button></DialogTrigger>
           <DialogContent>

@@ -23,7 +23,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
 
   return (
     <div className="space-y-6 py-2">
-      <h3 className="text-lg font-semibold text-neutral-700 text-center">Baixe o modelo</h3>
+      <h3 className="text-lg font-semibold text-neutral-700">Baixe o modelo</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="border-primary/30 bg-primary/5 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadXLSX}>

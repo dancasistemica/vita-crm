@@ -153,7 +153,7 @@ export default function LoginPage() {
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
           </div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+          <h1 className="text-4xl font-bold text-neutral-900">
             Dança Sistêmica
           </h1>
           <p className="text-sm text-neutral-600">Faça login para acessar sua conta</p>

@@ -153,7 +153,7 @@ export default function AuthPage() {
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
           </div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+          <h1 className="text-4xl font-bold text-neutral-900">
             Dança Sistêmica
           </h1>
           <p className="text-sm text-neutral-600">CRM para gestão de leads e clientes</p>
@@ -163,7 +163,7 @@ export default function AuthPage() {
           <Card padding="lg">
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-neutral-900">Recuperar Senha</h3>
+                <h3 className="text-lg font-semibold text-neutral-700">Recuperar Senha</h3>
                 <p className="text-sm text-neutral-600 mt-1">Informe seu email para receber o link de recuperação</p>
               </div>
               <Input

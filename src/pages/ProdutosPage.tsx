@@ -82,7 +82,7 @@ export default function ProdutosPage() {
   return (
     <div className="space-y-4">
         <div className="flex items-center justify-between">
-         <h1 className="text-4xl font-bold text-neutral-900 mb-6">Produtos</h1>
+         <h1 className="text-4xl font-bold text-neutral-900">Produtos</h1>
          <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>Arraste para ordenar</span>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>

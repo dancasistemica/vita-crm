@@ -218,7 +218,7 @@ export const EditSaleModal = ({
               <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-lg font-bold text-neutral-900 mb-2">Erro ao carregar</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Erro ao carregar</h3>
               <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
               <div className="flex flex-col gap-3">
                 <button

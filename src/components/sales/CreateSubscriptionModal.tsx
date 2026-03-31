@@ -222,7 +222,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 1: Cliente */}
             {currentPhase === 1 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">1</Badge>
                   Selecione o Cliente/Lead
                 </h3>
@@ -266,7 +266,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 2: Produto */}
             {currentPhase === 2 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">2</Badge>
                   Selecione o Produto
                 </h3>
@@ -288,7 +288,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 3: Etapa (Valor Mensal) */}
             {currentPhase === 3 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">3</Badge>
                   Selecione a Etapa (Valor Mensal)
                 </h3>
@@ -314,7 +314,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 4: Forma de Pagamento */}
             {currentPhase === 4 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">4</Badge>
                   Forma de Pagamento
                 </h3>
@@ -334,7 +334,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 5: Data de Início e 1ª Parcela */}
             {currentPhase === 5 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">5</Badge>
                   Datas da Mensalidade
                 </h3>
@@ -361,7 +361,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 6: Data Final (opcional) */}
             {currentPhase === 6 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">6</Badge>
                   Data Final (Opcional)
                 </h3>
@@ -379,7 +379,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 7: Baixa Automática */}
             {currentPhase === 7 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">7</Badge>
                   Configuração de Pagamento
                 </h3>
@@ -401,7 +401,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {/* FASE 8: Notas */}
             {currentPhase === 8 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-neutral-700">
                   <Badge variant="default" size="md">8</Badge>
                   Notas Adicionais
                 </h3>
@@ -413,7 +413,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 />
 
                 <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-                  <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3 mb-4">
+                  <h3 className="text-lg font-semibold text-neutral-700">
                     <ShieldCheck className="w-5 h-5 text-success-600" />
                     Resumo Final
                   </h3>

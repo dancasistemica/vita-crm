@@ -100,7 +100,7 @@ export default function SuperadminDashboard() {
             <ShieldCheck className="h-8 w-8 text-primary-600" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-neutral-900 mb-6">Superadmin</h1>
+            <h1 className="text-4xl font-bold text-neutral-900">Superadmin</h1>
             <p className="text-sm text-neutral-600 mt-1">Gestão global do ecossistema</p>
           </div>
         </div>

@@ -213,7 +213,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
           <div className="space-y-6">
             {/* Dados Básicos */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Dados Básicos</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Dados Básicos</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <Label>Nome *</Label>
@@ -271,7 +271,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Endereço */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Endereço</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Endereço</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <Label>
@@ -326,7 +326,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Senha do Admin */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Senha do Admin</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Senha do Admin</h3>
               <div className="space-y-3">
                 <div className="flex gap-3">
                   <div className="relative flex-1">

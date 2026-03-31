@@ -111,7 +111,7 @@ export default function CustomizePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">🎨 Personalizar</h1>
+        <h1 className="text-4xl font-bold text-neutral-900">🎨 Personalizar</h1>
         <div className="flex gap-3">
           <Button variant="neutral" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
@@ -371,7 +371,7 @@ export default function CustomizePage() {
 
         {/* Right: Live Preview */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-neutral-700 mb-2">Preview ao vivo</h3>
+          <h3 className="text-lg font-semibold text-neutral-700">Preview ao vivo</h3>
 
           {/* Sidebar preview */}
           <Card className="overflow-hidden">

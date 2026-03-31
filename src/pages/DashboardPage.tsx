@@ -55,7 +55,7 @@ export default function DashboardPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">Dashboard</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -97,7 +97,7 @@ export default function DashboardPage() {
     leads_parados: () => <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={() => navigate('/leads')} />,
     metricas_estagio: () => stageMetrics.length > 0 ? (
       <>
-        <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Métricas por Etapa</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900">Métricas por Etapa</h2>
         <StageMetrics metrics={stageMetrics} />
       </>
     ) : null,
@@ -200,7 +200,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             Dados de <strong>{organization?.name || 'sua organização'}</strong>
           </p>

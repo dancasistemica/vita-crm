@@ -75,7 +75,7 @@ export default function FirstSuperadminSetup() {
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center">
             <Shield className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+          <h1 className="text-4xl font-bold text-neutral-900">
             Inicializar Sistema
           </h1>
           <p className="text-sm text-neutral-600">Crie a conta do primeiro superadmin</p>
