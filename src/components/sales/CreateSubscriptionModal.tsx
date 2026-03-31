@@ -187,15 +187,15 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
   const selectedClient = clients.find(c => c.id === formData.client_id);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-neutral-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <Card variant="elevated" padding="none" className="max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-b border-purple-200 dark:border-purple-700 p-4 sticky top-0">
+        <div className="bg-neutral-50 border-b border-neutral-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Mensalidade</h2>
-            <button onClick={onClose} disabled={loading} className="p-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded transition-colors">
-              <X className="w-5 h-5 text-purple-600 dark:text-purple-300" />
-            </button>
+            <Button variant="ghost" size="sm" onClick={onClose} disabled={loading} className="h-8 w-8 p-0">
+              <X className="w-5 h-5" />
+            </Button>
           </div>
 
           {/* Progress Bar */}
