@@ -353,8 +353,8 @@ export default function ClientsTable({
       {selectedIds.length >= 2 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionados</span>
-          < variant="neutral" size="sm" className="h-7 text-xs">Exportar selecionados</>
-          < variant="neutral" size="sm" className="h-7 text-xs">Atribuir responsável</>
+          <Button variant="secondary" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
+          <Button variant="secondary" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
         </div>
       )}
 
