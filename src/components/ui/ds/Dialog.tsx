@@ -9,6 +9,7 @@ interface DialogProps {
   onOpenChange?: (open: boolean) => void;
   title?: string;
   children: React.ReactNode;
+  modal?: boolean;
 }
 
 export const Dialog = ({ isOpen, open, onClose, onOpenChange, title, children }: DialogProps) => {
@@ -40,19 +41,19 @@ export const Dialog = ({ isOpen, open, onClose, onOpenChange, title, children }:
 };
 
 // Shims for compound components
-export const DialogContent = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+export const DialogContent = ({ children, className = '' }: any) => (
   <div className={className}>{children}</div>
 );
-export const DialogHeader = ({ children }: { children: React.ReactNode }) => (
-  <div className="mb-4">{children}</div>
+export const DialogHeader = ({ children, className = '' }: any) => (
+  <div className={`mb-4 ${className}`}>{children}</div>
 );
-export const DialogTitle = ({ children }: { children: React.ReactNode }) => (
-  <div className="text-xl font-semibold">{children}</div>
+export const DialogTitle = ({ children, className = '' }: any) => (
+  <div className={`text-xl font-semibold ${className}`}>{children}</div>
 );
-export const DialogFooter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+export const DialogFooter = ({ children, className = '' }: any) => (
   <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>
 );
 export const DialogTrigger = ({ children, asChild }: any) => children;
-export const DialogDescription = ({ children }: { children: React.ReactNode }) => (
-  <p className="text-sm text-neutral-500 mt-2">{children}</p>
+export const DialogDescription = ({ children, className = '' }: any) => (
+  <p className={`text-sm text-neutral-500 mt-2 ${className}`}>{children}</p>
 );
