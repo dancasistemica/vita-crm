@@ -133,14 +133,14 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <Label className="text-sm font-medium">Dados</Label>
             <div className="flex gap-3 mt-2">
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('all')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
                   dataScope === 'all' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
                 }`}
               >
                 Todos ({allData.length})
-              </>
+              </Button>
               < variant="secondary" size="sm"
                 onClick={() => setDataScope('filtered')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
