@@ -72,13 +72,13 @@ export default function FirstSuperadminSetup() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center gap-2 mb-8">
-          <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center">
-            <Shield className="h-6 w-6 text-primary-foreground" />
+          <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center">
+            <Shield className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-xl font-display text-foreground tracking-wide">
+          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
             Inicializar Sistema
           </h1>
-          <p className="text-sm text-muted-foreground">Crie a conta do primeiro superadmin</p>
+          <p className="text-sm text-neutral-600">Crie a conta do primeiro superadmin</p>
         </div>
 
         <div className="mb-4 flex items-start gap-2 rounded-lg border border-border bg-muted/50 p-3">

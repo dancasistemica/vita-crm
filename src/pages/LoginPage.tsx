@@ -151,13 +151,13 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
         <div className="flex flex-col items-center gap-2 mb-8">
-          <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-2xl">
+          <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
           </div>
-          <h1 className="text-xl font-display text-foreground tracking-wide">
+          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
             Dança Sistêmica
           </h1>
-          <p className="text-sm text-muted-foreground">Faça login para acessar sua conta</p>
+          <p className="text-sm text-neutral-600">Faça login para acessar sua conta</p>
         </div>
 
         <Card>

@@ -150,13 +150,13 @@ export default function AuthPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center gap-2 mb-8">
-          <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-2xl">
+          <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
           </div>
-          <h1 className="text-xl font-display text-foreground tracking-wide">
+          <h1 className="text-4xl font-bold text-neutral-900 mb-2">
             Dança Sistêmica
           </h1>
-          <p className="text-sm text-muted-foreground">CRM para gestão de leads e clientes</p>
+          <p className="text-sm text-neutral-600">CRM para gestão de leads e clientes</p>
         </div>
 
         {showForgotPassword ? (
