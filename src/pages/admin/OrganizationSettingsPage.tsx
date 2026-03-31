@@ -3,11 +3,11 @@ import { Loader2 } from 'lucide-react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,7 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from '@/components/ui/ds';
 import { toast } from 'sonner';
 
 const CRON_URL = 'https://yelawymcltqewpkwsxxb.supabase.co/functions/v1/send-scheduled-messages';
@@ -263,14 +263,14 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
     return <div>Erro: organizationId não fornecido</div>;
   }
 
-  const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
+  const showActivate = botconversaConfigId !== undefined && botconversaConfigId !== null;
   const botconversaError = null;
 
   // DEBUG: Estado final antes de renderizar
   const debugState = {
     organizationId,
     botconversaConfigId,
-    showActivateButton,
+    showActivate,
     loading: botconversaLoading,
     error: botconversaError,
     cron_secret_token: cronSecretToken ? 'EXISTS' : 'MISSING',
@@ -278,7 +278,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
   };
 
   console.log('[BotconversaSettings] ESTADO FINAL:', debugState);
-  console.log('[BotconversaSettings] showActivateButton é:', showActivateButton);
+  console.log('[BotconversaSettings] showActivate é:', showActivate);
   console.log('[BotconversaSettings] botconversaConfigId é:', botconversaConfigId);
 
   return (
@@ -301,7 +301,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
               disabled={botconversaLoading}
             />
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
+              < onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
                 {botconversaSaving ? (
                   <span className="inline-flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -310,18 +310,18 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 ) : (
                   'Salvar'
                 )}
-              </Button>
+              </>
               {/* TESTE: Botão SEM condição */}
-              <Button
+              <
                 onClick={handleActivateAutomation}
                 className="bg-green-600 hover:bg-green-700 w-full mt-4"
                 data-testid="activate-automation-button"
               >
                 Ativar Automação (TESTE)
-              </Button>
-              {!showActivateButton && (
+              </>
+              {!showActivate && (
                 <div className="text-sm text-amber-600 p-3 bg-amber-50 rounded border border-amber-200">
-                  ⚠️ Debug: showActivateButton = {String(showActivateButton)}
+                  ⚠️ Debug: showActivate = {String(showActivate)}
                   <br />
                   configId = {botconversaConfigId || 'undefined'}
                 </div>
@@ -475,16 +475,16 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Button variant="neutral" onClick={handleCopy} disabled={!token || loading}>
+                < variant="neutral" onClick={handleCopy} disabled={!token || loading}>
                   Copy
-                </Button>
-                <Button
+                </>
+                <
                   variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
                   {regenerating ? 'Regenerating...' : 'Regenerate'}
-                </Button>
+                </>
               </div>
             </div>
           </div>

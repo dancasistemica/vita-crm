@@ -15,10 +15,10 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
+import { } from '@/components/ui/ds';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/ds';
+import { Switch } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import { GripVertical, Settings2 } from 'lucide-react';
 import { DASHBOARD_CARDS, GROUP_LABELS } from '@/config/dashboardCards';
 import type { DashboardCardSetting } from '@/hooks/useDashboardSettings';
@@ -98,10 +98,10 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="neutral" size="sm" className="min-h-[44px] gap-3">
+        < variant="neutral" size="sm" className="min-h-[44px] gap-3">
           <Settings2 className="h-4 w-4" />
           Personalizar
-        </Button>
+        </>
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -97,12 +97,12 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
         </div>
 
         <DialogFooter className="gap-3 sm:gap-0">
-          <Button variant="neutral" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+          < variant="neutral" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
             Cancelar
-          </Button>
-          <Button variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>
+          </>
+          < variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
-          </Button>
+          </>
         </DialogFooter>
       </DialogContent>
     </Dialog>

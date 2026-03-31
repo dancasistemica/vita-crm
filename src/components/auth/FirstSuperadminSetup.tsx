@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
-import { Button } from '@/components/ui/ds/Button';
+import { } from '@/components/ui/ds/';
 import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
 import { Alert } from '@/components/ui/ds/Alert';
@@ -122,9 +122,9 @@ export default function FirstSuperadminSetup() {
               required
               {...form.register('confirmPassword')} 
             />
-            <Button type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
+            < type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
               Criar Superadmin
-            </Button>
+            </>
           </form>
         </Card>
 

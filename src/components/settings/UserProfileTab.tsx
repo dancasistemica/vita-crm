@@ -5,13 +5,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCPF, validateCPF } from '@/services/cpfValidator';
 import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Progress } from '@/components/ui/ds';
 import { toast } from 'sonner';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -210,13 +210,13 @@ export default function UserProfileTab() {
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
           </div>
           <div className="flex gap-3">
-            <Button variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
+            < variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
-            </Button>
+            </>
             {(displayAvatar) && (
-              <Button variant="neutral" size="sm" onClick={handleRemovePhoto}>
+              < variant="neutral" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
-              </Button>
+              </>
             )}
           </div>
           {previewUrl && <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
@@ -276,9 +276,9 @@ export default function UserProfileTab() {
         </CardContent>
       </Card>
 
-      <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
+      < onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </Button>
+      </>
     </div>
   );
 }

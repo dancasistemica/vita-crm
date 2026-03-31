@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import { Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/ds';
 
 const BUSINESS_MODELS = ['B2B', 'B2C', 'B2B2C', 'Marketplace', 'SaaS', 'Agência', 'Consultoria', 'Outro'];
 
@@ -97,15 +97,15 @@ export default function AIContextTab() {
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
+              < type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
-              </Button>
+              </>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
                 <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
+                  < variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></>
                 </Badge>
               ))}
             </div>
@@ -132,15 +132,15 @@ export default function AIContextTab() {
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              < type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
-              </Button>
+              </>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
                 <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
+                  < variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></>
                 </Badge>
               ))}
             </div>
@@ -223,9 +223,9 @@ export default function AIContextTab() {
 
       {/* Salvar */}
       <div className="flex justify-end">
-        <Button onClick={() => save(form)} disabled={saving}>
+        < onClick={() => save(form)} disabled={saving}>
           {saving ? 'Salvando...' : '💾 Salvar Contexto da IA'}
-        </Button>
+        </>
       </div>
     </div>
   );

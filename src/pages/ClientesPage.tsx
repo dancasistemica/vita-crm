@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Button, Card, Input, Badge, Alert } from '@/components/ui/ds';
+import { Card, Input, Badge, Alert } from '@/components/ui/ds';
 import { Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { useClientsFilter } from '@/hooks/useClientsFilter';
@@ -47,30 +47,30 @@ export default function ClientesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button 
+          < 
             variant="neutral" 
             size="md" 
             icon={<FileDown className="w-4 h-4" />}
             onClick={() => setExportOpen(true)}
           >
             Exportar
-          </Button>
-          <Button 
+          </>
+          < 
             variant="neutral" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowSubscriptionModal(true)}
           >
             Nova Mensalidade
-          </Button>
-          <Button 
+          </>
+          < 
             variant="primary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowCreateModal(true)}
           >
             Nova Venda
-          </Button>
+          </>
         </div>
       </div>
 
@@ -78,12 +78,12 @@ export default function ClientesPage() {
       {hook.selectedIds.length > 0 && (
         <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
           <div className="flex gap-3 mt-2">
-            <Button variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
+            < variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
               Editar em Massa
-            </Button>
-            <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
+            </>
+            < variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
               Deletar Selecionados
-            </Button>
+            </>
           </div>
         </Alert>
       )}
@@ -99,14 +99,14 @@ export default function ClientesPage() {
               onChange={(e) => hook.updateFilter('search', e.target.value)}
             />
           </div>
-          <Button 
+          < 
             variant={showFilters ? 'primary' : 'secondary'} 
             size="md" 
             icon={<Filter className="w-4 h-4" />}
             onClick={() => setShowFilters(!showFilters)}
           >
             {showFilters ? 'Ocultar Filtros' : 'Filtros Avançados'}
-          </Button>
+          </>
         </div>
       </Card>
 

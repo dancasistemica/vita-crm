@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
 import { RefreshCw } from 'lucide-react';
 
 interface DebugInfo {
@@ -134,9 +134,9 @@ export default function DebugMultiTenantPage() {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">🔍 Debug Multi-Tenant</h1>
-        <Button variant="neutral" size="sm" onClick={runDiagnostics}>
+        < variant="neutral" size="sm" onClick={runDiagnostics}>
           <RefreshCw className="h-4 w-4 mr-2" /> Recarregar
-        </Button>
+        </>
       </div>
 
       {/* User Info */}

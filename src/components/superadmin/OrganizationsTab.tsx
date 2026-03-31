@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
 import { EditOrganizationModal } from './EditOrganizationModal';
@@ -154,9 +154,9 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 : `${orgs.length} organização(ões) cadastrada(s)`}
             </span>
           </div>
-          <Button onClick={() => setCreateOpen(true)} className="gap-3">
+          < onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
-          </Button>
+          </>
         </div>
 
         {/* Filter bar */}
@@ -192,9 +192,9 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             </SelectContent>
           </Select>
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+            < variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
               <X className="h-4 w-4" /> Limpar
-            </Button>
+            </>
           )}
         </div>
 
@@ -256,19 +256,19 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
+                    < variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                    </>
+                    < variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                    <Button
+                    </>
+                    <
                       variant={org.active ? 'destructive' : 'default'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
-                    </Button>
+                    </>
                   </div>
                 </TableCell>
               </TableRow>

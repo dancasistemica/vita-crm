@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Switch } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
 import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/ds';
 
 interface CustomField {
   id: string;
@@ -481,9 +481,9 @@ export function CustomFieldsManager() {
                 className="pl-9"
               />
             </div>
-            <Button onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
+            < onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
               <Plus className="h-4 w-4" /> Adicionar Campo
-            </Button>
+            </>
           </div>
         )}
       </div>
@@ -525,22 +525,22 @@ export function CustomFieldsManager() {
                         {field.org_count} de {totalOrgs}
                       </Badge>
                       {field.org_count < totalOrgs && (
-                        <Button
+                        <
                           variant="ghost"
                           size="sm"
                           className="text-xs px-1 h-auto"
                           onClick={() => handleApplyToAll(field)}
                         >
                           Aplicar para todas
-                        </Button>
+                        </>
                       )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
+                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
+                        </>
+                        <
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 text-destructive"
@@ -550,7 +550,7 @@ export function CustomFieldsManager() {
                           }}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        </>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -615,12 +615,12 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
+                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
+                        </>
+                        < variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
                           <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        </>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -673,7 +673,7 @@ export function CustomFieldsManager() {
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  <Button type="button" variant="neutral" size="sm" onClick={addOption}>+</Button>
+                  < type="button" variant="neutral" size="sm" onClick={addOption}>+</>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
@@ -696,10 +696,10 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
+            < variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
+            < onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
-            </Button>
+            </>
           </DialogFooter>
         </DialogContent>
       </Dialog>

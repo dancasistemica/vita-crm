@@ -6,13 +6,15 @@ interface SelectOption {
   label: string;
 }
 
-interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'onChange'> {
   label?: string;
   error?: string;
   helperText?: string;
-  options: SelectOption[];
+  options?: SelectOption[];
   placeholder?: string;
   size?: 'sm' | 'md' | 'lg';
+  onValueChange?: (value: string) => void;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const sizeStyles = {
@@ -27,16 +29,24 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       label,
       error,
       helperText,
-      options,
+      options = [],
       placeholder,
       size = 'md',
       className = '',
       disabled,
       required,
+      onValueChange,
+      onChange,
+      children,
       ...props
     },
     ref
   ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (onValueChange) onValueChange(e.target.value);
+      if (onChange) onChange(e);
+    };
+
     return (
       <div className="w-full">
         {label && (
@@ -51,6 +61,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             disabled={disabled}
             required={required}
+            onChange={handleChange}
             className={`
               ${sizeStyles[size]}
               w-full
@@ -81,6 +92,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                 {option.label}
               </option>
             ))}
+            {children}
           </select>
 
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 pointer-events-none" />
@@ -99,3 +111,11 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 
 Select.displayName = 'Select';
+
+// Shims for compound components
+export const SelectTrigger = ({ children, className = '' }: any) => children;
+export const SelectValue = ({ placeholder }: any) => null;
+export const SelectContent = ({ children }: any) => <>{children}</>;
+export const SelectItem = ({ value, children }: any) => <option value={value}>{children}</option>;
+export const SelectGroup = ({ children }: any) => <optgroup label="">{children}</optgroup>;
+export const SelectLabel = ({ children }: any) => null;

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Skeleton } from '@/components/ui/ds';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Lead } from '@/types/crm';
@@ -59,9 +59,9 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
             </div>
             <div className="flex items-center justify-between pt-1">
               <span className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de agir</span>
-              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+              < variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                 <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
-              </Button>
+              </>
             </div>
           </div>
         ) : (

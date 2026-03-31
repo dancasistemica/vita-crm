@@ -2,14 +2,21 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Select } from "@/components/ui/ds/Select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { 
+  Card, 
+  
+  Input, 
+  Badge, 
+  Select, 
+  Dialog, 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableRow, 
+  TableHead, 
+  TableCell,
+  AlertDialog 
+} from "@/components/ui/ds";
 import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,7 +69,6 @@ export default function AdminUsersPage() {
   const [editPassword, setEditPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [editOrgId, setEditOrgId] = useState<string | null>(null);
-  const [orgSearch, setOrgSearch] = useState("");
   const [saving, setSaving] = useState(false);
 
   // Delete modal
@@ -187,7 +193,6 @@ export default function AdminUsersPage() {
 
   // Edit handlers
   const openEdit = (u: AdminUser) => {
-    console.log('[EditUserModal] Abrindo edição para:', u.user_id, u.full_name);
     setEditUser(u);
     setEditName(u.full_name);
     setEditPhone(u.phone || "");
@@ -196,7 +201,6 @@ export default function AdminUsersPage() {
     setEditPassword("");
     setShowPassword(false);
     setEditOrgId(u.org_id);
-    setOrgSearch("");
     setEditOpen(true);
   };
 
@@ -218,7 +222,6 @@ export default function AdminUsersPage() {
       // Handle organization change
       const orgChanged = editOrgId !== editUser.org_id;
       if (orgChanged) {
-        console.log('[EditUserModal] Salvando vínculo:', editUser.user_id, editOrgId);
         // Remove existing membership(s)
         if (editUser.member_id) {
           const { error: delError } = await supabase
@@ -329,7 +332,7 @@ export default function AdminUsersPage() {
   if (saLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
       </div>
     );
   }
@@ -382,88 +385,86 @@ export default function AdminUsersPage() {
               />
             </div>
             {hasFilters && (
-              <Button variant="ghost" size="sm" onClick={resetFilters}>
+              < variant="ghost" onClick={resetFilters} className="sm:mb-1">
                 <X className="h-4 w-4 mr-1" /> Resetar
-              </Button>
+              </>
             )}
           </div>
         </div>
       </Card>
 
-      <Card padding="none">
+      <Card padding="none" className="overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
           </div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">Nenhum usuário encontrado.</p>
+          <p className="text-center text-neutral-500 py-12">Nenhum usuário encontrado.</p>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead className="hidden md:table-cell">Telefone</TableHead>
-                    <TableHead>Organização</TableHead>
-                    <TableHead>Função</TableHead>
-                    <TableHead className="hidden lg:table-cell">Criado em</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginated.map((u, idx) => (
-                    <TableRow key={`${u.user_id}-${u.org_id}-${idx}`}>
-                      <TableCell className="font-medium">
-                        {u.full_name}
-                        {u.is_owner && (
-                          <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead className="hidden md:table-cell">Telefone</TableHead>
+                  <TableHead>Organização</TableHead>
+                  <TableHead>Função</TableHead>
+                  <TableHead className="hidden lg:table-cell">Criado em</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginated.map((u, idx) => (
+                  <TableRow key={`${u.user_id}-${u.org_id}-${idx}`}>
+                    <TableCell className="font-medium">
+                      {u.full_name}
+                      {u.is_owner && (
+                        <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm">{u.email}</TableCell>
+                    <TableCell className="hidden md:table-cell text-sm text-neutral-600">
+                      {u.phone || "—"}
+                    </TableCell>
+                    <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
+                    <TableCell>
+                      <Badge variant="neutral">{roleLabels[u.role] || u.role}</Badge>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
+                      {new Date(u.created_at).toLocaleDateString("pt-BR")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        < variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
+                          <Edit className="h-4 w-4" />
+                        </>
+                        {u.email && u.org_id && (
+                          < variant="ghost" title="Resetar senha" onClick={() => handleResetPassword(u)} className="p-1 h-8 w-8">
+                            <RotateCcw className="h-4 w-4" />
+                          </>
                         )}
-                      </TableCell>
-                      <TableCell className="text-sm">{u.email}</TableCell>
-                      <TableCell className="hidden md:table-cell text-sm text-neutral-600">
-                        {u.phone || "—"}
-                      </TableCell>
-                      <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
-                      <TableCell>
-                        <Badge variant="neutral">{roleLabels[u.role] || u.role}</Badge>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
-                        {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Editar" onClick={() => openEdit(u)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          {u.email && u.org_id && (
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Resetar senha" onClick={() => handleResetPassword(u)}>
-                              <RotateCcw className="h-4 w-4" />
-                            </Button>
-                          )}
-                          {u.org_id && (
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver organização" onClick={() => navigate("/superadmin")}>
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          )}
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" title="Remover" onClick={() => setDeleteTarget(u)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                        {u.org_id && (
+                          < variant="ghost" title="Ver organização" onClick={() => navigate("/superadmin")} className="p-1 h-8 w-8">
+                            <Eye className="h-4 w-4" />
+                          </>
+                        )}
+                        < variant="ghost" title="Remover" onClick={() => setDeleteTarget(u)} className="p-1 h-8 w-8 text-error-600">
+                          <Trash2 className="h-4 w-4" />
+                        </>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t">
+              <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t border-neutral-100">
                 <span>Página {page} de {totalPages}</span>
                 <div className="flex gap-1">
-                  <Button variant="neutral" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-                  <Button variant="neutral" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+                  < variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
+                  < variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
                 </div>
               </div>
             )}
@@ -472,105 +473,89 @@ export default function AdminUsersPage() {
       </Card>
 
       {/* Edit User Modal */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              <h2 className="text-2xl font-semibold text-neutral-900">Editar Usuário</h2>
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+      <Dialog isOpen={editOpen} onClose={() => setEditOpen(false)} title="Editar Usuário">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+          <Input
+            label="Nome Completo"
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            placeholder="Nome do usuário"
+          />
+          <Input
+            label="Telefone"
+            value={editPhone}
+            onChange={(e) => setEditPhone(e.target.value)}
+            placeholder="(00) 00000-0000"
+          />
+          <Input
+            label="Email"
+            type="email"
+            value={editEmail}
+            onChange={(e) => setEditEmail(e.target.value)}
+            placeholder="email@exemplo.com"
+          />
+          <div className="space-y-3">
             <Input
-              label="Nome Completo"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              placeholder="Nome do usuário"
-            />
-            <Input
-              label="Telefone"
-              value={editPhone}
-              onChange={(e) => setEditPhone(e.target.value)}
-              placeholder="(00) 00000-0000"
-            />
-            <Input
-              label="Email"
-              type="email"
-              value={editEmail}
-              onChange={(e) => setEditEmail(e.target.value)}
-              placeholder="email@exemplo.com"
-            />
-            <div className="space-y-3">
-              <Input
-                label="Nova Senha (deixe em branco para não alterar)"
-                type={showPassword ? "text" : "password"}
-                value={editPassword}
-                onChange={(e) => setEditPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
-                icon={
-                  <Button variant="secondary" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
-                    {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                  </Button>
-                }
-              />
-            </div>
-            
-            <Select
-              label="Organização"
-              value={editOrgId || ""}
-              onChange={(e) => setEditOrgId(e.target.value || null)}
-              placeholder="Sem organização"
-              options={orgs.map(o => ({ value: o.id, label: o.name }))}
-            />
-            
-            <Select
-              label="Função na Organização"
-              value={editRole}
-              onChange={(e) => setEditRole(e.target.value)}
-              options={[
-                { value: "owner", label: "Proprietário" },
-                { value: "admin", label: "Administrador" },
-                { value: "vendedor", label: "Vendedor" },
-                { value: "member", label: "Usuário" },
-                { value: "—", label: "Nenhuma" },
-              ]}
+              label="Nova Senha (opcional)"
+              type={showPassword ? "text" : "password"}
+              value={editPassword}
+              onChange={(e) => setEditPassword(e.target.value)}
+              placeholder="Mínimo 6 caracteres"
+              icon={
+                <button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
+                  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                </button>
+              }
             />
           </div>
+          
+          <Select
+            label="Organização"
+            value={editOrgId || ""}
+            onChange={(e) => setEditOrgId(e.target.value || null)}
+            placeholder="Sem organização"
+            options={orgs.map(o => ({ value: o.id, label: o.name }))}
+          />
+          
+          <Select
+            label="Função na Organização"
+            value={editRole}
+            onChange={(e) => setEditRole(e.target.value)}
+            options={[
+              { value: "owner", label: "Proprietário" },
+              { value: "admin", label: "Administrador" },
+              { value: "vendedor", label: "Vendedor" },
+              { value: "member", label: "Usuário" },
+              { value: "—", label: "Nenhuma" },
+            ]}
+          />
+        </div>
 
-          <DialogFooter className="flex gap-3 pt-4 border-t">
-            <Button variant="neutral" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
-              Cancelar
-            </Button>
-            <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
-              Salvar Alterações
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        <div className="flex gap-3 pt-4 border-t border-neutral-100">
+          < variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
+            Cancelar
+          </>
+          < variant="primary" onClick={handleEditSave} isLoading={saving} className="flex-1">
+            Salvar Alterações
+          </>
+        </div>
       </Dialog>
 
-      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              <h2 className="text-2xl font-semibold text-neutral-900">Remover Usuário</h2>
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Tem certeza que deseja remover o usuário <strong>{deleteTarget?.full_name}</strong>? 
-              Esta ação removerá o acesso dele à organização.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex gap-3 pt-4 border-t">
-            <AlertDialogCancel asChild>
-              <Button variant="neutral" className="flex-1">Cancelar</Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button variant="error" onClick={handleDelete} loading={saving} className="flex-1">
-                Remover Usuário
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialog 
+        isOpen={!!deleteTarget} 
+        onClose={() => setDeleteTarget(null)}
+        title="Remover Usuário"
+        description={(
+          <>
+            Tem certeza que deseja remover o usuário <strong>{deleteTarget?.full_name}</strong>? 
+            Esta ação removerá o acesso dele à organização.
+          </>
+        )}
+        variant="error"
+        onConfirm={handleDelete}
+        isLoading={saving}
+        confirmText="Remover Usuário"
+      />
     </div>
   );
 }

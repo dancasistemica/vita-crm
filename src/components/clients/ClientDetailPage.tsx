@@ -2,11 +2,11 @@ import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
-import { Button, Card, Badge, Input, Select, Alert } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Card, Badge, Input, Select, Alert } from '@/components/ui/ds';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
 import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
@@ -151,9 +151,9 @@ export default function ClientDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
-        <Button variant="neutral" onClick={() => navigate('/clientes')}>
+        < variant="neutral" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
-        </Button>
+        </>
       </div>
     );
   }
@@ -165,7 +165,7 @@ export default function ClientDetailPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start gap-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
+        < variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
         
         <div className="flex-1">
           <div className="flex items-center gap-4">
@@ -197,7 +197,7 @@ export default function ClientDetailPage() {
           </div>
 
           <div className="flex gap-3 mt-4 flex-wrap">
-            <Button
+            <
               variant="neutral"
               size="md"
               onClick={() => setScheduleDialogOpen(true)}
@@ -205,7 +205,7 @@ export default function ClientDetailPage() {
               disabled={!client.phone}
             >
               Agendar Mensagem
-            </Button>
+            </>
           </div>
         </div>
       </div>
@@ -251,8 +251,8 @@ export default function ClientDetailPage() {
                       <span className="font-bold text-success-600">R$ {sale.value.toLocaleString('pt-BR')}</span>
                       <Badge variant={statusBadgeVariants[sale.status] || 'neutral'}>{sale.status}</Badge>
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
-                        <Button
+                        < variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
+                        <
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4 text-error-600" />}

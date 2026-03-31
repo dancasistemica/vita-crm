@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
 import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -165,9 +165,9 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             <Shield className="h-5 w-5" />
             Roles Customizáveis
           </CardTitle>
-          <Button size="sm" onClick={openCreate}>
+          < size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4 mr-1" /> Nova Role
-          </Button>
+          </>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
@@ -207,13 +207,13 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
+                          < variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
-                          </Button>
+                          </>
                           {!r.is_default && (
-                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
+                            < variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
                               <Trash2 className="h-4 w-4" />
-                            </Button>
+                            </>
                           )}
                         </div>
                       </TableCell>
@@ -243,11 +243,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving}>
+            < variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</>
+            < onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               {editing ? 'Salvar' : 'Criar'}
-            </Button>
+            </>
           </DialogFooter>
         </DialogContent>
       </Dialog>

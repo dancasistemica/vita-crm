@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
+import { Calendar } from '@/components/ui/ds';
 import { CalendarIcon, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -223,9 +223,9 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
                   </Badge>
                 </div>
-                <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
+                < variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
                   <X className="h-4 w-4" />
-                </Button>
+                </>
               </div>
             ) : (
               <div className="relative">
@@ -240,7 +240,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 {showResults && searchResults.length > 0 && (
                   <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(lead => (
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         key={lead.id}
                         onClick={() => handleSelectLead(lead)}
                         className="w-full text-left px-3 py-2.5 hover:bg-muted/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
@@ -252,7 +252,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
                         </Badge>
-                      </Button>
+                      </>
                     ))}
                   </div>
                 )}
@@ -327,10 +327,10 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  < variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
-                  </Button>
+                  </>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
@@ -398,12 +398,12 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
           {/* Section 3: Actions */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <Button variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
+            < variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
               Cancelar
-            </Button>
-            <Button onClick={handleSubmit} disabled={saving}>
+            </>
+            < onClick={handleSubmit} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar Venda'}
-            </Button>
+            </>
           </div>
         </div>
       </DialogContent>

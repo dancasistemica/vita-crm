@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Progress } from '@/components/ui/ds';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
@@ -289,10 +289,10 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        <Button variant="neutral" onClick={onBack}>Voltar</Button>
-        <Button onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
+        < variant="neutral" onClick={onBack}>Voltar</>
+        < onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
-        </Button>
+        </>
       </div>
 
       {state.importResult && state.importResult.dateConversions > 0 && (

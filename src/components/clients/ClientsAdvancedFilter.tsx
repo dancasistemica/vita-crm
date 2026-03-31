@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Slider } from '@/components/ui/ds';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/ds';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';
 interface SimpleProduct {
   id: string;
@@ -27,14 +27,14 @@ interface Props {
 function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
-      <Button variant="secondary" size="sm"
+      < variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('AND')}
-      >E</Button>
-      <Button variant="secondary" size="sm"
+      >E</>
+      < variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('OR')}
-      >OU</Button>
+      >OU</>
     </div>
   );
 }
@@ -71,9 +71,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           className="pl-9 h-9 text-sm"
         />
         {filters.search && (
-          <Button variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
+          < variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
             <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </Button>
+          </>
         )}
       </div>
 
@@ -129,7 +129,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: '90 dias', days: 90 },
               { label: 'Este ano', days: -1 },
             ].map(({ label, days }) => (
-              <Button key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
+              < key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
                 const now = new Date();
                 const to = now.toISOString().split('T')[0];
                 const from = days === -1
@@ -138,7 +138,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 updateFilter('dateRange', { from, to });
               }}>
                 {label}
-              </Button>
+              </>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -223,7 +223,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: 'Últimos 30 dias', value: '30d' },
               { label: 'Sem interação 30+ dias', value: 'no_interaction_30' },
             ].map(({ label, value }) => (
-              <Button
+              <
                 key={value}
                 variant={filters.lastInteraction.preset === value ? 'default' : 'outline'}
                 size="sm"
@@ -234,7 +234,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 })}
               >
                 {label}
-              </Button>
+              </>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">

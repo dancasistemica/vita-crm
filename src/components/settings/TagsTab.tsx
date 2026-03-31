@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
+import { } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
 import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, Edit, Trash2 } from "lucide-react";
@@ -34,17 +34,17 @@ export default function TagsTab() {
                 <Badge variant="neutral">{t.name}</Badge>
               )}
               {editingTag?.id === t.id ? (
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { updateTag(t.id, editingTag); toast.success("Tag atualizada"); setEditingTag(null); }}>✓</Button>
+                < size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { updateTag(t.id, editingTag); toast.success("Tag atualizada"); setEditingTag(null); }}>✓</>
               ) : (
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></Button>
+                < size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setEditingTag(t)}><Edit className="h-3 w-3" /></>
               )}
-              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: t.id, name: t.name })}><Trash2 className="h-3 w-3" /></Button>
+              < size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: t.id, name: t.name })}><Trash2 className="h-3 w-3" /></>
             </div>
           ))}
         </div>
         <div className="flex gap-3">
           <Input placeholder="Nova tag..." value={newTag} onChange={e => setNewTag(e.target.value)} />
-          <Button onClick={() => { if (newTag.trim()) { addTag({ id: crypto.randomUUID(), name: newTag.trim(), color: 'hsl(var(--primary))' }); setNewTag(''); toast.success("Tag adicionada"); } }} disabled={!newTag.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
+          < onClick={() => { if (newTag.trim()) { addTag({ id: crypto.randomUUID(), name: newTag.trim(), color: 'hsl(var(--primary))' }); setNewTag(''); toast.success("Tag adicionada"); } }} disabled={!newTag.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</>
         </div>
       </CardContent>
     </Card>

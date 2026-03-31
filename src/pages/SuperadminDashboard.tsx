@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 import { supabase } from '@/integrations/supabase/client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button, Card, Select, Badge, Alert } from '@/components/ui/ds';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Card, Select, Badge, Alert } from '@/components/ui/ds';
 import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
@@ -136,9 +136,9 @@ export default function SuperadminDashboard() {
           </div>
         </Card>
         <Card interactive variant="elevated" padding="md">
-          <Button variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
+          < variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
             Nova Org
-          </Button>
+          </>
         </Card>
       </div>
 

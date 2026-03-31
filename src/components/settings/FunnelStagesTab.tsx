@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { PipelineStage } from "@/types/crm";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
+import { } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
 import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
 import { toast } from "sonner";
@@ -38,17 +38,17 @@ export default function FunnelStagesTab() {
             )}
             <div className="flex gap-1">
               {editingStage?.id === s.id ? (
-                <Button size="sm" variant="ghost" onClick={() => { updatePipelineStage(s.id, editingStage); toast.success("Etapa atualizada"); setEditingStage(null); }}>✓</Button>
+                < size="sm" variant="ghost" onClick={() => { updatePipelineStage(s.id, editingStage); toast.success("Etapa atualizada"); setEditingStage(null); }}>✓</>
               ) : (
-                <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
+                < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></>
               )}
-              <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: s.id, name: s.name })}><Trash2 className="h-3 w-3" /></Button>
+              < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: s.id, name: s.name })}><Trash2 className="h-3 w-3" /></>
             </div>
           </div>
         ))}
         <div className="flex gap-3 mt-3">
           <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} />
-          <Button onClick={() => { if (newStage.trim()) { addPipelineStage({ id: crypto.randomUUID(), name: newStage.trim(), order: pipelineStages.length + 1 }); setNewStage(''); toast.success("Etapa adicionada"); } }} disabled={!newStage.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
+          < onClick={() => { if (newStage.trim()) { addPipelineStage({ id: crypto.randomUUID(), name: newStage.trim(), order: pipelineStages.length + 1 }); setNewStage(''); toast.success("Etapa adicionada"); } }} disabled={!newStage.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</>
         </div>
       </CardContent>
     </Card>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { Badge } from "@/components/ui/ds/Badge";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/ds";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";

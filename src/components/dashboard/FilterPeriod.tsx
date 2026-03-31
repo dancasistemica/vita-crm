@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent } from '@/components/ui/ds';
 import { CalendarDays } from 'lucide-react';
 
 export interface DateRange {
@@ -65,7 +65,7 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
           <CalendarDays className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium text-muted-foreground mr-1">Período:</span>
           {PRESET_PERIODS.map(preset => (
-            <Button
+            <
               key={preset.label}
               size="sm"
               variant={selectedLabel === preset.label && !isCustom ? 'default' : 'outline'}
@@ -73,16 +73,16 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
               className="text-xs"
             >
               {preset.label}
-            </Button>
+            </>
           ))}
-          <Button
+          <
             size="sm"
             variant={isCustom ? 'default' : 'outline'}
             onClick={() => setIsCustom(!isCustom)}
             className="text-xs"
           >
             Customizado
-          </Button>
+          </>
         </div>
 
         {isCustom && (
@@ -95,9 +95,9 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
               <Label className="text-xs">Fim</Label>
               <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="h-8 text-xs w-36" />
             </div>
-            <Button size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
+            < size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
               Aplicar
-            </Button>
+            </>
           </div>
         )}
       </CardContent>

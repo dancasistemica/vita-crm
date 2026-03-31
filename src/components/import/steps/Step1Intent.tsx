@@ -1,6 +1,6 @@
 import { Clock, RefreshCw, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { } from '@/components/ui/ds';
+import { Card, CardContent } from '@/components/ui/ds';
 
 interface Props {
   onNext: () => void;
@@ -35,8 +35,8 @@ export default function Step1Intent({ onNext, onClose }: Props) {
       </div>
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button variant="neutral" onClick={onClose}>Cancelar</Button>
-        <Button onClick={onNext}>Começar Importação</Button>
+        < variant="neutral" onClick={onClose}>Cancelar</>
+        < onClick={onNext}>Começar Importação</>
       </div>
     </div>
   );

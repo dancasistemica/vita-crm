@@ -5,8 +5,8 @@ import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/ds/Card';
 import { Input } from '@/components/ui/ds/Input';
-import { Button } from '@/components/ui/ds/Button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { } from '@/components/ui/ds/';
+import { Checkbox } from '@/components/ui/ds';
 import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -199,14 +199,14 @@ export default function LoginPage() {
                 icon={<Lock className="h-4 w-4" />}
                 required
               />
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={loading}
                 className="absolute right-3 top-[38px] text-neutral-500 hover:text-neutral-700 disabled:opacity-50 transition"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
+              </>
             </div>
 
             <div className="flex items-center gap-3">
@@ -221,34 +221,34 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <Button
+            <
               type="submit"
               disabled={!isFormValid || loading}
               fullWidth
               loading={loading}
             >
               Entrar
-            </Button>
+            </>
           </form>
 
           {/* Secondary links */}
           <div className="mt-4 space-y-3 text-center">
-            <Button
+            <
               variant="ghost"
               fullWidth
               size="sm"
               onClick={() => navigate('/auth')}
             >
               Esqueci minha senha
-            </Button>
+            </>
             <p className="text-sm text-neutral-600">
               Não tem conta?{' '}
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 onClick={() => navigate('/auth')}
                 className="text-primary-600 hover:underline font-medium"
               >
                 Criar conta
-              </Button>
+              </>
             </p>
           </div>
 

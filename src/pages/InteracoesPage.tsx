@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { } from "@/components/ui/ds/";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
 import { Select } from "@/components/ui/ds/Select";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/ds";
+import { Textarea } from "@/components/ui/ds";
 import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
@@ -41,7 +41,7 @@ export default function InteracoesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Interação</Button></DialogTrigger>
+          <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Interação</></DialogTrigger>
           <DialogContent>
             <DialogHeader><DialogTitle className="font-display">Nova Interação</DialogTitle></DialogHeader>
             <InteractionForm leads={leads} onSave={handleAdd} />
@@ -119,7 +119,7 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
         />
       )}
 
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</Button>
+      < className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</>
     </div>
   );
 }

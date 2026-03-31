@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter }
 import { Users, DollarSign, TrendingUp, Target, Building2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/ds";
 import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";

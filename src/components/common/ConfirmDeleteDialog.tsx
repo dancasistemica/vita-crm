@@ -7,7 +7,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/ds";
 import { Loader2 } from "lucide-react";
 
 interface ConfirmDeleteDialogProps {

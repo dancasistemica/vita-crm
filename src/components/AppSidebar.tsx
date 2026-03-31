@@ -10,14 +10,24 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
-import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarFooter, useSidebar,
-} from "@/components/ui/sidebar";
+import { 
+  Avatar, 
+  AvatarFallback, 
+  AvatarImage, 
+  Separator,
+  Sidebar, 
+  SidebarContent, 
+  SidebarGroup, 
+  SidebarGroupContent,
+  SidebarGroupLabel, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem,
+  SidebarFooter, 
+  useSidebar,
+  Button
+} from "@/components/ui/ds";
 
 const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -84,7 +94,7 @@ export function AppSidebar() {
     : "?";
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <SidebarContent>
         {/* Organization Switcher (SuperAdmin only) */}
         {!collapsed && <OrganizationSwitcher />}
@@ -95,40 +105,37 @@ export function AppSidebar() {
             <div className="flex items-center gap-3.5">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={avatarUrl || undefined} alt={profileName || "Usuário"} />
-                <AvatarFallback className="bg-sidebar-accent text-sidebar-foreground text-xs font-medium">
+                <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-sidebar-foreground truncate">
+                <p className="text-sm font-semibold text-neutral-900 truncate">
                   {profileName || "Carregando..."}
                 </p>
               </div>
             </div>
-            <Separator className="mt-3 bg-sidebar-foreground/10" />
+            <Separator className="mt-3" />
           </div>
         )}
 
         {/* Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-widest text-sidebar-foreground/40 font-sans font-medium">
+          <SidebarGroupLabel>
             Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild active={location.pathname === item.url}>
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
                       className={cn(
-                        "hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg",
-                        item.url === '/vendas' && location.pathname === '/vendas' 
-                          ? 'bg-blue-100 text-blue-700 font-semibold' 
-                          : ''
+                        "hover:bg-primary-50 transition-colors duration-150 rounded-lg",
+                        location.pathname === item.url ? 'bg-primary-50 text-primary-700 font-semibold' : ''
                       )}
-                      activeClassName={item.url === '/vendas' ? '' : "bg-sidebar-accent text-sidebar-primary font-medium shadow-sm"}
                     >
                       <item.icon className="mr-2 h-4 w-4" />
                       {!collapsed && <span className="text-sm">{item.title}</span>}
@@ -141,14 +148,13 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-2 space-y-1">
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild active={location.pathname === "/perfil"}>
               <NavLink
                 to="/perfil"
-                className="hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg"
-                activeClassName="bg-sidebar-accent text-sidebar-primary font-medium shadow-sm"
+                className="hover:bg-primary-50 transition-colors duration-150 rounded-lg"
               >
                 <User className="mr-2 h-4 w-4" />
                 {!collapsed && <span className="text-sm">Meu Perfil</span>}
@@ -158,7 +164,7 @@ export function AppSidebar() {
         </SidebarMenu>
         <Button variant="secondary" size="sm"
           onClick={signOut}
-          className="flex items-center gap-3 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
+          className="flex items-center gap-3 w-full mt-2"
         >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Sair</span>}

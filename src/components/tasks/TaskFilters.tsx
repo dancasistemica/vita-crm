@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/ds/Button";
+import { Label } from "@/components/ui/ds";
+import { } from "@/components/ui/ds/";
 import { Select } from "@/components/ui/ds/Select";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
 
 interface OrgMember {
   user_id: string;
@@ -52,15 +52,15 @@ export default function TaskFilters({
           />
         </div>
         <CollapsibleTrigger asChild>
-          <Button variant="neutral" size="sm" className="gap-1">
+          < variant="neutral" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
             Filtros
-          </Button>
+          </>
         </CollapsibleTrigger>
         {hasFilters && (
-          <Button variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
+          < variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
             <X className="h-4 w-4" /> Limpar
-          </Button>
+          </>
         )}
       </div>
 

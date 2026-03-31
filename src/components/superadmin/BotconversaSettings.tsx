@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 import { useBotconversaConfig } from '@/hooks/useBotconversaConfig';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
 
 interface BotconversaSettingsProps {
   organizationId: string;
@@ -90,9 +90,9 @@ export const BotconversaSettings = ({
           </AlertDescription>
         </Alert>
 
-        <Button onClick={() => window.location.reload()}>
+        < onClick={() => window.location.reload()}>
           Recarregar Página
-        </Button>
+        </>
       </div>
     );
   }
@@ -116,16 +116,16 @@ export const BotconversaSettings = ({
           </div>
 
           <div className="flex gap-3">
-            <Button
+            <
               variant="neutral"
               onClick={() => setIsEditing(true)}
               disabled={isSaving}
             >
               Editar
-            </Button>
-            <Button variant="error" onClick={handleDelete} disabled={isSaving}>
+            </>
+            < variant="error" onClick={handleDelete} disabled={isSaving}>
               Remover
-            </Button>
+            </>
           </div>
         </div>
       ) : (
@@ -143,11 +143,11 @@ export const BotconversaSettings = ({
           </div>
 
           <div className="flex gap-3">
-            <Button onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
+            < onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
               {isSaving ? 'Salvando...' : 'Salvar Chave'}
-            </Button>
+            </>
             {config && (
-              <Button
+              <
                 variant="neutral"
                 onClick={() => {
                   setIsEditing(false);
@@ -155,7 +155,7 @@ export const BotconversaSettings = ({
                 }}
               >
                 Cancelar
-              </Button>
+              </>
             )}
           </div>
         </div>

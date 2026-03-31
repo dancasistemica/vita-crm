@@ -5,10 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/ds/Button';
+import { } from '@/components/ui/ds/';
 import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { useAuth } from '@/hooks/useAuth';
 import { hasSuperadmin } from '@/services/bootstrapService';
 
@@ -174,12 +174,12 @@ export default function AuthPage() {
                 placeholder="seu@email.com"
                 required
               />
-              <Button onClick={handleForgotPassword} disabled={isSubmitting} fullWidth>
+              < onClick={handleForgotPassword} disabled={isSubmitting} fullWidth>
                 {isSubmitting ? 'Enviando...' : 'Enviar link de recuperação'}
-              </Button>
-              <Button variant="ghost" fullWidth onClick={() => setShowForgotPassword(false)}>
+              </>
+              < variant="ghost" fullWidth onClick={() => setShowForgotPassword(false)}>
                 Voltar ao login
-              </Button>
+              </>
             </div>
           </Card>
         ) : (
@@ -210,10 +210,10 @@ export default function AuthPage() {
                       required
                       {...loginForm.register('password')}
                     />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
+                    < type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Entrando...' : 'Entrar'}
-                    </Button>
-                    <Button
+                    </>
+                    <
                       type="button"
                       variant="ghost"
                       fullWidth
@@ -221,7 +221,7 @@ export default function AuthPage() {
                       onClick={() => setShowForgotPassword(true)}
                     >
                       Esqueci minha senha
-                    </Button>
+                    </>
                   </form>
                 </TabsContent>
 
@@ -258,9 +258,9 @@ export default function AuthPage() {
                       required
                       {...signupForm.register('confirmPassword')}
                     />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
+                    < type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Criando conta...' : 'Criar conta'}
-                    </Button>
+                    </>
                   </form>
                 </TabsContent>
               </div>

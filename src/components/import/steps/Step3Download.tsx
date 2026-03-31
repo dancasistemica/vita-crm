@@ -1,7 +1,7 @@
 import { FileSpreadsheet, FileText, Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { } from '@/components/ui/ds';
+import { Card, CardContent } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import { downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';
 import { toast } from 'sonner';
 
@@ -34,9 +34,9 @@ export default function Step3Download({ onNext, onBack }: Props) {
               <Badge variant="neutral" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
             <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
-            <Button size="sm" className="w-full mt-2">
+            < size="sm" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar XLSX
-            </Button>
+            </>
           </CardContent>
         </Card>
 
@@ -47,9 +47,9 @@ export default function Step3Download({ onNext, onBack }: Props) {
               <p className="text-sm font-semibold text-foreground">CSV</p>
             </div>
             <p className="text-xs text-muted-foreground">Texto separado por vírgula</p>
-            <Button size="sm" variant="neutral" className="w-full mt-2">
+            < size="sm" variant="neutral" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar CSV
-            </Button>
+            </>
           </CardContent>
         </Card>
       </div>
@@ -80,8 +80,8 @@ export default function Step3Download({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="neutral" onClick={onBack}>Voltar</Button>
-        <Button onClick={onNext}>Próximo</Button>
+        < variant="neutral" onClick={onBack}>Voltar</>
+        < onClick={onNext}>Próximo</>
       </div>
     </div>
   );

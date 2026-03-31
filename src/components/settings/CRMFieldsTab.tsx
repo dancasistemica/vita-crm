@@ -5,7 +5,7 @@ import { useDataAccess } from "@/hooks/useDataAccess";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
+import { } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -544,11 +544,11 @@ export default function CRMFieldsTab() {
               )}
               <div className="flex gap-1">
                 {editingOrigin?.id === o.id ? (
-                  <Button size="sm" variant="ghost" onClick={handleUpdateOrigin} disabled={originsSaving}>✓</Button>
+                  < size="sm" variant="ghost" onClick={handleUpdateOrigin} disabled={originsSaving}>✓</>
                 ) : (
-                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></Button>
+                  < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></>
                 )}
-                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
+                < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></>
               </div>
             </>
           ),
@@ -557,10 +557,10 @@ export default function CRMFieldsTab() {
         )}
         <div className="flex gap-3 mt-3">
           <Input placeholder="Nova origem..." value={newOrigin} onChange={e => setNewOrigin(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddOrigin()} />
-          <Button onClick={handleAddOrigin} disabled={!newOrigin.trim() || originsSaving}>
+          < onClick={handleAddOrigin} disabled={!newOrigin.trim() || originsSaving}>
             {originsSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
             Adicionar
-          </Button>
+          </>
         </div>
       </CardContent>
     </Card>
@@ -589,11 +589,11 @@ export default function CRMFieldsTab() {
               )}
               <div className="flex gap-1">
                 {editingLevel?.id === l.id ? (
-                  <Button size="sm" variant="ghost" onClick={handleUpdateLevel} disabled={levelsSaving}>✓</Button>
+                  < size="sm" variant="ghost" onClick={handleUpdateLevel} disabled={levelsSaving}>✓</>
                 ) : (
-                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingLevel(l)}><Edit className="h-3 w-3" /></Button>
+                  < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingLevel(l)}><Edit className="h-3 w-3" /></>
                 )}
-                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
+                < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></>
               </div>
             </>
           ),
@@ -603,9 +603,9 @@ export default function CRMFieldsTab() {
         <div className="flex gap-3 mt-3">
           <Input placeholder="Valor (ex: frio)" value={newLevel.value} onChange={e => setNewLevel(p => ({ ...p, value: e.target.value }))} className="h-8" />
           <Input placeholder="Label (ex: Frio)" value={newLevel.label} onChange={e => setNewLevel(p => ({ ...p, label: e.target.value }))} className="h-8" />
-          <Button size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
+          < size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
             {levelsSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-          </Button>
+          </>
         </div>
       </CardContent>
     </Card>
@@ -631,11 +631,11 @@ export default function CRMFieldsTab() {
               )}
               <div className="flex gap-1">
                 {editingStage?.id === s.id ? (
-                  <Button size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</Button>
+                  < size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</>
                 ) : (
-                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
+                  < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></>
                 )}
-                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
+                < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></>
               </div>
             </>
           ),
@@ -644,10 +644,10 @@ export default function CRMFieldsTab() {
         )}
         <div className="flex gap-3 mt-3">
           <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddStage()} />
-          <Button onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
+          < onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
             {stagesSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
             Adicionar
-          </Button>
+          </>
         </div>
       </CardContent>
     </Card>

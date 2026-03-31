@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Card } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import { createOrganization } from '@/services/organizationService';
 import { Building2, Users, FileText, Check, Copy } from 'lucide-react';
 
@@ -227,7 +227,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
               <p><span className="text-muted-foreground">Email:</span> {form.admin_email}</p>
               <div className="flex items-center justify-between">
                 <p><span className="text-muted-foreground">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>
-                <Button variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></Button>
+                < variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></>
               </div>
             </div>
             <Badge variant="neutral" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
@@ -238,19 +238,19 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
         <div className="flex justify-between pt-2">
           {step <= 3 ? (
             <>
-              <Button variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
+              < variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
                 {step === 1 ? 'Cancelar' : '← Anterior'}
-              </Button>
+              </>
               {step < 3 ? (
-                <Button onClick={handleNext}>Próximo →</Button>
+                < onClick={handleNext}>Próximo →</>
               ) : (
-                <Button onClick={handleCreate} disabled={loading}>
+                < onClick={handleCreate} disabled={loading}>
                   {loading ? 'Criando...' : 'Criar Organização'}
-                </Button>
+                </>
               )}
             </>
           ) : (
-            <Button className="w-full" onClick={resetAndClose}>Fechar</Button>
+            < className="w-full" onClick={resetAndClose}>Fechar</>
           )}
         </div>
       </DialogContent>

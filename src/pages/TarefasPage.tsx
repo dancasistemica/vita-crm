@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { } from "@/components/ui/ds/";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
 import { Select } from "@/components/ui/ds/Select";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/ds";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
-import TaskActionButtons from "@/components/tasks/TaskActionButtons";
+import TaskActions from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
 import { Badge } from "@/components/ui/ds/Badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/ds";
+import { Skeleton } from "@/components/ui/ds";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
 import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
@@ -453,7 +453,7 @@ export default function TarefasPage() {
           )}
 
           <AssignPopover taskId={task.id} assignedTo={task.assigned_to} orgMembers={orgMembers} onAssign={handleAssign} />
-          <TaskActionButtons
+          <TaskActions
             taskId={task.id}
             onEdit={handleEdit}
             onDuplicate={handleDuplicate}
@@ -483,11 +483,11 @@ export default function TarefasPage() {
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          <Button variant="neutral" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          < variant="neutral" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
-          </Button>
+          </>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
-            <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</Button></DialogTrigger>
+            <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle className="font-display">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle></DialogHeader>
               <TaskForm
@@ -568,25 +568,25 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
+        < variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
           <UserCircle className="h-4 w-4" />
-        </Button>
+        </>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
-        <Button variant="secondary" size="sm"
+        < variant="secondary" size="sm"
           onClick={() => onAssign(taskId, null)}
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
-        </Button>
+        </>
         {orgMembers.map(m => (
-          <Button variant="secondary" size="sm"
+          < variant="secondary" size="sm"
             key={m.user_id}
             onClick={() => onAssign(taskId, m.user_id)}
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
           >
             {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-          </Button>
+          </>
         ))}
       </PopoverContent>
     </Popover>
@@ -668,9 +668,9 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
         <AIFollowUpGenerator lead={selectedLead} stageName={stageName} />
       )}
 
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
+      < className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
         {initialData ? 'Salvar Alterações' : 'Salvar'}
-      </Button>
+      </>
     </div>
   );
 }

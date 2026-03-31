@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/ds/Button';
+import { } from '@/components/ui/ds/';
 import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
 import { Select } from '@/components/ui/ds/Select';
@@ -193,9 +193,9 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
         <div className="bg-neutral-50 border-b border-neutral-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Mensalidade</h2>
-            <Button variant="ghost" size="sm" onClick={onClose} disabled={loading} className="h-8 w-8 p-0">
+            < variant="ghost" size="sm" onClick={onClose} disabled={loading} className="h-8 w-8 p-0">
               <X className="w-5 h-5 text-neutral-600" />
-            </Button>
+            </>
           </div>
 
           {/* Progress Bar */}
@@ -243,12 +243,12 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                           <div className="p-4 text-center text-neutral-500">Nenhum cliente encontrado</div>
                         ) : (
                           filteredClients.map((client) => (
-                            <Button variant="secondary" size="sm" key={client.id} type="button"
+                            < variant="secondary" size="sm" key={client.id} type="button"
                               onClick={() => { setFormData({ ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
                               className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0">
                               <p className="font-medium text-neutral-900">{client.name}</p>
                               <p className="text-sm text-neutral-500">{client.email}</p>
-                            </Button>
+                            </>
                           ))
                         )}
                       </div>
@@ -297,14 +297,14 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 ) : (
                   <div className="space-y-3">
                     {productSalesStages.filter(s => s.product_id === formData.product_id).map((stage) => (
-                      <Button variant="secondary" size="sm" key={stage.id} type="button"
+                      < variant="secondary" size="sm" key={stage.id} type="button"
                         onClick={() => setFormData({ ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
                         className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                           formData.sales_stage_id === stage.id ? 'border-primary-600 bg-primary-50' : 'border-neutral-200 hover:border-primary-300'
                         }`}>
                         <p className="font-semibold text-neutral-900">{stage.name}</p>
                         <p className="text-lg font-bold text-primary-600">R$ {stage.value.toFixed(2)}/mês</p>
-                      </Button>
+                      </>
                     ))}
                   </div>
                 )}
@@ -433,17 +433,17 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
 
         {/* Footer */}
         <div className="p-6 border-t border-neutral-200 bg-neutral-50 flex gap-4">
-          <Button variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
+          < variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
             Anterior
-          </Button>
+          </>
           {currentPhase < totalPhases ? (
-            <Button variant="primary" onClick={handleNextPhase} disabled={!canProceedToNextPhase() || loading} className="flex-1">
+            < variant="primary" onClick={handleNextPhase} disabled={!canProceedToNextPhase() || loading} className="flex-1">
               Próximo
-            </Button>
+            </>
           ) : (
-            <Button variant="primary" onClick={handleSubmit} loading={loading} className="flex-1">
+            < variant="primary" onClick={handleSubmit} loading={loading} className="flex-1">
               Criar Mensalidade
-            </Button>
+            </>
           )}
         </div>
       </Card>

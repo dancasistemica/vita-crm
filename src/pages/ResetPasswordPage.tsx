@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
 import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
 
 export default function ResetPasswordPage() {
@@ -105,9 +105,9 @@ export default function ResetPasswordPage() {
             <CardDescription>Este link de recuperação é inválido ou expirou.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
+            < onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
-            </Button>
+            </>
           </CardContent>
         </Card>
       </div>
@@ -144,9 +144,9 @@ export default function ResetPasswordPage() {
               className="min-h-[44px]"
             />
           </div>
-          <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
+          < onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
             {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
-          </Button>
+          </>
         </CardContent>
       </Card>
     </div>

@@ -3,16 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
+import { } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/ds";
 import { Badge } from "@/components/ui/ds/Badge";
 import { Select } from "@/components/ui/ds/Select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/ds";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/ds";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/ds";
 import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -313,9 +313,9 @@ export default function UsersTab() {
           <Users className="h-5 w-5" />
           Usuários da Organização
         </CardTitle>
-        <Button size="sm" onClick={openCreate}>
+        < size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
-        </Button>
+        </>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
@@ -381,7 +381,7 @@ export default function UsersTab() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
+                          <
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -389,8 +389,8 @@ export default function UsersTab() {
                             onClick={() => openEdit(u)}
                           >
                             <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
+                          </>
+                          <
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -398,9 +398,9 @@ export default function UsersTab() {
                             onClick={() => handleResetPassword(u)}
                           >
                             <RotateCcw className="h-4 w-4" />
-                          </Button>
+                          </>
                           {u.role !== "owner" && (
-                            <Button
+                            <
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 text-destructive"
@@ -408,7 +408,7 @@ export default function UsersTab() {
                               onClick={() => setDeleteTarget(u)}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </Button>
+                            </>
                           )}
                         </div>
                       </TableCell>
@@ -425,22 +425,22 @@ export default function UsersTab() {
                   {filtered.length} usuário(s) · Página {page} de {totalPages}
                 </span>
                 <div className="flex gap-1">
-                  <Button
+                  <
                     variant="neutral"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
                   >
                     Anterior
-                  </Button>
-                  <Button
+                  </>
+                  <
                     variant="neutral"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
                   >
                     Próximo
-                  </Button>
+                  </>
                 </div>
               </div>
             )}
@@ -481,7 +481,7 @@ export default function UsersTab() {
                   <Label>Organização *</Label>
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
-                      <Button
+                      <
                         variant="neutral"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
@@ -491,7 +491,7 @@ export default function UsersTab() {
                           ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
                           : "Selecione uma organização"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
+                      </>
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
                       <Command>
@@ -557,11 +557,11 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
-              <Button onClick={handleSave} disabled={saving}>
+              < variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</>
+              < onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}
-              </Button>
+              </>
             </DialogFooter>
           </DialogContent>
         </Dialog>

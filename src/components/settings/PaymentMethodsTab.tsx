@@ -2,9 +2,9 @@ import { useEffect, useState, type DragEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
+import { } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/ds";
 import { Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -180,9 +180,9 @@ export default function PaymentMethodsTab() {
               onChange={e => setNewMethod(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAdd()}
             />
-            <Button onClick={handleAdd} disabled={!newMethod.trim() || loading}>
+            < onClick={handleAdd} disabled={!newMethod.trim() || loading}>
               <Plus className="h-4 w-4 mr-1" />Adicionar
-            </Button>
+            </>
           </div>
         </CardContent>
       </Card>
@@ -228,21 +228,21 @@ export default function PaymentMethodsTab() {
                   <div className="flex items-center gap-1">
                     {editingMethod?.id === m.id ? (
                     <>
-                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
+                      < size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
                         <Check className="h-3 w-3" />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
+                      </>
+                      < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
                         <X className="h-3 w-3" />
-                      </Button>
+                      </>
                     </>
                   ) : (
-                    <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
+                    < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
                       <Edit className="h-3 w-3" />
-                    </Button>
+                    </>
                   )}
-                  <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
+                  < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
                     <Trash2 className="h-3 w-3" />
-                  </Button>
+                  </>
                 </div>
               </div>
             </div>

@@ -44,3 +44,11 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 );
 
 Alert.displayName = 'Alert';
+
+export const AlertTitle = ({ children, className = '' }: any) => (
+  <h5 className={`font-semibold mb-1 ${className}`}>{children}</h5>
+);
+
+export const AlertDescription = ({ children, className = '' }: any) => (
+  <div className={`text-sm opacity-90 ${className}`}>{children}</div>
+);

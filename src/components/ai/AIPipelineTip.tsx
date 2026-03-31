@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
 import { Sparkles, RefreshCw, Plus } from 'lucide-react';
 import type { Lead } from '@/types/crm';
 
@@ -29,9 +29,9 @@ Sugira uma ação prática para avançar esta lead no funil.`;
   return (
     <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="sm" className="p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors" title="Sugestão IA">
+        < variant="secondary" size="sm" className="p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors" title="Sugestão IA">
           <Sparkles className="h-3.5 w-3.5 text-purple-500" />
-        </Button>
+        </>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-3" align="start">
         <div className="space-y-3">
@@ -49,13 +49,13 @@ Sugira uma ação prática para avançar esta lead no funil.`;
               <p className="text-sm text-foreground leading-relaxed">{response}</p>
               <div className="flex gap-1.5 pt-1">
                 {onCreateTask && (
-                  <Button size="sm" variant="neutral" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
+                  < size="sm" variant="neutral" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
                     <Plus className="h-3 w-3 mr-1" /> Criar tarefa
-                  </Button>
+                  </>
                 )}
-                <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+                < size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Nova sugestão
-                </Button>
+                </>
               </div>
               <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA</p>
             </>
