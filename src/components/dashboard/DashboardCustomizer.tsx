@@ -98,10 +98,10 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        < variant="neutral" size="sm" className="min-h-[44px] gap-3">
+        <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
           <Settings2 className="h-4 w-4" />
           Personalizar
-        </>
+        </Button>
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>

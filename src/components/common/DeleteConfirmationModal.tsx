@@ -62,21 +62,21 @@ export function DeleteConfirmationModal({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-neutral-200 bg-neutral-50 p-4 sm:flex-row sm:justify-end">
-          < variant="secondary" size="sm"
+          <Button variant="secondary" size="sm"
             onClick={onCancel}
             disabled={isLoading}
             className="min-h-[44px] rounded bg-gray-300 px-4 py-2 text-sm text-neutral-800 transition-colors hover:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancelar
-          </>
-          < variant="secondary" size="sm"
+          </Button>
+          <Button variant="secondary" size="sm"
             onClick={handleConfirm}
             disabled={isLoading}
             className="flex min-h-[44px] items-center justify-center gap-3 rounded bg-red-600 px-4 py-2 text-sm text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
             {isLoading ? "Excluindo..." : "Excluir permanentemente"}
-          </>
+          </Button>
         </div>
       </div>
     </div>

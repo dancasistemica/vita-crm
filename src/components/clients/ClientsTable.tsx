@@ -379,9 +379,9 @@ export default function ClientsTable({
           <span>por página</span>
         </div>
         <div className="flex items-center gap-1">
-          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
+          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
           <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
+          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
       </div>
     </div>

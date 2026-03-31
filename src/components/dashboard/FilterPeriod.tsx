@@ -95,9 +95,9 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
               <Label className="text-xs">Fim</Label>
               <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="h-8 text-xs w-36" />
             </div>
-            < size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
+            <Button size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
               Aplicar
-            </>
+            </Button>
           </div>
         )}
       </CardContent>
