@@ -110,7 +110,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
     <Dialog open={open} onOpenChange={resetAndClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-3">
             <Building2 className="h-5 w-5" /> Nova Organização
           </DialogTitle>
           <DialogDescription>
@@ -223,7 +223,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
               <p className="font-semibold text-lg">Organização criada!</p>
               <p className="text-sm text-muted-foreground mt-1">Compartilhe as credenciais com o admin</p>
             </div>
-            <div className="bg-muted rounded-lg p-4 text-left space-y-2 text-sm">
+            <div className="bg-muted rounded-lg p-4 text-left space-y-3 text-sm">
               <p><span className="text-muted-foreground">Email:</span> {form.admin_email}</p>
               <div className="flex items-center justify-between">
                 <p><span className="text-muted-foreground">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>

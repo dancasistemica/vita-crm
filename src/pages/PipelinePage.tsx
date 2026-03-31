@@ -53,7 +53,7 @@ export default function PipelinePage() {
                 {totalDealValue > 0 && (
                   <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
                 )}
-                <div className="space-y-2 min-h-[100px]">
+                <div className="space-y-3 min-h-[100px]">
                   {stageLeads.map(lead => (
                     <Card
                       key={lead.id}

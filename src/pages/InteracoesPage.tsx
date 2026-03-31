@@ -57,14 +57,14 @@ export default function InteracoesPage() {
         </SelectContent>
       </Select>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {sorted.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhuma interação registrada.</p>}
         {sorted.map(interaction => (
           <Card key={interaction.id}>
             <CardContent className="py-3 px-4 flex items-start gap-3">
               <MessageCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-medium text-sm">{getLeadName(interaction.leadId)}</span>
                   <Badge variant="outline" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
                   <span className="text-xs text-muted-foreground">{interaction.date}</span>

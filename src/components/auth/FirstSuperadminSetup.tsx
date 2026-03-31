@@ -71,7 +71,7 @@ export default function FirstSuperadminSetup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center gap-2 mb-8">
+        <div className="flex flex-col items-center gap-3 mb-8">
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center">
             <Shield className="h-6 w-6 text-white" />
           </div>

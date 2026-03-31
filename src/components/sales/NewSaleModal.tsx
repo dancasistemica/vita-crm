@@ -208,9 +208,9 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
           <DialogTitle>Nova Venda</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5 py-2">
+        <div className="space-y-6 py-2">
           {/* Section 1: Lead/Client search */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Selecione o Lead ou Cliente *</Label>
             {selectedLead ? (
               <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-3">
@@ -263,7 +263,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
           {/* Section 2: Sale data */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Product */}
-            <div className="space-y-2 sm:col-span-2">
+            <div className="space-y-3 sm:col-span-2">
               <Label>Produto/Serviço *</Label>
               <Select value={productId} onValueChange={(pid) => {
                 setProductId(pid);
@@ -283,7 +283,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
             {/* Sales Stage (if product has stages) */}
             {productId && (products.find(p => p.id === productId)?.stages?.length ?? 0) > 0 && (
-              <div className="space-y-2 sm:col-span-2">
+              <div className="space-y-3 sm:col-span-2">
                 <Label>Fase / Lote</Label>
                 <Select value={selectedStageId} onValueChange={(stageId) => {
                   setSelectedStageId(stageId);
@@ -309,7 +309,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             )}
 
             {/* Value */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Valor (R$) *</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">R$</span>
@@ -323,7 +323,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             </div>
 
             {/* Date */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -346,7 +346,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             </div>
 
             {/* Payment method */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Forma de Pagamento *</Label>
               <Select value={paymentMethod} onValueChange={setPaymentMethod}>
                 <SelectTrigger>
@@ -369,7 +369,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             </div>
 
             {/* Status */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Status da Venda *</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger>
@@ -384,7 +384,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             </div>
 
             {/* Observations */}
-            <div className="space-y-2 sm:col-span-2">
+            <div className="space-y-3 sm:col-span-2">
               <Label>Observações</Label>
               <Textarea
                 value={observations}

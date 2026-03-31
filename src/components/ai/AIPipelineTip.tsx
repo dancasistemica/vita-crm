@@ -34,13 +34,13 @@ Sugira uma ação prática para avançar esta lead no funil.`;
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-3" align="start">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center gap-1.5">
             <span className="inline-flex items-center gap-1 text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
             <span className="text-xs font-medium text-foreground">Próximo passo sugerido</span>
           </div>
           {loading ? (
-            <div className="flex items-center gap-2 py-3">
+            <div className="flex items-center gap-3 py-3">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-500" />
               <span className="text-xs text-muted-foreground">Analisando...</span>
             </div>

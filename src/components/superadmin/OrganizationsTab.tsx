@@ -146,7 +146,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <div className="flex items-center gap-3 text-muted-foreground text-sm">
             <Building2 className="h-4 w-4" />
             <span>
               {hasActiveFilters
@@ -154,7 +154,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 : `${orgs.length} organização(ões) cadastrada(s)`}
             </span>
           </div>
-          <Button onClick={() => setCreateOpen(true)} className="gap-2">
+          <Button onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
           </Button>
         </div>

@@ -199,7 +199,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           </div>
 
           {/* Progress Bar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {Array.from({ length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
@@ -413,7 +413,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 />
 
                 <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-                  <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2 mb-4">
+                  <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-3 mb-4">
                     <ShieldCheck className="w-5 h-5 text-success-600" />
                     Resumo Final
                   </h3>

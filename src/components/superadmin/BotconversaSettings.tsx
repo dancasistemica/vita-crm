@@ -115,7 +115,7 @@ export const BotconversaSettings = ({
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button
               variant="outline"
               onClick={() => setIsEditing(true)}
@@ -142,7 +142,7 @@ export const BotconversaSettings = ({
             />
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
               {isSaving ? 'Salvando...' : 'Salvar Chave'}
             </Button>

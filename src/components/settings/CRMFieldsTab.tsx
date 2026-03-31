@@ -504,7 +504,7 @@ export default function CRMFieldsTab() {
               setDraggedId(null);
             }}
             onDragEnd={() => setDraggedId(null)}
-            className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing ${
+            className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing ${
               draggedId === item.id
                 ? 'opacity-40 border-muted bg-muted/30'
                 : 'border-transparent bg-muted/50 hover:border-primary/20'
@@ -527,7 +527,7 @@ export default function CRMFieldsTab() {
   const renderOriginSection = () => (
     <Card>
       <CardHeader><CardTitle className="text-lg">🌐 Origem do Lead</CardTitle></CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-3">
         {renderDraggableList(
           origins,
           originsLoading,
@@ -555,7 +555,7 @@ export default function CRMFieldsTab() {
           "Nenhuma origem cadastrada.",
           "Arraste para reordenar. A ordem é salva automaticamente."
         )}
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-3 mt-3">
           <Input placeholder="Nova origem..." value={newOrigin} onChange={e => setNewOrigin(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddOrigin()} />
           <Button onClick={handleAddOrigin} disabled={!newOrigin.trim() || originsSaving}>
             {originsSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
@@ -569,7 +569,7 @@ export default function CRMFieldsTab() {
   const renderInterestLevelSection = () => (
     <Card>
       <CardHeader><CardTitle className="text-lg">⭐ Nível de Interesse</CardTitle></CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-3">
         {renderDraggableList(
           levels,
           levelsLoading,
@@ -580,7 +580,7 @@ export default function CRMFieldsTab() {
           (l) => (
             <>
               {editingLevel?.id === l.id ? (
-                <div className="flex gap-2 flex-1 mr-2">
+                <div className="flex gap-3 flex-1 mr-2">
                   <Input value={editingLevel.value} onChange={e => setEditingLevel({ ...editingLevel, value: e.target.value })} className="h-8" placeholder="Valor" />
                   <Input value={editingLevel.label} onChange={e => setEditingLevel({ ...editingLevel, label: e.target.value })} className="h-8" placeholder="Label" />
                 </div>
@@ -600,7 +600,7 @@ export default function CRMFieldsTab() {
           "Nenhum nível cadastrado.",
           "Arraste para reordenar. A ordem é salva automaticamente."
         )}
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-3 mt-3">
           <Input placeholder="Valor (ex: frio)" value={newLevel.value} onChange={e => setNewLevel(p => ({ ...p, value: e.target.value }))} className="h-8" />
           <Input placeholder="Label (ex: Frio)" value={newLevel.label} onChange={e => setNewLevel(p => ({ ...p, label: e.target.value }))} className="h-8" />
           <Button size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
@@ -614,7 +614,7 @@ export default function CRMFieldsTab() {
   const renderFunnelStagesSection = () => (
     <Card>
       <CardHeader><CardTitle className="text-lg">📈 Etapas do Funil de Vendas</CardTitle></CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-3">
         {renderDraggableList(
           stages,
           stagesLoading,
@@ -642,7 +642,7 @@ export default function CRMFieldsTab() {
           "Nenhuma etapa cadastrada.",
           "Arraste as etapas para reordenar. A ordem é salva automaticamente."
         )}
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-3 mt-3">
           <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddStage()} />
           <Button onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
             {stagesSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
@@ -697,7 +697,7 @@ export default function CRMFieldsTab() {
               }}
               onDragEnd={() => setDraggedField(null)}
               onClick={() => setActiveTab(field.key)}
-              className={`flex items-center gap-2 px-4 py-3 border-b-2 cursor-grab select-none transition-all whitespace-nowrap text-sm ${
+              className={`flex items-center gap-3 px-4 py-3 border-b-2 cursor-grab select-none transition-all whitespace-nowrap text-sm ${
                 activeTab === field.key
                   ? 'border-primary text-primary font-semibold'
                   : 'border-transparent text-muted-foreground hover:text-foreground'

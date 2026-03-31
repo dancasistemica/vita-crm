@@ -500,7 +500,7 @@ export default function AdminUsersPage() {
               onChange={(e) => setEditEmail(e.target.value)}
               placeholder="email@exemplo.com"
             />
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Input
                 label="Nova Senha (deixe em branco para não alterar)"
                 type={showPassword ? "text" : "password"}

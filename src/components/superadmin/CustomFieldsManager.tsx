@@ -442,7 +442,7 @@ export function CustomFieldsManager() {
         </div>
 
         {isGlobalMode && (
-          <div className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 p-3">
+          <div className="flex items-start gap-3 rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 p-3">
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300">
               Alterações afetarão <strong>TODAS as {totalOrgs} organizações</strong>
@@ -471,7 +471,7 @@ export function CustomFieldsManager() {
 
         {/* Search + Add button */}
         {(isGlobalMode || selectedOrgId) && (
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-3">
             <div className="relative flex-1 sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -666,7 +666,7 @@ export function CustomFieldsManager() {
             {fieldType === 'select' && (
               <div>
                 <Label>Opções</Label>
-                <div className="flex gap-2 mt-1">
+                <div className="flex gap-3 mt-1">
                   <Input
                     value={optionInput}
                     onChange={e => setOptionInput(e.target.value)}
@@ -726,7 +726,7 @@ export function CustomFieldsManager() {
       <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => { if (!open) { setDeleteGlobalFieldName(null); setDeleteGlobalFieldLabel(''); } }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className="flex items-center gap-3">
               <AlertTriangle className="h-5 w-5 text-destructive" />
               Remover campo de TODAS as organizações?
             </AlertDialogTitle>

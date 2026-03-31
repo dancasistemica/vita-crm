@@ -272,13 +272,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                     <Card key={mod.label}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-sm flex items-center gap-2">
+                          <CardTitle className="text-sm flex items-center gap-3">
                             <span>{mod.icon}</span> {mod.label}
                             <Badge variant="outline" className="ml-1 text-xs">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
                           </CardTitle>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                             <span className="text-xs text-muted-foreground">Tudo</span>
                             <Switch
                               checked={allEnabled}
@@ -287,9 +287,9 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="space-y-2.5">
+                      <CardContent className="space-y-3.5">
                         {mod.permissions.map(perm => (
-                          <label key={perm.key} className="flex items-center gap-2.5 cursor-pointer text-sm">
+                          <label key={perm.key} className="flex items-center gap-3.5 cursor-pointer text-sm">
                             <Checkbox
                               checked={permissions[perm.key] || false}
                               onCheckedChange={() => togglePermission(perm.key)}

@@ -326,7 +326,7 @@ export default function LeadsPage() {
           <h1 className="text-4xl font-bold text-neutral-900 mb-6">Leads</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
             <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
               <Upload className="h-4 w-4 mr-1" /> Importar Leads
@@ -368,16 +368,16 @@ export default function LeadsPage() {
 
         <div className="space-y-4 p-4 bg-white rounded-lg border border-neutral-200 mb-6" ref={filterRef}>
           {activeFiltersCount > 0 && (
-            <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold sm:ml-auto">
+              <span className="inline-flex items-center gap-3 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold sm:ml-auto">
                 <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                 {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} ativo{activeFiltersCount !== 1 ? 's' : ''}
               </span>
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative space-y-2">
+            <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Origem</label>
               <button
                 type="button"
@@ -400,7 +400,7 @@ export default function LeadsPage() {
               {openOrigin && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {origins.map((origin) => (
-                    <label key={origin} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={origin} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedOrigins.includes(origin)}
@@ -431,7 +431,7 @@ export default function LeadsPage() {
               )}
             </div>
 
-            <div className="relative space-y-2">
+            <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
               <button
                 type="button"
@@ -454,7 +454,7 @@ export default function LeadsPage() {
               {openInterest && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {interestLevels.map((level) => (
-                    <label key={level.value} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={level.value} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedInterests.includes(level.value)}
@@ -487,7 +487,7 @@ export default function LeadsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative space-y-2">
+            <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
               <button
                 type="button"
@@ -510,7 +510,7 @@ export default function LeadsPage() {
               {openStage && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {pipelineStages.map((stage) => (
-                    <label key={stage.id} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={stage.id} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedStages.includes(stage.id)}
@@ -541,7 +541,7 @@ export default function LeadsPage() {
               )}
             </div>
 
-            <div className="relative space-y-2">
+            <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Tags</label>
               <button
                 type="button"
@@ -567,7 +567,7 @@ export default function LeadsPage() {
                     Selecione as tags desejadas
                   </div>
                   {tags.map((tag) => (
-                    <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={tag.name} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedTags.includes(tag.name)}
@@ -648,7 +648,7 @@ export default function LeadsPage() {
             setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
             resetPage();
           }}
-          className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center gap-2"
+          className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center gap-3"
         >
           {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
         </button>
@@ -673,11 +673,11 @@ export default function LeadsPage() {
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {paginated.length === 0 && <p className="text-muted-foreground text-center py-12 text-sm">Nenhum lead encontrado.</p>}
 
         {paginated.length > 0 && (
-          <div className="flex items-center gap-2 px-4 py-1">
+          <div className="flex items-center gap-3 px-4 py-1">
             <Checkbox
               checked={selectedIds.length === paginated.length && paginated.length > 0}
               onCheckedChange={toggleSelectAll}
@@ -689,7 +689,7 @@ export default function LeadsPage() {
         {paginated.map((lead, idx) => (
           <Card key={lead.id} className="hover-lift shadow-card border-border/60 relative overflow-hidden animate-slide-up" style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'backwards' }}>
             <div className={`interest-bar ${interestBarColors[lead.interestLevel] || 'bg-muted'}`} />
-            <CardContent className="py-3 px-4 pl-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <CardContent className="py-3 px-4 pl-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <Checkbox
                   checked={selectedIds.includes(lead.id)}
@@ -697,7 +697,7 @@ export default function LeadsPage() {
                   onClick={e => e.stopPropagation()}
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span className="font-semibold text-foreground text-sm cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</span>
                     <Badge variant="outline" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
                     <Badge variant="outline" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>

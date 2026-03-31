@@ -134,7 +134,7 @@ export default function LeadSelectWithSearch({
         aria-expanded={open}
       >
         {selected ? (
-          <span className="flex items-center gap-2 truncate">
+          <span className="flex items-center gap-3 truncate">
             <Avatar className="h-5 w-5 text-[10px]">
               <AvatarFallback className={cn("text-[10px]", colorFor(selected.id))}>
                 {getInitials(selected.name)}
@@ -157,7 +157,7 @@ export default function LeadSelectWithSearch({
       {open && (
         <div className="absolute z-50 mt-1 w-full rounded-md border border-input bg-popover shadow-md animate-in fade-in-0 zoom-in-95">
           {/* Search */}
-          <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+          <div className="flex items-center gap-3 border-b border-border px-3 py-2">
             <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
               ref={inputRef}
@@ -206,7 +206,7 @@ export default function LeadSelectWithSearch({
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{lead.name}</p>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {lead.email && (
                           <span className="text-xs text-muted-foreground truncate">{lead.email}</span>
                         )}

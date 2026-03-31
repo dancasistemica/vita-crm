@@ -410,7 +410,7 @@ export default function TarefasPage() {
           <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task)} />
           <div className="flex-1 min-w-0">
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <div className="flex items-center gap-3 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
               <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
               {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
@@ -468,7 +468,7 @@ export default function TarefasPage() {
     return (
       <div className="space-y-6">
         <h1 className="text-4xl font-bold text-neutral-900 mb-6">Tarefas</h1>
-        <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
+        <div className="space-y-3">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       </div>
     );
   }
@@ -477,7 +477,7 @@ export default function TarefasPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <NotificationCenter
             notifications={notifications}
             onMarkAsRead={handleMarkNotificationRead}
@@ -529,29 +529,29 @@ export default function TarefasPage() {
 
       {overdue.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
-          <div className="space-y-2">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
+          <div className="space-y-3">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       <section>
-        <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
-        <div className="space-y-2">
+        <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
+        <div className="space-y-3">
           {todayTasks.length === 0 ? <p className="text-sm text-muted-foreground">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
         </div>
       </section>
 
       {upcoming.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
-          <div className="space-y-2">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
+          <div className="space-y-3">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       {completed.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
-          <div className="space-y-2">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
+          <div className="space-y-3">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
     </div>

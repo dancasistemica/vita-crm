@@ -186,7 +186,7 @@ export function SystemSettings() {
           {/* Identity */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-lg flex items-center gap-3">
                 <Image className="h-5 w-5" /> Identidade do Sistema
               </CardTitle>
             </CardHeader>
@@ -226,7 +226,7 @@ export function SystemSettings() {
                       <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
                     </div>
@@ -307,12 +307,12 @@ export function SystemSettings() {
                   <input ref={faviconRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
                   {settings.favicon_url ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <img src={settings.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
                       <span className="text-xs text-muted-foreground">Clique para trocar</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Upload className="h-5 w-5 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">Upload favicon</span>
                     </div>
@@ -325,7 +325,7 @@ export function SystemSettings() {
           {/* Basic Colors */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-lg flex items-center gap-3">
                 <Palette className="h-5 w-5" /> Cores Padrão do Sistema
               </CardTitle>
             </CardHeader>
@@ -349,7 +349,7 @@ export function SystemSettings() {
           {/* Advanced Colors */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-lg flex items-center gap-3">
                 <Palette className="h-5 w-5" /> Cores Avançadas do Sistema
               </CardTitle>
             </CardHeader>
@@ -456,7 +456,7 @@ export function SystemSettings() {
           {/* Typography */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-lg flex items-center gap-3">
                 <Type className="h-5 w-5" /> Tipografia Padrão
               </CardTitle>
             </CardHeader>
@@ -481,7 +481,7 @@ export function SystemSettings() {
           <h3 className="text-lg font-semibold text-neutral-700 mb-2">Preview do sistema</h3>
           <Card className="overflow-hidden">
             <div className="p-4 rounded-t-lg" style={{ backgroundColor: settings.sidebar_bg_color.startsWith('#') ? settings.sidebar_bg_color : `hsl(${settings.sidebar_bg_color})` }}>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-3 mb-4">
                 {settings.logo_url ? (
                   <img src={settings.logo_url} alt="Logo" className="h-8 object-contain" />
                 ) : (
@@ -513,13 +513,13 @@ export function SystemSettings() {
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
               </button>
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: settings.accent_color }}>Tag 1</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: settings.secondary_color }}>Tag 2</span>
               </div>
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_success }}>✓ Sucesso</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_warning }}>⚠ Aviso</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_error }}>✕ Erro</span>
@@ -532,7 +532,7 @@ export function SystemSettings() {
 
       {/* Save button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-2">
+        <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
           <Save className="h-4 w-4" />
           {saving ? 'Salvando...' : 'Salvar Configurações do Sistema'}
         </Button>
@@ -548,7 +548,7 @@ function SystemColorPicker({ label, description, value, onChange }: {
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
       <p className="text-xs text-muted-foreground">{description}</p>
-      <div className="flex items-center gap-2 mt-1">
+      <div className="flex items-center gap-3 mt-1">
         <input type="color" value={value} onChange={e => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />
         <Input value={value} onChange={e => onChange(e.target.value)}

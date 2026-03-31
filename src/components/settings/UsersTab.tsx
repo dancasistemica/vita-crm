@@ -309,7 +309,7 @@ export default function UsersTab() {
   return (
     <Card>
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="text-lg flex items-center gap-3">
           <Users className="h-5 w-5" />
           Usuários da Organização
         </CardTitle>
@@ -319,7 +319,7 @@ export default function UsersTab() {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input

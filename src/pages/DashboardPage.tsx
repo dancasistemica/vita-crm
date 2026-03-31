@@ -171,7 +171,7 @@ export default function DashboardPage() {
       <Card className="shadow-card border-border/60">
         <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {salesByDay.slice(-7).map((day) => (
               <div key={day.day} className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground w-24">{day.day}</span>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">

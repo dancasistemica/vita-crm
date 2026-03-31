@@ -196,7 +196,7 @@ export default function ClientDetailPage() {
             </Card>
           </div>
 
-          <div className="flex gap-2 mt-4 flex-wrap">
+          <div className="flex gap-3 mt-4 flex-wrap">
             <Button
               variant="secondary"
               size="md"
@@ -231,7 +231,7 @@ export default function ClientDetailPage() {
                 <p className="text-neutral-600">Nenhuma venda registrada.</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {sales.map(sale => (
                   <div
                     key={sale.id}
@@ -282,7 +282,7 @@ export default function ClientDetailPage() {
                         <MessageSquare className="h-5 w-5 text-primary-600" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-3 mb-1">
                           <Badge variant="neutral" size="sm">{typeLabel}</Badge>
                           <span className="text-xs text-neutral-500">{int.date}</span>
                         </div>
@@ -302,7 +302,7 @@ export default function ClientDetailPage() {
                 <p className="text-neutral-600">Nenhuma tarefa vinculada.</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {tasks.map(task => (
                   <div key={task.id} className="flex items-center justify-between p-4 rounded-lg border border-neutral-100">
                     <div className="flex items-center gap-3">

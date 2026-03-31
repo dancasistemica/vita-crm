@@ -173,7 +173,7 @@ export default function PaymentMethodsTab() {
       <Card>
         <CardHeader><CardTitle className="text-lg">Adicionar Nova Forma de Pagamento</CardTitle></CardHeader>
         <CardContent>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Input
               placeholder="Ex: Pix, Cartão Crédito, Boleto..."
               value={newMethod}
@@ -189,7 +189,7 @@ export default function PaymentMethodsTab() {
 
       <Card>
         <CardHeader><CardTitle className="text-lg">Formas de Pagamento Cadastradas</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-3">
           {loading && (
             <p className="text-sm text-muted-foreground text-center py-4">Carregando formas de pagamento...</p>
           )}
@@ -200,9 +200,9 @@ export default function PaymentMethodsTab() {
               onDragStart={() => handleDragStart(index)}
               onDragOver={event => handleDragOver(event, index)}
               onDragEnd={handleDragEnd}
-              className={`flex flex-col gap-2 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between ${dragIndex === index ? 'opacity-60' : ''}`}
+              className={`flex flex-col gap-3 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between ${dragIndex === index ? 'opacity-60' : ''}`}
             >
-              <div className="flex items-center gap-2 flex-1">
+              <div className="flex items-center gap-3 flex-1">
                 <span className="cursor-grab text-muted-foreground">
                   <GripVertical className="h-4 w-4" />
                 </span>
@@ -218,8 +218,8 @@ export default function PaymentMethodsTab() {
                     <span className="text-foreground font-medium flex-1">{m.name}</span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 justify-between sm:justify-end">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 justify-between sm:justify-end">
+                  <div className="flex items-center gap-3">
                     <Switch checked={m.active} onCheckedChange={() => handleToggle(m)} />
                     <span className={`text-xs font-medium ${m.active ? 'text-primary' : 'text-muted-foreground'}`}>
                       {m.active ? '✓ Ativo' : '✗ Inativo'}

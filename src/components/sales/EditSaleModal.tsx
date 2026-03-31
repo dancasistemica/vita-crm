@@ -191,7 +191,7 @@ export const EditSaleModal = ({
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-neutral-900">Editar Venda</h2>
             <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
@@ -220,10 +220,10 @@ export const EditSaleModal = ({
               </div>
               <h3 className="text-lg font-bold text-neutral-900 mb-2">Erro ao carregar</h3>
               <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <button
                   onClick={loadData}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex items-center justify-center gap-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" /> Tentar Novamente
                 </button>
@@ -236,7 +236,7 @@ export const EditSaleModal = ({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Info do Cliente (ReadOnly) */}
               <div className="bg-neutral-50 p-3 rounded-lg border border-gray-100">
                 <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
@@ -245,7 +245,7 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-3">
                   Status da Venda
                 </label>
                 <select
@@ -265,7 +265,7 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-3">
                   Forma de Pagamento
                 </label>
                 <select
@@ -304,7 +304,7 @@ export const EditSaleModal = ({
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   title="Excluir esta venda"
                 >
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
@@ -313,7 +313,7 @@ export const EditSaleModal = ({
                 </button>
 
                 {/* Botões Cancelar e Salvar à direita */}
-                <div className="flex gap-2 flex-1">
+                <div className="flex gap-3 flex-1">
                   <button
                     type="button"
                     onClick={onClose}
@@ -325,7 +325,7 @@ export const EditSaleModal = ({
                   <button
                     type="submit"
                     disabled={loading || deleting}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   >
                     {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar

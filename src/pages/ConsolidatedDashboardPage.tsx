@@ -184,7 +184,7 @@ export default function ConsolidatedDashboardPage() {
           <Card className="shadow-card border-border/60">
             <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {salesByDay.slice(-7).map((day) => (
                   <div key={day.day} className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground w-24">{day.day}</span>

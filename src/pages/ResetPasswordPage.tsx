@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
           <CardDescription>Defina sua nova senha abaixo</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label htmlFor="new-password">Nova senha</Label>
             <Input
               id="new-password"
@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
               className="min-h-[44px]"
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label htmlFor="confirm-new-password">Confirmar nova senha</Label>
             <Input
               id="confirm-new-password"

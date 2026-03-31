@@ -253,7 +253,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Editor */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-3 mb-2">
           <span className={`text-xs px-2 py-0.5 rounded-full ${isCustom ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
             {isCustom ? '✏️ Customizado' : '📋 Padrão'}
           </span>
@@ -286,7 +286,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
 
           <div>
             <Label>Logo do Email</Label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Input
                 type="file"
                 accept=".png,.jpg,.jpeg,.svg"
@@ -297,7 +297,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
               {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
             </div>
             {form.logo_url && (
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-3">
                 <img src={form.logo_url} alt="Logo" className="h-8 max-w-[120px] object-contain" />
                 <Button variant="ghost" size="sm" onClick={() => updateField('logo_url', null)}>Remover</Button>
               </div>
@@ -363,13 +363,13 @@ export default function EmailTemplateEditor({ templateType }: Props) {
         </div>
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-2 pt-2">
-          <Button onClick={handleSave} disabled={saving} className="min-h-[44px] gap-2">
+        <div className="flex flex-wrap gap-3 pt-2">
+          <Button onClick={handleSave} disabled={saving} className="min-h-[44px] gap-3">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Salvar Template
           </Button>
           {isCustom && (
-            <Button variant="outline" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-2">
+            <Button variant="outline" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
               <RotateCcw className="h-4 w-4" />
               Restaurar Padrão
             </Button>

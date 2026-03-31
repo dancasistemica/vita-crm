@@ -55,15 +55,15 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
       </Button>
 
       {suggestion && (
-        <div className="space-y-2 animate-in fade-in-50">
-          <div className="flex items-center gap-2">
+        <div className="space-y-3 animate-in fade-in-50">
+          <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1 text-xs font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-2 py-0.5 rounded-full">
               ✨ IA
             </span>
             <span className="text-xs text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</span>
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button size="sm" variant="outline" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
             <Button size="sm" variant="outline" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>

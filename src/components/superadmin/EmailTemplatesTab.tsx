@@ -17,7 +17,7 @@ export function EmailTemplatesTab() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Mail className="h-5 w-5 text-primary" />
           <CardTitle className="text-lg">Email Templates</CardTitle>
         </div>

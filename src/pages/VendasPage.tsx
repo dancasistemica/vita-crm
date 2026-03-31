@@ -200,7 +200,7 @@ export function VendasPage() {
                       </Badge>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         <Button 
                           variant="ghost" 
                           size="sm" 

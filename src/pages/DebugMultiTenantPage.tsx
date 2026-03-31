@@ -203,11 +203,11 @@ export default function DebugMultiTenantPage() {
       <Card>
         <CardHeader><CardTitle>📋 Verificação por Tabela</CardTitle></CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {debugInfo?.tables_checked && Object.entries(debugInfo.tables_checked).map(([table, info]) => (
               <div key={table} className="flex items-center justify-between bg-muted rounded p-3">
                 <span className="font-medium text-foreground">{table}</span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground">{info.visible} registros</span>
                   <Badge variant={info.org_ids.length <= 1 ? 'default' : 'destructive'} className="text-xs">
                     {info.org_ids.length <= 1 ? '✅' : `❌ ${info.org_ids.length} orgs`}

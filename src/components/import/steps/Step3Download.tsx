@@ -22,12 +22,12 @@ export default function Step3Download({ onNext, onBack }: Props) {
   };
 
   return (
-    <div className="space-y-5 py-2">
+    <div className="space-y-6 py-2">
       <h3 className="text-lg font-semibold text-neutral-700 text-center">Baixe o modelo</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="border-primary/30 bg-primary/5 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadXLSX}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-2">
+          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
             <FileSpreadsheet className="h-8 w-8 text-primary mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">XLSX</p>
@@ -41,7 +41,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
         </Card>
 
         <Card className="border-border/50 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadCSV}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-2">
+          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
             <FileText className="h-8 w-8 text-muted-foreground mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">CSV</p>

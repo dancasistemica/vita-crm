@@ -146,25 +146,25 @@ export default function SuperadminDashboard() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <div className="overflow-x-auto pb-2">
           <TabsList className="flex w-max min-w-full">
-            <TabsTrigger value="organizations" className="gap-2">
+            <TabsTrigger value="organizations" className="gap-3">
               <Building2 className="h-4 w-4" /> Organizações
             </TabsTrigger>
-            <TabsTrigger value="plans" className="gap-2">
+            <TabsTrigger value="plans" className="gap-3">
               <CreditCard className="h-4 w-4" /> Planos
             </TabsTrigger>
-            <TabsTrigger value="users" className="gap-2">
+            <TabsTrigger value="users" className="gap-3">
               <Users className="h-4 w-4" /> Superadmins
             </TabsTrigger>
-            <TabsTrigger value="emails" className="gap-2">
+            <TabsTrigger value="emails" className="gap-3">
               <Mail className="h-4 w-4" /> Email Templates
             </TabsTrigger>
-            <TabsTrigger value="custom-fields" className="gap-2">
+            <TabsTrigger value="custom-fields" className="gap-3">
               <Settings2 className="h-4 w-4" /> Campos Custom
             </TabsTrigger>
-            <TabsTrigger value="botconversa" className="gap-2">
+            <TabsTrigger value="botconversa" className="gap-3">
               <Bot className="h-4 w-4" /> Botconversa
             </TabsTrigger>
-            <TabsTrigger value="system-settings" className="gap-2">
+            <TabsTrigger value="system-settings" className="gap-3">
               <Cog className="h-4 w-4" /> Sistema
             </TabsTrigger>
           </TabsList>
@@ -195,7 +195,7 @@ export default function SuperadminDashboard() {
                 onChange={(e) => setSelectedBotconversaOrgId(e.target.value)}
               />
               {botconversaLoading && (
-                <div className="flex items-center gap-2 mt-2 text-sm text-neutral-600">
+                <div className="flex items-center gap-3 mt-2 text-sm text-neutral-600">
                   <Loader className="w-3 h-3 animate-spin" /> Carregando organizações...
                 </div>
               )}

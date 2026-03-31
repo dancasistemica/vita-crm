@@ -167,7 +167,7 @@ export const TagsManagement = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
+      <div className="flex items-center justify-center p-6">
         <Loader className="w-6 h-6 animate-spin text-blue-600" />
       </div>
     );
@@ -181,7 +181,7 @@ export const TagsManagement = () => {
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-neutral-700 mb-3 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-neutral-700 mb-3 flex items-center gap-3">
           <Plus className="w-5 h-5" />
           Nova Tag
         </h3>
@@ -202,7 +202,7 @@ export const TagsManagement = () => {
           <button
             onClick={handleCreateTag}
             disabled={isSaving}
-            className="px-4 py-2 min-h-[44px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="px-4 py-2 min-h-[44px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
           >
             {isSaving && <Loader className="w-4 h-4 animate-spin" />}
             Criar
@@ -210,9 +210,9 @@ export const TagsManagement = () => {
         </div>
       </div>
 
-      <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 sm:max-h-none sm:overflow-visible">
+      <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1 sm:max-h-none sm:overflow-visible">
         {tags.length === 0 ? (
-          <div className="text-center p-8 bg-neutral-50 rounded-lg">
+          <div className="text-center p-6 bg-neutral-50 rounded-lg">
             <p className="text-neutral-600">Nenhuma tag criada ainda</p>
           </div>
         ) : (
@@ -265,7 +265,7 @@ export const TagsManagement = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <button
                       onClick={() => {
                         setEditingId(tag.id);
@@ -332,7 +332,7 @@ export const TagsManagement = () => {
               <button
                 onClick={() => handleDeleteTag(showDeleteModal)}
                 disabled={isSaving}
-                className="px-4 py-2 min-h-[44px] bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="px-4 py-2 min-h-[44px] bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-3"
               >
                 {isSaving && <Loader className="w-4 h-4 animate-spin" />}
                 {deleteError ? 'Tentar Novamente' : 'Deletar'}

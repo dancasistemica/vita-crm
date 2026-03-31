@@ -46,7 +46,7 @@ export default function ClientesPage() {
             Gestão de clientes e histórico de vendas
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           <Button 
             variant="secondary" 
             size="md" 

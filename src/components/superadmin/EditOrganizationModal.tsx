@@ -215,11 +215,11 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-neutral-700 mb-2">Dados Básicos</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Nome *</Label>
                   <Input value={form.name} onChange={set('name')} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>CNPJ</Label>
                   <div className="relative">
                     <Input
@@ -248,20 +248,20 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     <p className="text-xs text-destructive">{cnpjValidation.error}</p>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Email de Contato</Label>
                   <Input type="email" value={form.contact_email} onChange={set('contact_email')} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Telefone</Label>
                   <Input value={form.phone} onChange={set('phone')} placeholder="(11) 98765-4321" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Website</Label>
                   <Input value={form.website} onChange={set('website')} placeholder="https://empresa.com" />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label>Descrição</Label>
                 <Textarea rows={2} value={form.description} onChange={set('description')} />
               </div>
@@ -273,7 +273,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-neutral-700 mb-2">Endereço</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>
                     CEP {loadingCEP && <Loader2 className="inline h-3 w-3 animate-spin ml-1" />}
                   </Label>
@@ -286,27 +286,27 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     disabled={loadingCEP}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Rua/Avenida</Label>
                   <Input value={form.rua} onChange={set('rua')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Número</Label>
                   <Input value={form.numero} onChange={set('numero')} placeholder="123" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Complemento</Label>
                   <Input value={form.complemento} onChange={set('complemento')} placeholder="Apto 101" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Bairro</Label>
                   <Input value={form.bairro} onChange={set('bairro')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Município</Label>
                   <Input value={form.municipio} onChange={set('municipio')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Estado (UF)</Label>
                   <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ ...prev, estado: v }))}>
                     <SelectTrigger disabled={loadingCEP}>
@@ -328,7 +328,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-neutral-700 mb-2">Senha do Admin</h3>
               <div className="space-y-3">
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <div className="relative flex-1">
                     <Input
                       type={showPassword ? 'text' : 'password'}
@@ -351,13 +351,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 </div>
 
                 {passwordStrength && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className={`h-1.5 flex-1 rounded-full ${passwordStrength.color}`} />
                     <span className="text-xs font-medium text-muted-foreground">{passwordStrength.label}</span>
                   </div>
                 )}
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Checkbox
                     id="manual-pwd"
                     checked={form.senhaManual}

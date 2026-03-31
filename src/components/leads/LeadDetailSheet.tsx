@@ -143,7 +143,7 @@ export default function LeadDetailSheet({
         <div className="p-6 pb-0">
           <SheetHeader>
             <SheetTitle className="text-lg font-display">{lead.name}</SheetTitle>
-            <SheetDescription className="flex items-center gap-2 flex-wrap">
+            <SheetDescription className="flex items-center gap-3 flex-wrap">
               {stageName && <Badge variant="outline" className="text-xs">{stageName}</Badge>}
               {interestLabel && <Badge variant="secondary" className="text-xs">{interestLabel}</Badge>}
               {lead.origin && <span className="text-xs">{lead.origin}</span>}
@@ -203,7 +203,7 @@ export default function LeadDetailSheet({
             {lead.customData && Object.keys(lead.customData).length > 0 && (
               <div>
                 <span className="text-xs text-muted-foreground font-medium">Campos Personalizados</span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {Object.entries(lead.customData).map(([key, value]) => (
                     <InfoField key={key} label={key} value={String(value ?? '')} />
                   ))}
@@ -212,7 +212,7 @@ export default function LeadDetailSheet({
             )}
 
             {/* Quick actions */}
-            <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border">
+            <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-border">
               {lead.phone && (
                 <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
                   <Button variant="outline" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
@@ -222,7 +222,7 @@ export default function LeadDetailSheet({
                 variant="outline"
                 size="sm"
                 onClick={() => setScheduleDialogOpen(true)}
-                className="gap-2 min-h-[44px]"
+                className="gap-3 min-h-[44px]"
                 disabled={!lead.phone}
               >
                 <Clock className="h-4 w-4" />
@@ -272,7 +272,7 @@ export default function LeadDetailSheet({
                     <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${status.color}`} />
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-medium ${t.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{t.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
                         <span className={status.color}>{status.label}</span>
                         {t.due_date && <span>Prazo: {formatDate(t.due_date)}</span>}
                       </div>

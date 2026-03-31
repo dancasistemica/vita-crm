@@ -98,14 +98,14 @@ export default function CRMLayout() {
                 </div>
               )}
             </div>
-            <Link to="/" className="flex items-center gap-2 min-w-fit" aria-label="VITA CRM">
+            <Link to="/" className="flex items-center gap-3 min-w-fit" aria-label="VITA CRM">
               <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-blue-400 rounded flex items-center justify-center">
                 <span className="text-white font-bold text-sm">V</span>
               </div>
               <span className="text-sm font-semibold text-neutral-900 hidden sm:inline">ita CRM</span>
             </Link>
           </header>
-          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-6">
             <div className="animate-fade-in">
               <Outlet />
             </div>

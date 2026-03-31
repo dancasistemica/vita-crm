@@ -149,7 +149,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="flex flex-col items-center gap-2 mb-8">
+        <div className="flex flex-col items-center gap-3 mb-8">
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
           </div>
@@ -167,7 +167,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Rate limit banner */}
             {rateLimited && (
-              <div className="rounded-lg bg-error-50 border border-error-200 p-3 text-sm text-error-600 flex items-center gap-2">
+              <div className="rounded-lg bg-error-50 border border-error-200 p-3 text-sm text-error-600 flex items-center gap-3">
                 <Lock className="h-4 w-4 shrink-0" />
                 <span>Muitas tentativas. Tente novamente em {rateLimitMinutes} minuto{rateLimitMinutes !== 1 ? 's' : ''}.</span>
               </div>
@@ -186,7 +186,7 @@ export default function LoginPage() {
               required
             />
 
-            <div className="space-y-2 relative">
+            <div className="space-y-3 relative">
                <Input
                 label="Senha"
                 type={showPassword ? 'text' : 'password'}
@@ -209,7 +209,7 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Checkbox
                 id="remember-me"
                 checked={rememberMe}
@@ -232,7 +232,7 @@ export default function LoginPage() {
           </form>
 
           {/* Secondary links */}
-          <div className="mt-4 space-y-2 text-center">
+          <div className="mt-4 space-y-3 text-center">
             <Button
               variant="ghost"
               fullWidth

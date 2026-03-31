@@ -44,13 +44,13 @@ function FilterSection({ title, count, children, defaultOpen = false }: { title:
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="border-b border-border pb-3">
       <CollapsibleTrigger className="flex w-full items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           {title}
         </div>
         {count > 0 && <Badge variant="destructive" className="h-5 min-w-5 justify-center rounded-full px-1.5 text-[10px]">{count}</Badge>}
       </CollapsibleTrigger>
-      <CollapsibleContent className="pt-2 space-y-2">
+      <CollapsibleContent className="pt-2 space-y-3">
         {children}
       </CollapsibleContent>
     </Collapsible>
@@ -85,7 +85,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             <LogicToggle value={filters.products.logic} onChange={v => updateFilter('products', { ...filters.products, logic: v })} />
           </div>
           {products.map(p => (
-            <label key={p.id} className="flex items-center gap-2 text-sm cursor-pointer py-0.5">
+            <label key={p.id} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
               <Checkbox
                 checked={filters.products.ids.includes(p.id)}
                 onCheckedChange={checked => {
@@ -107,7 +107,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               onValueChange={([min, max]) => updateFilter('valueRange', { min, max })}
               className="mb-3"
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">De (R$)</Label>
                 <Input type="number" value={filters.valueRange.min} onChange={e => updateFilter('valueRange', { ...filters.valueRange, min: Number(e.target.value) })} className="h-8 text-xs" />
@@ -141,7 +141,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-muted-foreground">De</Label>
               <Input type="date" value={filters.dateRange.from} onChange={e => updateFilter('dateRange', { ...filters.dateRange, from: e.target.value })} className="h-8 text-xs" />
@@ -159,7 +159,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             <LogicToggle value={filters.saleStatuses.logic} onChange={v => updateFilter('saleStatuses', { ...filters.saleStatuses, logic: v })} />
           </div>
           {saleStatuses.map(s => (
-            <label key={s} className="flex items-center gap-2 text-sm cursor-pointer py-0.5 capitalize">
+            <label key={s} className="flex items-center gap-3 text-sm cursor-pointer py-0.5 capitalize">
               <Checkbox
                 checked={filters.saleStatuses.values.includes(s)}
                 onCheckedChange={checked => {
@@ -178,7 +178,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             <LogicToggle value={filters.origins.logic} onChange={v => updateFilter('origins', { ...filters.origins, logic: v })} />
           </div>
           {origins.map(o => (
-            <label key={o} className="flex items-center gap-2 text-sm cursor-pointer py-0.5">
+            <label key={o} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
               <Checkbox
                 checked={filters.origins.values.includes(o)}
                 onCheckedChange={checked => {
@@ -197,7 +197,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             <LogicToggle value={filters.responsibles.logic} onChange={v => updateFilter('responsibles', { ...filters.responsibles, logic: v })} />
           </div>
           {users.map(u => (
-            <label key={u.id} className="flex items-center gap-2 text-sm cursor-pointer py-0.5">
+            <label key={u.id} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
               <Checkbox
                 checked={filters.responsibles.ids.includes(u.name)}
                 onCheckedChange={checked => {
@@ -205,7 +205,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                   updateFilter('responsibles', { ...filters.responsibles, ids });
                 }}
               />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-medium text-primary">
                   {u.name.charAt(0)}
                 </div>
@@ -237,7 +237,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-muted-foreground">De</Label>
               <Input type="date" value={filters.lastInteraction.from} onChange={e => updateFilter('lastInteraction', { ...filters.lastInteraction, from: e.target.value, preset: '' })} className="h-8 text-xs" />

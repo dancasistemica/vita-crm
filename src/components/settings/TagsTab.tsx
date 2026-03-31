@@ -17,7 +17,7 @@ export default function TagsTab() {
   return (
     <Card>
       <CardHeader><CardTitle className="text-lg">Tags Personalizadas</CardTitle></CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-3">
         <ConfirmDeleteDialog
           isOpen={deleteConfirm.isOpen}
           itemName={deleteConfirm.name}
@@ -25,7 +25,7 @@ export default function TagsTab() {
           onConfirm={() => { removeTag(deleteConfirm.id); toast.success("Tag removida"); setDeleteConfirm({ isOpen: false, id: '', name: '' }); }}
           onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
         />
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-3 mb-4">
           {tags.map(t => (
             <div key={t.id} className="flex items-center gap-1 bg-muted/50 rounded-full px-3 py-1">
               {editingTag?.id === t.id ? (
@@ -42,7 +42,7 @@ export default function TagsTab() {
             </div>
           ))}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Input placeholder="Nova tag..." value={newTag} onChange={e => setNewTag(e.target.value)} />
           <Button onClick={() => { if (newTag.trim()) { addTag({ id: crypto.randomUUID(), name: newTag.trim(), color: 'hsl(var(--primary))' }); setNewTag(''); toast.success("Tag adicionada"); } }} disabled={!newTag.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
         </div>

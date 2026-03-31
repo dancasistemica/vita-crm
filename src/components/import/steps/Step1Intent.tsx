@@ -25,7 +25,7 @@ export default function Step1Intent({ onNext, onClose }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {cards.map(({ icon: Icon, title, desc }) => (
           <Card key={title} className="border-border/50">
-            <CardContent className="pt-5 pb-4 px-4 text-center space-y-2">
+            <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
               <Icon className="h-7 w-7 text-primary mx-auto" />
               <p className="text-sm font-semibold text-foreground">{title}</p>
               <p className="text-xs text-muted-foreground">{desc}</p>

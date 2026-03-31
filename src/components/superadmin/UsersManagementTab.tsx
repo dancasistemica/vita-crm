@@ -85,7 +85,7 @@ export function UsersManagementTab() {
         onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <div className="flex items-center gap-3 text-muted-foreground text-sm">
           <ShieldCheck className="h-4 w-4" />
           <span>{users.length} superadmin(s)</span>
         </div>
@@ -127,7 +127,7 @@ export function UsersManagementTab() {
             <DialogTitle>Adicionar Superadmin</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Email do usuário existente</Label>
               <Input
                 type="email"

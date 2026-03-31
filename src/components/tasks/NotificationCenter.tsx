@@ -48,7 +48,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
           ) : (
             notifications.map(n => (
               <div key={n.id} className={`p-3 border-b last:border-0 text-sm ${!n.read ? 'bg-muted/50' : ''}`}>
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-3">
                   <p className={!n.read ? 'font-medium' : ''}>{n.message}</p>
                   {!n.read && (
                     <Button variant="ghost" size="sm" className="h-6 w-6 p-0 shrink-0" onClick={() => onMarkAsRead(n.id)}>

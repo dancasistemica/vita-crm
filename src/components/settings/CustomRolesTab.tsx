@@ -161,7 +161,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-3">
             <Shield className="h-5 w-5" />
             Roles Customizáveis
           </CardTitle>
@@ -196,7 +196,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                   {roles.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           {r.name}
                           {r.is_default && <Badge variant="outline" className="text-xs">Padrão</Badge>}
                         </div>

@@ -184,7 +184,7 @@ export default function OrganizationPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6 flex items-center gap-3">
           <Building2 className="h-6 w-6" /> Dados da Organização
         </h1>
         <p className="text-muted-foreground text-sm mt-1">Edite as informações da sua empresa</p>
@@ -196,7 +196,7 @@ export default function OrganizationPage() {
           <CardDescription>Nome, contato e documentação</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Nome da Empresa *</Label>
             <Input
               value={formData.name}
@@ -205,7 +205,7 @@ export default function OrganizationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Descrição</Label>
             <Input
               value={formData.description}
@@ -214,7 +214,7 @@ export default function OrganizationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>CNPJ</Label>
             <Input
               value={formData.cnpj}
@@ -224,7 +224,7 @@ export default function OrganizationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label className="flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5" /> Email de Contato
             </Label>
@@ -236,7 +236,7 @@ export default function OrganizationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label className="flex items-center gap-1.5">
               <Phone className="h-3.5 w-3.5" /> Telefone
             </Label>
@@ -248,7 +248,7 @@ export default function OrganizationPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Website</Label>
             <Input
               value={formData.website}
@@ -261,15 +261,15 @@ export default function OrganizationPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-3">
             <MapPin className="h-5 w-5" /> Endereço
           </CardTitle>
           <CardDescription>Preencha o CEP para busca automática</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>CEP</Label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Input
                 value={formData.cep}
                 onChange={(e) => handleCEPChange(e.target.value)}
@@ -283,13 +283,13 @@ export default function OrganizationPage() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Rua</Label>
             <Input value={formData.rua} disabled className="bg-muted" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Número</Label>
               <Input
                 value={formData.numero}
@@ -297,7 +297,7 @@ export default function OrganizationPage() {
                 placeholder="Nº"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Complemento</Label>
               <Input
                 value={formData.complemento}
@@ -307,17 +307,17 @@ export default function OrganizationPage() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Bairro</Label>
             <Input value={formData.bairro} disabled className="bg-muted" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Cidade</Label>
               <Input value={formData.municipio} disabled className="bg-muted" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Estado</Label>
               <Input value={formData.estado} disabled className="bg-muted" />
             </div>

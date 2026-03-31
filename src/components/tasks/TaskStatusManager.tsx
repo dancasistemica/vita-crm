@@ -68,7 +68,7 @@ export default function TaskStatusManager({
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-3">
             <Settings className="h-4 w-4" /> Gerenciar Status
           </CardTitle>
           <Button size="sm" variant="outline" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
@@ -78,7 +78,7 @@ export default function TaskStatusManager({
       </CardHeader>
       <CardContent className="space-y-3">
         {showForm && (
-          <div className="flex items-end gap-2 p-3 rounded-lg border bg-muted/30">
+          <div className="flex items-end gap-3 p-3 rounded-lg border bg-muted/30">
             <div className="flex-1">
               <Label className="text-xs">Nome</Label>
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Em andamento" />
@@ -97,7 +97,7 @@ export default function TaskStatusManager({
         )}
         {statuses.map(s => (
           <div key={s.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <div className="w-4 h-4 rounded-full" style={{ backgroundColor: s.color }} />
               <span className="text-sm font-medium">{s.name}</span>
             </div>

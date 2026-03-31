@@ -92,7 +92,7 @@ export function AppSidebar() {
         {/* User & Organization Info */}
         {!collapsed && (
           <div className="px-4 pt-4 pb-1">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3.5">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={avatarUrl || undefined} alt={profileName || "Usuário"} />
                 <AvatarFallback className="bg-sidebar-accent text-sidebar-foreground text-xs font-medium">
@@ -158,7 +158,7 @@ export function AppSidebar() {
         </SidebarMenu>
         <button
           onClick={signOut}
-          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
+          className="flex items-center gap-3 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Sair</span>}

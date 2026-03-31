@@ -363,7 +363,7 @@ export default function ClientsTable({
 
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>{totalFiltered} clientes</span>
           <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
             <SelectTrigger className="h-8 w-20 text-xs">
