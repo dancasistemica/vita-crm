@@ -165,7 +165,7 @@ export default function ClientDetailPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start gap-6">
-        < variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
+        <Button variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
         
         <div className="flex-1">
           <div className="flex items-center gap-4">
