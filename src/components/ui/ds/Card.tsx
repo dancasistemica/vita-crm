@@ -16,6 +16,7 @@ const paddingStyles = {
   sm: 'p-3',
   md: 'p-4',
   lg: 'p-6',
+  none: 'p-0',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
