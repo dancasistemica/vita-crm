@@ -544,11 +544,11 @@ export default function CRMFieldsTab() {
               )}
               <div className="flex gap-1">
                 {editingOrigin?.id === o.id ? (
-                  < size="sm" variant="ghost" onClick={handleUpdateOrigin} disabled={originsSaving}>✓</>
+                  <Button size="sm" variant="ghost" onClick={handleUpdateOrigin} disabled={originsSaving}>✓</Button>
                 ) : (
-                  < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></>
+                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></Button>
                 )}
-                < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></>
+                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
