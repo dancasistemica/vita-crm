@@ -26,14 +26,14 @@ interface Props {
 function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
-      < variant="secondary" size="sm"
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('AND')}
-      >E</>
-      < variant="secondary" size="sm"
+      >E</Button>
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('OR')}
-      >OU</>
+      >OU</Button>
     </div>
   );
 }
