@@ -176,7 +176,7 @@ export const TagsManagement = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Gerenciar Tags</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900">Gerenciar Tags</h2>
         <p className="text-gray-600 mt-1">Crie, edite e delete tags para organizar seus leads</p>
       </div>
 
