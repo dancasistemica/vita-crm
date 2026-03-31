@@ -405,7 +405,7 @@ export default function LeadsPage() {
                         type="checkbox"
                         checked={selectedOrigins.includes(origin)}
                         onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                        className="w-4 h-4 rounded border-neutral-300 text-blue-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                       />
                       <span className="text-sm text-neutral-700">{origin}</span>
                     </label>
