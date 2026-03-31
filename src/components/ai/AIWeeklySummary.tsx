@@ -57,9 +57,9 @@ Gere o resumo semanal.`;
             <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
           </CardTitle>
           {hasLoaded && (
-            < variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
               <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
-            </>
+            </Button>
           )}
         </div>
       </CardHeader>
