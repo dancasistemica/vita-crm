@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/ds/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Bell, CheckCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";

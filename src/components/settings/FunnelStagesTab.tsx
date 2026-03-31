@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { PipelineStage } from "@/types/crm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/ds/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";

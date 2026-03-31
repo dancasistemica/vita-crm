@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";

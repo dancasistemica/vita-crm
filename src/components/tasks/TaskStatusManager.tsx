@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
 import { toast } from "sonner";
 

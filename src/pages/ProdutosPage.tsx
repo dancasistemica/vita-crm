@@ -1,11 +1,11 @@
 import { type DragEvent, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
 import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
 import { useOrganization } from "@/contexts/OrganizationContext";

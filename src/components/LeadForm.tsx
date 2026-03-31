@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { useCustomFields } from "@/hooks/useCustomFields";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
