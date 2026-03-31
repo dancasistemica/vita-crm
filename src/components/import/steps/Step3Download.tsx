@@ -34,9 +34,9 @@ export default function Step3Download({ onNext, onBack }: Props) {
               <Badge variant="neutral" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
             <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
-            < size="sm" className="w-full mt-2">
+            <Button size="sm" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar XLSX
-            </>
+            </Button>
           </CardContent>
         </Card>
 
