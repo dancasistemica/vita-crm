@@ -197,15 +197,15 @@ export default function ClientDetailPage() {
           </div>
 
           <div className="flex gap-3 mt-4 flex-wrap">
-            <
-              variant="neutral"
+            <Button
+              variant="secondary"
               size="md"
               onClick={() => setScheduleDialogOpen(true)}
               icon={<Clock className="h-4 w-4" />}
               disabled={!client.phone}
             >
               Agendar Mensagem
-            </>
+            </Button>
           </div>
         </div>
       </div>
