@@ -478,7 +478,7 @@ export function SystemSettings() {
 
         {/* Preview */}
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preview do sistema</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-2">Preview do sistema</h3>
           <Card className="overflow-hidden">
             <div className="p-4 rounded-t-lg" style={{ backgroundColor: settings.sidebar_bg_color.startsWith('#') ? settings.sidebar_bg_color : `hsl(${settings.sidebar_bg_color})` }}>
               <div className="flex items-center gap-2 mb-4">

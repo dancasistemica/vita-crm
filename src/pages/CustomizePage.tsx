@@ -371,7 +371,7 @@ export default function CustomizePage() {
 
         {/* Right: Live Preview */}
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preview ao vivo</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-2">Preview ao vivo</h3>
 
           {/* Sidebar preview */}
           <Card className="overflow-hidden">
