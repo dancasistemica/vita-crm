@@ -543,7 +543,7 @@ export default function TarefasPage() {
 
       {upcoming.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="font-semibold text-muted-foreground">Próximos ({upcoming.length})</h2></div>
+          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
           <div className="space-y-2">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
