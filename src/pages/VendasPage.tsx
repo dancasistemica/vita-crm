@@ -99,7 +99,7 @@ export function VendasPage() {
 
       {/* ERROR ALERT */}
       {error && (
-        <Alert variant="error" title="Erro ao carregar vendas" closeable onClose={() => setError(null)}>
+        <Alert variant="error" title="Erro ao carregar vendas">
           {error}
           <div className="mt-3">
             <Button variant="error" size="sm" onClick={loadSales}>
