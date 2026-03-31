@@ -146,7 +146,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center gap-2 mb-8">
@@ -160,73 +160,64 @@ export default function AuthPage() {
         </div>
 
         {showForgotPassword ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Recuperar Senha</CardTitle>
-              <CardDescription>Informe seu email para receber o link de recuperação</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="forgot-email">Email</Label>
-                <Input
-                  id="forgot-email"
-                  type="email"
-                  value={forgotEmail}
-                  onChange={(e) => setForgotEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                />
+          <Card padding="lg">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-neutral-900">Recuperar Senha</h3>
+                <p className="text-sm text-neutral-600 mt-1">Informe seu email para receber o link de recuperação</p>
               </div>
-              <Button onClick={handleForgotPassword} disabled={isSubmitting} className="w-full">
+              <Input
+                label="Email"
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="seu@email.com"
+                required
+              />
+              <Button onClick={handleForgotPassword} disabled={isSubmitting} fullWidth>
                 {isSubmitting ? 'Enviando...' : 'Enviar link de recuperação'}
               </Button>
-              <Button variant="ghost" className="w-full" onClick={() => setShowForgotPassword(false)}>
+              <Button variant="ghost" fullWidth onClick={() => setShowForgotPassword(false)}>
                 Voltar ao login
               </Button>
-            </CardContent>
+            </div>
           </Card>
         ) : (
-          <Card>
+          <Card padding="none" className="overflow-hidden">
             <Tabs defaultValue="login">
-              <CardHeader className="pb-3">
+              <div className="p-6 pb-3 border-b">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">Entrar</TabsTrigger>
                   <TabsTrigger value="signup">Criar Conta</TabsTrigger>
                 </TabsList>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div className="p-6">
                 <TabsContent value="login" className="mt-0">
                   <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="login-email">Email</Label>
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="seu@email.com"
-                        {...loginForm.register('email')}
-                      />
-                      {loginForm.formState.errors.email && (
-                        <p className="text-sm text-destructive">{loginForm.formState.errors.email.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="login-password">Senha</Label>
-                      <Input
-                        id="login-password"
-                        type="password"
-                        placeholder="••••••"
-                        {...loginForm.register('password')}
-                      />
-                      {loginForm.formState.errors.password && (
-                        <p className="text-sm text-destructive">{loginForm.formState.errors.password.message}</p>
-                      )}
-                    </div>
-                    <Button type="submit" disabled={isSubmitting} className="w-full">
+                    <Input
+                      label="Email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      error={loginForm.formState.errors.email?.message}
+                      required
+                      {...loginForm.register('email')}
+                    />
+                    <Input
+                      label="Senha"
+                      type="password"
+                      placeholder="••••••"
+                      error={loginForm.formState.errors.password?.message}
+                      required
+                      {...loginForm.register('password')}
+                    />
+                    <Button type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Entrando...' : 'Entrar'}
                     </Button>
                     <Button
                       type="button"
-                      variant="link"
-                      className="w-full text-sm"
+                      variant="ghost"
+                      fullWidth
+                      className="text-sm"
                       onClick={() => setShowForgotPassword(true)}
                     >
                       Esqueci minha senha
@@ -236,59 +227,43 @@ export default function AuthPage() {
 
                 <TabsContent value="signup" className="mt-0">
                   <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-name">Nome completo</Label>
-                      <Input
-                        id="signup-name"
-                        placeholder="Seu nome"
-                        {...signupForm.register('fullName')}
-                      />
-                      {signupForm.formState.errors.fullName && (
-                        <p className="text-sm text-destructive">{signupForm.formState.errors.fullName.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        placeholder="seu@email.com"
-                        {...signupForm.register('email')}
-                      />
-                      {signupForm.formState.errors.email && (
-                        <p className="text-sm text-destructive">{signupForm.formState.errors.email.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-password">Senha</Label>
-                      <Input
-                        id="signup-password"
-                        type="password"
-                        placeholder="Mínimo 6 caracteres"
-                        {...signupForm.register('password')}
-                      />
-                      {signupForm.formState.errors.password && (
-                        <p className="text-sm text-destructive">{signupForm.formState.errors.password.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-confirm">Confirmar senha</Label>
-                      <Input
-                        id="signup-confirm"
-                        type="password"
-                        placeholder="Repita a senha"
-                        {...signupForm.register('confirmPassword')}
-                      />
-                      {signupForm.formState.errors.confirmPassword && (
-                        <p className="text-sm text-destructive">{signupForm.formState.errors.confirmPassword.message}</p>
-                      )}
-                    </div>
-                    <Button type="submit" disabled={isSubmitting} className="w-full">
+                    <Input
+                      label="Nome completo"
+                      placeholder="Seu nome"
+                      error={signupForm.formState.errors.fullName?.message}
+                      required
+                      {...signupForm.register('fullName')}
+                    />
+                    <Input
+                      label="Email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      error={signupForm.formState.errors.email?.message}
+                      required
+                      {...signupForm.register('email')}
+                    />
+                    <Input
+                      label="Senha"
+                      type="password"
+                      placeholder="Mínimo 6 caracteres"
+                      error={signupForm.formState.errors.password?.message}
+                      required
+                      {...signupForm.register('password')}
+                    />
+                    <Input
+                      label="Confirmar senha"
+                      type="password"
+                      placeholder="Repita a senha"
+                      error={signupForm.formState.errors.confirmPassword?.message}
+                      required
+                      {...signupForm.register('confirmPassword')}
+                    />
+                    <Button type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Criando conta...' : 'Criar conta'}
                     </Button>
                   </form>
                 </TabsContent>
-              </CardContent>
+              </div>
             </Tabs>
           </Card>
         )}
