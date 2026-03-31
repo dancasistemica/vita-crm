@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle, Button, Skeleton } from '@/components/ui/ds';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Lead } from '@/types/crm';

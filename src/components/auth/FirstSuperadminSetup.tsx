@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
-import { } from '@/components/ui/ds/';
+import { Button } from '@/components/ui/ds/';
 import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
 import { Alert } from '@/components/ui/ds/Alert';
