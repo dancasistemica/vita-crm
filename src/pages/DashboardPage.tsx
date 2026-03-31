@@ -97,7 +97,7 @@ export default function DashboardPage() {
     leads_parados: () => <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={() => navigate('/leads')} />,
     metricas_estagio: () => stageMetrics.length > 0 ? (
       <>
-        <h2 className="text-lg font-display text-foreground">Métricas por Etapa</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Métricas por Etapa</h2>
         <StageMetrics metrics={stageMetrics} />
       </>
     ) : null,
