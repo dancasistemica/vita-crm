@@ -165,9 +165,9 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             <Shield className="h-5 w-5" />
             Roles Customizáveis
           </CardTitle>
-          < size="sm" onClick={openCreate}>
+          <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4 mr-1" /> Nova Role
-          </>
+          </Button>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
