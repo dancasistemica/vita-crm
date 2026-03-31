@@ -120,7 +120,7 @@ export function AppSidebar() {
 
         {/* Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-widest text-sidebar-foreground/40 font-sans font-medium">
+          <SidebarGroupLabel>
             Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
