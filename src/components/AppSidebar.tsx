@@ -10,14 +10,14 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/ds";
+import { Separator } from "@/components/ui/ds";
 import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarFooter, useSidebar,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/ds";
 
 const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },

@@ -1,4 +1,4 @@
-import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { SidebarProvider, useSidebar } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";

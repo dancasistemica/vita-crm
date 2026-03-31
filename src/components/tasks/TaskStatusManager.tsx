@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/ds/Button";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/ds";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
 import { toast } from "sonner";

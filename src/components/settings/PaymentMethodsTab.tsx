@@ -4,7 +4,7 @@ import { useOrganization } from "@/contexts/OrganizationContext";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
 import { Input } from "@/components/ui/ds/Input";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/ds";
 import { Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 

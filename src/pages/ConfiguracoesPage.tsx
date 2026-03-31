@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 import { Card, Badge, Alert } from "@/components/ui/ds";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
@@ -9,7 +9,7 @@ import CustomRolesTab from "@/components/settings/CustomRolesTab";
 import OrganizationPage from "@/pages/OrganizationPage";
 import AIContextTab from "@/components/settings/AIContextTab";
 import { useUserRole } from "@/hooks/useUserRole";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/ds";
 import { Users, ClipboardList, CreditCard, Shield, Lock, Building2, Brain } from "lucide-react";
 
 export default function ConfiguracoesPage() {
