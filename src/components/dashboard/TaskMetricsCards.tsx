@@ -2,8 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Card, CardContent } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Card, CardContent, Button } from '@/components/ui/ds';
 import { Skeleton } from '@/components/ui/ds';
 import { AlertCircle, Clock, ArrowRight } from 'lucide-react';
 
