@@ -10,3 +10,4 @@ export * from './PageTitle';
 export * from './Checkbox';
 export * from './Label';
 export * from './Table';
+export * from './AlertDialog';
