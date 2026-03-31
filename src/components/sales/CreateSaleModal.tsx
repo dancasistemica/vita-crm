@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
+import { Button, Input, Select, Badge, Alert } from '@/components/ui/ds';
 
 interface CreateSaleModalProps {
   isOpen: boolean;
