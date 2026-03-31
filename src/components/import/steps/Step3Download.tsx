@@ -1,5 +1,5 @@
 import { FileSpreadsheet, FileText, Download } from 'lucide-react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Card, CardContent } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
 import { downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';

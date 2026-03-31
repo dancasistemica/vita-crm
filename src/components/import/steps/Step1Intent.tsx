@@ -1,5 +1,5 @@
 import { Clock, RefreshCw, Shield } from 'lucide-react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Card, CardContent } from '@/components/ui/ds';
 
 interface Props {
