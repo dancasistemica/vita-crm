@@ -416,16 +416,16 @@ export default function LeadsPage() {
               {selectedOrigins.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedOrigins.map((origin) => (
-                    <span key={origin} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                    <Badge key={origin} variant="default" size="sm" className="gap-1">
                       {origin}
                       <button
                         type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                        className="ml-1 hover:text-blue-900"
+                        className="ml-1 hover:text-primary-900"
                       >
                         ×
                       </button>
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               )}
