@@ -332,7 +332,7 @@ export default function LeadsPage() {
               <Upload className="h-4 w-4 mr-1" /> Importar Leads
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
+          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
