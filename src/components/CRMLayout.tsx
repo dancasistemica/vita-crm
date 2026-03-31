@@ -2,7 +2,7 @@ import { SidebarProvider, useSidebar } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
-import { } from "@/components/ui/ds/";
+import { Button } from "@/components/ui/ds";
 import { Input } from "@/components/ui/ds/Input";
 import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
 import { useSearch } from "@/hooks/useSearch";
@@ -12,7 +12,7 @@ function HeaderMenu() {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <
+    <Button
       variant="ghost"
       size="sm"
       onClick={toggleSidebar}
@@ -21,7 +21,7 @@ function HeaderMenu() {
       type="button"
     >
       <Menu className="h-5 w-5" />
-    </>
+    </Button>
   );
 }
 

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
