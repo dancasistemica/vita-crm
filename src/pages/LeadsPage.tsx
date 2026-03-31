@@ -328,7 +328,7 @@ export default function LeadsPage() {
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
-            <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
+            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
               <Upload className="h-4 w-4 mr-1" /> Importar Leads
             </Button>
           )}
