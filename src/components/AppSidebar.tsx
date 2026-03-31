@@ -93,7 +93,7 @@ export function AppSidebar() {
     : "?";
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <SidebarContent>
         {/* Organization Switcher (SuperAdmin only) */}
         {!collapsed && <OrganizationSwitcher />}
