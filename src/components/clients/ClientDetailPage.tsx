@@ -151,9 +151,9 @@ export default function ClientDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
-        < variant="neutral" onClick={() => navigate('/clientes')}>
+        <Button variant="secondary" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
-        </>
+        </Button>
       </div>
     );
   }

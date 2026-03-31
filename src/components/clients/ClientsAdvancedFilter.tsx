@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Input, Button } from '@/components/ui/ds';
 import { Checkbox } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
