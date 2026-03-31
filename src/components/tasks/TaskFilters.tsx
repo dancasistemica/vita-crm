@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/ds/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select } from "@/components/ui/ds/Select";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
