@@ -187,7 +187,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-b border-purple-200 dark:border-purple-700 p-4 sticky top-0">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-purple-900 dark:text-purple-100">Nova Mensalidade</h2>
+            <h2 className="text-2xl font-semibold text-neutral-900">Nova Mensalidade</h2>
             <button onClick={onClose} disabled={loading} className="p-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded transition-colors">
               <X className="w-5 h-5 text-purple-600 dark:text-purple-300" />
             </button>
