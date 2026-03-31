@@ -57,7 +57,7 @@ export default function ConsolidatedDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-display text-foreground">📊 Dashboard Consolidado</h1>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard Consolidado</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
 
