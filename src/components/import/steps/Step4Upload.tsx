@@ -145,9 +145,9 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
               <Badge variant="neutral">{state.csvRows.length} linhas</Badge>
             </div>
-            < variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
+            <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar
-            </>
+            </Button>
           </div>
 
           {/* Preview */}
