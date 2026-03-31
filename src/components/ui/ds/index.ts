@@ -20,3 +20,4 @@ export * from './Popover';
 export * from './Toaster';
 export * from './Tooltip';
 export * from './Sidebar';
+export * from './Compatibility';
