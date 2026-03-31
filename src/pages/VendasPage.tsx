@@ -184,7 +184,7 @@ export function VendasPage() {
                     <td className="py-3 px-4 text-neutral-900">{sale.client_name}</td>
                     <td className="py-3 px-4 text-neutral-900">{sale.stage_name}</td>
                     <td className="py-3 px-4">
-                      <Badge variant={sale.sale_type === 'unica' ? 'primary' : 'warning'} size="sm">
+                      <Badge variant={sale.sale_type === 'unica' ? 'default' : 'warning'} size="sm">
                         {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
                       </Badge>
                     </td>
