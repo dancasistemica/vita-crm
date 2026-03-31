@@ -366,7 +366,7 @@ export default function LeadsPage() {
           />
         </div>
 
-        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" ref={filterRef}>
+        <div className="space-y-4 p-4 bg-white rounded-lg border border-neutral-200 mb-6" ref={filterRef}>
           {activeFiltersCount > 0 && (
             <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
@@ -378,7 +378,7 @@ export default function LeadsPage() {
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Origem</label>
+              <label className="block text-sm font-semibold text-neutral-700">Origem</label>
               <button
                 type="button"
                 onClick={() => {
@@ -387,9 +387,9 @@ export default function LeadsPage() {
                   setOpenStage(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedOrigins.length === 0 ? 'Selecione origens...' : `${selectedOrigins.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,16 +398,16 @@ export default function LeadsPage() {
               </button>
 
               {openOrigin && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {origins.map((origin) => (
-                    <label key={origin} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={origin} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedOrigins.includes(origin)}
                         onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-blue-600"
                       />
-                      <span className="text-sm text-gray-700">{origin}</span>
+                      <span className="text-sm text-neutral-700">{origin}</span>
                     </label>
                   ))}
                 </div>
@@ -432,7 +432,7 @@ export default function LeadsPage() {
             </div>
 
             <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
+              <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
               <button
                 type="button"
                 onClick={() => {
@@ -441,9 +441,9 @@ export default function LeadsPage() {
                   setOpenStage(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedInterests.length === 0 ? 'Selecione níveis...' : `${selectedInterests.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,16 +452,16 @@ export default function LeadsPage() {
               </button>
 
               {openInterest && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {interestLevels.map((level) => (
-                    <label key={level.value} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={level.value} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedInterests.includes(level.value)}
                         onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
-                        className="w-4 h-4 rounded border-gray-300 text-green-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-green-600"
                       />
-                      <span className="text-sm text-gray-700">{level.label}</span>
+                      <span className="text-sm text-neutral-700">{level.label}</span>
                     </label>
                   ))}
                 </div>
@@ -488,7 +488,7 @@ export default function LeadsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
+              <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
               <button
                 type="button"
                 onClick={() => {
@@ -497,9 +497,9 @@ export default function LeadsPage() {
                   setOpenInterest(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedStages.length === 0 ? 'Selecione etapas...' : `${selectedStages.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -508,16 +508,16 @@ export default function LeadsPage() {
               </button>
 
               {openStage && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {pipelineStages.map((stage) => (
-                    <label key={stage.id} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={stage.id} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedStages.includes(stage.id)}
                         onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
-                        className="w-4 h-4 rounded border-gray-300 text-purple-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-purple-600"
                       />
-                      <span className="text-sm text-gray-700">{stage.name}</span>
+                      <span className="text-sm text-neutral-700">{stage.name}</span>
                     </label>
                   ))}
                 </div>
@@ -542,7 +542,7 @@ export default function LeadsPage() {
             </div>
 
             <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Tags</label>
+              <label className="block text-sm font-semibold text-neutral-700">Tags</label>
               <button
                 type="button"
                 onClick={() => {
@@ -551,9 +551,9 @@ export default function LeadsPage() {
                   setOpenInterest(false);
                   setOpenStage(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedTags.length === 0 ? 'Selecione tags...' : `${selectedTags.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -562,19 +562,19 @@ export default function LeadsPage() {
               </button>
 
               {openTags && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
-                  <div className="px-4 py-2 border-b border-gray-200 font-semibold bg-gray-50 text-sm text-gray-600">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  <div className="px-4 py-2 border-b border-neutral-200 font-semibold bg-neutral-50 text-sm text-neutral-600">
                     Selecione as tags desejadas
                   </div>
                   {tags.map((tag) => (
-                    <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedTags.includes(tag.name)}
                         onChange={() => toggleSelection(tag.name, selectedTags, setSelectedTags, 'Tags')}
-                        className="w-4 h-4 rounded border-gray-300 text-orange-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-orange-600"
                       />
-                      <span className="text-sm text-gray-700">{tag.name}</span>
+                      <span className="text-sm text-neutral-700">{tag.name}</span>
                     </label>
                   ))}
                 </div>
@@ -629,15 +629,15 @@ export default function LeadsPage() {
         onPerPageChange={setPerPage}
       />
 
-      <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 bg-gray-50 rounded-lg">
-        <label className="text-sm font-medium text-gray-700">Ordenar por:</label>
+      <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 bg-neutral-50 rounded-lg">
+        <label className="text-sm font-medium text-neutral-700">Ordenar por:</label>
         <select
           value={sortBy}
           onChange={(e) => {
             setSortBy(e.target.value as 'date' | 'name');
             resetPage();
           }}
-          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-3 py-2 border border-neutral-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="date">📅 Data de Cadastro (Padrão)</option>
           <option value="name">🔤 Ordem Alfabética</option>

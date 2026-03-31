@@ -211,15 +211,15 @@ export const EditSaleModal = ({
           {loadingData ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-              <p className="text-gray-500 font-medium">Carregando informações...</p>
+              <p className="text-neutral-500 font-medium">Carregando informações...</p>
             </div>
           ) : error ? (
             <div className="text-center py-8">
               <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Erro ao carregar</h3>
-              <p className="text-gray-600 text-sm mb-6 px-4">{error}</p>
+              <h3 className="text-lg font-bold text-neutral-900 mb-2">Erro ao carregar</h3>
+              <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
               <div className="flex flex-col gap-2">
                 <button
                   onClick={loadData}
@@ -229,7 +229,7 @@ export const EditSaleModal = ({
                 </button>
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="px-4 py-2 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
                   Fechar
                 </button>
@@ -238,20 +238,20 @@ export const EditSaleModal = ({
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Info do Cliente (ReadOnly) */}
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
-                <p className="text-gray-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
-                <p className="text-xs text-gray-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
+              <div className="bg-neutral-50 p-3 rounded-lg border border-gray-100">
+                <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
+                <p className="text-neutral-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
+                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-2">
                   Status da Venda
                 </label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   required
                 >
                   <option value="">Selecione um status</option>
@@ -265,13 +265,13 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-2">
                   Forma de Pagamento
                 </label>
                 <select
                   value={formData.payment_method_id}
                   onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option value="">Nenhuma definida</option>
                   {paymentMethods.map((method) => (
@@ -286,14 +286,14 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5">
                   Observações
                 </label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                   placeholder="Adicione detalhes importantes sobre esta venda..."
                 />
               </div>
@@ -318,7 +318,7 @@ export const EditSaleModal = ({
                     type="button"
                     onClick={onClose}
                     disabled={loading || deleting}
-                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
+                    className="flex-1 px-4 py-2 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
                   </button>

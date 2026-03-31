@@ -46,10 +46,10 @@ export function DeleteConfirmationModal({
         </div>
 
         <div className="p-4">
-          <p className="mb-3 text-sm text-gray-700">
+          <p className="mb-3 text-sm text-neutral-700">
             Tem certeza que deseja excluir <strong>{itemName}</strong>?
           </p>
-          <p className="mb-4 text-xs text-gray-500">
+          <p className="mb-4 text-xs text-neutral-500">
             Esta acao nao pode ser desfeita. Todos os dados serao permanentemente removidos.
           </p>
 
@@ -60,11 +60,11 @@ export function DeleteConfirmationModal({
           )}
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-gray-200 bg-gray-50 p-4 sm:flex-row sm:justify-end">
+        <div className="flex flex-col gap-2 border-t border-neutral-200 bg-neutral-50 p-4 sm:flex-row sm:justify-end">
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="min-h-[44px] rounded bg-gray-300 px-4 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-[44px] rounded bg-gray-300 px-4 py-2 text-sm text-neutral-800 transition-colors hover:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancelar
           </button>

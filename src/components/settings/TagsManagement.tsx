@@ -177,7 +177,7 @@ export const TagsManagement = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold text-neutral-900">Gerenciar Tags</h2>
-        <p className="text-gray-600 mt-1">Crie, edite e delete tags para organizar seus leads</p>
+        <p className="text-neutral-600 mt-1">Crie, edite e delete tags para organizar seus leads</p>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -191,13 +191,13 @@ export const TagsManagement = () => {
             placeholder="Nome da tag"
             value={newTagName}
             onChange={(e) => setNewTagName(e.target.value)}
-            className="flex-1 px-3 py-2 min-h-[44px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 min-h-[44px] border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="color"
             value={newTagColor}
             onChange={(e) => setNewTagColor(e.target.value)}
-            className="w-12 h-11 border border-gray-300 rounded-md cursor-pointer"
+            className="w-12 h-11 border border-neutral-300 rounded-md cursor-pointer"
           />
           <button
             onClick={handleCreateTag}
@@ -212,14 +212,14 @@ export const TagsManagement = () => {
 
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 sm:max-h-none sm:overflow-visible">
         {tags.length === 0 ? (
-          <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">Nenhuma tag criada ainda</p>
+          <div className="text-center p-8 bg-neutral-50 rounded-lg">
+            <p className="text-neutral-600">Nenhuma tag criada ainda</p>
           </div>
         ) : (
           tags.map((tag) => (
             <div
               key={tag.id}
-              className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between hover:shadow-md transition-shadow"
+              className="bg-white border border-neutral-200 rounded-lg p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between hover:shadow-md transition-shadow"
             >
               {editingId === tag.id ? (
                 <div className="flex-1 flex flex-col gap-3 sm:flex-row">
@@ -227,13 +227,13 @@ export const TagsManagement = () => {
                     type="text"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    className="flex-1 px-3 py-2 min-h-[44px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 min-h-[44px] border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="color"
                     value={editColor}
                     onChange={(e) => setEditColor(e.target.value)}
-                    className="w-12 h-11 border border-gray-300 rounded-md cursor-pointer"
+                    className="w-12 h-11 border border-neutral-300 rounded-md cursor-pointer"
                   />
                   <button
                     onClick={() => handleEditTag(tag.id)}
@@ -245,7 +245,7 @@ export const TagsManagement = () => {
                   <button
                     onClick={() => setEditingId(null)}
                     disabled={isSaving}
-                    className="px-4 py-2 min-h-[44px] bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors disabled:opacity-50"
+                    className="px-4 py-2 min-h-[44px] bg-gray-300 text-neutral-800 rounded-md hover:bg-gray-400 transition-colors disabled:opacity-50"
                   >
                     Cancelar
                   </button>
@@ -258,8 +258,8 @@ export const TagsManagement = () => {
                       style={{ backgroundColor: tag.color }}
                     />
                     <div>
-                      <p className="font-medium text-gray-900">{tag.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-medium text-neutral-900">{tag.name}</p>
+                      <p className="text-sm text-neutral-500">
                         Usado em {tag.usageCount} {tag.usageCount === 1 ? 'lead' : 'leads'}
                       </p>
                     </div>
@@ -304,10 +304,10 @@ export const TagsManagement = () => {
             </div>
 
             <div className="p-4">
-              <p className="text-gray-700 mb-2">
+              <p className="text-neutral-700 mb-2">
                 Tem certeza que deseja deletar esta tag?
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-neutral-500">
                 ⚠️ A tag será removida de todos os leads que a usam.
               </p>
               {deleteError && (
@@ -318,14 +318,14 @@ export const TagsManagement = () => {
               )}
             </div>
 
-            <div className="bg-gray-50 border-t border-gray-200 p-4 flex gap-3 justify-end">
+            <div className="bg-neutral-50 border-t border-neutral-200 p-4 flex gap-3 justify-end">
               <button
                 onClick={() => {
                   setShowDeleteModal(null);
                   setDeleteError(null);
                 }}
                 disabled={isSaving}
-                className="px-4 py-2 min-h-[44px] bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
+                className="px-4 py-2 min-h-[44px] bg-gray-300 text-neutral-800 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
               >
                 Cancelar
               </button>

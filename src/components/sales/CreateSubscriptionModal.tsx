@@ -198,7 +198,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {Array.from({ length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                  i + 1 < currentPhase ? 'bg-green-500 text-white' : i + 1 === currentPhase ? 'bg-purple-600 text-white' : 'bg-gray-300 text-gray-600'
+                  i + 1 < currentPhase ? 'bg-green-500 text-white' : i + 1 === currentPhase ? 'bg-purple-600 text-white' : 'bg-gray-300 text-neutral-600'
                 }`}>
                   {i + 1 < currentPhase ? <Check className="w-4 h-4" /> : i + 1}
                 </div>
@@ -225,22 +225,22 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
               ) : (
                 <div className="relative">
                   <div className="relative">
-                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <Search className="absolute left-3 top-3 w-5 h-5 text-neutral-400" />
                     <input type="text" placeholder="Buscar por nome ou email..." value={clientSearch}
                       onChange={(e) => { setClientSearch(e.target.value); setShowClientDropdown(true); }}
                       onFocus={() => setShowClientDropdown(true)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                      className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
                     />
                   </div>
                   {showClientDropdown && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-300 rounded-lg shadow-lg z-10 max-h-64 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-neutral-300 rounded-lg shadow-lg z-10 max-h-64 overflow-y-auto">
                       {filteredClients.length === 0 ? (
-                        <div className="p-4 text-center text-gray-500">Nenhum cliente encontrado</div>
+                        <div className="p-4 text-center text-neutral-500">Nenhum cliente encontrado</div>
                       ) : (
                         filteredClients.map((client) => (
                           <button key={client.id} type="button"
                             onClick={() => { setFormData({ ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
-                            className="w-full text-left px-4 py-3 hover:bg-purple-50 dark:hover:bg-purple-900/30 border-b border-gray-200 last:border-b-0">
+                            className="w-full text-left px-4 py-3 hover:bg-purple-50 dark:hover:bg-purple-900/30 border-b border-neutral-200 last:border-b-0">
                             <p className="font-medium text-foreground">{client.name}</p>
                             <p className="text-sm text-muted-foreground">{client.email}</p>
                           </button>
@@ -272,7 +272,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
               ) : (
                 <select value={formData.product_id}
                   onChange={(e) => setFormData({ ...formData, product_id: e.target.value, sales_stage_id: '', monthly_value: 0 })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base">
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base">
                   <option value="">Escolha um produto...</option>
                   {products.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
@@ -295,7 +295,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                     <button key={stage.id} type="button"
                       onClick={() => setFormData({ ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
                       className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                        formData.sales_stage_id === stage.id ? 'border-purple-600 bg-purple-50' : 'border-gray-300 hover:border-purple-400'
+                        formData.sales_stage_id === stage.id ? 'border-purple-600 bg-purple-50' : 'border-neutral-300 hover:border-purple-400'
                       }`}>
                       <p className="font-semibold text-foreground">{stage.name}</p>
                       <p className="text-lg font-bold text-purple-600">R$ {stage.value.toFixed(2)}/mês</p>
@@ -318,7 +318,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
               ) : (
                 <select value={formData.payment_method_id}
                   onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base">
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base">
                   <option value="">Escolha a forma de pagamento...</option>
                   {activePaymentMethods.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
                 </select>
@@ -338,14 +338,14 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                   <label className="block text-sm font-medium text-foreground mb-2">Data de Início *</label>
                   <input type="date" value={formData.start_date}
                     onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Vencimento da 1ª Parcela *</label>
                   <input type="date" value={formData.first_payment_due_date}
                     onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
                   />
                 </div>
               </div>
@@ -367,7 +367,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
               </p>
               <input type="date" value={formData.end_date}
                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
               />
             </div>
           )}
@@ -407,10 +407,10 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 placeholder="Adicione observações sobre esta mensalidade..."
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
               />
               {/* Resumo */}
-              <div className="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 space-y-2">
+              <div className="bg-neutral-50 dark:bg-gray-800 border border-neutral-300 dark:border-gray-700 rounded-lg p-4 space-y-2">
                 <h4 className="font-semibold text-foreground">Resumo da Mensalidade</h4>
                 <div className="text-sm space-y-1 text-foreground">
                   <p>Cliente: <span className="font-semibold">{selectedClient?.name}</span></p>
@@ -428,7 +428,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* Navigation */}
           <div className="flex gap-3 pt-6 border-t">
             <button type="button" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading}
-              className="flex-1 px-4 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium">
+              className="flex-1 px-4 py-3 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium">
               ← Anterior
             </button>
             {currentPhase < totalPhases ? (
