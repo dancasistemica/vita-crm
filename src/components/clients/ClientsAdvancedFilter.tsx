@@ -70,9 +70,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           className="pl-9 h-9 text-sm"
         />
         {filters.search && (
-          < variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
+          <Button variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
             <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </>
+          </Button>
         )}
       </div>
 
