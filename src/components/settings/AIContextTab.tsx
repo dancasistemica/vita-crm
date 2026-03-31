@@ -1,14 +1,14 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, useAIContext, AIContextData } from '@/hooks/useAIContext';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
-import { Button, Separator } from '@/components/ui/ds';
+import { useState, useEffect } from 'react';
+import { useAIContext, AIContextData } from '@/hooks/useAIContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
+import { Separator } from '@/components/ui/ds';
 
 const BUSINESS_MODELS = ['B2B', 'B2C', 'B2B2C', 'Marketplace', 'SaaS', 'Agência', 'Consultoria', 'Outro'];
 
@@ -18,13 +18,13 @@ const SUGGESTED_SERVICES = [
 ];
 
 export default function AIContextTab() {
-  const { Button, data, loading, saving, save, getFormattedContext } = useAIContext();
+  const { data, loading, saving, save, getFormattedContext } = useAIContext();
   const [form, setForm] = useState<AIContextData>(data);
   const [newService, setNewService] = useState('');
   const [newExcluded, setNewExcluded] = useState('');
   const [showPreview, setShowPreview] = useState(false);
 
-  useEffect(() => { Button, setForm(data); }, [data]);
+  useEffect(() => { setForm(data); }, [data]);
 
   const services = form.ai_services?.services || [];
   const excluded = form.ai_services?.excluded_services || [];
@@ -33,7 +33,7 @@ export default function AIContextTab() {
   const updateServices = (key: 'services' | 'excluded_services', val: string[]) => {
     setForm(prev => ({
       ...prev,
-      ai_services: { Button, ...prev.ai_services, [key]: val },
+      ai_services: { ...prev.ai_services, [key]: val },
     }));
   };
 
@@ -70,7 +70,7 @@ export default function AIContextTab() {
             placeholder="Ex: Agência de marketing digital especializada em e-commerce"
             maxLength={500}
             value={form.ai_context}
-            onChange={e => setForm(prev => ({ Button, ...prev, ai_context: e.target.value }))}
+            onChange={e => setForm(prev => ({ ...prev, ai_context: e.target.value }))}
             className="min-h-[100px]"
           />
           <p className="text-xs text-muted-foreground mt-1">{form.ai_context.length}/500 caracteres</p>
@@ -97,15 +97,15 @@ export default function AIContextTab() {
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
+              < type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
-              </Button>
+              </>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
                 <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
+                  < variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></>
                 </Badge>
               ))}
             </div>
@@ -132,15 +132,15 @@ export default function AIContextTab() {
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              < type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
-              </Button>
+              </>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
                 <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
+                  < variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></>
                 </Badge>
               ))}
             </div>
@@ -163,13 +163,13 @@ export default function AIContextTab() {
               placeholder="Ex: Pequenas e médias empresas de e-commerce"
               maxLength={300}
               value={form.ai_target_audience}
-              onChange={e => setForm(prev => ({ Button, ...prev, ai_target_audience: e.target.value }))}
+              onChange={e => setForm(prev => ({ ...prev, ai_target_audience: e.target.value }))}
             />
             <p className="text-xs text-muted-foreground">{form.ai_target_audience.length}/300 caracteres</p>
           </div>
           <div className="space-y-3">
             <Label>Modelo de Negócio</Label>
-            <Select value={form.ai_business_model} onValueChange={v => setForm(prev => ({ Button, ...prev, ai_business_model: v }))}>
+            <Select value={form.ai_business_model} onValueChange={v => setForm(prev => ({ ...prev, ai_business_model: v }))}>
               <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
               <SelectContent>
                 {BUSINESS_MODELS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
@@ -195,7 +195,7 @@ export default function AIContextTab() {
             value={customInstructions}
             onChange={e => setForm(prev => ({
               ...prev,
-              ai_services: { Button, ...prev.ai_services, custom_instructions: e.target.value },
+              ai_services: { ...prev.ai_services, custom_instructions: e.target.value },
             }))}
             className="min-h-[100px]"
           />
@@ -223,9 +223,9 @@ export default function AIContextTab() {
 
       {/* Salvar */}
       <div className="flex justify-end">
-        <Button onClick={() => save(form)} disabled={saving}>
+        < onClick={() => save(form)} disabled={saving}>
           {saving ? 'Salvando...' : '💾 Salvar Contexto da IA'}
-        </Button>
+        </>
       </div>
     </div>
   );

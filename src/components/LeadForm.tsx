@@ -1,8 +1,8 @@
-import { Button, useState } from "react";
-import { Button, useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Button, useCustomFields } from "@/hooks/useCustomFields";
-import { Button, 
-  Button, 
+import { useState } from "react";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
+import { useCustomFields } from "@/hooks/useCustomFields";
+import { 
+  
   Input, 
   Select, 
   Badge, 
@@ -10,24 +10,24 @@ import { Button,
   Checkbox, 
   Label 
 } from "@/components/ui/ds";
-import { Button, X } from "lucide-react";
-import { Button, formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
+import { X } from "lucide-react";
+import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
 
 interface LeadFormProps {
   lead: LeadView | null;
   onSave: (data: Partial<LeadView>) => void;
 }
 
-export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
-  const { Button, origins, pipelineStages, tags, interestLevels } = useLeadsData();
-  const { Button, customFields } = useCustomFields();
+export default function LeadForm({ lead, onSave }: LeadFormProps) {
+  const { origins, pipelineStages, tags, interestLevels } = useLeadsData();
+  const { customFields } = useCustomFields();
 
   const defaultStageId = pipelineStages.length > 0
     ? pipelineStages.sort((a, b) => a.order - b.order)[0].id
     : '';
 
   const [form, setForm] = useState<Partial<LeadView>>(
-    lead || { Button, interestLevel: interestLevels[0]?.value || 'frio', pipelineStage: defaultStageId, tags: [], entryDate: new Date().toISOString().split('T')[0], responsible: '' }
+    lead || { interestLevel: interestLevels[0]?.value || 'frio', pipelineStage: defaultStageId, tags: [], entryDate: new Date().toISOString().split('T')[0], responsible: '' }
   );
 
   const [cpfWarning, setCpfWarning] = useState(false);
@@ -35,8 +35,8 @@ export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
     (lead as any)?.customData || (lead as any)?.custom_data || {}
   );
 
-  const set = (key: string, val: any) => setForm(f => ({ Button, ...f, [key]: val }));
-  const setCustom = (key: string, val: any) => setCustomData(d => ({ Button, ...d, [key]: val }));
+  const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
+  const setCustom = (key: string, val: any) => setCustomData(d => ({ ...d, [key]: val }));
 
   const toggleTag = (tagName: string) => {
     const current = form.tags || [];
@@ -88,19 +88,19 @@ export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
           value={form.origin || ''} 
           onChange={e => set('origin', e.target.value)}
           placeholder="Selecionar"
-          options={origins.map(o => ({ Button, value: o, label: o }))}
+          options={origins.map(o => ({ value: o, label: o }))}
         />
         <Select 
           label="Nível de interesse"
           value={form.interestLevel || 'frio'} 
           onChange={e => set('interestLevel', e.target.value)}
-          options={interestLevels.map(l => ({ Button, value: l.value, label: l.label }))}
+          options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
         />
         <Select 
           label="Etapa do funil"
           value={form.pipelineStage || '1'} 
           onChange={e => set('pipelineStage', e.target.value)}
-          options={pipelineStages.map(s => ({ Button, value: s.id, label: s.name }))}
+          options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
         />
         <Input label="Responsável" value={form.responsible || ''} onChange={e => set('responsible', e.target.value)} placeholder="Nome do responsável" />
       </div>
@@ -109,7 +109,7 @@ export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
         label="Valor do Negócio"
         inputMode="decimal"
         placeholder="R$ 0,00"
-        value={form.dealValue != null ? `R$ ${Number(form.dealValue).toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}` : ''}
+        value={form.dealValue != null ? `R$ ${Number(form.dealValue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
         onChange={e => {
           const raw = e.target.value.replace(/[R$\s.]/g, '').replace(',', '.');
           const num = parseFloat(raw);
@@ -159,7 +159,7 @@ export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
                     value={customData[cf.field_name] || ''} 
                     onChange={e => setCustom(cf.field_name, e.target.value)}
                     placeholder="Selecionar"
-                    options={(cf.field_options || []).map(opt => ({ Button, value: opt, label: opt }))}
+                    options={(cf.field_options || []).map(opt => ({ value: opt, label: opt }))}
                   />
                 )}
                 {cf.field_type === 'checkbox' && (
@@ -177,7 +177,7 @@ export default function LeadForm({ Button, lead, onSave }: LeadFormProps) {
         </div>
       )}
 
-      <Button variant="primary" className="w-full" onClick={() => onSave({ Button, ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</Button>
+      < variant="primary" className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</>
     </div>
   );
 }

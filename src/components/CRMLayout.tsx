@@ -1,18 +1,18 @@
-import { Button, SidebarProvider, useSidebar } from "@/components/ui/ds";
-import { Button, AppSidebar } from "@/components/AppSidebar";
-import { Button, Link, Outlet, useNavigate } from "react-router-dom";
-import { Button, useBrand } from "@/contexts/BrandContext";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
-import { Button, useSearch } from "@/hooks/useSearch";
-import { Button, Menu, Search } from "lucide-react";
+import { SidebarProvider, useSidebar } from "@/components/ui/ds";
+import { AppSidebar } from "@/components/AppSidebar";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useBrand } from "@/contexts/BrandContext";
+import { } from "@/components/ui/ds/";
+import { Input } from "@/components/ui/ds/Input";
+import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
+import { useSearch } from "@/hooks/useSearch";
+import { Menu, Search } from "lucide-react";
 
-function HeaderMenuButton() {
-  const { Button, toggleSidebar } = useSidebar();
+function HeaderMenu() {
+  const { toggleSidebar } = useSidebar();
 
   return (
-    <Button
+    <
       variant="ghost"
       size="sm"
       onClick={toggleSidebar}
@@ -21,14 +21,14 @@ function HeaderMenuButton() {
       type="button"
     >
       <Menu className="h-5 w-5" />
-    </Button>
+    </>
   );
 }
 
 export default function CRMLayout() {
-  const { Button, brand } = useBrand();
-  const { Button, currentOrganization } = useOrganizationSwitch();
-  const { Button, searchQuery, setSearchQuery, results, loading } = useSearch();
+  const { brand } = useBrand();
+  const { currentOrganization } = useOrganizationSwitch();
+  const { searchQuery, setSearchQuery, results, loading } = useSearch();
   const navigate = useNavigate();
   const organizationName = currentOrganization?.name || brand.org_display_name || "CRM";
 
@@ -39,7 +39,7 @@ export default function CRMLayout() {
         <div className="flex-1 flex flex-col min-w-0">
           <header className="flex items-center justify-between gap-4 px-4 py-3 bg-white border-b border-neutral-200">
             <div className="flex items-center gap-3 min-w-fit">
-              <HeaderMenuButton />
+              <HeaderMenu />
               <div className="hidden sm:flex flex-col">
                 <span className="text-xs text-neutral-500 uppercase tracking-wide">Organização</span>
                 <span className="text-sm font-semibold text-neutral-900">{organizationName}</span>
@@ -61,15 +61,15 @@ export default function CRMLayout() {
               {searchQuery && results.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
                   {results.map((result) => (
-                    <Button variant="secondary" size="sm"
+                    < variant="secondary" size="sm"
                       key={`${result.type}-${result.id}`}
                       onClick={() => {
                         if (result.type === "lead") {
-                          navigate("/leads", { Button, state: { Button, leadId: result.id } });
+                          navigate("/leads", { state: { leadId: result.id } });
                         } else if (result.type === "client") {
                           navigate(`/clientes/${result.id}`);
                         } else if (result.type === "task") {
-                          navigate("/tarefas", { Button, state: { Button, taskId: result.id } });
+                          navigate("/tarefas", { state: { taskId: result.id } });
                         }
                         setSearchQuery("");
                       }}
@@ -81,7 +81,7 @@ export default function CRMLayout() {
                         <p className="text-xs text-neutral-500">{result.subtitle}</p>
                       )}
                       <span className="text-xs text-neutral-400 capitalize">{result.type}</span>
-                    </Button>
+                    </>
                   ))}
                 </div>
               )}

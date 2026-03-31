@@ -1,11 +1,11 @@
-import { Button, useState, useRef, useEffect } from 'react';
-import { Button, useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
-import { Button, ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
-import { Button, Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui/ds';
-import { Button, CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
+import { useState, useRef, useEffect } from 'react';
+import { useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
+import { ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage, } from '@/components/ui/ds';
+import { CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
 
 export function OrganizationSwitcher() {
-  const { Button, organizations, currentOrganization, currentOrgId, isSuperadmin, loading, switchOrganization } = useOrganizationSwitch();
+  const { organizations, currentOrganization, currentOrgId, isSuperadmin, loading, switchOrganization } = useOrganizationSwitch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export function OrganizationSwitcher() {
       <p className="text-[10px] uppercase tracking-widest text-sidebar-foreground/40 font-medium mb-1.5 px-1">
         Organização
       </p>
-      <Button variant="secondary" size="sm"
+      < variant="secondary" size="sm"
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg bg-sidebar-accent/40 hover:bg-sidebar-accent/70 transition-colors text-left"
       >
@@ -53,7 +53,7 @@ export function OrganizationSwitcher() {
           {isConsolidated ? '🌐 Consolidado' : currentOrganization?.name || 'Selecione uma org'}
         </span>
         <ChevronDown className={`h-3.5 w-3.5 text-sidebar-foreground/50 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </Button>
+      </>
 
       {open && (
         <div className="absolute left-3 right-3 mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 overflow-hidden">
@@ -73,8 +73,8 @@ export function OrganizationSwitcher() {
           <div className="max-h-56 overflow-y-auto">
             {/* Consolidado option — always first */}
             {(!search || 'consolidado'.includes(search.toLowerCase())) && (
-              <Button variant="secondary" size="sm"
-                onClick={() => { Button, switchOrganization(CONSOLIDATED_ORG_ID); setOpen(false); setSearch(''); }}
+              < variant="secondary" size="sm"
+                onClick={() => { switchOrganization(CONSOLIDATED_ORG_ID); setOpen(false); setSearch(''); }}
                 className={`w-full text-left px-3 py-2.5 flex items-center gap-3.5 hover:bg-accent/50 transition-colors hover:text-black ${isConsolidated ? 'bg-accent' : 'text-black'}`}
               >
                 <div className="h-7 w-7 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
@@ -87,7 +87,7 @@ export function OrganizationSwitcher() {
                   </p>
                 </div>
                 {isConsolidated && <Check className="h-4 w-4 text-primary shrink-0" />}
-              </Button>
+              </>
             )}
 
             {/* Separator */}
@@ -101,9 +101,9 @@ export function OrganizationSwitcher() {
               filtered.map(org => {
                 const active = currentOrgId === org.id;
                 return (
-                  <Button variant="secondary" size="sm"
+                  < variant="secondary" size="sm"
                     key={org.id}
-                    onClick={() => { Button, switchOrganization(org.id); setOpen(false); setSearch(''); }}
+                    onClick={() => { switchOrganization(org.id); setOpen(false); setSearch(''); }}
                     className={`w-full text-left px-3 py-2.5 flex items-center gap-3.5 hover:bg-accent/50 transition-colors hover:text-black ${active ? 'bg-accent' : 'text-black'}`}
                   >
                     <Avatar className="h-7 w-7 shrink-0">
@@ -119,7 +119,7 @@ export function OrganizationSwitcher() {
                       )}
                     </div>
                     {active && <Check className="h-4 w-4 text-primary shrink-0" />}
-                  </Button>
+                  </>
                 );
               })
             )}

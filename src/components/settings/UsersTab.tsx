@@ -1,21 +1,21 @@
-import { Button, useState, useEffect, useMemo } from "react";
-import { Button, supabase } from "@/integrations/supabase/client";
-import { Button, useOrganization } from "@/contexts/OrganizationContext";
-import { Button, useSuperadmin } from "@/hooks/useSuperadmin";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, Label } from "@/components/ui/ds";
-import { Button, Badge } from "@/components/ui/ds/Badge";
-import { Button, Select } from "@/components/ui/ds/Select";
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/ds";
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
-import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/ds";
-import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
-import { Button, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/ds";
-import { Button, Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
-import { Button, cn } from "@/lib/utils";
-import { Button, toast } from "sonner";
+import { useState, useEffect, useMemo } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useOrganization } from "@/contexts/OrganizationContext";
+import { useSuperadmin } from "@/hooks/useSuperadmin";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { } from "@/components/ui/ds/";
+import { Input } from "@/components/ui/ds/Input";
+import { Label } from "@/components/ui/ds";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Select } from "@/components/ui/ds/Select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/ds";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/ds";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/ds";
+import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface OrgUser {
   member_id: string;
@@ -47,8 +47,8 @@ const roleBadgeVariant = (role: string) => {
 };
 
 export default function UsersTab() {
-  const { Button, organizationId, organization } = useOrganization();
-  const { Button, isSuperadmin } = useSuperadmin();
+  const { organizationId, organization } = useOrganization();
+  const { isSuperadmin } = useSuperadmin();
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -81,7 +81,7 @@ export default function UsersTab() {
     if (!organizationId) return;
     setLoading(true);
     try {
-      const { Button, data: members, error } = await supabase
+      const { data: members, error } = await supabase
         .from("organization_members")
         .select("id, user_id, role, created_at")
         .eq("organization_id", organizationId);
@@ -94,7 +94,7 @@ export default function UsersTab() {
       }
 
       const userIds = members.map((m) => m.user_id);
-      const { Button, data: profiles } = await supabase
+      const { data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name, email, phone")
         .in("id", userIds);
@@ -132,7 +132,7 @@ export default function UsersTab() {
         .select('name')
         .eq('organization_id', organizationId)
         .order('name')
-        .then(({ Button, data }) => {
+        .then(({ data }) => {
           setCustomRoleOptions(data?.map(r => r.name) || []);
         });
     }
@@ -142,7 +142,7 @@ export default function UsersTab() {
   const fetchOrgs = async () => {
     setOrgsLoading(true);
     try {
-      const { Button, data, error } = await supabase
+      const { data, error } = await supabase
         .from("organizations")
         .select("id, name, cnpj")
         .eq("active", true)
@@ -212,17 +212,17 @@ export default function UsersTab() {
     try {
       if (editing) {
         // Update profile
-        const { Button, error: profileError } = await supabase
+        const { error: profileError } = await supabase
           .from("profiles")
-          .update({ Button, full_name: formName, phone: formPhone || null })
+          .update({ full_name: formName, phone: formPhone || null })
           .eq("id", editing.user_id);
         if (profileError) throw profileError;
 
         // Update role if changed
         if (formRole !== editing.role) {
-          const { Button, error: roleError } = await supabase
+          const { error: roleError } = await supabase
             .from("organization_members")
-            .update({ Button, role: formRole as any })
+            .update({ role: formRole as any })
             .eq("id", editing.member_id);
           if (roleError) throw roleError;
         }
@@ -230,7 +230,7 @@ export default function UsersTab() {
         toast.success("Usuário atualizado!");
       } else {
         // Create via edge function
-        const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
+        const { data, error } = await supabase.functions.invoke("manage-org-users", {
           body: {
             action: "create",
             organization_id: targetOrgId,
@@ -267,7 +267,7 @@ export default function UsersTab() {
     if (!deleteTarget) return;
     setSaving(true);
     try {
-      const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
+      const { data, error } = await supabase.functions.invoke("manage-org-users", {
         body: {
           action: "delete",
           organization_id: organizationId,
@@ -290,7 +290,7 @@ export default function UsersTab() {
 
   const handleResetPassword = async (u: OrgUser) => {
     try {
-      const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
+      const { data, error } = await supabase.functions.invoke("manage-org-users", {
         body: {
           action: "reset_password",
           organization_id: organizationId,
@@ -313,9 +313,9 @@ export default function UsersTab() {
           <Users className="h-5 w-5" />
           Usuários da Organização
         </CardTitle>
-        <Button size="sm" onClick={openCreate}>
+        < size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
-        </Button>
+        </>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
@@ -325,11 +325,11 @@ export default function UsersTab() {
             <Input
               placeholder="Buscar por nome ou email..."
               value={search}
-              onChange={(e) => { Button, setSearch(e.target.value); setPage(1); }}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="pl-9"
             />
           </div>
-          <Select value={roleFilter} onValueChange={(v) => { Button, setRoleFilter(v); setPage(1); }}>
+          <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filtrar por função" />
             </SelectTrigger>
@@ -381,7 +381,7 @@ export default function UsersTab() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
+                          <
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -389,8 +389,8 @@ export default function UsersTab() {
                             onClick={() => openEdit(u)}
                           >
                             <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
+                          </>
+                          <
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -398,9 +398,9 @@ export default function UsersTab() {
                             onClick={() => handleResetPassword(u)}
                           >
                             <RotateCcw className="h-4 w-4" />
-                          </Button>
+                          </>
                           {u.role !== "owner" && (
-                            <Button
+                            <
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 text-destructive"
@@ -408,7 +408,7 @@ export default function UsersTab() {
                               onClick={() => setDeleteTarget(u)}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </Button>
+                            </>
                           )}
                         </div>
                       </TableCell>
@@ -425,22 +425,22 @@ export default function UsersTab() {
                   {filtered.length} usuário(s) · Página {page} de {totalPages}
                 </span>
                 <div className="flex gap-1">
-                  <Button
+                  <
                     variant="neutral"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
                   >
                     Anterior
-                  </Button>
-                  <Button
+                  </>
+                  <
                     variant="neutral"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
                   >
                     Próximo
-                  </Button>
+                  </>
                 </div>
               </div>
             )}
@@ -448,7 +448,7 @@ export default function UsersTab() {
         )}
 
         {/* Create/Edit Dialog */}
-        <Dialog open={formOpen} onOpenChange={(o) => { Button, setFormOpen(o); if (!o) setEditing(null); }}>
+        <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
           <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
             <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
               <DialogTitle>{editing ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
@@ -481,7 +481,7 @@ export default function UsersTab() {
                   <Label>Organização *</Label>
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
-                      <Button
+                      <
                         variant="neutral"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
@@ -491,7 +491,7 @@ export default function UsersTab() {
                           ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
                           : "Selecione uma organização"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
+                      </>
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
                       <Command>
@@ -557,17 +557,17 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
-              <Button onClick={handleSave} disabled={saving}>
+              < variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</>
+              < onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}
-              </Button>
+              </>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
         {/* Delete Confirmation */}
-        <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { Button, if (!o) setDeleteTarget(null); }}>
+        <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Remover usuário</AlertDialogTitle>

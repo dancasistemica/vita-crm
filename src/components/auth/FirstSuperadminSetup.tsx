@@ -1,15 +1,15 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, useNavigate } from 'react-router-dom';
-import { Button, useForm } from 'react-hook-form';
-import { Button, zodResolver } from '@hookform/resolvers/zod';
-import { Button, z } from 'zod';
-import { Button, toast } from 'sonner';
-import { Button, hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
-import { Button } from '@/components/ui/ds/Button';
-import { Button, Input } from '@/components/ui/ds/Input';
-import { Button, Card } from '@/components/ui/ds/Card';
-import { Button, Alert } from '@/components/ui/ds/Alert';
-import { Button, Shield, Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
+import { } from '@/components/ui/ds/';
+import { Input } from '@/components/ui/ds/Input';
+import { Card } from '@/components/ui/ds/Card';
+import { Alert } from '@/components/ui/ds/Alert';
+import { Shield, Info } from 'lucide-react';
 
 const setupSchema = z.object({
   fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),
@@ -30,13 +30,13 @@ export default function FirstSuperadminSetup() {
 
   const form = useForm<SetupForm>({
     resolver: zodResolver(setupSchema),
-    defaultValues: { Button, fullName: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
   });
 
   useEffect(() => {
     hasSuperadmin().then((exists) => {
       if (exists) {
-        navigate('/auth', { Button, replace: true });
+        navigate('/auth', { replace: true });
       } else {
         setChecking(false);
       }
@@ -49,7 +49,7 @@ export default function FirstSuperadminSetup() {
       const result = await createFirstSuperadmin(data.email, data.password, data.fullName);
       if (result.success) {
         toast.success(result.message);
-        setTimeout(() => navigate('/auth', { Button, replace: true }), 2000);
+        setTimeout(() => navigate('/auth', { replace: true }), 2000);
       } else {
         toast.error(result.message);
       }
@@ -122,9 +122,9 @@ export default function FirstSuperadminSetup() {
               required
               {...form.register('confirmPassword')} 
             />
-            <Button type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
+            < type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
               Criar Superadmin
-            </Button>
+            </>
           </form>
         </Card>
 

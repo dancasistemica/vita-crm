@@ -1,12 +1,12 @@
-import { Button, useState, useCallback } from 'react';
-import { Button, Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
-import { Button, parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
-import { Button, parseFile, getFileType } from '@/services/excelParser';
-import { Button, ImportModalState } from '@/hooks/useImportModal';
+import { useState, useCallback } from 'react';
+import { Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
+import { } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { toast } from 'sonner';
+import { parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
+import { parseFile, getFileType } from '@/services/excelParser';
+import { ImportModalState } from '@/hooks/useImportModal';
 
 interface Props {
   state: ImportModalState;
@@ -15,7 +15,7 @@ interface Props {
   onBack: () => void;
 }
 
-export default function Step4Upload({ Button, state, update, onNext, onBack }: Props) {
+export default function Step4Upload({ state, update, onNext, onBack }: Props) {
   const [dragOver, setDragOver] = useState(false);
 
   const isDateHeader = (header: string) => {
@@ -26,7 +26,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
   const normalizeDateColumns = (headers: string[], rows: CSVRow[]) => {
     let conversions = 0;
     const normalizedRows = rows.map(row => {
-      const next = { Button, ...row };
+      const next = { ...row };
       headers.forEach(header => {
         if (!isDateHeader(header)) return;
         const value = row[header];
@@ -43,7 +43,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
       return next;
     });
 
-    return { Button, normalizedRows, conversions };
+    return { normalizedRows, conversions };
   };
 
   const handleFile = useCallback(async (file: File) => {
@@ -57,7 +57,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
       return;
     }
 
-    update({ Button, loading: true, error: null });
+    update({ loading: true, error: null });
 
     try {
       let headers: string[];
@@ -74,11 +74,11 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
         rows = parsed.rows;
       }
 
-      if (headers.length === 0) { Button, toast.error('Arquivo vazio ou inválido'); update({ Button, loading: false }); return; }
-      if (rows.length > 1000) { Button, toast.error('Máximo 1.000 linhas por importação.'); update({ Button, loading: false }); return; }
+      if (headers.length === 0) { toast.error('Arquivo vazio ou inválido'); update({ loading: false }); return; }
+      if (rows.length > 1000) { toast.error('Máximo 1.000 linhas por importação.'); update({ loading: false }); return; }
 
       const suggested = suggestMapping(headers);
-      const { Button, normalizedRows, conversions } = normalizeDateColumns(headers, rows);
+      const { normalizedRows, conversions } = normalizeDateColumns(headers, rows);
       update({
         file,
         fileName: file.name,
@@ -88,10 +88,10 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
         loading: false,
         dateConversions: conversions,
       });
-      console.log('[Step4Upload] Arquivo processado:', { Button, headers: headers.length, rows: rows.length });
+      console.log('[Step4Upload] Arquivo processado:', { headers: headers.length, rows: rows.length });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erro ao processar arquivo');
-      update({ Button, loading: false });
+      update({ loading: false });
     }
   }, [update]);
 
@@ -117,7 +117,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
           className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
             dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
           }`}
-          onDragOver={e => { Button, e.preventDefault(); setDragOver(true); }}
+          onDragOver={e => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => document.getElementById('import-file-input')?.click()}
@@ -134,7 +134,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
               <p className="text-xs text-muted-foreground mt-1">CSV, XLSX ou XLS (máx 10MB, 1.000 linhas)</p>
             </>
           )}
-          <input id="import-file-input" type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => { Button, const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+          <input id="import-file-input" type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
         </div>
       ) : (
         <>
@@ -145,9 +145,9 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
               <Badge variant="neutral">{state.csvRows.length} linhas</Badge>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => update({ Button, file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
+            < variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar
-            </Button>
+            </>
           </div>
 
           {/* Preview */}
@@ -183,7 +183,7 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
                   <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
                   <Select
                     value={state.mapping[header] || '_ignore'}
-                    onValueChange={v => update({ Button, mapping: { Button, ...state.mapping, [header]: v === '_ignore' ? '' : v } })}
+                    onValueChange={v => update({ mapping: { ...state.mapping, [header]: v === '_ignore' ? '' : v } })}
                     key={`${header}-${state.mapping[header] || '_ignore'}`}
                   >
                     <SelectTrigger className="w-[160px] h-8 text-xs">
@@ -203,8 +203,8 @@ export default function Step4Upload({ Button, state, update, onNext, onBack }: P
       )}
 
       <div className="flex justify-between">
-        <Button variant="neutral" onClick={onBack}>Voltar</Button>
-        <Button onClick={onNext} disabled={!canProceed}>Validar e Importar</Button>
+        < variant="neutral" onClick={onBack}>Voltar</>
+        < onClick={onNext} disabled={!canProceed}>Validar e Importar</>
       </div>
     </div>
   );

@@ -1,33 +1,33 @@
-import { Button, useEffect, useMemo, useRef, useState } from "react";
-import { Button, useLocation, useNavigate } from "react-router-dom";
-import { Button, useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Button, Card } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, Badge } from "@/components/ui/ds/Badge";
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Button, Checkbox } from "@/components/ui/ds";
-import { Button, Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
-import { Button, toast } from "sonner";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
+import { Card } from "@/components/ui/ds/Card";
+import { } from "@/components/ui/ds/";
+import { Input } from "@/components/ui/ds/Input";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Checkbox } from "@/components/ui/ds";
+import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
-import { Button, DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
-import { Button, useTablePagination } from "@/hooks/useTablePagination";
-import { Button, useUserRole } from "@/hooks/useUserRole";
-import { Button, canDeleteLead } from "@/services/leadsService";
+import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
+import { useTablePagination } from "@/hooks/useTablePagination";
+import { useUserRole } from "@/hooks/useUserRole";
+import { canDeleteLead } from "@/services/leadsService";
 
-const interestColors: Record<string, string> = { Button, frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
-const interestBarColors: Record<string, string> = { Button, frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
+const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
+const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
 
 export default function LeadsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { Button, leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
-  const { Button, role, canCreate: userCanCreate, canEdit: userCanEdit } = useUserRole();
+  const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
+  const { role, canCreate: userCanCreate, canEdit: userCanEdit } = useUserRole();
   const userCanDelete = canDeleteLead(role);
 
   const [search, setSearch] = useState("");
@@ -52,7 +52,7 @@ export default function LeadsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<LeadView | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const { Button, page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
+  const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
   const getFilteredLeads = () => {
     if (!leads) return [];
@@ -180,13 +180,13 @@ export default function LeadsPage() {
   };
 
   useEffect(() => {
-    const state = location.state as { Button, leadId?: string } | null;
+    const state = location.state as { leadId?: string } | null;
     if (!state?.leadId) return;
 
     const targetLead = leads.find(lead => lead.id === state.leadId);
     if (targetLead) {
       setDetailLead(targetLead);
-      navigate(location.pathname, { Button, replace: true, state: null });
+      navigate(location.pathname, { replace: true, state: null });
     }
   }, [location.state, leads, navigate, location.pathname]);
 
@@ -328,17 +328,17 @@ export default function LeadsPage() {
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
-            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
+            < variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
               <Upload className="h-4 w-4" /> Importar Leads
-            </Button>
+            </>
           )}
-          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
+          < variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4" /> Exportar
-          </Button>
+          </>
           {userCanCreate && (
             <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</Button>
+                < size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
@@ -357,7 +357,7 @@ export default function LeadsPage() {
         <Input
           placeholder="Buscar por nome, email ou telefone..."
           value={search}
-          onChange={e => { Button, setSearch(e.target.value); resetPage(); }}
+          onChange={e => { setSearch(e.target.value); resetPage(); }}
           icon={<Search className="h-4 w-4" />}
         />
 
@@ -373,7 +373,7 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Origem</label>
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenOrigin(!openOrigin);
@@ -389,7 +389,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </Button>
+              </>
 
               {openOrigin && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -412,13 +412,13 @@ export default function LeadsPage() {
                   {selectedOrigins.map((origin) => (
                     <Badge key={origin} variant="default" size="sm" className="gap-1">
                       {origin}
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
                         className="ml-1 hover:text-primary-900"
                       >
                         ×
-                      </Button>
+                      </>
                     </Badge>
                   ))}
                 </div>
@@ -427,7 +427,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenInterest(!openInterest);
@@ -443,7 +443,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </Button>
+              </>
 
               {openInterest && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -466,13 +466,13 @@ export default function LeadsPage() {
                   {selectedInterests.map((interest) => (
                     <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                       {getInterestLabel(interest)}
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
                         className="ml-1 hover:text-green-900"
                       >
                         ×
-                      </Button>
+                      </>
                     </span>
                   ))}
                 </div>
@@ -483,7 +483,7 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenStage(!openStage);
@@ -499,7 +499,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </Button>
+              </>
 
               {openStage && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -522,13 +522,13 @@ export default function LeadsPage() {
                   {selectedStages.map((stage) => (
                     <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
                       {getStageName(stage)}
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
                         className="ml-1 hover:text-purple-900"
                       >
                         ×
-                      </Button>
+                      </>
                     </span>
                   ))}
                 </div>
@@ -537,7 +537,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Tags</label>
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenTags(!openTags);
@@ -553,7 +553,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </Button>
+              </>
 
               {openTags && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -579,13 +579,13 @@ export default function LeadsPage() {
                   {selectedTags.map((tag) => (
                     <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                       {tag}
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
                         className="ml-1 hover:text-orange-900"
                       >
                         ×
-                      </Button>
+                      </>
                     </span>
                   ))}
                 </div>
@@ -594,7 +594,7 @@ export default function LeadsPage() {
           </div>
           
           <div className="flex justify-end pt-2">
-            <Button variant="secondary" size="sm" onClick={resetFilters}>Limpar Filtros</Button>
+            < variant="secondary" size="sm" onClick={resetFilters}>Limpar Filtros</>
           </div>
         </Card>
       </div>
@@ -612,20 +612,20 @@ export default function LeadsPage() {
           <div className="flex-1">
             <select
               value={sortBy}
-              onChange={(e) => { Button, setSortBy(e.target.value as 'date' | 'name'); resetPage(); }}
+              onChange={(e) => { setSortBy(e.target.value as 'date' | 'name'); resetPage(); }}
               className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="date">📅 Data de Cadastro</option>
               <option value="name">🔤 Ordem Alfabética</option>
             </select>
           </div>
-          <Button
+          <
             variant="secondary"
             size="sm"
-            onClick={() => { Button, setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
+            onClick={() => { setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
           >
             {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-          </Button>
+          </>
         </div>
       </div>
 
@@ -634,16 +634,16 @@ export default function LeadsPage() {
           <span className="text-sm font-medium text-primary-700">{selectedIds.length} selecionado(s)</span>
           <div className="ml-auto flex gap-2">
             {userCanEdit && (
-              <Button variant="secondary" size="sm" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3 w-3" />}>
+              < variant="secondary" size="sm" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3 w-3" />}>
                 Editar
-              </Button>
+              </>
             )}
             {userCanDelete && (
-              <Button variant="error" size="sm" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3 w-3" />}>
+              < variant="error" size="sm" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3 w-3" />}>
                 Deletar
-              </Button>
+              </>
             )}
-            <Button variant="ghost" size="sm" onClick={() => setSelectedIds([])}>Limpar</Button>
+            < variant="ghost" size="sm" onClick={() => setSelectedIds([])}>Limpar</>
           </div>
         </Card>
       )}
@@ -686,18 +686,18 @@ export default function LeadsPage() {
               </div>
               <div className="flex items-center gap-1">
                 {lead.phone && (
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(`https://wa.me/${lead.phone}`, '_blank')}>
+                  < variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(`https://wa.me/${lead.phone}`, '_blank')}>
                     <Phone className="h-4 w-4" />
-                  </Button>
+                  </>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
+                  < variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
-                  </Button>
+                  </>
                 )}
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" onClick={() => handleDeleteClick(lead)}>
+                < variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" onClick={() => handleDeleteClick(lead)}>
                   <Trash2 className="h-4 w-4" />
-                </Button>
+                </>
               </div>
             </div>
           </Card>
@@ -708,15 +708,15 @@ export default function LeadsPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
           <div className="flex items-center gap-1">
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            < variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
             <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+            < variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
           </div>
         </div>
       )}
 
       <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
-      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { Button, setSelectedIds([]); refetch(); }} items={leads.map(l => ({ Button, id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
+      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
       <LeadDetailSheet
         lead={detailLead}
@@ -724,7 +724,7 @@ export default function LeadsPage() {
         onClose={() => setDetailLead(null)}
         stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
         interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
-        onEdit={(l) => { Button, setDetailLead(null); handleEditLead(l); }}
+        onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
         onDelete={async (id) => {
           if (!userCanDelete) {
             console.warn('[LeadsPage] Usuario sem permissao para excluir lead');

@@ -1,5 +1,5 @@
-import { Button, LucideIcon } from 'lucide-react';
-import { Button, Card } from '@/components/ui/ds';
+import { LucideIcon } from 'lucide-react';
+import { Card } from '@/components/ui/ds';
 
 interface QuickAccessCardProps {
   icon: LucideIcon;
@@ -10,7 +10,7 @@ interface QuickAccessCardProps {
   statLabel?: string;
 }
 
-export function QuickAccessCard({ Button, icon: Icon, title, description, onClick, stat, statLabel }: QuickAccessCardProps) {
+export function QuickAccessCard({ icon: Icon, title, description, onClick, stat, statLabel }: QuickAccessCardProps) {
   return (
     <Card
       onClick={onClick}

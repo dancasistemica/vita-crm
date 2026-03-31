@@ -1,9 +1,9 @@
-import { Button, useCallback, useEffect, useState } from 'react';
-import { Button, Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
-import { Button, tagsService } from '@/services/tagsService';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, toast } from 'sonner';
+import { useCallback, useEffect, useState } from 'react';
+import { Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
+import { tagsService } from '@/services/tagsService';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface Tag {
   id: string;
@@ -14,7 +14,7 @@ interface Tag {
 }
 
 export const TagsManagement = () => {
-  const { Button, organization } = useOrganization();
+  const { organization } = useOrganization();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export const TagsManagement = () => {
       .channel(`tags:org:${orgId}`)
       .on(
         'postgres_changes',
-        { Button, event: '*', schema: 'public', table: 'tags', filter: `organization_id=eq.${orgId}` },
+        { event: '*', schema: 'public', table: 'tags', filter: `organization_id=eq.${orgId}` },
         () => {
           console.log('[TagsManagement] Realtime: tags alteradas');
           loadTags();
@@ -71,7 +71,7 @@ export const TagsManagement = () => {
 
     const leadTagsChannel = supabase
       .channel(`lead_tags:org:${orgId}`)
-      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'lead_tags' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'lead_tags' }, () => {
         console.log('[TagsManagement] Realtime: lead_tags alteradas');
         loadTags();
       })
@@ -199,14 +199,14 @@ export const TagsManagement = () => {
             onChange={(e) => setNewTagColor(e.target.value)}
             className="w-12 h-11 border border-neutral-300 rounded-md cursor-pointer"
           />
-          <Button variant="secondary" size="sm"
+          < variant="secondary" size="sm"
             onClick={handleCreateTag}
             disabled={isSaving}
             className="px-4 py-2 min-h-[44px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
           >
             {isSaving && <Loader className="w-4 h-4 animate-spin" />}
             Criar
-          </Button>
+          </>
         </div>
       </div>
 
@@ -235,27 +235,27 @@ export const TagsManagement = () => {
                     onChange={(e) => setEditColor(e.target.value)}
                     className="w-12 h-11 border border-neutral-300 rounded-md cursor-pointer"
                   />
-                  <Button variant="secondary" size="sm"
+                  < variant="secondary" size="sm"
                     onClick={() => handleEditTag(tag.id)}
                     disabled={isSaving}
                     className="px-4 py-2 min-h-[44px] bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
                   >
                     Salvar
-                  </Button>
-                  <Button variant="secondary" size="sm"
+                  </>
+                  < variant="secondary" size="sm"
                     onClick={() => setEditingId(null)}
                     disabled={isSaving}
                     className="px-4 py-2 min-h-[44px] bg-gray-300 text-neutral-800 rounded-md hover:bg-gray-400 transition-colors disabled:opacity-50"
                   >
                     Cancelar
-                  </Button>
+                  </>
                 </div>
               ) : (
                 <>
                   <div className="flex items-center gap-3 flex-1">
                     <div
                       className="w-4 h-4 rounded-full"
-                      style={{ Button, backgroundColor: tag.color }}
+                      style={{ backgroundColor: tag.color }}
                     />
                     <div>
                       <p className="font-medium text-neutral-900">{tag.name}</p>
@@ -266,7 +266,7 @@ export const TagsManagement = () => {
                   </div>
 
                   <div className="flex gap-3">
-                    <Button variant="secondary" size="sm"
+                    < variant="secondary" size="sm"
                       onClick={() => {
                         setEditingId(tag.id);
                         setEditName(tag.name);
@@ -276,8 +276,8 @@ export const TagsManagement = () => {
                       title="Editar tag"
                     >
                       <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button variant="secondary" size="sm"
+                    </>
+                    < variant="secondary" size="sm"
                       onClick={() => {
                         setShowDeleteModal(tag.id);
                         setDeleteError(null);
@@ -286,7 +286,7 @@ export const TagsManagement = () => {
                       title="Deletar tag"
                     >
                       <Trash2 className="w-4 h-4" />
-                    </Button>
+                    </>
                   </div>
                 </>
               )}
@@ -319,7 +319,7 @@ export const TagsManagement = () => {
             </div>
 
             <div className="bg-neutral-50 border-t border-neutral-200 p-4 flex gap-3 justify-end">
-              <Button variant="secondary" size="sm"
+              < variant="secondary" size="sm"
                 onClick={() => {
                   setShowDeleteModal(null);
                   setDeleteError(null);
@@ -328,15 +328,15 @@ export const TagsManagement = () => {
                 className="px-4 py-2 min-h-[44px] bg-gray-300 text-neutral-800 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
               >
                 Cancelar
-              </Button>
-              <Button variant="secondary" size="sm"
+              </>
+              < variant="secondary" size="sm"
                 onClick={() => handleDeleteTag(showDeleteModal)}
                 disabled={isSaving}
                 className="px-4 py-2 min-h-[44px] bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-3"
               >
                 {isSaving && <Loader className="w-4 h-4 animate-spin" />}
                 {deleteError ? 'Tentar Novamente' : 'Deletar'}
-              </Button>
+              </>
             </div>
           </div>
         </div>

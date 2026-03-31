@@ -1,6 +1,6 @@
-import { Button, NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
-import { Button, forwardRef } from "react";
-import { Button, cn } from "@/lib/utils";
+import { NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
   className?: string;
@@ -9,12 +9,12 @@ interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
 }
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
-  ({ Button, className, activeClassName, pendingClassName, to, ...props }, ref) => {
+  ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
     return (
       <RouterNavLink
         ref={ref}
         to={to}
-        className={({ Button, isActive, isPending }) =>
+        className={({ isActive, isPending }) =>
           cn(className, isActive && activeClassName, isPending && pendingClassName)
         }
         {...props}
@@ -25,4 +25,4 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
 
 NavLink.displayName = "NavLink";
 
-export { Button, NavLink };
+export { NavLink };

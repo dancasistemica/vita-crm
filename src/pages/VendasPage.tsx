@@ -1,14 +1,14 @@
-import React, { Button, useState, useEffect } from 'react';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
-import { Button, Card, Input, Select, Badge, Alert } from '@/components/ui/ds';
-import { Button, Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
-import { Button, toast } from 'sonner';
-import { Button, CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import React, { useState, useEffect } from 'react';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
+import { Card, Input, Select, Badge, Alert } from '@/components/ui/ds';
+import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
+import { toast } from 'sonner';
+import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import EditSaleModal from '@/components/sales/EditSaleModal';
 
 export function VendasPage() {
-  const { Button, organization } = useOrganization();
+  const { organization } = useOrganization();
   
   const [sales, setSales] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -86,7 +86,7 @@ export function VendasPage() {
             {filteredSales.length} {filteredSales.length === 1 ? 'venda' : 'vendas'}
           </p>
         </div>
-        <Button 
+        < 
           variant="primary" 
           size="lg"
           icon={<Plus className="w-5 h-5" />}
@@ -94,7 +94,7 @@ export function VendasPage() {
           className="w-full md:w-auto"
         >
           Nova Venda
-        </Button>
+        </>
       </div>
 
       {/* ERROR ALERT */}
@@ -102,9 +102,9 @@ export function VendasPage() {
         <Alert variant="error" title="Erro ao carregar vendas">
           {error}
           <div className="mt-3">
-            <Button variant="error" size="sm" onClick={loadSales}>
+            < variant="error" size="sm" onClick={loadSales}>
               Tentar Novamente
-            </Button>
+            </>
           </div>
         </Alert>
       )}
@@ -121,9 +121,9 @@ export function VendasPage() {
           <Select
             label="Status"
             options={[
-              { Button, value: 'todos', label: 'Todos' },
-              { Button, value: 'ativa', label: 'Ativa' },
-              { Button, value: 'cancelada', label: 'Cancelada' },
+              { value: 'todos', label: 'Todos' },
+              { value: 'ativa', label: 'Ativa' },
+              { value: 'cancelada', label: 'Cancelada' },
             ]}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -131,18 +131,18 @@ export function VendasPage() {
           <Select
             label="Tipo"
             options={[
-              { Button, value: 'todos', label: 'Todos' },
-              { Button, value: 'unica', label: 'Venda Única' },
-              { Button, value: 'mensalidade', label: 'Mensalidade' },
+              { value: 'todos', label: 'Todos' },
+              { value: 'unica', label: 'Venda Única' },
+              { value: 'mensalidade', label: 'Mensalidade' },
             ]}
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
           />
           <div className="flex items-end">
-            <Button variant="neutral" size="md" className="w-full">
+            < variant="neutral" size="md" className="w-full">
               <Filter className="w-4 h-4" />
               Mais Filtros
-            </Button>
+            </>
           </div>
         </div>
       </Card>
@@ -159,9 +159,9 @@ export function VendasPage() {
         <Card variant="elevated" padding="lg" className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <p className="text-neutral-600 mb-4">Nenhuma venda encontrada</p>
-            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+            < variant="primary" onClick={() => setShowCreateModal(true)}>
               + Criar Primeira Venda
-            </Button>
+            </>
           </div>
         </Card>
       ) : (
@@ -201,13 +201,13 @@ export function VendasPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex gap-3">
-                        <Button 
+                        < 
                           variant="ghost" 
                           size="sm" 
                           icon={<Edit2 className="w-4 h-4" />} 
                           onClick={() => handleEditSale(sale)}
                         />
-                        <Button 
+                        < 
                           variant="error" 
                           size="sm" 
                           icon={<Trash2 className="w-4 h-4" />} 

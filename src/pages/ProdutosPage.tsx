@@ -1,18 +1,18 @@
-import { Button, type DragEvent, useEffect, useState } from "react";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, Label } from "@/components/ui/ds";
-import { Button, Textarea } from "@/components/ui/ds";
-import { Button, Badge } from "@/components/ui/ds/Badge";
-import { Button, Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
-import { Button, useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
-import { Button, useOrganization } from "@/contexts/OrganizationContext";
+import { type DragEvent, useEffect, useState } from "react";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { } from "@/components/ui/ds/";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Input } from "@/components/ui/ds/Input";
+import { Label } from "@/components/ui/ds";
+import { Textarea } from "@/components/ui/ds";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
+import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
+import { useOrganization } from "@/contexts/OrganizationContext";
 
 export default function ProdutosPage() {
-  const { Button, organizationId } = useOrganization();
-  const { Button, products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
+  const { organizationId } = useOrganization();
+  const { products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProductView | null>(null);
   const [orderedProducts, setOrderedProducts] = useState<ProductView[]>([]);
@@ -85,9 +85,9 @@ export default function ProdutosPage() {
          <h1 className="text-4xl font-bold text-neutral-900">Produtos</h1>
          <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>Arraste para ordenar</span>
-          <Dialog open={dialogOpen} onOpenChange={o => { Button, setDialogOpen(o); if (!o) setEditing(null); }}>
+          <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</Button>
+              < onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</>
             </DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle className="font-display">{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle></DialogHeader>
@@ -133,8 +133,8 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => { Button, setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></Button>
+                    < variant="ghost" size="sm" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></>
+                    < variant="ghost" size="sm" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></>
                   </div>
                 </div>
               </CardHeader>
@@ -188,20 +188,20 @@ interface ProductFormData {
   type: string;
   description: string;
   notes: string;
-  salesStages: { Button, id: string; name: string; value: number; link: string; sale_type: 'unica' | 'mensalidade' }[];
+  salesStages: { id: string; name: string; value: number; link: string; sale_type: 'unica' | 'mensalidade' }[];
 }
 
-function ProductForm({ Button, product, onSave }: { Button, product: ProductView | null; onSave: (data: ProductInput) => void }) {
+function ProductForm({ product, onSave }: { product: ProductView | null; onSave: (data: ProductInput) => void }) {
   const [form, setForm] = useState<ProductFormData>(
     product
-      ? { Button, name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }
-      : { Button, name: '', type: '', description: '', notes: '', salesStages: [{ Button, id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }] }
+      ? { name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }
+      : { name: '', type: '', description: '', notes: '', salesStages: [{ id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }] }
   );
-  const set = (k: keyof ProductFormData, v: any) => setForm(f => ({ Button, ...f, [k]: v }));
+  const set = (k: keyof ProductFormData, v: any) => setForm(f => ({ ...f, [k]: v }));
 
-  const addStage = () => set('salesStages', [...form.salesStages, { Button, id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }]);
+  const addStage = () => set('salesStages', [...form.salesStages, { id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }]);
   const updateStage = (id: string, key: string, val: any) =>
-    set('salesStages', form.salesStages.map(s => s.id === id ? { Button, ...s, [key]: val } : s));
+    set('salesStages', form.salesStages.map(s => s.id === id ? { ...s, [key]: val } : s));
   const removeStage = (id: string) => set('salesStages', form.salesStages.filter(s => s.id !== id));
 
   return (
@@ -213,14 +213,14 @@ function ProductForm({ Button, product, onSave }: { Button, product: ProductView
       <div>
         <div className="flex items-center justify-between mb-2">
           <Label>Etapas de Venda</Label>
-          <Button variant="neutral" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</Button>
+          < variant="neutral" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</>
         </div>
         {form.salesStages.map(stage => (
           <div key={stage.id} className="p-3 border rounded-lg bg-muted/20 mb-3 space-y-3">
             <div className="grid grid-cols-[1fr_80px_auto] gap-3 items-end">
               <div><Label className="text-xs">Nome</Label><Input placeholder="Nome" value={stage.name} onChange={e => updateStage(stage.id, 'name', e.target.value)} /></div>
               <div><Label className="text-xs">R$</Label><Input type="number" placeholder="R$" value={stage.value || ''} onChange={e => updateStage(stage.id, 'value', Number(e.target.value))} /></div>
-              <Button variant="ghost" size="sm" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></Button>
+              < variant="ghost" size="sm" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></>
             </div>
             <div className="grid grid-cols-2 gap-3">
                <div>
@@ -241,7 +241,7 @@ function ProductForm({ Button, product, onSave }: { Button, product: ProductView
       </div>
 
       <div><Label>Observações</Label><Textarea value={form.notes} onChange={e => set('notes', e.target.value)} /></div>
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.name.trim()}>Salvar</Button>
+      < className="w-full" onClick={() => onSave(form)} disabled={!form.name.trim()}>Salvar</>
     </div>
   );
 }

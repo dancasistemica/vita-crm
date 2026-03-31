@@ -1,12 +1,12 @@
-import React, { Button, useState } from 'react';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, Card, Input, Badge, Alert } from '@/components/ui/ds';
-import { Button, Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
-import { Button, toast } from 'sonner';
-import { Button, useClientsFilter } from '@/hooks/useClientsFilter';
+import React, { useState } from 'react';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { Card, Input, Badge, Alert } from '@/components/ui/ds';
+import { Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
+import { toast } from 'sonner';
+import { useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
-import { Button, CreateSaleModal } from '@/components/sales/CreateSaleModal';
-import { Button, CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
+import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -14,7 +14,7 @@ import NewSaleModal from '@/components/sales/NewSaleModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
-  const { Button, organization } = useOrganization();
+  const { organization } = useOrganization();
   
   const [showFilters, setShowFilters] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -47,30 +47,30 @@ export default function ClientesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button 
+          < 
             variant="neutral" 
             size="md" 
             icon={<FileDown className="w-4 h-4" />}
             onClick={() => setExportOpen(true)}
           >
             Exportar
-          </Button>
-          <Button 
+          </>
+          < 
             variant="neutral" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowSubscriptionModal(true)}
           >
             Nova Mensalidade
-          </Button>
-          <Button 
+          </>
+          < 
             variant="primary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowCreateModal(true)}
           >
             Nova Venda
-          </Button>
+          </>
         </div>
       </div>
 
@@ -78,12 +78,12 @@ export default function ClientesPage() {
       {hook.selectedIds.length > 0 && (
         <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
           <div className="flex gap-3 mt-2">
-            <Button variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
+            < variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
               Editar em Massa
-            </Button>
-            <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
+            </>
+            < variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
               Deletar Selecionados
-            </Button>
+            </>
           </div>
         </Alert>
       )}
@@ -99,14 +99,14 @@ export default function ClientesPage() {
               onChange={(e) => hook.updateFilter('search', e.target.value)}
             />
           </div>
-          <Button 
+          < 
             variant={showFilters ? 'primary' : 'secondary'} 
             size="md" 
             icon={<Filter className="w-4 h-4" />}
             onClick={() => setShowFilters(!showFilters)}
           >
             {showFilters ? 'Ocultar Filtros' : 'Filtros Avançados'}
-          </Button>
+          </>
         </div>
       </Card>
 
@@ -153,7 +153,7 @@ export default function ClientesPage() {
         onSuccess={() => {
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
-        items={hook.filteredClients.map((c: any) => ({ Button, id: c.id, name: c.name, email: c.email, phone: c.phone }))}
+        items={hook.filteredClients.map((c: any) => ({ id: c.id, name: c.name, email: c.email, phone: c.phone }))}
       />
       <BulkEditModal
         open={bulkEditOpen}

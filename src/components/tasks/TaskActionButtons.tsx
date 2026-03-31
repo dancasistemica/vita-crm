@@ -1,9 +1,9 @@
-import { Button, useState } from 'react';
-import { Button, Edit2, Copy, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
+import { useState } from 'react';
+import { Edit2, Copy, Trash2 } from 'lucide-react';
+import { } from '@/components/ui/ds';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
-interface TaskActionButtonsProps {
+interface TaskActionsProps {
   taskId: string;
   taskTitle?: string;
   onEdit: (taskId: string) => void;
@@ -11,13 +11,13 @@ interface TaskActionButtonsProps {
   onDelete: (taskId: string) => void;
 }
 
-export default function TaskActionButtons({
+export default function TaskActions({
   taskId,
   taskTitle = 'esta tarefa',
   onEdit,
   onDuplicate,
   onDelete,
-}: TaskActionButtonsProps) {
+}: TaskActionsProps) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
@@ -26,11 +26,11 @@ export default function TaskActionButtons({
         isOpen={showConfirm}
         itemName={taskTitle}
         itemType="tarefa"
-        onConfirm={() => { Button, onDelete(taskId); setShowConfirm(false); }}
+        onConfirm={() => { onDelete(taskId); setShowConfirm(false); }}
         onCancel={() => setShowConfirm(false)}
       />
 
-      <Button
+      <
         variant="ghost"
         size="sm"
         onClick={() => onEdit(taskId)}
@@ -38,9 +38,9 @@ export default function TaskActionButtons({
         className="text-primary hover:text-primary/80 h-8 w-8 p-0"
       >
         <Edit2 className="h-4 w-4" />
-      </Button>
+      </>
 
-      <Button
+      <
         variant="ghost"
         size="sm"
         onClick={() => onDuplicate(taskId)}
@@ -48,9 +48,9 @@ export default function TaskActionButtons({
         className="text-muted-foreground hover:text-foreground h-8 w-8 p-0"
       >
         <Copy className="h-4 w-4" />
-      </Button>
+      </>
 
-      <Button
+      <
         variant="ghost"
         size="sm"
         onClick={() => setShowConfirm(true)}
@@ -58,7 +58,7 @@ export default function TaskActionButtons({
         className="text-destructive hover:text-destructive/80 h-8 w-8 p-0"
       >
         <Trash2 className="h-4 w-4" />
-      </Button>
+      </>
     </div>
   );
 }

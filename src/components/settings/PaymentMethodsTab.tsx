@@ -1,31 +1,31 @@
-import { Button, useEffect, useState, type DragEvent } from "react";
-import { Button, supabase } from "@/integrations/supabase/client";
-import { Button, useOrganization } from "@/contexts/OrganizationContext";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, Switch } from "@/components/ui/ds";
-import { Button, Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
-import { Button, toast } from "sonner";
+import { useEffect, useState, type DragEvent } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useOrganization } from "@/contexts/OrganizationContext";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { } from "@/components/ui/ds/";
+import { Input } from "@/components/ui/ds/Input";
+import { Switch } from "@/components/ui/ds";
+import { Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
+import { toast } from "sonner";
 
 export default function PaymentMethodsTab() {
-  const { Button, organization } = useOrganization();
-  const [paymentMethods, setPaymentMethods] = useState<Array<{ Button, id: string; name: string; active: boolean; sort_order: number; organization_id: string }>>([]);
+  const { organization } = useOrganization();
+  const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean; sort_order: number; organization_id: string }>>([]);
   const [loading, setLoading] = useState(false);
   const [newMethod, setNewMethod] = useState('');
-  const [editingMethod, setEditingMethod] = useState<{ Button, id: string; name: string } | null>(null);
+  const [editingMethod, setEditingMethod] = useState<{ id: string; name: string } | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!organization?.id) return;
     const loadPaymentMethods = async () => {
       setLoading(true);
-      const { Button, data, error } = await supabase
+      const { data, error } = await supabase
         .from('payment_methods')
         .select('id, name, active, sort_order, organization_id')
         .eq('organization_id', organization.id)
-        .order('sort_order', { Button, ascending: true })
-        .order('name', { Button, ascending: true });
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true });
 
       if (error) {
         console.error('[PaymentMethodsTab] Erro ao carregar formas:', error);
@@ -39,9 +39,9 @@ export default function PaymentMethodsTab() {
     loadPaymentMethods();
   }, [organization?.id]);
 
-  const persistOrder = async (methods: Array<{ Button, id: string; sort_order: number }>) => {
+  const persistOrder = async (methods: Array<{ id: string; sort_order: number }>) => {
     const promises = methods.map(m =>
-      supabase.from('payment_methods').update({ Button, sort_order: m.sort_order }).eq('id', m.id)
+      supabase.from('payment_methods').update({ sort_order: m.sort_order }).eq('id', m.id)
     );
     const results = await Promise.all(promises);
     const error = results.find(r => r.error)?.error;
@@ -60,7 +60,7 @@ export default function PaymentMethodsTab() {
       return;
     }
     const nextOrder = paymentMethods.reduce((max, method) => Math.max(max, method.sort_order), -1) + 1;
-    const { Button, data, error } = await supabase
+    const { data, error } = await supabase
       .from('payment_methods')
       .insert({
         organization_id: organization.id,
@@ -82,7 +82,7 @@ export default function PaymentMethodsTab() {
     console.log('[PaymentMethodsTab] Adicionada:', newMethod.trim());
   };
 
-  const handleEditSave = async (method: { Button, id: string }) => {
+  const handleEditSave = async (method: { id: string }) => {
     if (!editingMethod) return;
     const nextName = editingMethod.name.trim();
     if (!nextName) {
@@ -94,9 +94,9 @@ export default function PaymentMethodsTab() {
       toast.error("Forma de pagamento já existe!");
       return;
     }
-    const { Button, error } = await supabase
+    const { error } = await supabase
       .from('payment_methods')
-      .update({ Button, name: nextName })
+      .update({ name: nextName })
       .eq('id', method.id);
 
     if (error) {
@@ -104,7 +104,7 @@ export default function PaymentMethodsTab() {
       toast.error('Erro ao atualizar forma de pagamento');
       return;
     }
-    setPaymentMethods((prev) => prev.map((m) => (m.id === method.id ? { Button, ...m, name: nextName } : m)));
+    setPaymentMethods((prev) => prev.map((m) => (m.id === method.id ? { ...m, name: nextName } : m)));
     setEditingMethod(null);
     toast.success("Forma de pagamento atualizada");
     console.log('[PaymentMethodsTab] Atualizada:', nextName);
@@ -133,11 +133,11 @@ export default function PaymentMethodsTab() {
       sort_order: index,
     }));
     await persistOrder(next);
-    setPaymentMethods((prev) => prev.map((method, index) => ({ Button, ...method, sort_order: index })));
+    setPaymentMethods((prev) => prev.map((method, index) => ({ ...method, sort_order: index })));
   };
 
-  const handleDelete = async (method: { Button, id: string; name: string }) => {
-    const { Button, error } = await supabase
+  const handleDelete = async (method: { id: string; name: string }) => {
+    const { error } = await supabase
       .from('payment_methods')
       .delete()
       .eq('id', method.id);
@@ -152,10 +152,10 @@ export default function PaymentMethodsTab() {
     console.log('[PaymentMethodsTab] Removida:', method.name);
   };
 
-  const handleToggle = async (method: { Button, id: string; name: string; active: boolean }) => {
-    const { Button, error } = await supabase
+  const handleToggle = async (method: { id: string; name: string; active: boolean }) => {
+    const { error } = await supabase
       .from('payment_methods')
-      .update({ Button, active: !method.active })
+      .update({ active: !method.active })
       .eq('id', method.id);
 
     if (error) {
@@ -163,7 +163,7 @@ export default function PaymentMethodsTab() {
       toast.error('Erro ao atualizar forma de pagamento');
       return;
     }
-    setPaymentMethods((prev) => prev.map((m) => (m.id === method.id ? { Button, ...m, active: !m.active } : m)));
+    setPaymentMethods((prev) => prev.map((m) => (m.id === method.id ? { ...m, active: !m.active } : m)));
     toast.success(method.active ? "Desativada" : "Ativada");
     console.log('[PaymentMethodsTab] Toggle:', method.name, !method.active);
   };
@@ -180,9 +180,9 @@ export default function PaymentMethodsTab() {
               onChange={e => setNewMethod(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAdd()}
             />
-            <Button onClick={handleAdd} disabled={!newMethod.trim() || loading}>
+            < onClick={handleAdd} disabled={!newMethod.trim() || loading}>
               <Plus className="h-4 w-4 mr-1" />Adicionar
-            </Button>
+            </>
           </div>
         </CardContent>
       </Card>
@@ -210,7 +210,7 @@ export default function PaymentMethodsTab() {
                   {editingMethod?.id === m.id ? (
                     <Input
                       value={editingMethod.name}
-                      onChange={e => setEditingMethod({ Button, ...editingMethod, name: e.target.value })}
+                      onChange={e => setEditingMethod({ ...editingMethod, name: e.target.value })}
                       onKeyDown={e => e.key === 'Enter' && handleEditSave(m)}
                       className="h-8 flex-1"
                     />
@@ -228,21 +228,21 @@ export default function PaymentMethodsTab() {
                   <div className="flex items-center gap-1">
                     {editingMethod?.id === m.id ? (
                     <>
-                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
+                      < size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
                         <Check className="h-3 w-3" />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
+                      </>
+                      < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
                         <X className="h-3 w-3" />
-                      </Button>
+                      </>
                     </>
                   ) : (
-                    <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
+                    < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
                       <Edit className="h-3 w-3" />
-                    </Button>
+                    </>
                   )}
-                  <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
+                  < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
                     <Trash2 className="h-3 w-3" />
-                  </Button>
+                  </>
                 </div>
               </div>
             </div>

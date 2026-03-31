@@ -1,19 +1,19 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Checkbox } from '@/components/ui/ds';
-import { Button, Separator } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
-import { Button, updateOrganization } from '@/services/superadminService';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { Button, validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
-import { Button, generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
-import { Button, Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
+import { Separator } from '@/components/ui/ds';
+import { toast } from 'sonner';
+import { updateOrganization } from '@/services/superadminService';
+import { supabase } from '@/integrations/supabase/client';
+import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
+import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
+import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
+import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -24,13 +24,13 @@ interface EditOrganizationModalProps {
 
 const UF_OPTIONS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','TO'];
 
-export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuccess }: EditOrganizationModalProps) {
+export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: EditOrganizationModalProps) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
-  const [cnpjValidation, setCnpjValidation] = useState<CNPJValidationResult>({ Button, valid: true });
+  const [cnpjValidation, setCnpjValidation] = useState<CNPJValidationResult>({ valid: true });
   const [cnpjTouched, setCnpjTouched] = useState(false);
 
   const [form, setForm] = useState({
@@ -57,7 +57,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
     setPasswordStrength(null);
     (async () => {
       try {
-        const { Button, data, error } = await supabase
+        const { data, error } = await supabase
           .from('organizations')
           .select('name, contact_email, phone, website, description, cnpj, cep, rua, numero, complemento, bairro, municipio, estado')
           .eq('id', orgId)
@@ -112,18 +112,18 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
 
   const handleGeneratePassword = () => {
     const pwd = generatePassword();
-    setForm(prev => ({ Button, ...prev, senhaAdmin: pwd }));
+    setForm(prev => ({ ...prev, senhaAdmin: pwd }));
     setPasswordStrength(evaluatePasswordStrength(pwd));
     toast.success('Senha gerada');
   };
 
   const handlePasswordChange = (value: string) => {
-    setForm(prev => ({ Button, ...prev, senhaAdmin: value }));
+    setForm(prev => ({ ...prev, senhaAdmin: value }));
     setPasswordStrength(value ? evaluatePasswordStrength(value) : null);
   };
 
   const handleSave = async () => {
-    if (!form.name.trim()) { Button, toast.error('Nome é obrigatório'); return; }
+    if (!form.name.trim()) { toast.error('Nome é obrigatório'); return; }
     if (form.cnpj) {
       const result = validateCNPJWithResult(form.cnpj);
       if (!result.valid) {
@@ -159,7 +159,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
         updated_at: new Date().toISOString(),
       };
 
-      const { Button, error } = await supabase
+      const { error } = await supabase
         .from('organizations')
         .update(updateData as any)
         .eq('id', orgId);
@@ -169,8 +169,8 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
       // 2. Update admin password if provided
       if (form.senhaAdmin) {
         console.log('[EditOrganizationModal] Updating admin password via edge function');
-        const { Button, data: fnData, error: fnError } = await supabase.functions.invoke('update-admin-password', {
-          body: { Button, organization_id: orgId, new_password: form.senhaAdmin },
+        const { data: fnData, error: fnError } = await supabase.functions.invoke('update-admin-password', {
+          body: { organization_id: orgId, new_password: form.senhaAdmin },
         });
 
         if (fnError) {
@@ -198,7 +198,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
   };
 
   const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm(prev => ({ Button, ...prev, [field]: e.target.value }));
+    setForm(prev => ({ ...prev, [field]: e.target.value }));
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -225,7 +225,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
                     <Input
                       value={form.cnpj}
                       onChange={(e) => {
-                        setForm(prev => ({ Button, ...prev, cnpj: formatCNPJ(e.target.value) }));
+                        setForm(prev => ({ ...prev, cnpj: formatCNPJ(e.target.value) }));
                         if (cnpjTouched) {
                           setCnpjValidation(validateCNPJWithResult(formatCNPJ(e.target.value)));
                         }
@@ -279,7 +279,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
                   </Label>
                   <Input
                     value={form.cep}
-                    onChange={(e) => setForm(prev => ({ Button, ...prev, cep: formatCEP(e.target.value) }))}
+                    onChange={(e) => setForm(prev => ({ ...prev, cep: formatCEP(e.target.value) }))}
                     onBlur={handleCEPBlur}
                     placeholder="00000-000"
                     maxLength={9}
@@ -308,7 +308,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
                 </div>
                 <div className="space-y-3">
                   <Label>Estado (UF)</Label>
-                  <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ Button, ...prev, estado: v }))}>
+                  <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ ...prev, estado: v }))}>
                     <SelectTrigger disabled={loadingCEP}>
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
@@ -337,17 +337,17 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
                       placeholder="Mínimo 8 caracteres"
                       className="pr-10"
                     />
-                    <Button variant="secondary" size="sm"
+                    < variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
+                    </>
                   </div>
-                  <Button type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                  < type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
-                  </Button>
+                  </>
                 </div>
 
                 {passwordStrength && (
@@ -361,7 +361,7 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
                   <Checkbox
                     id="manual-pwd"
                     checked={form.senhaManual}
-                    onCheckedChange={(v) => setForm(prev => ({ Button, ...prev, senhaManual: !!v }))}
+                    onCheckedChange={(v) => setForm(prev => ({ ...prev, senhaManual: !!v }))}
                   />
                   <Label htmlFor="manual-pwd" className="text-sm cursor-pointer">Definir senha manualmente</Label>
                 </div>
@@ -371,11 +371,11 @@ export function EditOrganizationModal({ Button, open, onOpenChange, orgId, onSuc
         )}
 
         <DialogFooter>
-          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+          < variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</>
+          < onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
-          </Button>
+          </>
         </DialogFooter>
       </DialogContent>
     </Dialog>

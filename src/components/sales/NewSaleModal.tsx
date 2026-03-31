@@ -1,20 +1,20 @@
-import { Button, useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
-import { Button, Calendar } from '@/components/ui/ds';
-import { Button, CalendarIcon, Search, X } from 'lucide-react';
-import { Button, cn } from '@/lib/utils';
-import { Button, format } from 'date-fns';
-import { Button, ptBR } from 'date-fns/locale';
-import { Button, toast } from 'sonner';
-import { Button, useDataAccess } from '@/hooks/useDataAccess';
-import { Button, useLeadsData, LeadView } from '@/hooks/useLeadsData';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
+import { Calendar } from '@/components/ui/ds';
+import { CalendarIcon, Search, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
+import { useDataAccess } from '@/hooks/useDataAccess';
+import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
 
 const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
 
@@ -37,9 +37,9 @@ interface NewSaleModalProps {
   onSaleCreated?: () => void;
 }
 
-export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLeadId, onSaleCreated }: NewSaleModalProps) {
+export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, onSaleCreated }: NewSaleModalProps) {
   const dataAccess = useDataAccess();
-  const { Button, leads, pipelineStages, updateLead, refetch: refetchLeads } = useLeadsData();
+  const { leads, pipelineStages, updateLead, refetch: refetchLeads } = useLeadsData();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLead, setSelectedLead] = useState<LeadView | null>(null);
@@ -47,7 +47,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
   const [saving, setSaving] = useState(false);
   const [products, setProducts] = useState<ProductView[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
-  const [sales, setSales] = useState<{ Button, lead_id: string }[]>([]);
+  const [sales, setSales] = useState<{ lead_id: string }[]>([]);
   const [selectedStageId, setSelectedStageId] = useState('');
 
   // Form state
@@ -92,7 +92,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
           setPaymentMethods(names.length > 0 ? [...names, 'Outro'] : ['Dinheiro', 'Cartão Crédito', 'Cartão Débito', 'Pix', 'Transferência Bancária', 'Boleto', 'Outro']);
         }
         if (salesData.status === 'fulfilled') {
-          setSales((salesData.value as any[]).map(s => ({ Button, lead_id: s.lead_id })));
+          setSales((salesData.value as any[]).map(s => ({ lead_id: s.lead_id })));
         }
       } catch (err) {
         console.error('[NewSaleModal] Erro ao carregar dados:', err);
@@ -145,7 +145,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
     const num = val.replace(/\D/g, '');
     if (!num) return '';
     const cents = parseInt(num) / 100;
-    return cents.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return cents.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,13 +159,13 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
   };
 
   const handleSubmit = async () => {
-    if (!selectedLead) { Button, toast.error('Selecione um lead ou cliente'); return; }
-    if (!productId) { Button, toast.error('Selecione um produto'); return; }
-    if (!value || parseValue(value) <= 0) { Button, toast.error('Informe um valor válido'); return; }
-    if (!dataAccess) { Button, toast.error('Erro de conexão'); return; }
+    if (!selectedLead) { toast.error('Selecione um lead ou cliente'); return; }
+    if (!productId) { toast.error('Selecione um produto'); return; }
+    if (!value || parseValue(value) <= 0) { toast.error('Informe um valor válido'); return; }
+    if (!dataAccess) { toast.error('Erro de conexão'); return; }
 
     setSaving(true);
-    console.log('[NewSaleModal] Iniciando criação de venda:', { Button, leadId: selectedLead.id });
+    console.log('[NewSaleModal] Iniciando criação de venda:', { leadId: selectedLead.id });
 
     try {
       // 1. Create sale in database
@@ -185,8 +185,8 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
       // 2. Move lead to "Cliente" stage if not already
       const clienteStage = pipelineStages.find(s => s.name === 'Cliente');
       if (clienteStage && selectedLead.pipelineStage !== clienteStage.id) {
-        await updateLead(selectedLead.id, { Button, pipelineStage: clienteStage.id });
-        console.log('[NewSaleModal] ✅ Lead movido para etapa Cliente:', { Button, leadId: selectedLead.id, stageId: clienteStage.id });
+        await updateLead(selectedLead.id, { pipelineStage: clienteStage.id });
+        console.log('[NewSaleModal] ✅ Lead movido para etapa Cliente:', { leadId: selectedLead.id, stageId: clienteStage.id });
       }
 
       toast.success('Venda registrada com sucesso!');
@@ -223,16 +223,16 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
                   </Badge>
                 </div>
-                <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
+                < variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
                   <X className="h-4 w-4" />
-                </Button>
+                </>
               </div>
             ) : (
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={searchQuery}
-                  onChange={e => { Button, setSearchQuery(e.target.value); setShowResults(true); }}
+                  onChange={e => { setSearchQuery(e.target.value); setShowResults(true); }}
                   onFocus={() => setShowResults(true)}
                   placeholder="Digite nome, email ou telefone..."
                   className="pl-9"
@@ -240,7 +240,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
                 {showResults && searchResults.length > 0 && (
                   <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(lead => (
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         key={lead.id}
                         onClick={() => handleSelectLead(lead)}
                         className="w-full text-left px-3 py-2.5 hover:bg-muted/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
@@ -252,7 +252,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
                         </Badge>
-                      </Button>
+                      </>
                     ))}
                   </div>
                 )}
@@ -290,7 +290,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
                   const product = products.find(p => p.id === productId);
                   const stage = product?.stages.find(s => s.id === stageId);
                   if (stage && stage.value > 0) {
-                    const formatted = stage.value.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const formatted = stage.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     setValue(formatted);
                   }
                 }}>
@@ -300,7 +300,7 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
                   <SelectContent>
                     {products.find(p => p.id === productId)?.stages.map(s => (
                       <SelectItem key={s.id} value={s.id}>
-                        {s.name} — R$ {s.value.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}
+                        {s.name} — R$ {s.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -327,10 +327,10 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  < variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
-                  </Button>
+                  </>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
@@ -398,12 +398,12 @@ export default function NewSaleModal({ Button, open, onOpenChange, preSelectedLe
 
           {/* Section 3: Actions */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <Button variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
+            < variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
               Cancelar
-            </Button>
-            <Button onClick={handleSubmit} disabled={saving}>
+            </>
+            < onClick={handleSubmit} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar Venda'}
-            </Button>
+            </>
           </div>
         </div>
       </DialogContent>

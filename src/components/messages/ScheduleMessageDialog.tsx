@@ -1,14 +1,14 @@
-import { Button, useState } from 'react';
-import { Button, AlertCircle } from 'lucide-react';
-import { Button, toast } from 'sonner';
-import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Alert, AlertDescription } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
+import { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Alert, AlertDescription } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
 
 interface RecipientRef {
   id: string;
@@ -33,8 +33,8 @@ export const ScheduleMessageDialog = ({
   client,
   onScheduled,
 }: ScheduleMessageDialogProps) => {
-  const { Button, organizationId } = useOrganization();
-  const { Button, scheduleMessage } = useScheduledMessages(organizationId);
+  const { organizationId } = useOrganization();
+  const { scheduleMessage } = useScheduledMessages(organizationId);
   const [messageText, setMessageText] = useState('');
   const [scheduledDate, setScheduledDate] = useState<Date>(new Date());
   const [scheduledTime, setScheduledTime] = useState('09:00');
@@ -159,12 +159,12 @@ export const ScheduleMessageDialog = ({
         </div>
 
         <DialogFooter>
-          <Button variant="neutral" onClick={() => onOpenChange(false)} className="min-h-[44px]">
+          < variant="neutral" onClick={() => onOpenChange(false)} className="min-h-[44px]">
             Cancelar
-          </Button>
-          <Button onClick={handleSchedule} disabled={loading} className="min-h-[44px]">
+          </>
+          < onClick={handleSchedule} disabled={loading} className="min-h-[44px]">
             {loading ? 'Agendando...' : 'Agendar'}
-          </Button>
+          </>
         </DialogFooter>
       </DialogContent>
     </Dialog>

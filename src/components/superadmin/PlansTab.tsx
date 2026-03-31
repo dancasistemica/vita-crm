@@ -1,15 +1,15 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, toast } from 'sonner';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
-import { Button, Plus, Trash2, Users, FileText, Link } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
+import { Plus, Trash2, Users, FileText, Link } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface Plan {
@@ -45,7 +45,7 @@ export function PlansTab() {
     }
   };
 
-  useEffect(() => { Button, fetchPlans(); }, []);
+  useEffect(() => { fetchPlans(); }, []);
 
   const handleCreate = async () => {
     if (!form.name || !form.value || !form.max_users) {
@@ -64,7 +64,7 @@ export function PlansTab() {
       });
       toast.success('Plano criado');
       setOpen(false);
-      setForm({ Button, name: '', value: '', period: 'monthly', max_users: '', max_leads: '', max_integrations: '', description: '' });
+      setForm({ name: '', value: '', period: 'monthly', max_users: '', max_leads: '', max_integrations: '', description: '' });
       fetchPlans();
     } catch (err) {
       console.error('[PlansTab] create:', err);
@@ -72,13 +72,13 @@ export function PlansTab() {
     }
   };
 
-  const [deleteConfirm, setDeleteConfirm] = useState<{ Button, isOpen: boolean; id: string; name: string }>({ Button, isOpen: false, id: '', name: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
 
   const handleDeleteConfirm = async () => {
     try {
       await deletePlan(deleteConfirm.id);
       toast.success('Plano deletado');
-      setDeleteConfirm({ Button, isOpen: false, id: '', name: '' });
+      setDeleteConfirm({ isOpen: false, id: '', name: '' });
       fetchPlans();
     } catch (err) {
       console.error('[PlansTab] delete:', err);
@@ -97,12 +97,12 @@ export function PlansTab() {
         itemName={deleteConfirm.name}
         itemType="Plano"
         onConfirm={handleDeleteConfirm}
-        onCancel={() => setDeleteConfirm({ Button, isOpen: false, id: '', name: '' })}
+        onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex justify-end">
-        <Button onClick={() => setOpen(true)}>
+        < onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano
-        </Button>
+        </>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -121,7 +121,7 @@ export function PlansTab() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-2xl font-bold text-primary">
-                R$ {Number(plan.value).toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}
+                R$ {Number(plan.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 <span className="text-sm font-normal text-muted-foreground">
                   /{plan.period === 'monthly' ? 'mês' : 'ano'}
                 </span>
@@ -142,9 +142,9 @@ export function PlansTab() {
                 </div>
               </div>
 
-              <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ Button, isOpen: true, id: plan.id, name: plan.name })}>
+              < variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
-              </Button>
+              </>
             </CardContent>
           </Card>
         ))}
@@ -159,17 +159,17 @@ export function PlansTab() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
                 <Label>Nome *</Label>
-                <Input value={form.name} onChange={(e) => setForm({ Button, ...form, name: e.target.value })} placeholder="Ex: Pro" />
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Pro" />
               </div>
               <div className="space-y-3">
                 <Label>Valor (R$) *</Label>
-                <Input type="number" value={form.value} onChange={(e) => setForm({ Button, ...form, value: e.target.value })} placeholder="99.90" />
+                <Input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} placeholder="99.90" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
                 <Label>Período *</Label>
-                <Select value={form.period} onValueChange={(v) => setForm({ Button, ...form, period: v })}>
+                <Select value={form.period} onValueChange={(v) => setForm({ ...form, period: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="monthly">Mensal</SelectItem>
@@ -179,27 +179,27 @@ export function PlansTab() {
               </div>
               <div className="space-y-3">
                 <Label>Máx Usuários *</Label>
-                <Input type="number" value={form.max_users} onChange={(e) => setForm({ Button, ...form, max_users: e.target.value })} placeholder="5" />
+                <Input type="number" value={form.max_users} onChange={(e) => setForm({ ...form, max_users: e.target.value })} placeholder="5" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
                 <Label>Máx Leads</Label>
-                <Input type="number" value={form.max_leads} onChange={(e) => setForm({ Button, ...form, max_leads: e.target.value })} placeholder="Ilimitado" />
+                <Input type="number" value={form.max_leads} onChange={(e) => setForm({ ...form, max_leads: e.target.value })} placeholder="Ilimitado" />
               </div>
               <div className="space-y-3">
                 <Label>Máx Integrações</Label>
-                <Input type="number" value={form.max_integrations} onChange={(e) => setForm({ Button, ...form, max_integrations: e.target.value })} placeholder="Ilimitado" />
+                <Input type="number" value={form.max_integrations} onChange={(e) => setForm({ ...form, max_integrations: e.target.value })} placeholder="Ilimitado" />
               </div>
             </div>
             <div className="space-y-3">
               <Label>Descrição</Label>
-              <Textarea value={form.description} onChange={(e) => setForm({ Button, ...form, description: e.target.value })} placeholder="Descrição do plano..." />
+              <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descrição do plano..." />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="neutral" onClick={() => setOpen(false)}>Cancelar</Button>
-            <Button onClick={handleCreate}>Criar Plano</Button>
+            < variant="neutral" onClick={() => setOpen(false)}>Cancelar</>
+            < onClick={handleCreate}>Criar Plano</>
           </DialogFooter>
         </DialogContent>
       </Dialog>

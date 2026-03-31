@@ -1,6 +1,6 @@
-import { Button, Check } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Button, ImportModalState } from '@/hooks/useImportModal';
+import { Check } from 'lucide-react';
+import { } from '@/components/ui/ds';
+import { ImportModalState } from '@/hooks/useImportModal';
 
 interface Props {
   state: ImportModalState;
@@ -8,7 +8,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function Step6Results({ Button, state, onImportMore, onClose }: Props) {
+export default function Step6Results({ state, onImportMore, onClose }: Props) {
   const result = state.importResult;
   if (!result) return null;
 
@@ -70,8 +70,8 @@ export default function Step6Results({ Button, state, onImportMore, onClose }: P
       )}
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button variant="neutral" onClick={onImportMore}>Importar mais</Button>
-        <Button onClick={onClose}>Voltar para Leads</Button>
+        < variant="neutral" onClick={onImportMore}>Importar mais</>
+        < onClick={onClose}>Voltar para Leads</>
       </div>
     </div>
   );

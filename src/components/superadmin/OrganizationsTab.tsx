@@ -1,15 +1,15 @@
-import { Button, useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Button, toast } from 'sonner';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { Button, getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
-import { Button, CreateOrganizationModal } from './CreateOrganizationModal';
-import { Button, EditOrganizationModal } from './EditOrganizationModal';
-import { Button, Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
+import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
+import { CreateOrganizationModal } from './CreateOrganizationModal';
+import { EditOrganizationModal } from './EditOrganizationModal';
+import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -22,7 +22,7 @@ interface Org {
   max_leads: number;
   max_users: number;
   created_at: string;
-  organization_members: { Button, user_id: string; role: string }[];
+  organization_members: { user_id: string; role: string }[];
 }
 
 interface Plan {
@@ -40,8 +40,8 @@ interface OrganizationsTabProps {
   onStatsChange?: () => void;
 }
 
-export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => void }, OrganizationsTabProps>(
-  ({ Button, onStatsChange }, ref) => {
+export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, OrganizationsTabProps>(
+  ({ onStatsChange }, ref) => {
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [plans, setPlans] = useState<Plan[]>([]);
     const [loading, setLoading] = useState(true);
@@ -95,7 +95,7 @@ export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => voi
       }
     };
 
-    useEffect(() => { Button, fetchData(); }, []);
+    useEffect(() => { fetchData(); }, []);
 
     const handleToggleStatus = async (org: Org) => {
       try {
@@ -154,9 +154,9 @@ export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => voi
                 : `${orgs.length} organização(ões) cadastrada(s)`}
             </span>
           </div>
-          <Button onClick={() => setCreateOpen(true)} className="gap-3">
+          < onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
-          </Button>
+          </>
         </div>
 
         {/* Filter bar */}
@@ -192,9 +192,9 @@ export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => voi
             </SelectContent>
           </Select>
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+            < variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
               <X className="h-4 w-4" /> Limpar
-            </Button>
+            </>
           )}
         </div>
 
@@ -256,19 +256,19 @@ export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => voi
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
+                    < variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                    </>
+                    < variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                    <Button
+                    </>
+                    <
                       variant={org.active ? 'destructive' : 'default'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
-                    </Button>
+                    </>
                   </div>
                 </TableCell>
               </TableRow>
@@ -285,12 +285,12 @@ export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => voi
 
         <EditOrganizationModal
           open={!!editOrgId}
-          onOpenChange={(open) => { Button, if (!open) setEditOrgId(null); }}
+          onOpenChange={(open) => { if (!open) setEditOrgId(null); }}
           orgId={editOrgId}
-          onSuccess={() => { Button, fetchData(); onStatsChange?.(); }}
+          onSuccess={() => { fetchData(); onStatsChange?.(); }}
         />
 
-        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { Button, if (!open) setDeleteConfirmOrg(null); }}>
+        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { if (!open) setDeleteConfirmOrg(null); }}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Deletar organização</AlertDialogTitle>

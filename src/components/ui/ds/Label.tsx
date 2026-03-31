@@ -4,7 +4,7 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
 }
 
-export const Label = ({ Button, children, required, className = '', ...props }: LabelProps) => {
+export const Label = ({ children, required, className = '', ...props }: LabelProps) => {
   return (
     <label
       className={`block text-sm font-medium text-neutral-700 mb-2 ${className}`}

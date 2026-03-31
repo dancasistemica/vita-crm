@@ -1,17 +1,17 @@
-import { Button, useState, useEffect } from "react";
-import { Button, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
   CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart
 } from "lucide-react";
 
-import { Button, NavLink } from "@/components/NavLink";
-import { Button, cn } from "@/lib/utils";
-import { Button, useAuth } from "@/hooks/useAuth";
-import { Button, useUserRole } from "@/hooks/useUserRole";
-import { Button, supabase } from "@/integrations/supabase/client";
-import { Button, OrganizationSwitcher } from "@/components/OrganizationSwitcher";
-import { Button, 
+import { NavLink } from "@/components/NavLink";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
+import { supabase } from "@/integrations/supabase/client";
+import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
+import { 
   Avatar, 
   AvatarFallback, 
   AvatarImage, 
@@ -22,32 +22,32 @@ import { Button,
   SidebarGroupContent,
   SidebarGroupLabel, 
   SidebarMenu, 
-  SidebarMenuButton, 
+  SidebarMenu
   SidebarMenuItem,
   SidebarFooter, 
   useSidebar,
-  Button
+ 
 } from "@/components/ui/ds";
 
 const baseItems = [
-  { Button, title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { Button, title: "Leads", url: "/leads", icon: Users },
-  { Button, title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
-  { Button, title: "Vendas", url: "/vendas", icon: ShoppingCart },
-  { Button, title: "Clientes", url: "/clientes", icon: UserCheck },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Leads", url: "/leads", icon: Users },
+  { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
+  { title: "Vendas", url: "/vendas", icon: ShoppingCart },
+  { title: "Clientes", url: "/clientes", icon: UserCheck },
 
-  { Button, title: "Interações", url: "/interacoes", icon: MessageCircle },
-  { Button, title: "Tarefas", url: "/tarefas", icon: CheckSquare },
-  { Button, title: "Produtos", url: "/produtos", icon: Package },
-  { Button, title: "Relatórios", url: "/relatorios", icon: BarChart3 },
+  { title: "Interações", url: "/interacoes", icon: MessageCircle },
+  { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
+  { title: "Produtos", url: "/produtos", icon: Package },
+  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 export function AppSidebar() {
-  const { Button, state } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const collapsed = state === "collapsed";
-  const { Button, user, signOut } = useAuth();
-  const { Button, canAccessSettings, isSuperadmin } = useUserRole();
+  const { user, signOut } = useAuth();
+  const { canAccessSettings, isSuperadmin } = useUserRole();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -55,7 +55,7 @@ export function AppSidebar() {
   useEffect(() => {
     if (!user?.id) return;
     const fetchProfile = async () => {
-      const { Button, data } = await supabase
+      const { data } = await supabase
         .from("profiles")
         .select("full_name, avatar_url")
         .eq("id", user.id)
@@ -72,14 +72,14 @@ export function AppSidebar() {
     ...baseItems,
     ...(canAccessSettings
       ? [
-          { Button, title: "Configurações", url: "/configuracoes", icon: Settings },
-          { Button, title: "Personalizar", url: "/personalizar", icon: Palette },
+          { title: "Configurações", url: "/configuracoes", icon: Settings },
+          { title: "Personalizar", url: "/personalizar", icon: Palette },
         ]
       : []),
     ...(isSuperadmin
       ? [
-          { Button, title: "Superadmin", url: "/superadmin", icon: Shield },
-          { Button, title: "Todos Usuários", url: "/admin/users", icon: Users },
+          { title: "Superadmin", url: "/superadmin", icon: Shield },
+          { title: "Todos Usuários", url: "/admin/users", icon: Users },
         ]
       : []),
   ];
@@ -128,7 +128,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenu asChild>
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
@@ -143,7 +143,7 @@ export function AppSidebar() {
                       <item.icon className="mr-2 h-4 w-4" />
                       {!collapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
-                  </SidebarMenuButton>
+                  </SidebarMenu>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -154,7 +154,7 @@ export function AppSidebar() {
       <SidebarFooter className="p-2 space-y-1">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenu asChild>
               <NavLink
                 to="/perfil"
                 className="hover:bg-sidebar-accent/60 transition-colors duration-150 rounded-lg"
@@ -163,16 +163,16 @@ export function AppSidebar() {
                 <User className="mr-2 h-4 w-4" />
                 {!collapsed && <span className="text-sm">Meu Perfil</span>}
               </NavLink>
-            </SidebarMenuButton>
+            </SidebarMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-        <Button variant="secondary" size="sm"
+        < variant="secondary" size="sm"
           onClick={signOut}
           className="flex items-center gap-3 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Sair</span>}
-        </Button>
+        </>
       </SidebarFooter>
     </Sidebar>
   );

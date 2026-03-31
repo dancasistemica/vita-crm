@@ -1,12 +1,12 @@
-import { Button, useCallback, useEffect, useState } from 'react';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
+import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Input } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
-import { Button, Save, RotateCcw, Loader2 } from 'lucide-react';
+import { Save, RotateCcw, Loader2 } from 'lucide-react';
 
 interface EmailTemplateData {
   id?: string;
@@ -50,18 +50,18 @@ const DEFAULTS: Record<string, EmailTemplateData> = {
 };
 
 const VARIABLES = [
-  { Button, key: '{{name}}', desc: 'Nome do usuário' },
-  { Button, key: '{{email}}', desc: 'Email do usuário' },
-  { Button, key: '{{link}}', desc: 'Link de ação' },
-  { Button, key: '{{organization_name}}', desc: 'Nome da organização' },
-  { Button, key: '{{crm_name}}', desc: 'Nome do CRM' },
+  { key: '{{name}}', desc: 'Nome do usuário' },
+  { key: '{{email}}', desc: 'Email do usuário' },
+  { key: '{{link}}', desc: 'Link de ação' },
+  { key: '{{organization_name}}', desc: 'Nome da organização' },
+  { key: '{{crm_name}}', desc: 'Nome do CRM' },
 ];
 
 interface Props {
   templateType: 'confirmation_email' | 'reset_password';
 }
 
-export default function EmailTemplateEditor({ Button, templateType }: Props) {
+export default function EmailTemplateEditor({ templateType }: Props) {
   const [form, setForm] = useState<EmailTemplateData>(DEFAULTS[templateType]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -73,7 +73,7 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
     setLoading(true);
     try {
       console.log('[EmailTemplateEditor] Loading template:', templateType);
-      const { Button, data, error } = await supabase
+      const { data, error } = await supabase
         .from('email_templates')
         .select('*')
         .eq('template_type', templateType)
@@ -116,7 +116,7 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
   }, [loadTemplate]);
 
   const updateField = (field: keyof EmailTemplateData, value: string | null) => {
-    setForm(prev => ({ Button, ...prev, [field]: value }));
+    setForm(prev => ({ ...prev, [field]: value }));
   };
 
   const validate = (): string | null => {
@@ -134,7 +134,7 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
 
   const handleSave = async () => {
     const error = validate();
-    if (error) { Button, toast.error(error); return; }
+    if (error) { toast.error(error); return; }
     setSaving(true);
     try {
       console.log('[EmailTemplateEditor] Saving template:', templateType);
@@ -154,19 +154,19 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
       };
 
       if (form.id) {
-        const { Button, error } = await supabase
+        const { error } = await supabase
           .from('email_templates')
           .update(payload)
           .eq('id', form.id);
         if (error) throw error;
       } else {
-        const { Button, data, error } = await supabase
+        const { data, error } = await supabase
           .from('email_templates')
           .insert(payload)
           .select('id')
           .single();
         if (error) throw error;
-        setForm(prev => ({ Button, ...prev, id: data.id }));
+        setForm(prev => ({ ...prev, id: data.id }));
       }
       setIsCustom(true);
       toast.success('Template salvo com sucesso!');
@@ -184,7 +184,7 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
     setSaving(true);
     try {
       console.log('[EmailTemplateEditor] Restoring default');
-      const { Button, error } = await supabase
+      const { error } = await supabase
         .from('email_templates')
         .delete()
         .eq('id', form.id);
@@ -221,13 +221,13 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
       const path = `email-logos/${Date.now()}.${ext}`;
       console.log('[EmailTemplateEditor] Uploading logo:', path);
 
-      const { Button, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('brand-assets')
-        .upload(path, file, { Button, upsert: true });
+        .upload(path, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { Button, data: { Button, publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = supabase.storage
         .from('brand-assets')
         .getPublicUrl(path);
 
@@ -299,7 +299,7 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
             {form.logo_url && (
               <div className="mt-2 flex items-center gap-3">
                 <img src={form.logo_url} alt="Logo" className="h-8 max-w-[120px] object-contain" />
-                <Button variant="ghost" size="sm" onClick={() => updateField('logo_url', null)}>Remover</Button>
+                < variant="ghost" size="sm" onClick={() => updateField('logo_url', null)}>Remover</>
               </div>
             )}
           </div>
@@ -364,15 +364,15 @@ export default function EmailTemplateEditor({ Button, templateType }: Props) {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 pt-2">
-          <Button onClick={handleSave} disabled={saving} className="min-h-[44px] gap-3">
+          < onClick={handleSave} disabled={saving} className="min-h-[44px] gap-3">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Salvar Template
-          </Button>
+          </>
           {isCustom && (
-            <Button variant="neutral" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
+            < variant="neutral" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
               <RotateCcw className="h-4 w-4" />
               Restaurar Padrão
-            </Button>
+            </>
           )}
           {/* TODO: Reativar quando integrar provedor de email */}
         </div>

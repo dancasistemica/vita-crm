@@ -1,14 +1,14 @@
-import { Button, AlertCircle, Clock } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import type { Button, StuckLead } from '@/hooks/useDashboardData';
+import { AlertCircle, Clock } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import type { StuckLead } from '@/hooks/useDashboardData';
 
 interface StuckLeadsAlertProps {
   stuckLeads: StuckLead[];
   onLeadClick: (leadId: string) => void;
 }
 
-export default function StuckLeadsAlert({ Button, stuckLeads, onLeadClick }: StuckLeadsAlertProps) {
+export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsAlertProps) {
   if (stuckLeads.length === 0) return null;
 
   return (
@@ -34,9 +34,9 @@ export default function StuckLeadsAlert({ Button, stuckLeads, onLeadClick }: Stu
                   {lead.daysInStage} dias em "{lead.stage}"
                 </div>
               </div>
-              <Button size="sm" variant="error" className="text-xs h-7">
+              < size="sm" variant="error" className="text-xs h-7">
                 Ver
-              </Button>
+              </>
             </div>
           ))}
         </div>

@@ -1,8 +1,8 @@
-import { Button, useMemo } from 'react';
-import { Button, CheckCircle, Clock } from 'lucide-react';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
+import { useMemo } from 'react';
+import { CheckCircle, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
 
 interface ScheduledMessagesListProps {
   organizationId: string | null;
@@ -10,8 +10,8 @@ interface ScheduledMessagesListProps {
   clientId?: string;
 }
 
-export const ScheduledMessagesList = ({ Button, organizationId, leadId, clientId }: ScheduledMessagesListProps) => {
-  const { Button, messages, loading, cancelMessage } = useScheduledMessages(organizationId);
+export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: ScheduledMessagesListProps) => {
+  const { messages, loading, cancelMessage } = useScheduledMessages(organizationId);
 
   const filteredMessages = useMemo(() => {
     return messages.filter(m => {
@@ -80,14 +80,14 @@ export const ScheduledMessagesList = ({ Button, organizationId, leadId, clientId
                   </div>
                   <div className="flex items-center gap-3">
                     {getStatusBadge(msg.status)}
-                    <Button
+                    <
                       variant="ghost"
                       size="sm"
                       className="min-h-[44px]"
                       onClick={() => cancelMessage(msg.id)}
                     >
                       Cancelar
-                    </Button>
+                    </>
                   </div>
                 </div>
               </div>

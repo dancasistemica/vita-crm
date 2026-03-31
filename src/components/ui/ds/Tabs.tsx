@@ -1,4 +1,4 @@
-import React, { Button, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface TabsProps {
   defaultValue?: string;
@@ -8,7 +8,7 @@ interface TabsProps {
   className?: string;
 }
 
-export const Tabs = ({ Button, defaultValue, value, onValueChange, children, className = '' }: TabsProps) => {
+export const Tabs = ({ defaultValue, value, onValueChange, children, className = '' }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(value || defaultValue || '');
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const Tabs = ({ Button, defaultValue, value, onValueChange, children, cla
     <div className={`space-y-4 ${className}`}>
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<any>, { Button, activeTab, setActiveTab: handleTabChange });
+          return React.cloneElement(child as React.ReactElement<any>, { activeTab, setActiveTab: handleTabChange });
         }
         return child;
       })}
@@ -32,18 +32,18 @@ export const Tabs = ({ Button, defaultValue, value, onValueChange, children, cla
   );
 };
 
-export const TabsList = ({ Button, children, activeTab, setActiveTab, className = '' }: any) => (
+export const TabsList = ({ children, activeTab, setActiveTab, className = '' }: any) => (
   <div className={`flex border-b border-neutral-200 ${className}`}>
     {React.Children.map(children, child => {
       if (React.isValidElement(child)) {
-        return React.cloneElement(child as React.ReactElement<any>, { Button, activeTab, setActiveTab });
+        return React.cloneElement(child as React.ReactElement<any>, { activeTab, setActiveTab });
       }
       return child;
     })}
   </div>
 );
 
-export const TabsTrigger = ({ Button, value, children, activeTab, setActiveTab, className = '' }: any) => (
+export const TabsTrigger = ({ value, children, activeTab, setActiveTab, className = '' }: any) => (
   <button
     onClick={() => setActiveTab(value)}
     className={`px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 -mb-px ${
@@ -56,7 +56,7 @@ export const TabsTrigger = ({ Button, value, children, activeTab, setActiveTab, 
   </button>
 );
 
-export const TabsContent = ({ Button, value, children, activeTab, className = '' }: any) => {
+export const TabsContent = ({ value, children, activeTab, className = '' }: any) => {
   if (activeTab !== value) return null;
   return <div className={`py-4 ${className}`}>{children}</div>;
 };

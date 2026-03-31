@@ -1,14 +1,14 @@
-import { Button, X } from "lucide-react";
-import { Button, cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MultiSelectFilterProps {
   label: string;
-  options: { Button, value: string; label: string }[];
+  options: { value: string; label: string }[];
   selected: string[];
   onChange: (values: string[]) => void;
 }
 
-export default function MultiSelectFilter({ Button, label, options, selected, onChange }: MultiSelectFilterProps) {
+export default function MultiSelectFilter({ label, options, selected, onChange }: MultiSelectFilterProps) {
   const toggle = (value: string) => {
     onChange(
       selected.includes(value)
@@ -26,7 +26,7 @@ export default function MultiSelectFilter({ Button, label, options, selected, on
         {options.map(opt => {
           const isActive = selected.includes(opt.value);
           return (
-            <Button variant="secondary" size="sm"
+            < variant="secondary" size="sm"
               key={opt.value}
               type="button"
               onClick={() => toggle(opt.value)}
@@ -39,7 +39,7 @@ export default function MultiSelectFilter({ Button, label, options, selected, on
             >
               {opt.label}
               {isActive && <X className="h-3 w-3" />}
-            </Button>
+            </>
           );
         })}
       </div>

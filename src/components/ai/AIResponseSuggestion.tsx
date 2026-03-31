@@ -1,21 +1,21 @@
-import { Button, useState } from 'react';
-import { Button, useAI } from '@/hooks/useAI';
-import { Button } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Sparkles, Copy, RefreshCw } from 'lucide-react';
-import { Button, toast } from 'sonner';
-import type { Button, Lead, Interaction } from '@/types/crm';
+import { useState } from 'react';
+import { useAI } from '@/hooks/useAI';
+import { } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Sparkles, Copy, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
+import type { Lead, Interaction } from '@/types/crm';
 
 interface Props {
   lead: Lead;
   interactions: Interaction[];
-  products: { Button, name: string }[];
+  products: { name: string }[];
   stageName: string;
 }
 
-export default function AIResponseSuggestion({ Button, lead, interactions, products, stageName }: Props) {
+export default function AIResponseSuggestion({ lead, interactions, products, stageName }: Props) {
   const [suggestion, setSuggestion] = useState('');
-  const { Button, loading, generate, regenerate } = useAI({ Button, type: 'suggest_response' });
+  const { loading, generate, regenerate } = useAI({ type: 'suggest_response' });
 
   const handleGenerate = async () => {
     const lastInteraction = interactions.sort((a, b) => b.date.localeCompare(a.date))[0];
@@ -49,10 +49,10 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
 
   return (
     <div className="space-y-3">
-      <Button variant="neutral" size="sm" onClick={handleGenerate} disabled={loading}>
+      < variant="neutral" size="sm" onClick={handleGenerate} disabled={loading}>
         <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
         {loading ? 'Gerando...' : '✨ Sugerir resposta'}
-      </Button>
+      </>
 
       {suggestion && (
         <div className="space-y-3 animate-in fade-in-50">
@@ -64,8 +64,8 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
           <div className="flex gap-3">
-            <Button size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
-            <Button size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
+            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
+            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
           </div>
         </div>
       )}

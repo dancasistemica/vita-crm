@@ -7,7 +7,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ Button, label, error, helperText, className = '', ...props }, ref) => {
+  ({ label, error, helperText, className = '', ...props }, ref) => {
     return (
       <div className="w-full">
         {label && (

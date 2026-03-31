@@ -1,5 +1,5 @@
-import { Button, Card, CardContent } from '@/components/ui/ds';
-import type { Button, StageMetric } from '@/hooks/useDashboardData';
+import { Card, CardContent } from '@/components/ui/ds';
+import type { StageMetric } from '@/hooks/useDashboardData';
 
 interface StageMetricsProps {
   metrics: StageMetric[];
@@ -12,7 +12,7 @@ const BORDER_COLORS = [
   'border-l-success',
 ];
 
-export default function StageMetrics({ Button, metrics }: StageMetricsProps) {
+export default function StageMetrics({ metrics }: StageMetricsProps) {
   if (metrics.length === 0) return null;
 
   return (

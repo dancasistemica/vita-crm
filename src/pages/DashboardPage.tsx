@@ -1,39 +1,39 @@
-import { Button, useState } from "react";
-import { Button, useNavigate } from "react-router-dom";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button, Users, DollarSign, TrendingUp, Target } from "lucide-react";
-import { Button, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
-import { Button, useDashboardData } from "@/hooks/useDashboardData";
+import { useDashboardData } from "@/hooks/useDashboardData";
 import TaskMetricsCards from "@/components/dashboard/TaskMetricsCards";
-import { Button, Skeleton } from "@/components/ui/ds";
-import { Button, useOrganization } from "@/contexts/OrganizationContext";
-import { Button, useAuth } from "@/hooks/useAuth";
-import FilterPeriod, { Button, type DateRange } from "@/components/dashboard/FilterPeriod";
+import { Skeleton } from "@/components/ui/ds";
+import { useOrganization } from "@/contexts/OrganizationContext";
+import { useAuth } from "@/hooks/useAuth";
+import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPeriod";
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";
 import ProductInsights from "@/components/dashboard/ProductInsights";
 import DashboardCustomizer from "@/components/dashboard/DashboardCustomizer";
-import { Button, useDashboardSettings } from "@/hooks/useDashboardSettings";
-import { Button, useUserRole } from "@/hooks/useUserRole";
+import { useDashboardSettings } from "@/hooks/useDashboardSettings";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
-  const { Button, user } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const { Button, organization, organizationId } = useOrganization();
-  const { Button, canAccessSettings, isSuperadmin } = useUserRole();
-  const { Button, settings, toggleVisibility, reorder } = useDashboardSettings(organizationId);
+  const { organization, organizationId } = useOrganization();
+  const { canAccessSettings, isSuperadmin } = useUserRole();
+  const { settings, toggleVisibility, reorder } = useDashboardSettings(organizationId);
 
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const end = new Date();
     const start = new Date();
     start.setDate(start.getDate() - 30);
-    return { Button, start, end, label: '30 dias' };
+    return { start, end, label: '30 dias' };
   });
 
-  const { Button, totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, predictedRevenue = 0, predictedLeadsCount = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, productInsights } = useDashboardData(dateRange);
+  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, predictedRevenue = 0, predictedLeadsCount = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, productInsights } = useDashboardData(dateRange);
 
   const isCardVisible = (cardId: string) => {
     const s = settings.find(s => s.card_id === cardId);
@@ -41,14 +41,14 @@ export default function DashboardPage() {
   };
 
   const metrics = [
-    { Button, icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
-    { Button, icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
-    { Button, icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
-    { Button, icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
-    { Button, icon: DollarSign, label: "Receita Prevista", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
-    { Button, icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
-    { Button, icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
-    { Button, icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
+    { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
+    { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
+    { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
+    { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Receita Prevista", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
+    { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
+    { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
+    { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
   ];
 
   if (loading) {
@@ -76,7 +76,7 @@ export default function DashboardPage() {
     metrics_grid: () => (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
-          <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ Button, animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
+          <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
             <CardContent className="pt-5 pb-4">
               <div className="flex items-center gap-3.5">
                 <div className={`p-2.5 rounded-xl ${m.color}`}>
@@ -107,9 +107,9 @@ export default function DashboardPage() {
         <CardContent className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={leadsByStage}>
-              <XAxis dataKey="name" tick={{ Button, fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
               <YAxis allowDecimals={false} />
-              <Tooltip contentStyle={{ Button, borderRadius: '8px', border: '1px solid hsl(220 13% 91%)', boxShadow: '0 4px 12px -2px rgb(0 0 0 / 0.06)' }} />
+              <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)', boxShadow: '0 4px 12px -2px rgb(0 0 0 / 0.06)' }} />
               <Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
               <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                 {leadsByOrigin.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <Tooltip contentStyle={{ Button, borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+              <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
             </PieChart>
           </ResponsiveContainer>
         </CardContent>
@@ -137,9 +137,9 @@ export default function DashboardPage() {
         <CardContent className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={revenueByProduct}>
-              <XAxis dataKey="name" tick={{ Button, fontSize: 11 }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
               <YAxis />
-              <Tooltip formatter={(v: number) => `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ Button, borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+              <Tooltip formatter={(v: number) => `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
               <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -160,7 +160,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-muted-foreground">{product.count} vendas</p>
                   </div>
                 </div>
-                <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}</p>
+                <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
               </div>
             ))}
           </div>
@@ -176,9 +176,9 @@ export default function DashboardPage() {
               <div key={day.day} className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground w-24">{day.day}</span>
                 <div className="flex-1 bg-muted rounded-full h-2">
-                  <div className="bg-primary h-2 rounded-full" style={{ Button, width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
+                  <div className="bg-primary h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
                 </div>
-                <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}</span>
+                <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
             ))}
           </div>

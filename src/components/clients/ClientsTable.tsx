@@ -1,14 +1,14 @@
-import { Button, useNavigate } from 'react-router-dom';
-import { Button, ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
-import { Button, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Checkbox } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Skeleton } from '@/components/ui/ds';
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, SortField, SortDir } from '@/hooks/useClientsFilter';
+import { useNavigate } from 'react-router-dom';
+import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Skeleton } from '@/components/ui/ds';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { SortField, SortDir } from '@/hooks/useClientsFilter';
 
 interface ClientLead {
   id: string;
@@ -63,7 +63,7 @@ function getInitialColor(name: string) {
 function formatDate(dateStr: string) {
   if (!dateStr) return '—';
   const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('pt-BR', { Button, day: '2-digit', month: 'short' }).replace('.', '');
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 }
 
 function relativeDate(dateStr: string) {
@@ -101,7 +101,7 @@ interface Props {
   onSelectClient?: (client: ClientLead) => void;
 }
 
-function SortIcon({ Button, field, current, dir }: { Button, field: SortField; current: SortField; dir: SortDir }) {
+function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
   if (field !== current) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-40" />;
   return dir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
 }
@@ -119,7 +119,7 @@ export default function ClientsTable({
   if (loading) {
     return (
       <div className="space-y-3">
-        {Array.from({ Button, length: 5 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-16 w-full rounded-lg" />
         ))}
       </div>
@@ -174,13 +174,13 @@ export default function ClientsTable({
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
+                  < variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
                     <MoreVertical className="h-4 w-4" />
-                  </Button>
+                  </>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={e => { Button, e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
-                  <DropdownMenuItem onClick={e => { Button, e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
                   <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -322,14 +322,14 @@ export default function ClientsTable({
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
+                    < variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
-                    </Button>
+                    </>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-7 w-7">
+                        < variant="ghost" size="sm" className="h-7 w-7">
                           <MoreVertical className="h-3.5 w-3.5" />
-                        </Button>
+                        </>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
@@ -353,8 +353,8 @@ export default function ClientsTable({
       {selectedIds.length >= 2 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionados</span>
-          <Button variant="neutral" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
-          <Button variant="neutral" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
+          < variant="neutral" size="sm" className="h-7 text-xs">Exportar selecionados</>
+          < variant="neutral" size="sm" className="h-7 text-xs">Atribuir responsável</>
         </div>
       )}
 
@@ -379,9 +379,9 @@ export default function ClientsTable({
           <span>por página</span>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
           <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-          <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
         </div>
       </div>
     </div>

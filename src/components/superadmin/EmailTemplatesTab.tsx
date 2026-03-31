@@ -1,12 +1,12 @@
-import { Button, useState } from 'react';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button, Mail } from 'lucide-react';
+import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Mail } from 'lucide-react';
 import EmailTemplateEditor from './EmailTemplateEditor';
 
 const TEMPLATE_OPTIONS = [
-  { Button, value: 'confirmation_email', label: '✉️ Confirmação de Email' },
-  { Button, value: 'reset_password', label: '🔑 Reset de Senha' },
+  { value: 'confirmation_email', label: '✉️ Confirmação de Email' },
+  { value: 'reset_password', label: '🔑 Reset de Senha' },
 ] as const;
 
 type TemplateType = 'confirmation_email' | 'reset_password';

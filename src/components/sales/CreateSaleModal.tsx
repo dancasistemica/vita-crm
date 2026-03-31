@@ -1,10 +1,10 @@
-import { Button, useState, useEffect, useMemo } from 'react';
-import { Button, X, Loader, ChevronRight, Check, Search } from 'lucide-react';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, createSaleWithInstallments } from '@/services/salesService';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, toast } from 'sonner';
-import { Button, Input, Select, Badge, Alert, Card } from '@/components/ui/ds';
+import { useState, useEffect, useMemo } from 'react';
+import { X, Loader, ChevronRight, Check, Search } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { createSaleWithInstallments } from '@/services/salesService';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { toast } from 'sonner';
+import { Input, Select, Badge, Alert, Card } from '@/components/ui/ds';
 
 interface CreateSaleModalProps {
   isOpen: boolean;
@@ -32,13 +32,13 @@ interface Client {
   email: string;
 }
 
-export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSaleModalProps) => {
-  const { Button, organization } = useOrganization();
+export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalProps) => {
+  const { organization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<Array<{ Button, id: string; name: string; active: boolean }>>([]);
+  const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   // Busca de cliente
@@ -149,11 +149,11 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
           payment_method_id: formData.payment_method_id,
           initial_payment: formData.initial_payment,
           sales_stage_id: formData.sales_stage_id,
-          items: [{ Button, product_id: formData.product_id, quantity: 1, unit_price: formData.stage_value }],
+          items: [{ product_id: formData.product_id, quantity: 1, unit_price: formData.stage_value }],
         });
         toast.success('Venda criada com sucesso!');
       } else {
-        const { Button, createSubscription } = await import('@/services/subscriptionService');
+        const { createSubscription } = await import('@/services/subscriptionService');
         await createSubscription(organization!.id, {
           client_id: formData.client_id,
           product_id: formData.product_id,
@@ -186,11 +186,11 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
-            <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
+            < variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
           </div>
 
           <div className="flex items-center gap-3">
-            {Array.from({ Button, length: totalPhases }).map((_, i) => (
+            {Array.from({ length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2 ${
                   i + 1 < currentPhase ? 'bg-success-600 border-success-600 text-white' : 
@@ -225,19 +225,19 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
                 {showClientDropdown && clientSearch && (
                   <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-lg bg-white">
                     {filteredClients.map(client => (
-                      <Button variant="secondary" size="sm"
+                      < variant="secondary" size="sm"
                         key={client.id}
                         type="button"
                         className="w-full text-left p-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
                         onClick={() => {
-                          setFormData({ Button, ...formData, client_id: client.id });
+                          setFormData({ ...formData, client_id: client.id });
                           setClientSearch(client.name);
                           setShowClientDropdown(false);
                         }}
                       >
                         <p className="font-semibold text-neutral-900">{client.name}</p>
                         <p className="text-xs text-neutral-500">{client.email}</p>
-                      </Button>
+                      </>
                     ))}
                   </div>
                 )}
@@ -253,9 +253,9 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
                 <Select
                   label="Selecione o Produto"
-                  options={products.map(p => ({ Button, value: p.id, label: p.name }))}
+                  options={products.map(p => ({ value: p.id, label: p.name }))}
                   value={formData.product_id}
-                  onChange={(e) => setFormData({ Button, ...formData, product_id: e.target.value, sales_stage_id: '' })}
+                  onChange={(e) => setFormData({ ...formData, product_id: e.target.value, sales_stage_id: '' })}
                   placeholder="Escolha um produto..."
                 />
               </div>
@@ -265,11 +265,11 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
                 <Select
                   label="Etapa de Venda"
-                  options={productSalesStages.filter(s => s.product_id === formData.product_id).map(s => ({ Button, value: s.id, label: s.name }))}
+                  options={productSalesStages.filter(s => s.product_id === formData.product_id).map(s => ({ value: s.id, label: s.name }))}
                   value={formData.sales_stage_id}
                   onChange={(e) => {
                     const stage = productSalesStages.find(s => s.id === e.target.value);
-                    setFormData({ Button, ...formData, sales_stage_id: e.target.value, stage_value: stage?.value || 0 });
+                    setFormData({ ...formData, sales_stage_id: e.target.value, stage_value: stage?.value || 0 });
                   }}
                 />
                 {formData.stage_value > 0 && (
@@ -286,9 +286,9 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
                 <Select
                   label="Forma de Pagamento"
-                  options={paymentMethods.map(p => ({ Button, value: p.id, label: p.name }))}
+                  options={paymentMethods.map(p => ({ value: p.id, label: p.name }))}
                   value={formData.payment_method_id}
-                  onChange={(e) => setFormData({ Button, ...formData, payment_method_id: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
                 />
               </div>
             )}
@@ -301,13 +301,13 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
                       label="Nº Parcelas"
                       type="number"
                       value={formData.installments}
-                      onChange={(e) => setFormData({ Button, ...formData, installments: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, installments: e.target.value })}
                     />
                     <Input
                       label="Data 1º Vencimento"
                       type="date"
                       value={formData.first_payment_date}
-                      onChange={(e) => setFormData({ Button, ...formData, first_payment_date: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
                     />
                   </>
                 ) : (
@@ -316,13 +316,13 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
                       label="Início da Vigência"
                       type="date"
                       value={formData.start_date}
-                      onChange={(e) => setFormData({ Button, ...formData, start_date: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
                     />
                     <Input
                       label="1º Pagamento"
                       type="date"
                       value={formData.first_payment_due_date}
-                      onChange={(e) => setFormData({ Button, ...formData, first_payment_due_date: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
                     />
                   </>
                 )}
@@ -334,7 +334,7 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
                 <Input
                   label="Observações Adicionais"
                   value={formData.notes}
-                  onChange={(e) => setFormData({ Button, ...formData, notes: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Algum detalhe importante?"
                 />
               </div>
@@ -344,17 +344,17 @@ export const CreateSaleModal = ({ Button, isOpen, onClose, onSuccess }: CreateSa
 
         {/* Footer com Ações */}
         <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex justify-between gap-4">
-          <Button variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
+          < variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
             Voltar
-          </Button>
+          </>
           {currentPhase < totalPhases ? (
-            <Button variant="primary" onClick={handleNextPhase}>
+            < variant="primary" onClick={handleNextPhase}>
               Próximo
-            </Button>
+            </>
           ) : (
-            <Button variant="success" type="submit" form="sale-form" loading={loading}>
+            < variant="success" type="submit" form="sale-form" loading={loading}>
               Finalizar {saleType === 'unica' ? 'Venda' : 'Assinatura'}
-            </Button>
+            </>
           )}
         </div>
       </div>

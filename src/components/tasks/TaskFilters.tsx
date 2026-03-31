@@ -1,15 +1,15 @@
-import { Button, useState } from "react";
-import { Button, Input } from "@/components/ui/ds/Input";
-import { Button, Label } from "@/components/ui/ds";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Select } from "@/components/ui/ds/Select";
-import { Button, Search, X, Filter } from "lucide-react";
-import { Button, TASK_TYPES } from "@/types/crm";
-import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
+import { useState } from "react";
+import { Input } from "@/components/ui/ds/Input";
+import { Label } from "@/components/ui/ds";
+import { } from "@/components/ui/ds/";
+import { Select } from "@/components/ui/ds/Select";
+import { Search, X, Filter } from "lucide-react";
+import { TASK_TYPES } from "@/types/crm";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
 
 interface OrgMember {
   user_id: string;
-  profiles?: { Button, full_name: string; email: string | null } | null;
+  profiles?: { full_name: string; email: string | null } | null;
 }
 
 interface TaskFiltersProps {
@@ -52,15 +52,15 @@ export default function TaskFilters({
           />
         </div>
         <CollapsibleTrigger asChild>
-          <Button variant="neutral" size="sm" className="gap-1">
+          < variant="neutral" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
             Filtros
-          </Button>
+          </>
         </CollapsibleTrigger>
         {hasFilters && (
-          <Button variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
+          < variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
             <X className="h-4 w-4" /> Limpar
-          </Button>
+          </>
         )}
       </div>
 

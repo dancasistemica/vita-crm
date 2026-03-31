@@ -1,12 +1,12 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, useNavigate } from 'react-router-dom';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, toast } from 'sonner';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button, getRecoveryContextFromUrl } from '@/utils/authRecovery';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { Button, code, hasTokenHash, rawHash, type } = getRecoveryContextFromUrl(window.location);
+      const { code, hasTokenHash, rawHash, type } = getRecoveryContextFromUrl(window.location);
 
       console.log('[ResetPasswordPage] Carregando...');
       console.log('[ResetPasswordPage] Search:', window.location.search);
@@ -26,7 +26,7 @@ export default function ResetPasswordPage() {
       console.log('[ResetPasswordPage] Token:', code);
       console.log('[ResetPasswordPage] Type:', type);
 
-      const { Button, data: { Button, session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       console.log('[ResetPasswordPage] Sessão ativa:', session);
 
       if (session || type === 'recovery' || Boolean(code) || hasTokenHash) {
@@ -41,8 +41,8 @@ export default function ResetPasswordPage() {
 
     checkSession();
 
-    const { Button, data: { Button, subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      const { Button, code, hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const { code, hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
 
       console.log('[ResetPasswordPage] Auth Event:', event);
       console.log('[ResetPasswordPage] Auth Session:', session);
@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
     setIsSubmitting(true);
     try {
       console.log('[ResetPasswordPage] Enviando updateUser para redefinir senha...');
-      const { Button, error } = await supabase.auth.updateUser({ Button, password });
+      const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       console.log('[ResetPasswordPage] Senha redefinida com sucesso.');
       toast.success('Senha redefinida com sucesso! Redirecionando para login...');
@@ -105,9 +105,9 @@ export default function ResetPasswordPage() {
             <CardDescription>Este link de recuperação é inválido ou expirou.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
+            < onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
-            </Button>
+            </>
           </CardContent>
         </Card>
       </div>
@@ -144,9 +144,9 @@ export default function ResetPasswordPage() {
               className="min-h-[44px]"
             />
           </div>
-          <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
+          < onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
             {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
-          </Button>
+          </>
         </CardContent>
       </Card>
     </div>

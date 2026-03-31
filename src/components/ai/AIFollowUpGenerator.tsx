@@ -1,12 +1,12 @@
-import { Button, useState } from 'react';
-import { Button, useAI } from '@/hooks/useAI';
-import { Button } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Sparkles, Copy, RefreshCw } from 'lucide-react';
-import { Button, toast } from 'sonner';
-import type { Button, Lead } from '@/types/crm';
+import { useState } from 'react';
+import { useAI } from '@/hooks/useAI';
+import { } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Sparkles, Copy, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
+import type { Lead } from '@/types/crm';
 
 interface Props {
   lead: Lead;
@@ -14,15 +14,15 @@ interface Props {
 }
 
 const CHANNELS = [
-  { Button, value: 'whatsapp', label: 'WhatsApp' },
-  { Button, value: 'email', label: 'Email' },
-  { Button, value: 'instagram', label: 'Instagram DM' },
+  { value: 'whatsapp', label: 'WhatsApp' },
+  { value: 'email', label: 'Email' },
+  { value: 'instagram', label: 'Instagram DM' },
 ];
 
-export default function AIFollowUpGenerator({ Button, lead, stageName }: Props) {
+export default function AIFollowUpGenerator({ lead, stageName }: Props) {
   const [channel, setChannel] = useState('whatsapp');
   const [message, setMessage] = useState('');
-  const { Button, loading, generate, regenerate } = useAI({ Button, type: 'followup_message' });
+  const { loading, generate, regenerate } = useAI({ type: 'followup_message' });
 
   const handleGenerate = async () => {
     const prompt = `Gere uma mensagem de follow-up via ${CHANNELS.find(c => c.value === channel)?.label || channel} para:
@@ -64,17 +64,17 @@ export default function AIFollowUpGenerator({ Button, lead, stageName }: Props) 
             </SelectContent>
           </Select>
         </div>
-        <Button size="sm" onClick={handleGenerate} disabled={loading}>
+        < size="sm" onClick={handleGenerate} disabled={loading}>
           {loading ? 'Gerando...' : '✨ Gerar mensagem'}
-        </Button>
+        </>
       </div>
 
       {message && (
         <div className="space-y-3 animate-in fade-in-50">
           <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} className="text-sm" />
           <div className="flex gap-3">
-            <Button size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
-            <Button size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
+            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
+            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
           </div>
           <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
         </div>

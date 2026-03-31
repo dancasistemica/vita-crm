@@ -1,35 +1,35 @@
-import { Button, useState, useRef, useCallback } from 'react';
-import { Button, useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Slider } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
-import { Button, Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
+import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Slider } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/ds';
+import { toast } from 'sonner';
+import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
 
 const PALETTES = [
-  { Button, name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
-  { Button, name: 'Terra e Movimento', primary: '#B45309', secondary: '#FEF3C7', accent: '#D97706' },
-  { Button, name: 'Oceano e Cura', primary: '#0891B2', secondary: '#E0F2FE', accent: '#0E7490' },
+  { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
+  { name: 'Terra e Movimento', primary: '#B45309', secondary: '#FEF3C7', accent: '#D97706' },
+  { name: 'Oceano e Cura', primary: '#0891B2', secondary: '#E0F2FE', accent: '#0E7490' },
 ];
 
 const FONTS = ['DM Sans', 'Inter', 'Poppins', 'Nunito'];
 
 export default function CustomizePage() {
-  const { Button, brand, saveBrand, resetBrand, updateLocalBrand } = useBrand();
-  const { Button, organizationId } = useOrganization();
+  const { brand, saveBrand, resetBrand, updateLocalBrand } = useBrand();
+  const { organizationId } = useOrganization();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const faviconInputRef = useRef<HTMLInputElement>(null);
 
   const handleColorChange = useCallback((key: keyof BrandSettings, value: string) => {
-    updateLocalBrand({ Button, [key]: value });
+    updateLocalBrand({ [key]: value });
   }, [updateLocalBrand]);
 
   const handlePalette = useCallback((palette: typeof PALETTES[0]) => {
@@ -58,12 +58,12 @@ export default function CustomizePage() {
     try {
       const ext = file.name.split('.').pop() || 'png';
       const path = `${organizationId}/${type}_${Date.now()}.${ext}`;
-      const { Button, error } = await supabase.storage.from('logos').upload(path, file, { Button, upsert: true });
+      const { error } = await supabase.storage.from('logos').upload(path, file, { upsert: true });
       if (error) throw error;
-      const { Button, data: { Button, publicUrl } } = supabase.storage.from('logos').getPublicUrl(path);
+      const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path);
       const urlWithCache = `${publicUrl}?t=${Date.now()}`;
       const key = type === 'logo' ? 'logo_url' : 'favicon_url';
-      updateLocalBrand({ Button, [key]: urlWithCache });
+      updateLocalBrand({ [key]: urlWithCache });
       toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado com sucesso!`);
     } catch (e: any) {
       console.error('Upload error:', e);
@@ -80,7 +80,7 @@ export default function CustomizePage() {
   };
 
   const removeLogo = () => {
-    updateLocalBrand({ Button, logo_url: null });
+    updateLocalBrand({ logo_url: null });
   };
 
   const handleSave = async () => {
@@ -113,12 +113,12 @@ export default function CustomizePage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">🎨 Personalizar</h1>
         <div className="flex gap-3">
-          <Button variant="neutral" onClick={handleReset} disabled={saving}>
+          < variant="neutral" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
+          </>
+          < onClick={handleSave} disabled={saving}>
             <Save className="h-4 w-4 mr-1" /> {saving ? 'Salvando...' : 'Salvar'}
-          </Button>
+          </>
         </div>
       </div>
 
@@ -141,7 +141,7 @@ export default function CustomizePage() {
                   onClick={() => logoInputRef.current?.click()}
                 >
                   <input ref={logoInputRef} type="file" accept="image/png,image/svg+xml,image/webp" className="hidden"
-                    onChange={e => { Button, if (e.target.files?.[0]) handleUpload(e.target.files[0], 'logo'); e.target.value = ''; }} />
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'logo'); e.target.value = ''; }} />
                   {brand.logo_url ? (
                     <div className="space-y-3">
                       <div className="flex justify-center gap-4">
@@ -162,9 +162,9 @@ export default function CustomizePage() {
                   )}
                 </div>
                 {brand.logo_url && (
-                  <Button variant="ghost" size="sm" onClick={(e) => { Button, e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
+                  < variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </Button>
+                  </>
                 )}
                 {brand.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -178,7 +178,7 @@ export default function CustomizePage() {
                           value={[brand.logo_size_desktop]}
                           onValueChange={([v]) => {
                             console.log('[BrandCustomizer] Salvando logo_size_desktop da org:', v);
-                            updateLocalBrand({ Button, logo_size_desktop: v });
+                            updateLocalBrand({ logo_size_desktop: v });
                           }}
                           min={24}
                           max={200}
@@ -203,7 +203,7 @@ export default function CustomizePage() {
                           value={[brand.logo_size_mobile]}
                           onValueChange={([v]) => {
                             console.log('[BrandCustomizer] Salvando logo_size_mobile da org:', v);
-                            updateLocalBrand({ Button, logo_size_mobile: v });
+                            updateLocalBrand({ logo_size_mobile: v });
                           }}
                           min={20}
                           max={80}
@@ -226,7 +226,7 @@ export default function CustomizePage() {
                 <Label>Nome da organização</Label>
                 <Input
                   value={brand.org_display_name || ''}
-                  onChange={e => updateLocalBrand({ Button, org_display_name: e.target.value || null })}
+                  onChange={e => updateLocalBrand({ org_display_name: e.target.value || null })}
                   placeholder="Exibido quando sem logo"
                 />
               </div>
@@ -240,7 +240,7 @@ export default function CustomizePage() {
                   onClick={() => faviconInputRef.current?.click()}
                 >
                   <input ref={faviconInputRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
-                    onChange={e => { Button, if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
                   {brand.favicon_url ? (
                     <div className="flex items-center gap-3">
                       <img src={brand.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
@@ -264,9 +264,9 @@ export default function CustomizePage() {
                 <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="neutral" size="sm" className="min-h-[44px] gap-3">
+                    < variant="neutral" size="sm" className="min-h-[44px] gap-3">
                       <Globe className="h-4 w-4" /> Usar Cores Globais
-                    </Button>
+                    </>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -279,7 +279,7 @@ export default function CustomizePage() {
                       <AlertDialogCancel>Cancelar</AlertDialogCancel>
                       <AlertDialogAction onClick={async () => {
                         console.log('[BrandCustomizer] Carregando cores globais do sistema');
-                        const { Button, data: sysSettings } = await supabase
+                        const { data: sysSettings } = await supabase
                           .from('system_settings')
                           .select('setting_key, setting_value')
                           .in('setting_key', ['primary_color', 'secondary_color', 'accent_color', 'sidebar_bg_color']);
@@ -318,7 +318,7 @@ export default function CustomizePage() {
                   hslValue={brand.sidebar_color}
                   onChange={v => {
                     console.log('[BrandCustomizer] Salvando sidebarBgColor:', v);
-                    updateLocalBrand({ Button, sidebar_color: v });
+                    updateLocalBrand({ sidebar_color: v });
                   }}
                 />
               </div>
@@ -326,15 +326,15 @@ export default function CustomizePage() {
                 <Label className="text-sm font-medium mb-2 block">Paletas prontas</Label>
                 <div className="flex flex-wrap gap-3">
                   {PALETTES.map(p => (
-                    <Button variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
+                    < variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg border hover:border-primary transition-colors bg-card">
                       <div className="flex gap-1">
-                        <div className="w-5 h-5 rounded-full border" style={{ Button, backgroundColor: p.primary }} />
-                        <div className="w-5 h-5 rounded-full border" style={{ Button, backgroundColor: p.secondary }} />
-                        <div className="w-5 h-5 rounded-full border" style={{ Button, backgroundColor: p.accent }} />
+                        <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.primary }} />
+                        <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.secondary }} />
+                        <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.accent }} />
                       </div>
                       <span className="text-xs font-medium">{p.name}</span>
-                    </Button>
+                    </>
                   ))}
                 </div>
               </div>
@@ -355,13 +355,13 @@ export default function CustomizePage() {
             </CardHeader>
             <CardContent>
               <Label>Fonte do CRM</Label>
-              <Select value={brand.font_family} onValueChange={v => updateLocalBrand({ Button, font_family: v })}>
+              <Select value={brand.font_family} onValueChange={v => updateLocalBrand({ font_family: v })}>
                 <SelectTrigger className="w-full max-w-xs mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ Button, fontFamily: f }}>{f}</SelectItem>
+                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -375,15 +375,15 @@ export default function CustomizePage() {
 
           {/* Sidebar preview */}
           <Card className="overflow-hidden">
-            <div className="p-4 rounded-t-lg" style={{ Button, backgroundColor: `hsl(${brand.sidebar_color})` }}>
+            <div className="p-4 rounded-t-lg" style={{ backgroundColor: `hsl(${brand.sidebar_color})` }}>
               <div className="flex items-center gap-3 mb-4">
                 {brand.logo_url ? (
                   <img src={brand.logo_url} alt="Logo" className="h-8 object-contain" />
                 ) : (
                   <div className="h-8 w-8 rounded-lg flex items-center justify-center text-sm"
-                    style={{ Button, backgroundColor: brand.primary_color, color: '#fff' }}>💃</div>
+                    style={{ backgroundColor: brand.primary_color, color: '#fff' }}>💃</div>
                 )}
-                <span className="text-sm font-medium" style={{ Button, color: '#d4d4d8' }}>
+                <span className="text-sm font-medium" style={{ color: '#d4d4d8' }}>
                   {brand.org_display_name || 'Meu CRM'}
                 </span>
               </div>
@@ -409,26 +409,26 @@ export default function CustomizePage() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium">Maria Silva</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
-                    style={{ Button, backgroundColor: brand.accent_color }}>Quente</span>
+                    style={{ backgroundColor: brand.accent_color }}>Quente</span>
                 </div>
                 <p className="text-xs text-muted-foreground">Interessada em dança terapêutica</p>
               </div>
             </CardContent>
           </Card>
 
-          {/* Button preview */}
+          {/* preview */}
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs text-muted-foreground">Botão primário</p>
-              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
-                style={{ Button, backgroundColor: brand.primary_color }}>
+              < variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
+                style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
-              </Button>
+              </>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
-                  style={{ Button, backgroundColor: brand.accent_color }}>Tag 1</span>
+                  style={{ backgroundColor: brand.accent_color }}>Tag 1</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
-                  style={{ Button, backgroundColor: brand.secondary_color }}>Tag 2</span>
+                  style={{ backgroundColor: brand.secondary_color }}>Tag 2</span>
               </div>
             </CardContent>
           </Card>
@@ -438,7 +438,7 @@ export default function CustomizePage() {
   );
 }
 
-function ColorPicker({ Button, label, description, value, onChange }: {
+function ColorPicker({ label, description, value, onChange }: {
   label: string; description: string; value: string; onChange: (v: string) => void;
 }) {
   return (
@@ -470,7 +470,7 @@ function hslStringToHex(hsl: string): string {
     return p;
   };
   let r, g, b;
-  if (s === 0) { Button, r = g = b = l; } else {
+  if (s === 0) { r = g = b = l; } else {
     const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     const p = 2 * l - q;
     r = hue2rgb(p, q, h + 1/3);
@@ -501,7 +501,7 @@ function hexToHSLString(hex: string): string {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
-function SidebarColorPicker({ Button, label, description, hslValue, onChange }: {
+function SidebarColorPicker({ label, description, hslValue, onChange }: {
   label: string; description: string; hslValue: string; onChange: (hsl: string) => void;
 }) {
   const hexValue = hslStringToHex(hslValue);

@@ -1,19 +1,19 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, useAuth } from '@/hooks/useAuth';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { Button, formatCNPJ, validateCNPJ } from '@/utils/cnpjValidator';
-import { Button, Building2, Mail, Phone, MapPin } from 'lucide-react';
-import { Button, Input } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { supabase } from '@/integrations/supabase/client';
+import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
+import { formatCNPJ, validateCNPJ } from '@/utils/cnpjValidator';
+import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
+import { toast } from 'sonner';
 
 export default function OrganizationPage() {
-  const { Button, user } = useAuth();
-  const { Button, organization, organizationId, refetch } = useOrganization();
+  const { user } = useAuth();
+  const { organization, organizationId, refetch } = useOrganization();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function OrganizationPage() {
     const load = async () => {
       try {
         setLoading(true);
-        const { Button, data, error } = await supabase
+        const { data, error } = await supabase
           .from('organizations')
           .select('*')
           .eq('id', organizationId)
@@ -84,7 +84,7 @@ export default function OrganizationPage() {
 
   const handleCEPChange = async (value: string) => {
     const formatted = formatCEP(value);
-    setFormData((prev) => ({ Button, ...prev, cep: formatted }));
+    setFormData((prev) => ({ ...prev, cep: formatted }));
 
     const clean = value.replace(/\D/g, '');
     if (clean.length === 8) {
@@ -105,7 +105,7 @@ export default function OrganizationPage() {
   };
 
   const handleCNPJChange = (value: string) => {
-    setFormData((prev) => ({ Button, ...prev, cnpj: formatCNPJ(value) }));
+    setFormData((prev) => ({ ...prev, cnpj: formatCNPJ(value) }));
   };
 
   const handleSave = async () => {
@@ -135,7 +135,7 @@ export default function OrganizationPage() {
     try {
       setSaving(true);
 
-      const { Button, error } = await supabase
+      const { error } = await supabase
         .from('organizations')
         .update({
           name: formData.name,
@@ -200,7 +200,7 @@ export default function OrganizationPage() {
             <Label>Nome da Empresa *</Label>
             <Input
               value={formData.name}
-              onChange={(e) => setFormData((p) => ({ Button, ...p, name: e.target.value }))}
+              onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
               placeholder="Nome da empresa"
             />
           </div>
@@ -209,7 +209,7 @@ export default function OrganizationPage() {
             <Label>Descrição</Label>
             <Input
               value={formData.description}
-              onChange={(e) => setFormData((p) => ({ Button, ...p, description: e.target.value }))}
+              onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
               placeholder="Breve descrição da empresa"
             />
           </div>
@@ -231,7 +231,7 @@ export default function OrganizationPage() {
             <Input
               type="email"
               value={formData.contact_email}
-              onChange={(e) => setFormData((p) => ({ Button, ...p, contact_email: e.target.value }))}
+              onChange={(e) => setFormData((p) => ({ ...p, contact_email: e.target.value }))}
               placeholder="contato@empresa.com"
             />
           </div>
@@ -243,7 +243,7 @@ export default function OrganizationPage() {
             <Input
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData((p) => ({ Button, ...p, phone: e.target.value }))}
+              onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
               placeholder="(11) 99999-9999"
             />
           </div>
@@ -252,7 +252,7 @@ export default function OrganizationPage() {
             <Label>Website</Label>
             <Input
               value={formData.website}
-              onChange={(e) => setFormData((p) => ({ Button, ...p, website: e.target.value }))}
+              onChange={(e) => setFormData((p) => ({ ...p, website: e.target.value }))}
               placeholder="https://www.empresa.com"
             />
           </div>
@@ -293,7 +293,7 @@ export default function OrganizationPage() {
               <Label>Número</Label>
               <Input
                 value={formData.numero}
-                onChange={(e) => setFormData((p) => ({ Button, ...p, numero: e.target.value }))}
+                onChange={(e) => setFormData((p) => ({ ...p, numero: e.target.value }))}
                 placeholder="Nº"
               />
             </div>
@@ -301,7 +301,7 @@ export default function OrganizationPage() {
               <Label>Complemento</Label>
               <Input
                 value={formData.complemento}
-                onChange={(e) => setFormData((p) => ({ Button, ...p, complemento: e.target.value }))}
+                onChange={(e) => setFormData((p) => ({ ...p, complemento: e.target.value }))}
                 placeholder="Sala, andar..."
               />
             </div>
@@ -325,9 +325,9 @@ export default function OrganizationPage() {
         </CardContent>
       </Card>
 
-      <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
+      < onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </Button>
+      </>
     </div>
   );
 }

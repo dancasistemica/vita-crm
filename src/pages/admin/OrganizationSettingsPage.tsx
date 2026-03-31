@@ -1,13 +1,13 @@
-import { Button, useEffect, useMemo, useState } from 'react';
-import { Button, Loader2 } from 'lucide-react';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, useUserRole } from '@/hooks/useUserRole';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
+import { useEffect, useMemo, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { useUserRole } from '@/hooks/useUserRole';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
+import { toast } from 'sonner';
 
 const CRON_URL = 'https://yelawymcltqewpkwsxxb.supabase.co/functions/v1/send-scheduled-messages';
 const CRON_SCHEDULE_MINUTES = 5;
@@ -43,7 +43,7 @@ interface BotconversaSettingsProps {
  * Dependências: useBotconversaConfig hook
  * Último teste: 2026-03-25
  */
-const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: BotconversaSettingsProps) => {
+const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSettingsProps) => {
   const [botconversaKey, setBotconversaKey] = useState('');
   const [botconversaConfigId, setBotconversaConfigId] = useState<string | null>(null);
   const [botconversaSaving, setBotconversaSaving] = useState(false);
@@ -53,7 +53,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
   );
   const [botconversaLoading, setBotconversaLoading] = useState(false);
 
-  const getStatusMessage = (config?: { Button, api_key?: string | null } | null) => {
+  const getStatusMessage = (config?: { api_key?: string | null } | null) => {
     const key = config?.api_key?.trim() ?? '';
     if (!key) return 'Nenhuma chave configurada';
     return 'Chave configurada';
@@ -79,7 +79,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
     if (!organizationId) return;
     setBotconversaLoading(true);
     try {
-      const { Button, data, error } = await supabase
+      const { data, error } = await supabase
         .from('botconversa_config')
         .select('id, api_key')
         .eq('organization_id', organizationId)
@@ -174,7 +174,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
 
     try {
       if (botconversaConfigId) {
-        const { Button, error } = await supabase
+        const { error } = await supabase
           .from('botconversa_config')
           .update({
             api_key: trimmedKey,
@@ -184,10 +184,10 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
 
         if (error) throw error;
       } else {
-        const { Button, data: userData } = await supabase.auth.getUser();
+        const { data: userData } = await supabase.auth.getUser();
         const createdBy = userData.user?.id;
 
-        const { Button, data, error } = await supabase
+        const { data, error } = await supabase
           .from('botconversa_config')
           .insert({
             organization_id: organizationId,
@@ -207,7 +207,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
         apiKeyLength: trimmedKey.length,
       });
 
-      const { Button, data: config } = await supabase
+      const { data: config } = await supabase
         .from('botconversa_config')
         .select('*')
         .eq('organization_id', organizationId)
@@ -263,14 +263,14 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
     return <div>Erro: organizationId não fornecido</div>;
   }
 
-  const showActivateButton = botconversaConfigId !== undefined && botconversaConfigId !== null;
+  const showActivate = botconversaConfigId !== undefined && botconversaConfigId !== null;
   const botconversaError = null;
 
   // DEBUG: Estado final antes de renderizar
   const debugState = {
     organizationId,
     botconversaConfigId,
-    showActivateButton,
+    showActivate,
     loading: botconversaLoading,
     error: botconversaError,
     cron_secret_token: cronSecretToken ? 'EXISTS' : 'MISSING',
@@ -278,7 +278,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
   };
 
   console.log('[BotconversaSettings] ESTADO FINAL:', debugState);
-  console.log('[BotconversaSettings] showActivateButton é:', showActivateButton);
+  console.log('[BotconversaSettings] showActivate é:', showActivate);
   console.log('[BotconversaSettings] botconversaConfigId é:', botconversaConfigId);
 
   return (
@@ -301,7 +301,7 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
               disabled={botconversaLoading}
             />
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
+              < onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
                 {botconversaSaving ? (
                   <span className="inline-flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -310,18 +310,18 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
                 ) : (
                   'Salvar'
                 )}
-              </Button>
+              </>
               {/* TESTE: Botão SEM condição */}
-              <Button
+              <
                 onClick={handleActivateAutomation}
                 className="bg-green-600 hover:bg-green-700 w-full mt-4"
                 data-testid="activate-automation-button"
               >
                 Ativar Automação (TESTE)
-              </Button>
-              {!showActivateButton && (
+              </>
+              {!showActivate && (
                 <div className="text-sm text-amber-600 p-3 bg-amber-50 rounded border border-amber-200">
-                  ⚠️ Debug: showActivateButton = {String(showActivateButton)}
+                  ⚠️ Debug: showActivate = {String(showActivate)}
                   <br />
                   configId = {botconversaConfigId || 'undefined'}
                 </div>
@@ -355,8 +355,8 @@ const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: Botcon
 };
 
 export default function OrganizationSettingsPage() {
-  const { Button, organization, organizationId } = useOrganization();
-  const { Button, role, loading: roleLoading } = useUserRole();
+  const { organization, organizationId } = useOrganization();
+  const { role, loading: roleLoading } = useUserRole();
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [lastExecution, setLastExecution] = useState<string | null>(null);
@@ -369,7 +369,7 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     setLoading(true);
     try {
-      const { Button, data, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .select('*')
         .eq('id', organizationId)
@@ -425,8 +425,8 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     setRegenerating(true);
     try {
-      const { Button, data, error } = await supabase.functions.invoke('regenerate-cron-secret-token', {
-        body: { Button, organization_id: organizationId },
+      const { data, error } = await supabase.functions.invoke('regenerate-cron-secret-token', {
+        body: { organization_id: organizationId },
       });
 
       if (error) throw error;
@@ -475,16 +475,16 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Button variant="neutral" onClick={handleCopy} disabled={!token || loading}>
+                < variant="neutral" onClick={handleCopy} disabled={!token || loading}>
                   Copy
-                </Button>
-                <Button
+                </>
+                <
                   variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
                   {regenerating ? 'Regenerating...' : 'Regenerate'}
-                </Button>
+                </>
               </div>
             </div>
           </div>

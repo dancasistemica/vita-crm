@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, designSystemStandards } from '@/styles/design-system-standards';
+import { designSystemStandards } from '@/styles/design-system-standards';
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interfaceProps extends React.HTMLAttributes<HTMLElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'error' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
@@ -24,7 +24,7 @@ const sizeStyles = {
   lg: 'px-6 py-3 text-lg font-semibold rounded-lg',
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const = React.forwardRef<HTMLElement,Props>(
   (
     {
       variant = 'primary',
@@ -40,7 +40,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     return (
-      <Button variant="secondary" size="sm"
+      < variant="secondary" size="sm"
         ref={ref}
         disabled={disabled || loading}
         className={`
@@ -69,9 +69,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {icon && !loading && icon}
         {children}
-      </Button>
+      </>
     );
   }
 );
 
-Button.displayName = 'Button';
+.displayName = '';

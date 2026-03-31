@@ -1,18 +1,18 @@
-import { Button, useState, useEffect, useRef } from 'react';
-import { Button, useAuth } from '@/hooks/useAuth';
-import { Button, useUserRole } from '@/hooks/useUserRole';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, fetchAddressByCEP, formatCEP } from '@/services/cepService';
-import { Button, formatCPF, validateCPF } from '@/services/cpfValidator';
-import { Button, Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
-import { Button, Input } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
-import { Button, Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, Progress } from '@/components/ui/ds';
-import { Button, toast } from 'sonner';
+import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useUserRole } from '@/hooks/useUserRole';
+import { supabase } from '@/integrations/supabase/client';
+import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
+import { formatCPF, validateCPF } from '@/services/cpfValidator';
+import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Progress } from '@/components/ui/ds';
+import { toast } from 'sonner';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -26,8 +26,8 @@ const roleLabels: Record<string, string> = {
 };
 
 export default function UserProfileTab() {
-  const { Button, user } = useAuth();
-  const { Button, role } = useUserRole();
+  const { user } = useAuth();
+  const { role } = useUserRole();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -48,7 +48,7 @@ export default function UserProfileTab() {
     const load = async () => {
       try {
         setLoading(true);
-        const { Button, data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
         if (error) throw error;
         setFormData({
           full_name: data.full_name || '',
@@ -73,7 +73,7 @@ export default function UserProfileTab() {
 
   const handleCEPChange = async (value: string) => {
     const formatted = formatCEP(value);
-    setFormData(prev => ({ Button, ...prev, cep: formatted }));
+    setFormData(prev => ({ ...prev, cep: formatted }));
     const clean = value.replace(/\D/g, '');
     if (clean.length === 8) {
       setCepLoading(true);
@@ -92,7 +92,7 @@ export default function UserProfileTab() {
   };
 
   const handleCPFChange = (value: string) => {
-    setFormData(prev => ({ Button, ...prev, cpf: formatCPF(value) }));
+    setFormData(prev => ({ ...prev, cpf: formatCPF(value) }));
   };
 
   const processFile = (file: File) => {
@@ -123,9 +123,9 @@ export default function UserProfileTab() {
   const handleRemovePhoto = async () => {
     setPreviewUrl(null);
     setSelectedFile(null);
-    setFormData(prev => ({ Button, ...prev, avatar_url: '' }));
+    setFormData(prev => ({ ...prev, avatar_url: '' }));
     if (user?.id) {
-      await supabase.from('profiles').update({ Button, avatar_url: null, updated_at: new Date().toISOString() } as any).eq('id', user.id);
+      await supabase.from('profiles').update({ avatar_url: null, updated_at: new Date().toISOString() } as any).eq('id', user.id);
       toast.success('Foto removida');
     }
   };
@@ -137,36 +137,36 @@ export default function UserProfileTab() {
     const ext = selectedFile.name.split('.').pop();
     const path = `${user.id}/avatar.${ext}`;
     setUploadProgress(60);
-    const { Button, error } = await supabase.storage.from('profile-avatars').upload(path, selectedFile, { Button, upsert: true });
-    if (error) { Button, setUploading(false); setUploadProgress(0); throw new Error('Erro ao fazer upload da foto'); }
+    const { error } = await supabase.storage.from('profile-avatars').upload(path, selectedFile, { upsert: true });
+    if (error) { setUploading(false); setUploadProgress(0); throw new Error('Erro ao fazer upload da foto'); }
     setUploadProgress(90);
-    const { Button, data: urlData } = supabase.storage.from('profile-avatars').getPublicUrl(path);
+    const { data: urlData } = supabase.storage.from('profile-avatars').getPublicUrl(path);
     setUploadProgress(100);
     setUploading(false);
     return `${urlData.publicUrl}?t=${Date.now()}`;
   };
 
   const handleSave = async () => {
-    if (!formData.full_name.trim()) { Button, toast.error('Nome completo é obrigatório'); return; }
+    if (!formData.full_name.trim()) { toast.error('Nome completo é obrigatório'); return; }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) { Button, toast.error('Email inválido'); return; }
+    if (formData.email && !emailRegex.test(formData.email)) { toast.error('Email inválido'); return; }
     const cleanCpf = formData.cpf.replace(/\D/g, '');
-    if (cleanCpf && !validateCPF(cleanCpf)) { Button, toast.error('CPF inválido'); return; }
+    if (cleanCpf && !validateCPF(cleanCpf)) { toast.error('CPF inválido'); return; }
     const cleanCep = formData.cep.replace(/\D/g, '');
-    if (cleanCep && cleanCep.length !== 8) { Button, toast.error('CEP deve ter 8 dígitos'); return; }
+    if (cleanCep && cleanCep.length !== 8) { toast.error('CEP deve ter 8 dígitos'); return; }
 
     try {
       setSaving(true);
       let avatarUrl = formData.avatar_url;
-      if (selectedFile) { Button, const uploaded = await uploadAvatar(); if (uploaded) avatarUrl = uploaded; }
-      const { Button, error } = await supabase.from('profiles').update({
+      if (selectedFile) { const uploaded = await uploadAvatar(); if (uploaded) avatarUrl = uploaded; }
+      const { error } = await supabase.from('profiles').update({
         full_name: formData.full_name, email: formData.email, phone: formData.phone,
         avatar_url: avatarUrl || null, cpf: cleanCpf || null, updated_at: new Date().toISOString(),
         cep: cleanCep || null, street: formData.street || null, neighborhood: formData.neighborhood || null,
         city: formData.city || null, state: formData.state || null,
       } as any).eq('id', user!.id);
       if (error) throw error;
-      setFormData(prev => ({ Button, ...prev, avatar_url: avatarUrl }));
+      setFormData(prev => ({ ...prev, avatar_url: avatarUrl }));
       setSelectedFile(null); setPreviewUrl(null); setUploadProgress(0);
       toast.success('Perfil atualizado com sucesso!');
     } catch (err: any) {
@@ -193,7 +193,7 @@ export default function UserProfileTab() {
         <CardContent className="flex flex-col items-center gap-4">
           <div
             className={`relative group cursor-pointer rounded-full ${isDragging ? 'ring-4 ring-primary ring-offset-2' : ''}`}
-            onDragOver={(e) => { Button, e.preventDefault(); setIsDragging(true); }}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
@@ -210,13 +210,13 @@ export default function UserProfileTab() {
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
           </div>
           <div className="flex gap-3">
-            <Button variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
+            < variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
-            </Button>
+            </>
             {(displayAvatar) && (
-              <Button variant="neutral" size="sm" onClick={handleRemovePhoto}>
+              < variant="neutral" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
-              </Button>
+              </>
             )}
           </div>
           {previewUrl && <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
@@ -232,7 +232,7 @@ export default function UserProfileTab() {
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <Label>Nome Completo *</Label>
-            <Input value={formData.full_name} onChange={e => setFormData(p => ({ Button, ...p, full_name: e.target.value }))} />
+            <Input value={formData.full_name} onChange={e => setFormData(p => ({ ...p, full_name: e.target.value }))} />
           </div>
           <div className="space-y-3">
             <Label className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> Email</Label>
@@ -240,7 +240,7 @@ export default function UserProfileTab() {
           </div>
           <div className="space-y-3">
             <Label className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" /> Telefone</Label>
-            <Input type="tel" value={formData.phone} onChange={e => setFormData(p => ({ Button, ...p, phone: e.target.value }))} placeholder="(11) 99999-9999" />
+            <Input type="tel" value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} placeholder="(11) 99999-9999" />
           </div>
           <div className="space-y-3">
             <Label>CPF</Label>
@@ -276,9 +276,9 @@ export default function UserProfileTab() {
         </CardContent>
       </Card>
 
-      <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
+      < onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </Button>
+      </>
     </div>
   );
 }

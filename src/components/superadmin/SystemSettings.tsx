@@ -1,14 +1,14 @@
-import { Button, useState, useEffect, useRef, useCallback } from 'react';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, toast } from 'sonner';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Button, Slider } from '@/components/ui/ds';
-import { Button, Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/ds';
-import { Button, Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Slider } from '@/components/ui/ds';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/ds';
+import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
 
 interface SystemSettingsMap {
   system_name: string;
@@ -89,7 +89,7 @@ export function SystemSettings() {
 
   const loadSettings = async () => {
     console.log('[SystemSettings] Carregando configurações globais do sistema');
-    const { Button, data, error } = await supabase
+    const { data, error } = await supabase
       .from('system_settings')
       .select('setting_key, setting_value');
     if (error) {
@@ -98,7 +98,7 @@ export function SystemSettings() {
       setLoading(false);
       return;
     }
-    const map = { Button, ...DEFAULTS };
+    const map = { ...DEFAULTS };
     for (const row of (data || [])) {
       const key = row.setting_key as keyof SystemSettingsMap;
       if (key in map) {
@@ -118,9 +118,9 @@ export function SystemSettings() {
         updated_at: new Date().toISOString(),
       }));
       console.log('[SystemSettings] Salvando configurações avançadas:', settingsToSave.length, 'campos');
-      const { Button, error } = await supabase
+      const { error } = await supabase
         .from('system_settings')
-        .upsert(settingsToSave, { Button, onConflict: 'setting_key' });
+        .upsert(settingsToSave, { onConflict: 'setting_key' });
       if (error) throw error;
       toast.success('Configurações do sistema salvas com sucesso');
     } catch (e: any) {
@@ -145,12 +145,12 @@ export function SystemSettings() {
     try {
       const ext = file.name.split('.').pop() || 'png';
       const path = `system/${type}_${Date.now()}.${ext}`;
-      const { Button, error } = await supabase.storage.from('system-assets').upload(path, file, { Button, upsert: true });
+      const { error } = await supabase.storage.from('system-assets').upload(path, file, { upsert: true });
       if (error) throw error;
-      const { Button, data: { Button, publicUrl } } = supabase.storage.from('system-assets').getPublicUrl(path);
+      const { data: { publicUrl } } = supabase.storage.from('system-assets').getPublicUrl(path);
       const urlWithCache = `${publicUrl}?t=${Date.now()}`;
       const key = type === 'logo' ? 'logo_url' : 'favicon_url';
-      setSettings(prev => ({ Button, ...prev, [key]: urlWithCache }));
+      setSettings(prev => ({ ...prev, [key]: urlWithCache }));
       toast.success(`${type === 'logo' ? 'Logo' : 'Favicon'} carregado!`);
     } catch (e: any) {
       toast.error('Erro no upload: ' + (e.message || 'Tente novamente'));
@@ -160,7 +160,7 @@ export function SystemSettings() {
   };
 
   const updateSetting = useCallback((key: keyof SystemSettingsMap, value: string | null) => {
-    setSettings(prev => ({ Button, ...prev, [key]: value }));
+    setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
 
   if (loading) {
@@ -208,11 +208,11 @@ export function SystemSettings() {
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
                   onDragOver={e => e.preventDefault()}
-                  onDrop={e => { Button, e.preventDefault(); if (e.dataTransfer.files?.[0]) handleUpload(e.dataTransfer.files[0], 'logo'); }}
+                  onDrop={e => { e.preventDefault(); if (e.dataTransfer.files?.[0]) handleUpload(e.dataTransfer.files[0], 'logo'); }}
                   onClick={() => logoRef.current?.click()}
                 >
                   <input ref={logoRef} type="file" accept="image/png,image/svg+xml,image/webp" className="hidden"
-                    onChange={e => { Button, if (e.target.files?.[0]) handleUpload(e.target.files[0], 'logo'); e.target.value = ''; }} />
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'logo'); e.target.value = ''; }} />
                   {settings.logo_url ? (
                     <div className="space-y-3">
                       <div className="flex justify-center gap-4">
@@ -233,9 +233,9 @@ export function SystemSettings() {
                   )}
                 </div>
                 {settings.logo_url && (
-                  <Button variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
+                  < variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </Button>
+                  </>
                 )}
                 {settings.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -301,11 +301,11 @@ export function SystemSettings() {
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
                   onDragOver={e => e.preventDefault()}
-                  onDrop={e => { Button, e.preventDefault(); if (e.dataTransfer.files?.[0]) handleUpload(e.dataTransfer.files[0], 'favicon'); }}
+                  onDrop={e => { e.preventDefault(); if (e.dataTransfer.files?.[0]) handleUpload(e.dataTransfer.files[0], 'favicon'); }}
                   onClick={() => faviconRef.current?.click()}
                 >
                   <input ref={faviconRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
-                    onChange={e => { Button, if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
+                    onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
                   {settings.favicon_url ? (
                     <div className="flex items-center gap-3">
                       <img src={settings.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
@@ -468,7 +468,7 @@ export function SystemSettings() {
                 </SelectTrigger>
                 <SelectContent>
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ Button, fontFamily: f }}>{f}</SelectItem>
+                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -480,15 +480,15 @@ export function SystemSettings() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-neutral-700">Preview do sistema</h3>
           <Card className="overflow-hidden">
-            <div className="p-4 rounded-t-lg" style={{ Button, backgroundColor: settings.sidebar_bg_color.startsWith('#') ? settings.sidebar_bg_color : `hsl(${settings.sidebar_bg_color})` }}>
+            <div className="p-4 rounded-t-lg" style={{ backgroundColor: settings.sidebar_bg_color.startsWith('#') ? settings.sidebar_bg_color : `hsl(${settings.sidebar_bg_color})` }}>
               <div className="flex items-center gap-3 mb-4">
                 {settings.logo_url ? (
                   <img src={settings.logo_url} alt="Logo" className="h-8 object-contain" />
                 ) : (
                   <div className="h-8 w-8 rounded-lg flex items-center justify-center text-sm"
-                    style={{ Button, backgroundColor: settings.primary_color, color: '#fff' }}>⚙</div>
+                    style={{ backgroundColor: settings.primary_color, color: '#fff' }}>⚙</div>
                 )}
-                <span className="text-sm font-medium" style={{ Button, color: settings.color_sidebar_text }}>
+                <span className="text-sm font-medium" style={{ color: settings.color_sidebar_text }}>
                   {settings.system_name || 'Vita CRM'}
                 </span>
               </div>
@@ -508,22 +508,22 @@ export function SystemSettings() {
 
           <Card>
             <CardContent className="p-4 space-y-3">
-              <p className="text-xs" style={{ Button, color: settings.color_text_secondary }}>Botão primário</p>
-              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
-                style={{ Button, backgroundColor: settings.primary_color, color: settings.color_button_text }}>
+              <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
+              < variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
+                style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
-              </Button>
+              </>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
-                  style={{ Button, backgroundColor: settings.accent_color }}>Tag 1</span>
+                  style={{ backgroundColor: settings.accent_color }}>Tag 1</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
-                  style={{ Button, backgroundColor: settings.secondary_color }}>Tag 2</span>
+                  style={{ backgroundColor: settings.secondary_color }}>Tag 2</span>
               </div>
               <div className="flex gap-3 mt-2">
-                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ Button, backgroundColor: settings.color_success }}>✓ Sucesso</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ Button, backgroundColor: settings.color_warning }}>⚠ Aviso</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ Button, backgroundColor: settings.color_error }}>✕ Erro</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ Button, backgroundColor: settings.color_info }}>ℹ Info</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_success }}>✓ Sucesso</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_warning }}>⚠ Aviso</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_error }}>✕ Erro</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_info }}>ℹ Info</span>
               </div>
             </CardContent>
           </Card>
@@ -532,16 +532,16 @@ export function SystemSettings() {
 
       {/* Save button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
+        < onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
           <Save className="h-4 w-4" />
           {saving ? 'Salvando...' : 'Salvar Configurações do Sistema'}
-        </Button>
+        </>
       </div>
     </div>
   );
 }
 
-function SystemColorPicker({ Button, label, description, value, onChange }: {
+function SystemColorPicker({ label, description, value, onChange }: {
   label: string; description: string; value: string; onChange: (v: string) => void;
 }) {
   return (

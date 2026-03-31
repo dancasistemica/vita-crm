@@ -1,11 +1,11 @@
-import { Button, useEffect, useState, useCallback } from 'react';
-import { Button, useNavigate } from 'react-router-dom';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, Card, CardContent } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Skeleton } from '@/components/ui/ds';
-import { Button, AlertCircle, Clock, ArrowRight } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { Card, CardContent } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Skeleton } from '@/components/ui/ds';
+import { AlertCircle, Clock, ArrowRight } from 'lucide-react';
 
 interface TaskPreview {
   id: string;
@@ -26,7 +26,7 @@ const getRelativeTime = (dueDate: string): string => {
 };
 
 export default function TaskMetricsCards() {
-  const { Button, organizationId } = useOrganization();
+  const { organizationId } = useOrganization();
   const navigate = useNavigate();
   const [overdueCount, setOverdueCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
@@ -51,7 +51,7 @@ export default function TaskMetricsCards() {
         .eq('completed', false)
         .not('due_date', 'is', null)
         .lt('due_date', todayISO)
-        .order('due_date', { Button, ascending: true })
+        .order('due_date', { ascending: true })
         .limit(5),
       supabase
         .from('tasks')
@@ -60,18 +60,18 @@ export default function TaskMetricsCards() {
         .eq('completed', false)
         .not('due_date', 'is', null)
         .gte('due_date', todayISO)
-        .order('due_date', { Button, ascending: true })
+        .order('due_date', { ascending: true })
         .limit(5),
       supabase
         .from('tasks')
-        .select('*', { Button, count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true })
         .eq('organization_id', organizationId)
         .eq('completed', false)
         .not('due_date', 'is', null)
         .lt('due_date', todayISO),
       supabase
         .from('tasks')
-        .select('*', { Button, count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true })
         .eq('organization_id', organizationId)
         .eq('completed', false)
         .not('due_date', 'is', null)
@@ -98,14 +98,14 @@ export default function TaskMetricsCards() {
       .channel('tasks-dashboard')
       .on(
         'postgres_changes',
-        { Button, event: '*', schema: 'public', table: 'tasks', filter: `organization_id=eq.${organizationId}` },
+        { event: '*', schema: 'public', table: 'tasks', filter: `organization_id=eq.${organizationId}` },
         () => {
           console.log('[Dashboard] Realtime: mudança detectada em tasks, recarregando métricas');
           loadTaskMetrics();
         }
       )
       .subscribe();
-    return () => { Button, supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(channel); };
   }, [organizationId, loadTaskMetrics]);
 
   if (loading) {
@@ -147,9 +147,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {overdueCount > 0 && (
-            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
+            < variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </Button>
+            </>
           )}
         </CardContent>
       </Card>
@@ -179,9 +179,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {pendingCount > 0 && (
-            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
+            < variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </Button>
+            </>
           )}
         </CardContent>
       </Card>

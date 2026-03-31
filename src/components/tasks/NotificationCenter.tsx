@@ -1,8 +1,8 @@
-import { Button, useState } from "react";
-import { Button } from "@/components/ui/ds/Button";
-import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
-import { Button, Bell, CheckCircle } from "lucide-react";
-import { Button, ScrollArea } from "@/components/ui/ds";
+import { useState } from "react";
+import { } from "@/components/ui/ds/";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Bell, CheckCircle } from "lucide-react";
+import { ScrollArea } from "@/components/ui/ds";
 
 interface Notification {
   id: string;
@@ -18,28 +18,28 @@ interface NotificationCenterProps {
   onMarkAllAsRead: () => void;
 }
 
-export default function NotificationCenter({ Button, notifications, onMarkAsRead, onMarkAllAsRead }: NotificationCenterProps) {
+export default function NotificationCenter({ notifications, onMarkAsRead, onMarkAllAsRead }: NotificationCenterProps) {
   const unread = notifications.filter(n => !n.read).length;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="neutral" size="sm" className="relative">
+        < variant="neutral" size="sm" className="relative">
           <Bell className="h-4 w-4" />
           {unread > 0 && (
             <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
               {unread}
             </span>
           )}
-        </Button>
+        </>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between p-3 border-b">
           <span className="text-sm font-semibold">Notificações</span>
           {unread > 0 && (
-            <Button variant="ghost" size="sm" className="text-xs h-6" onClick={onMarkAllAsRead}>
+            < variant="ghost" size="sm" className="text-xs h-6" onClick={onMarkAllAsRead}>
               Marcar tudo como lido
-            </Button>
+            </>
           )}
         </div>
         <ScrollArea className="max-h-64">
@@ -51,9 +51,9 @@ export default function NotificationCenter({ Button, notifications, onMarkAsRead
                 <div className="flex items-start justify-between gap-3">
                   <p className={!n.read ? 'font-medium' : ''}>{n.message}</p>
                   {!n.read && (
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 shrink-0" onClick={() => onMarkAsRead(n.id)}>
+                    < variant="ghost" size="sm" className="h-6 w-6 p-0 shrink-0" onClick={() => onMarkAsRead(n.id)}>
                       <CheckCircle className="h-3 w-3" />
-                    </Button>
+                    </>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">

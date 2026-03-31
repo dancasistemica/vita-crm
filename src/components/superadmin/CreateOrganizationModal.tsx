@@ -1,14 +1,14 @@
-import { Button, useState } from 'react';
-import { Button, toast } from 'sonner';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Input } from '@/components/ui/ds';
-import { Button, Label } from '@/components/ui/ds';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Button, Card } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button, createOrganization } from '@/services/organizationService';
-import { Button, Building2, Users, FileText, Check, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Input } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Card } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { createOrganization } from '@/services/organizationService';
+import { Building2, Users, FileText, Check, Copy } from 'lucide-react';
 
 interface Plan {
   id: string;
@@ -28,10 +28,10 @@ interface Props {
   plans: Plan[];
 }
 
-export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess, plans }: Props) {
+export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }: Props) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ Button, temp_password: string } | null>(null);
+  const [result, setResult] = useState<{ temp_password: string } | null>(null);
 
   const [form, setForm] = useState({
     name: '',
@@ -44,31 +44,31 @@ export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess,
     admin_email: '',
   });
 
-  const update = (field: string, value: string) => setForm(f => ({ Button, ...f, [field]: value }));
+  const update = (field: string, value: string) => setForm(f => ({ ...f, [field]: value }));
 
   const resetAndClose = () => {
     setStep(1);
-    setForm({ Button, name: '', contact_email: '', phone: '', website: '', description: '', plan_id: '', admin_name: '', admin_email: '' });
+    setForm({ name: '', contact_email: '', phone: '', website: '', description: '', plan_id: '', admin_name: '', admin_email: '' });
     setResult(null);
     onOpenChange(false);
   };
 
   const validateStep = (): boolean => {
     if (step === 1) {
-      if (!form.name.trim()) { Button, toast.error('Nome da organização é obrigatório'); return false; }
-      if (!form.contact_email.trim() || !form.contact_email.includes('@')) { Button, toast.error('Email de contato válido é obrigatório'); return false; }
+      if (!form.name.trim()) { toast.error('Nome da organização é obrigatório'); return false; }
+      if (!form.contact_email.trim() || !form.contact_email.includes('@')) { toast.error('Email de contato válido é obrigatório'); return false; }
     }
     if (step === 2) {
-      if (!form.plan_id) { Button, toast.error('Selecione um plano'); return false; }
+      if (!form.plan_id) { toast.error('Selecione um plano'); return false; }
     }
     if (step === 3) {
-      if (!form.admin_name.trim()) { Button, toast.error('Nome do admin é obrigatório'); return false; }
-      if (!form.admin_email.trim() || !form.admin_email.includes('@')) { Button, toast.error('Email do admin válido é obrigatório'); return false; }
+      if (!form.admin_name.trim()) { toast.error('Nome do admin é obrigatório'); return false; }
+      if (!form.admin_email.trim() || !form.admin_email.includes('@')) { toast.error('Email do admin válido é obrigatório'); return false; }
     }
     return true;
   };
 
-  const handleNext = () => { Button, if (validateStep()) setStep(s => s + 1); };
+  const handleNext = () => { if (validateStep()) setStep(s => s + 1); };
   const handlePrev = () => setStep(s => s - 1);
 
   const handleCreate = async () => {
@@ -85,7 +85,7 @@ export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess,
         admin_name: form.admin_name,
         admin_email: form.admin_email,
       });
-      setResult({ Button, temp_password: res.temp_password });
+      setResult({ temp_password: res.temp_password });
       setStep(4); // success step
       toast.success('Organização criada com sucesso!');
       onSuccess();
@@ -173,7 +173,7 @@ export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess,
                     {plan.description && <p className="text-xs text-muted-foreground">{plan.description}</p>}
                   </div>
                   <div className="text-right">
-                    <p className="font-bold">R$ {plan.value?.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}</p>
+                    <p className="font-bold">R$ {plan.value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                     <p className="text-xs text-muted-foreground">/{plan.period === 'monthly' ? 'mês' : 'ano'}</p>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess,
               <p><span className="text-muted-foreground">Email:</span> {form.admin_email}</p>
               <div className="flex items-center justify-between">
                 <p><span className="text-muted-foreground">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>
-                <Button variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></Button>
+                < variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></>
               </div>
             </div>
             <Badge variant="neutral" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
@@ -238,19 +238,19 @@ export function CreateOrganizationModal({ Button, open, onOpenChange, onSuccess,
         <div className="flex justify-between pt-2">
           {step <= 3 ? (
             <>
-              <Button variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
+              < variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
                 {step === 1 ? 'Cancelar' : '← Anterior'}
-              </Button>
+              </>
               {step < 3 ? (
-                <Button onClick={handleNext}>Próximo →</Button>
+                < onClick={handleNext}>Próximo →</>
               ) : (
-                <Button onClick={handleCreate} disabled={loading}>
+                < onClick={handleCreate} disabled={loading}>
                   {loading ? 'Criando...' : 'Criar Organização'}
-                </Button>
+                </>
               )}
             </>
           ) : (
-            <Button className="w-full" onClick={resetAndClose}>Fechar</Button>
+            < className="w-full" onClick={resetAndClose}>Fechar</>
           )}
         </div>
       </DialogContent>

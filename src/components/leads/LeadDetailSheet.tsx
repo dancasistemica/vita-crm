@@ -1,18 +1,18 @@
-import { Button, useState, useEffect, useCallback } from 'react';
-import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
-import { Button, Badge } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Button, Skeleton } from '@/components/ui/ds';
-import { Button, Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { useState, useEffect, useCallback } from 'react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { } from '@/components/ui/ds';
+import { Skeleton } from '@/components/ui/ds';
+import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import LeadTimeline from '@/components/leads/LeadTimeline';
-import type { Button, LeadView } from '@/hooks/useLeadsData';
-import { Button, ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
-import { Button, ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
-import { Button, DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
-import { Button, toast } from 'sonner';
+import type { LeadView } from '@/hooks/useLeadsData';
+import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
+import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
+import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
+import { toast } from 'sonner';
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -44,7 +44,7 @@ interface InteractionRow {
 export default function LeadDetailSheet({
   lead, open, onClose, stageName, interestLabel, onEdit, onDelete, canDelete = false,
 }: LeadDetailSheetProps) {
-  const { Button, organizationId } = useOrganization();
+  const { organizationId } = useOrganization();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [interactions, setInteractions] = useState<InteractionRow[]>([]);
   const [loadingTasks, setLoadingTasks] = useState(false);
@@ -57,12 +57,12 @@ export default function LeadDetailSheet({
   const loadTasks = useCallback(async () => {
     if (!lead || !organizationId) return;
     setLoadingTasks(true);
-    const { Button, data } = await supabase
+    const { data } = await supabase
       .from('tasks')
       .select('id, title, due_date, completed, assigned_to')
       .eq('lead_id', lead.id)
       .eq('organization_id', organizationId)
-      .order('created_at', { Button, ascending: false });
+      .order('created_at', { ascending: false });
     setTasks((data as TaskRow[]) || []);
     setLoadingTasks(false);
   }, [lead?.id, organizationId]);
@@ -70,12 +70,12 @@ export default function LeadDetailSheet({
   const loadInteractions = useCallback(async () => {
     if (!lead || !organizationId) return;
     setLoadingInteractions(true);
-    const { Button, data } = await supabase
+    const { data } = await supabase
       .from('interactions')
       .select('id, type, note, interaction_date, created_at')
       .eq('lead_id', lead.id)
       .eq('organization_id', organizationId)
-      .order('created_at', { Button, ascending: false });
+      .order('created_at', { ascending: false });
     setInteractions((data as InteractionRow[]) || []);
     setLoadingInteractions(false);
   }, [lead?.id, organizationId]);
@@ -97,15 +97,15 @@ export default function LeadDetailSheet({
   if (!lead) return null;
 
   const formatCurrency = (v: number) =>
-    new Intl.NumberFormat('pt-BR', { Button, style: 'currency', currency: 'BRL' }).format(v);
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('pt-BR');
 
   const getTaskStatus = (t: TaskRow) => {
-    if (t.completed) return { Button, label: 'Concluída', color: 'text-success', icon: CheckCircle };
-    if (t.due_date && new Date(t.due_date) < new Date()) return { Button, label: 'Vencida', color: 'text-destructive', icon: AlertTriangle };
-    return { Button, label: 'Pendente', color: 'text-warning', icon: Clock };
+    if (t.completed) return { label: 'Concluída', color: 'text-success', icon: CheckCircle };
+    if (t.due_date && new Date(t.due_date) < new Date()) return { label: 'Vencida', color: 'text-destructive', icon: AlertTriangle };
+    return { label: 'Pendente', color: 'text-warning', icon: Clock };
   };
 
   const handleDeleteClick = () => {
@@ -138,7 +138,7 @@ export default function LeadDetailSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={(v) => { Button, if (!v) onClose(); }}>
+    <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto p-0">
         <div className="p-6 pb-0">
           <SheetHeader>
@@ -215,10 +215,10 @@ export default function LeadDetailSheet({
             <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-border">
               {lead.phone && (
                 <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                  <Button variant="neutral" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
+                  < variant="neutral" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</>
                 </a>
               )}
-              <Button
+              <
                 variant="neutral"
                 size="sm"
                 onClick={() => setScheduleDialogOpen(true)}
@@ -227,23 +227,23 @@ export default function LeadDetailSheet({
               >
                 <Clock className="h-4 w-4" />
                 Agendar Mensagem
-              </Button>
+              </>
               {lead.email && (
                 <a href={`mailto:${lead.email}`}>
-                  <Button variant="neutral" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</Button>
+                  < variant="neutral" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</>
                 </a>
               )}
               {lead.instagram && (
                 <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                  <Button variant="neutral" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</Button>
+                  < variant="neutral" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</>
                 </a>
               )}
               {onEdit && (
-                <Button variant="neutral" size="sm" onClick={() => onEdit(lead)}>
+                < variant="neutral" size="sm" onClick={() => onEdit(lead)}>
                   <Edit className="h-4 w-4 mr-1" /> Editar
-                </Button>
+                </>
               )}
-              <Button
+              <
                 variant="error"
                 size="sm"
                 onClick={handleDeleteClick}
@@ -251,7 +251,7 @@ export default function LeadDetailSheet({
                 title={canDelete ? 'Excluir lead' : 'Voce nao tem permissao'}
               >
                 <Trash2 className="h-4 w-4 mr-1" /> Excluir
-              </Button>
+              </>
             </div>
           </TabsContent>
 
@@ -329,7 +329,7 @@ export default function LeadDetailSheet({
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
-        lead={{ Button, id: lead.id, name: lead.name, phone: lead.phone }}
+        lead={{ id: lead.id, name: lead.name, phone: lead.phone }}
         onScheduled={() => {
           console.log('[LeadDetailSheet] Mensagem agendada');
         }}
@@ -338,7 +338,7 @@ export default function LeadDetailSheet({
   );
 }
 
-function InfoField({ Button, label, value }: { Button, label: string; value: string }) {
+function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <span className="text-xs text-muted-foreground font-medium">{label}</span>

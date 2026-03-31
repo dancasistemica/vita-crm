@@ -1,6 +1,6 @@
-import { Button, Clock, RefreshCw, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Button, Card, CardContent } from '@/components/ui/ds';
+import { Clock, RefreshCw, Shield } from 'lucide-react';
+import { } from '@/components/ui/ds';
+import { Card, CardContent } from '@/components/ui/ds';
 
 interface Props {
   onNext: () => void;
@@ -8,12 +8,12 @@ interface Props {
 }
 
 const cards = [
-  { Button, icon: Clock, title: 'Economize tempo', desc: 'Importe múltiplos leads de uma vez a partir de planilhas' },
-  { Button, icon: RefreshCw, title: 'Atualize dados', desc: 'Detectamos duplicatas e você decide o que fazer' },
-  { Button, icon: Shield, title: 'Seguro', desc: 'Validação automática antes de importar' },
+  { icon: Clock, title: 'Economize tempo', desc: 'Importe múltiplos leads de uma vez a partir de planilhas' },
+  { icon: RefreshCw, title: 'Atualize dados', desc: 'Detectamos duplicatas e você decide o que fazer' },
+  { icon: Shield, title: 'Seguro', desc: 'Validação automática antes de importar' },
 ];
 
-export default function Step1Intent({ Button, onNext, onClose }: Props) {
+export default function Step1Intent({ onNext, onClose }: Props) {
   return (
     <div className="space-y-6 text-center py-4">
       <div>
@@ -23,7 +23,7 @@ export default function Step1Intent({ Button, onNext, onClose }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {cards.map(({ Button, icon: Icon, title, desc }) => (
+        {cards.map(({ icon: Icon, title, desc }) => (
           <Card key={title} className="border-border/50">
             <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
               <Icon className="h-7 w-7 text-primary mx-auto" />
@@ -35,8 +35,8 @@ export default function Step1Intent({ Button, onNext, onClose }: Props) {
       </div>
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button variant="neutral" onClick={onClose}>Cancelar</Button>
-        <Button onClick={onNext}>Começar Importação</Button>
+        < variant="neutral" onClick={onClose}>Cancelar</>
+        < onClick={onNext}>Começar Importação</>
       </div>
     </div>
   );

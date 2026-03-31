@@ -1,9 +1,9 @@
-import { Button, useState, useEffect } from 'react';
-import { Button, X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
-import { Button, supabase } from '@/integrations/supabase/client';
-import { Button, useOrganization } from '@/contexts/OrganizationContext';
-import { Button, getSaleById, updateSale, deleteSale } from '@/services/saleService';
-import { Button, toast } from 'sonner';
+import { useState, useEffect } from 'react';
+import { X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
+import { getSaleById, updateSale, deleteSale } from '@/services/saleService';
+import { toast } from 'sonner';
 
 interface Sale {
   id: string;
@@ -33,7 +33,7 @@ export const EditSaleModal = ({
   onSuccess,
   sale,
 }: EditSaleModalProps) => {
-  const { Button, organization } = useOrganization();
+  const { organization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -108,11 +108,11 @@ export const EditSaleModal = ({
 
     try {
       console.log('[EditSaleModal] Carregando formas de pagamento...');
-      const { Button, data, error: pmError } = await supabase
+      const { data, error: pmError } = await supabase
         .from('payment_methods')
         .select('id, name')
         .eq('organization_id', organization.id)
-        .order('name', { Button, ascending: true });
+        .order('name', { ascending: true });
 
       if (pmError) throw pmError;
 
@@ -197,13 +197,13 @@ export const EditSaleModal = ({
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>
           </div>
-          <Button variant="secondary" size="sm"
+          < variant="secondary" size="sm"
             onClick={onClose}
             disabled={loading}
             className="p-1 hover:bg-white/20 rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-white" />
-          </Button>
+          </>
         </div>
 
         {/* Conteúdo */}
@@ -221,18 +221,18 @@ export const EditSaleModal = ({
               <h3 className="text-lg font-semibold text-neutral-700">Erro ao carregar</h3>
               <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
               <div className="flex flex-col gap-3">
-                <Button variant="secondary" size="sm"
+                < variant="secondary" size="sm"
                   onClick={loadData}
                   className="flex items-center justify-center gap-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" /> Tentar Novamente
-                </Button>
-                <Button variant="secondary" size="sm"
+                </>
+                < variant="secondary" size="sm"
                   onClick={onClose}
                   className="px-4 py-2 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
                   Fechar
-                </Button>
+                </>
               </div>
             </div>
           ) : (
@@ -241,7 +241,7 @@ export const EditSaleModal = ({
               <div className="bg-neutral-50 p-3 rounded-lg border border-gray-100">
                 <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
                 <p className="text-neutral-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
-                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { Button, style: 'currency', currency: 'BRL' })}` : ''}</p>
+                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
               </div>
 
               <div>
@@ -250,7 +250,7 @@ export const EditSaleModal = ({
                 </label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ Button, ...formData, status: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   required
                 >
@@ -270,7 +270,7 @@ export const EditSaleModal = ({
                 </label>
                 <select
                   value={formData.payment_method_id}
-                  onChange={(e) => setFormData({ Button, ...formData, payment_method_id: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
                   className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option value="">Nenhuma definida</option>
@@ -291,7 +291,7 @@ export const EditSaleModal = ({
                 </label>
                 <textarea
                   value={formData.notes}
-                  onChange={(e) => setFormData({ Button, ...formData, notes: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                   placeholder="Adicione detalhes importantes sobre esta venda..."
@@ -300,7 +300,7 @@ export const EditSaleModal = ({
 
               <div className="flex gap-3 pt-4 border-t mt-4">
                 {/* Botão Excluir à esquerda */}
-                <Button variant="secondary" size="sm"
+                < variant="secondary" size="sm"
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
@@ -310,26 +310,26 @@ export const EditSaleModal = ({
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
                   <Trash2 className="w-4 h-4" />
                   <span>Excluir</span>
-                </Button>
+                </>
 
                 {/* Botões Cancelar e Salvar à direita */}
                 <div className="flex gap-3 flex-1">
-                  <Button variant="secondary" size="sm"
+                  < variant="secondary" size="sm"
                     type="button"
                     onClick={onClose}
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
-                  </Button>
-                  <Button variant="secondary" size="sm"
+                  </>
+                  < variant="secondary" size="sm"
                     type="submit"
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   >
                     {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar
-                  </Button>
+                  </>
                 </div>
               </div>
             </form>

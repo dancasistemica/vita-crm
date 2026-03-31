@@ -1,16 +1,16 @@
-import { Button, useState } from "react";
-import { Button, useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Button, Badge } from "@/components/ui/ds/Badge";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Button, ScrollArea, ScrollBar } from "@/components/ui/ds";
+import { useState } from "react";
+import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { ScrollArea, ScrollBar } from "@/components/ui/ds";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
-import { Button, toast } from "sonner";
+import { toast } from "sonner";
 
-const interestColors: Record<string, string> = { Button, frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
+const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 
 export default function PipelinePage() {
-  const { Button, leads, pipelineStages, updateLead, loading } = useLeadsData();
+  const { leads, pipelineStages, updateLead, loading } = useLeadsData();
   const [dragging, setDragging] = useState<string | null>(null);
   const [detailLead, setDetailLead] = useState<LeadView | null>(null);
 
@@ -25,7 +25,7 @@ export default function PipelinePage() {
     setDragging(null);
     if (!leadId) return;
     try {
-      await updateLead(leadId, { Button, pipelineStage: stageId });
+      await updateLead(leadId, { pipelineStage: stageId });
     } catch (err) {
       toast.error('Erro ao mover lead no funil de vendas');
     }
@@ -51,7 +51,7 @@ export default function PipelinePage() {
                   <Badge variant="neutral" className="text-xs">{stageLeads.length}</Badge>
                 </div>
                 {totalDealValue > 0 && (
-                  <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })} em negócios</p>
+                  <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
                 )}
                 <div className="space-y-3 min-h-[100px]">
                   {stageLeads.map(lead => (
@@ -69,7 +69,7 @@ export default function PipelinePage() {
                         </div>
                       )}
                       {lead.dealValue != null && lead.dealValue > 0 && (
-                        <p className="text-xs font-medium text-success mt-1">💰 R$ {lead.dealValue.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}</p>
+                        <p className="text-xs font-medium text-success mt-1">💰 R$ {lead.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs text-muted-foreground">Última: —</span>
