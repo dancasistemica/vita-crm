@@ -20,7 +20,7 @@ export default function StageMetrics({ metrics }: StageMetricsProps) {
       {metrics.map((metric, i) => (
         <Card key={i} className={`shadow-card border-l-4 ${BORDER_COLORS[i % BORDER_COLORS.length]} border-border/60`}>
           <CardContent className="pt-4 pb-3">
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">{metric.name}</h3>
+            <h3 className="text-lg font-semibold text-neutral-700 mb-2">{metric.name}</h3>
             <div className="space-y-1.5">
               <div>
                 <span className="text-2xl font-bold text-foreground">{metric.leadCount}</span>

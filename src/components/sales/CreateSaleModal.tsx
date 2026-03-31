@@ -185,7 +185,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         {/* Header com Progresso */}
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-neutral-900">Nova Venda</h2>
+            <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
             <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
           </div>
 

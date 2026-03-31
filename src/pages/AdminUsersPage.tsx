@@ -341,7 +341,7 @@ export default function AdminUsersPage() {
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex items-center gap-3">
         <Users className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">Todos os Usuários</h1>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Todos os Usuários</h1>
         <Badge variant="secondary" className="ml-auto">{filtered.length} usuários</Badge>
       </div>
 

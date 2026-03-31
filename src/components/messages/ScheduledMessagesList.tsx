@@ -63,7 +63,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
     <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-1">
       {pendingMessages.length > 0 && (
         <div>
-          <h3 className="font-semibold mb-3">Mensagens Pendentes ({pendingMessages.length})</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Mensagens Pendentes ({pendingMessages.length})</h3>
           <div className="space-y-2">
             {pendingMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 hover:bg-muted/50 transition">
@@ -98,7 +98,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
 
       {sentMessages.length > 0 && (
         <div>
-          <h3 className="font-semibold mb-3">Enviadas ({sentMessages.length})</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Enviadas ({sentMessages.length})</h3>
           <div className="space-y-2">
             {sentMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 bg-green-50 dark:bg-green-950/20">
@@ -123,7 +123,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
 
       {failedMessages.length > 0 && (
         <div>
-          <h3 className="font-semibold mb-3">Falhas ({failedMessages.length})</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Falhas ({failedMessages.length})</h3>
           <div className="space-y-2">
             {failedMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 bg-red-50 dark:bg-red-950/20">

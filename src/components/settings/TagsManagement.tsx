@@ -176,12 +176,12 @@ export const TagsManagement = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Gerenciar Tags</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900">Gerenciar Tags</h2>
         <p className="text-gray-600 mt-1">Crie, edite e delete tags para organizar seus leads</p>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-neutral-700 mb-3 flex items-center gap-2">
           <Plus className="w-5 h-5" />
           Nova Tag
         </h3>
@@ -300,7 +300,7 @@ export const TagsManagement = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="bg-red-50 border-b border-red-200 p-4 flex items-center gap-3">
               <AlertTriangle className="w-6 h-6 text-red-600" />
-              <h2 className="font-bold text-red-900">Deletar Tag</h2>
+              <h2 className="text-2xl font-semibold text-neutral-900">Deletar Tag</h2>
             </div>
 
             <div className="p-4">

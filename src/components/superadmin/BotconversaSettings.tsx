@@ -71,7 +71,7 @@ export const BotconversaSettings = ({
     return (
       <div className="space-y-6 p-6 border rounded-lg bg-card">
         <div>
-          <h3 className="font-semibold text-lg">🤖 Botconversa</h3>
+          <h3 className="text-lg font-semibold text-neutral-700">🤖 Botconversa</h3>
           <p className="text-sm text-muted-foreground mt-1">
             Organização: <strong>{organizationName}</strong>
           </p>
@@ -100,7 +100,7 @@ export const BotconversaSettings = ({
   return (
     <div className="space-y-6 p-6 border rounded-lg bg-card">
       <div>
-        <h3 className="font-semibold text-lg">🤖 Botconversa</h3>
+        <h3 className="text-lg font-semibold text-neutral-700">🤖 Botconversa</h3>
         <p className="text-sm text-muted-foreground mt-1">
           Organização: <strong>{organizationName}</strong>
         </p>

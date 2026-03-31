@@ -197,7 +197,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
   return (
     <div className="space-y-4 py-2">
-      <h3 className="text-lg font-display text-foreground text-center">Validação e Importação</h3>
+      <h3 className="text-lg font-semibold text-neutral-700 text-center">Validação e Importação</h3>
 
       {/* Summary badges */}
       <div className="flex gap-2 justify-center flex-wrap">

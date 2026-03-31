@@ -173,7 +173,7 @@ export default function ClientDetailPage() {
               {client.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-neutral-900">{client.name}</h1>
+              <h1 className="text-4xl font-bold text-neutral-900 mb-6">{client.name}</h1>
               <p className="text-sm text-neutral-600">{client.email} • {client.phone} • {client.city}</p>
               {client.dealValue != null && client.dealValue > 0 && (
                 <p className="text-sm font-semibold text-success-600 mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>

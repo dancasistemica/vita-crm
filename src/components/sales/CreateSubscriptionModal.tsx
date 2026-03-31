@@ -187,7 +187,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-b border-purple-200 dark:border-purple-700 p-4 sticky top-0">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-purple-900 dark:text-purple-100">Nova Mensalidade</h2>
+            <h2 className="text-2xl font-semibold text-neutral-900">Nova Mensalidade</h2>
             <button onClick={onClose} disabled={loading} className="p-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded transition-colors">
               <X className="w-5 h-5 text-purple-600 dark:text-purple-300" />
             </button>
@@ -216,7 +216,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 1: Cliente */}
           {currentPhase === 1 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
                 Selecione o Cliente/Lead
               </h3>
@@ -261,7 +261,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 2: Produto */}
           {currentPhase === 2 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
                 Selecione o Produto
               </h3>
@@ -283,7 +283,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 3: Etapa (Valor Mensal) */}
           {currentPhase === 3 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
                 Selecione a Etapa (Valor Mensal)
               </h3>
@@ -309,7 +309,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 4: Forma de Pagamento */}
           {currentPhase === 4 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
                 Forma de Pagamento
               </h3>
@@ -329,7 +329,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 5: Data de Início e 1ª Parcela */}
           {currentPhase === 5 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
                 Datas da Mensalidade
               </h3>
@@ -358,7 +358,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 6: Data Final (opcional) */}
           {currentPhase === 6 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
                 Data Final (Opcional)
               </h3>
@@ -375,7 +375,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 7: Baixa Automática */}
           {currentPhase === 7 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
                 Configuração de Pagamento
               </h3>

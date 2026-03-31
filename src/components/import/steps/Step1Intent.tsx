@@ -18,7 +18,7 @@ export default function Step1Intent({ onNext, onClose }: Props) {
     <div className="space-y-6 text-center py-4">
       <div>
         <div className="text-5xl mb-3">📥</div>
-        <h2 className="text-xl font-display text-foreground">Importar Leads</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900">Importar Leads</h2>
         <p className="text-sm text-muted-foreground mt-1">Adicione novos leads em massa ao seu CRM</p>
       </div>
 

@@ -467,7 +467,7 @@ export default function TarefasPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Tarefas</h1>
         <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       </div>
     );
@@ -529,13 +529,13 @@ export default function TarefasPage() {
 
       {overdue.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="font-semibold text-destructive">Atrasadas ({overdue.length})</h2></div>
+          <div className="flex items-center gap-2 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
           <div className="space-y-2">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       <section>
-        <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="font-semibold">Hoje ({todayTasks.length})</h2></div>
+        <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
         <div className="space-y-2">
           {todayTasks.length === 0 ? <p className="text-sm text-muted-foreground">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
         </div>
@@ -543,14 +543,14 @@ export default function TarefasPage() {
 
       {upcoming.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="font-semibold text-muted-foreground">Próximos ({upcoming.length})</h2></div>
+          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
           <div className="space-y-2">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       {completed.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="font-semibold text-success">Concluídas ({completed.length})</h2></div>
+          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
           <div className="space-y-2">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}

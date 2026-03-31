@@ -184,7 +184,7 @@ export default function OrganizationPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-display text-foreground flex items-center gap-2">
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
           <Building2 className="h-6 w-6" /> Dados da Organização
         </h1>
         <p className="text-muted-foreground text-sm mt-1">Edite as informações da sua empresa</p>
