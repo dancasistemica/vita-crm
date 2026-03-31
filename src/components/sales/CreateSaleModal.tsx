@@ -186,7 +186,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
-            < variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
+            <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
           </div>
 
           <div className="flex items-center gap-3">
