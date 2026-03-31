@@ -243,12 +243,12 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                           <div className="p-4 text-center text-neutral-500">Nenhum cliente encontrado</div>
                         ) : (
                           filteredClients.map((client) => (
-                            < variant="secondary" size="sm" key={client.id} type="button"
+                            <Button variant="secondary" size="sm" key={client.id} type="button"
                               onClick={() => { setFormData({ ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
                               className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0">
                               <p className="font-medium text-neutral-900">{client.name}</p>
                               <p className="text-sm text-neutral-500">{client.email}</p>
-                            </>
+                            </Button>
                           ))
                         )}
                       </div>
