@@ -114,7 +114,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   <p className="text-xs text-muted-foreground">Excel</p>
                 </div>
               </Button>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 onClick={() => setFormat('pdf')}
                 className={`flex-1 flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   format === 'pdf' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -125,7 +125,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   <p className="text-sm font-medium text-foreground">PDF</p>
                   <p className="text-xs text-muted-foreground">Relatório</p>
                 </div>
-              </>
+              </Button>
             </div>
           </div>
 
