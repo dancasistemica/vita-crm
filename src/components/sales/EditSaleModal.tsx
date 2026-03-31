@@ -192,7 +192,7 @@ export const EditSaleModal = ({
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="font-bold text-white text-lg">Editar Venda</h2>
+            <h2 className="text-2xl font-semibold text-neutral-900">Editar Venda</h2>
             <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>

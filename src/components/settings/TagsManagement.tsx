@@ -300,7 +300,7 @@ export const TagsManagement = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="bg-red-50 border-b border-red-200 p-4 flex items-center gap-3">
               <AlertTriangle className="w-6 h-6 text-red-600" />
-              <h2 className="font-bold text-red-900">Deletar Tag</h2>
+              <h2 className="text-2xl font-semibold text-neutral-900">Deletar Tag</h2>
             </div>
 
             <div className="p-4">
