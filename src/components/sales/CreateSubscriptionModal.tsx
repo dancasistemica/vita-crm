@@ -309,7 +309,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
           {/* FASE 4: Forma de Pagamento */}
           {currentPhase === 4 && (
             <div className="space-y-4">
-              <h3 className="font-bold text-foreground flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-neutral-700 flex items-center gap-2">
                 <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
                 Forma de Pagamento
               </h3>
