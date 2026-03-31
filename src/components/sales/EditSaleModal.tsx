@@ -198,13 +198,13 @@ export const EditSaleModal = ({
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>
           </div>
-          < variant="secondary" size="sm"
+          <Button variant="secondary" size="sm"
             onClick={onClose}
             disabled={loading}
             className="p-1 hover:bg-white/20 rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-white" />
-          </>
+          </Button>
         </div>
 
         {/* Conteúdo */}
