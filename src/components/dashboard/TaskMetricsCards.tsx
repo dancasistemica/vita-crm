@@ -146,9 +146,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {overdueCount > 0 && (
-            < variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
+            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </>
+            </Button>
           )}
         </CardContent>
       </Card>
