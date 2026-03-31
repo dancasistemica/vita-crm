@@ -48,10 +48,10 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
 
   return (
     <div className="space-y-3">
-      < variant="neutral" size="sm" onClick={handleGenerate} disabled={loading}>
+      <Button variant="secondary" size="sm" onClick={handleGenerate} disabled={loading}>
         <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
         {loading ? 'Gerando...' : '✨ Sugerir resposta'}
-      </>
+      </Button>
 
       {suggestion && (
         <div className="space-y-3 animate-in fade-in-50">
