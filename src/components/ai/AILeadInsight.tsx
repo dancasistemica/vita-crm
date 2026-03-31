@@ -57,9 +57,9 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
             </div>
             <div className="flex items-center justify-between pt-1">
               <span className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de agir</span>
-              < variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                 <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
-              </>
+              </Button>
             </div>
           </div>
         ) : (

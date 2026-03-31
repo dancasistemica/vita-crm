@@ -122,9 +122,9 @@ export default function FirstSuperadminSetup() {
               required
               {...form.register('confirmPassword')} 
             />
-            < type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} fullWidth loading={isSubmitting}>
               Criar Superadmin
-            </>
+            </Button>
           </form>
         </Card>
 
