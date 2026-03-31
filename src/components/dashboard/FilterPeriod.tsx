@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Card, CardContent } from '@/components/ui/ds';
