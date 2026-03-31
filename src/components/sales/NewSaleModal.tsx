@@ -223,9 +223,9 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
                   </Badge>
                 </div>
-                < variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
+                <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
                   <X className="h-4 w-4" />
-                </>
+                </Button>
               </div>
             ) : (
               <div className="relative">
