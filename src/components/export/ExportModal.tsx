@@ -141,14 +141,14 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
               >
                 Todos ({allData.length})
               </Button>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('filtered')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
                   dataScope === 'filtered' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
                 }`}
               >
                 Filtrados ({filteredData.length})
-              </>
+              </Button>
             </div>
           </div>
 
