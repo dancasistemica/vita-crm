@@ -156,9 +156,9 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Colunas</Label>
-              < variant="secondary" size="sm" onClick={toggleAll} className="text-xs text-primary hover:underline">
+              <Button variant="secondary" size="sm" onClick={toggleAll} className="text-xs text-primary hover:underline">
                 {selectedColumns.length === availableColumns.length ? 'Desmarcar todas' : 'Selecionar todas'}
-              </>
+              </Button>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-[200px] overflow-y-auto border rounded-md p-2">
               {availableColumns.map(col => (
