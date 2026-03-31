@@ -7,3 +7,5 @@ export * from './Alert';
 export * from './Textarea';
 export * from './Dialog';
 export * from './PageTitle';
+export * from './Checkbox';
+export * from './Label';
