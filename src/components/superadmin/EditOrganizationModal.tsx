@@ -271,7 +271,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Endereço */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Endereço</h3>
+              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Endereço</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>
