@@ -344,17 +344,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
         {/* Footer com Ações */}
         <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex justify-between gap-4">
-          < variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
+          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
             Voltar
-          </>
+          </Button>
           {currentPhase < totalPhases ? (
-            < variant="primary" onClick={handleNextPhase}>
+            <Button variant="primary" onClick={handleNextPhase}>
               Próximo
-            </>
+            </Button>
           ) : (
-            < variant="success" type="submit" form="sale-form" loading={loading}>
+            <Button variant="success" type="submit" form="sale-form" loading={loading}>
               Finalizar {saleType === 'unica' ? 'Venda' : 'Assinatura'}
-            </>
+            </Button>
           )}
         </div>
       </div>

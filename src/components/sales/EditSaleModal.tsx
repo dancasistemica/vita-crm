@@ -301,7 +301,7 @@ export const EditSaleModal = ({
 
               <div className="flex gap-3 pt-4 border-t mt-4">
                 {/* Botão Excluir à esquerda */}
-                < variant="secondary" size="sm"
+                <Button variant="secondary" size="sm"
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
@@ -311,26 +311,26 @@ export const EditSaleModal = ({
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
                   <Trash2 className="w-4 h-4" />
                   <span>Excluir</span>
-                </>
+                </Button>
 
                 {/* Botões Cancelar e Salvar à direita */}
                 <div className="flex gap-3 flex-1">
-                  < variant="secondary" size="sm"
+                  <Button variant="secondary" size="sm"
                     type="button"
                     onClick={onClose}
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
-                  </>
-                  < variant="secondary" size="sm"
+                  </Button>
+                  <Button variant="secondary" size="sm"
                     type="submit"
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   >
                     {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar
-                  </>
+                  </Button>
                 </div>
               </div>
             </form>

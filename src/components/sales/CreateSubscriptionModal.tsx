@@ -433,17 +433,17 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
 
         {/* Footer */}
         <div className="p-6 border-t border-neutral-200 bg-neutral-50 flex gap-4">
-          < variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
+          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
             Anterior
-          </>
+          </Button>
           {currentPhase < totalPhases ? (
-            < variant="primary" onClick={handleNextPhase} disabled={!canProceedToNextPhase() || loading} className="flex-1">
+            <Button variant="primary" onClick={handleNextPhase} disabled={!canProceedToNextPhase() || loading} className="flex-1">
               Próximo
-            </>
+            </Button>
           ) : (
-            < variant="primary" onClick={handleSubmit} loading={loading} className="flex-1">
+            <Button variant="primary" onClick={handleSubmit} loading={loading} className="flex-1">
               Criar Mensalidade
-            </>
+            </Button>
           )}
         </div>
       </Card>

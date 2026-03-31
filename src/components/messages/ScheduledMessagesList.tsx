@@ -80,14 +80,14 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
                   </div>
                   <div className="flex items-center gap-3">
                     {getStatusBadge(msg.status)}
-                    <
+                    <Button
                       variant="ghost"
                       size="sm"
                       className="min-h-[44px]"
                       onClick={() => cancelMessage(msg.id)}
                     >
                       Cancelar
-                    </>
+                    </Button>
                   </div>
                 </div>
               </div>

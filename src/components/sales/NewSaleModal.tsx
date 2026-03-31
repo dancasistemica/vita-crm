@@ -398,12 +398,12 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
           {/* Section 3: Actions */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            < variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
+            <Button variant="secondary" onClick={() => onOpenChange(false)} disabled={saving}>
               Cancelar
-            </>
-            < onClick={handleSubmit} disabled={saving}>
+            </Button>
+            <Button onClick={handleSubmit} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar Venda'}
-            </>
+            </Button>
           </div>
         </div>
       </DialogContent>
