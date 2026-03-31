@@ -102,7 +102,7 @@ export function VendasPage() {
         <Alert variant="error" title="Erro ao carregar vendas">
           {error}
           <div className="mt-3">
-            < variant="error" size="sm" onClick={loadSales}>
+            <Button variant="error" size="sm" onClick={loadSales}>
               Tentar Novamente
             </>
           </div>
@@ -139,7 +139,7 @@ export function VendasPage() {
             onChange={(e) => setTypeFilter(e.target.value)}
           />
           <div className="flex items-end">
-            < variant="neutral" size="md" className="w-full">
+            <Button variant="secondary" size="md" className="w-full">
               <Filter className="w-4 h-4" />
               Mais Filtros
             </>
@@ -159,7 +159,7 @@ export function VendasPage() {
         <Card variant="elevated" padding="lg" className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <p className="text-neutral-600 mb-4">Nenhuma venda encontrada</p>
-            < variant="primary" onClick={() => setShowCreateModal(true)}>
+            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
               + Criar Primeira Venda
             </>
           </div>
