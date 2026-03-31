@@ -75,14 +75,14 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
               {preset.label}
             </Button>
           ))}
-          <
+          <Button
             size="sm"
-            variant={isCustom ? 'default' : 'outline'}
+            variant={isCustom ? 'primary' : 'secondary'}
             onClick={() => setIsCustom(!isCustom)}
             className="text-xs"
           >
             Customizado
-          </>
+          </Button>
         </div>
 
         {isCustom && (

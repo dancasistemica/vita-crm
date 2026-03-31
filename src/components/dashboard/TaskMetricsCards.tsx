@@ -178,9 +178,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {pendingCount > 0 && (
-            < variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
+            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </>
+            </Button>
           )}
         </CardContent>
       </Card>
