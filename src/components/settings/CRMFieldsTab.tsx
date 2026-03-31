@@ -644,10 +644,10 @@ export default function CRMFieldsTab() {
         )}
         <div className="flex gap-3 mt-3">
           <Input placeholder="Nova etapa..." value={newStage} onChange={e => setNewStage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddStage()} />
-          < onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
+          <Button onClick={handleAddStage} disabled={!newStage.trim() || stagesSaving}>
             {stagesSaving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
             Adicionar
-          </>
+          </Button>
         </div>
       </CardContent>
     </Card>

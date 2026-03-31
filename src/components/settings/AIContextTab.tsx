@@ -223,9 +223,9 @@ export default function AIContextTab() {
 
       {/* Salvar */}
       <div className="flex justify-end">
-        < onClick={() => save(form)} disabled={saving}>
+        <Button onClick={() => save(form)} disabled={saving}>
           {saving ? 'Salvando...' : '💾 Salvar Contexto da IA'}
-        </>
+        </Button>
       </div>
     </div>
   );
