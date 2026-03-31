@@ -631,11 +631,11 @@ export default function CRMFieldsTab() {
               )}
               <div className="flex gap-1">
                 {editingStage?.id === s.id ? (
-                  < size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</>
+                  <Button size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</Button>
                 ) : (
-                  < size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></>
+                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
                 )}
-                < size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></>
+                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
