@@ -297,14 +297,14 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 ) : (
                   <div className="space-y-3">
                     {productSalesStages.filter(s => s.product_id === formData.product_id).map((stage) => (
-                      < variant="secondary" size="sm" key={stage.id} type="button"
+                      <Button variant="secondary" size="sm" key={stage.id} type="button"
                         onClick={() => setFormData({ ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
                         className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                           formData.sales_stage_id === stage.id ? 'border-primary-600 bg-primary-50' : 'border-neutral-200 hover:border-primary-300'
                         }`}>
                         <p className="font-semibold text-neutral-900">{stage.name}</p>
                         <p className="text-lg font-bold text-primary-600">R$ {stage.value.toFixed(2)}/mês</p>
-                      </>
+                      </Button>
                     ))}
                   </div>
                 )}
