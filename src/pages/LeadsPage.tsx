@@ -362,7 +362,7 @@ export default function LeadsPage() {
               setSearch(e.target.value);
               resetPage();
             }}
-            className="pl-9"
+            icon={<Search className="h-4 w-4" />}
           />
         </div>
 
