@@ -1,9 +1,9 @@
 import React from 'react';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  interactive?: boolean;
   variant?: 'default' | 'elevated' | 'outlined';
   padding?: 'sm' | 'md' | 'lg';
+  interactive?: boolean;
 }
 
 const variantStyles = {
@@ -34,8 +34,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={`
-          ${variantStyles[variant as keyof typeof variantStyles]}
-          ${paddingStyles[padding as keyof typeof paddingStyles]}
+          ${variantStyles[variant]}
+          ${paddingStyles[padding]}
           ${interactive ? 'cursor-pointer hover:shadow-lg transition-shadow duration-200' : ''}
           ${className}
         `}

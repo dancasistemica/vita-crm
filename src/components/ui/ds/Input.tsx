@@ -24,6 +24,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       icon,
       className = '',
       disabled,
+      required,
       ...props
     },
     ref
@@ -33,13 +34,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label className="block text-sm font-medium text-neutral-700 mb-2">
             {label}
-            {props.required && <span className="text-error-500 ml-1">*</span>}
+            {required && <span className="text-error-500 ml-1">*</span>}
           </label>
         )}
 
         <div className="relative">
           {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
               {icon}
             </div>
           )}
@@ -47,10 +48,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             disabled={disabled}
+            required={required}
             className={`
               ${sizeStyles[size]}
               ${icon ? 'pl-10' : ''}
               w-full
+              bg-white
               border border-neutral-300
               rounded-lg
               focus:outline-none
@@ -61,6 +64,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               disabled:bg-neutral-100
               disabled:text-neutral-500
               disabled:cursor-not-allowed
+              min-h-[44px] md:min-h-auto
               ${error ? 'border-error-500 focus:ring-error-500' : ''}
               ${className}
             `}
