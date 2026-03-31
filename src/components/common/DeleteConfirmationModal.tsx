@@ -40,7 +40,7 @@ export function DeleteConfirmationModal({
         <div className="flex items-center gap-3 border-b border-red-200 bg-red-50 p-4">
           <AlertTriangle className="h-6 w-6 text-red-600" />
           <div>
-            <h2 className="text-sm font-bold text-red-900">{title}</h2>
+            <h2 className="text-2xl font-semibold text-neutral-900">{title}</h2>
             <p className="mt-1 text-xs text-red-700">{message}</p>
           </div>
         </div>
