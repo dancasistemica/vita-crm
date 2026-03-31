@@ -603,9 +603,9 @@ export default function CRMFieldsTab() {
         <div className="flex gap-3 mt-3">
           <Input placeholder="Valor (ex: frio)" value={newLevel.value} onChange={e => setNewLevel(p => ({ ...p, value: e.target.value }))} className="h-8" />
           <Input placeholder="Label (ex: Frio)" value={newLevel.label} onChange={e => setNewLevel(p => ({ ...p, label: e.target.value }))} className="h-8" />
-          < size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
+          <Button size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
             {levelsSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-          </>
+          </Button>
         </div>
       </CardContent>
     </Card>
