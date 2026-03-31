@@ -102,7 +102,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <Label className="text-sm font-medium">Formato</Label>
             <div className="flex gap-3 mt-2">
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 onClick={() => setFormat('csv')}
                 className={`flex-1 flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   format === 'csv' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -113,7 +113,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   <p className="text-sm font-medium text-foreground">CSV</p>
                   <p className="text-xs text-muted-foreground">Excel</p>
                 </div>
-              </>
+              </Button>
               < variant="secondary" size="sm"
                 onClick={() => setFormat('pdf')}
                 className={`flex-1 flex items-center gap-3 p-3 rounded-lg border transition-colors ${
