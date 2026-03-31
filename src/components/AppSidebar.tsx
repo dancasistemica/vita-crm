@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
 import { 
   Avatar, 
   AvatarFallback, 

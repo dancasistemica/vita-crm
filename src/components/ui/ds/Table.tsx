@@ -20,8 +20,11 @@ export const TableBody = ({ children }: { children: React.ReactNode }) => (
   </tbody>
 );
 
-export const TableRow = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <tr className={`hover:bg-neutral-50 transition-colors duration-200 ${className}`}>
+export const TableRow = ({ children, className = '', onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
+  <tr 
+    onClick={onClick}
+    className={`hover:bg-neutral-50 transition-colors duration-200 ${onClick ? 'cursor-pointer' : ''} ${className}`}
+  >
     {children}
   </tr>
 );
@@ -32,8 +35,11 @@ export const TableHead = ({ children, className = '' }: { children: React.ReactN
   </th>
 );
 
-export const TableCell = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <td className={`px-4 py-3 text-sm ${className}`}>
+export const TableCell = ({ children, className = '', onClick }: { children: React.ReactNode; className?: string; onClick?: (e: any) => void }) => (
+  <td 
+    onClick={onClick}
+    className={`px-4 py-3 text-sm ${className}`}
+  >
     {children}
   </td>
 );
