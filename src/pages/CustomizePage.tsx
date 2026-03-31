@@ -111,7 +111,7 @@ export default function CustomizePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display text-foreground">🎨 Personalizar</h1>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6">🎨 Personalizar</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões

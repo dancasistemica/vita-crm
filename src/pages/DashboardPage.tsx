@@ -200,7 +200,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h1 className="text-2xl font-display text-foreground">📊 Dashboard</h1>
+          <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             Dados de <strong>{organization?.name || 'sua organização'}</strong>
           </p>

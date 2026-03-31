@@ -369,7 +369,7 @@ export default function LeadsPage() {
         <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" ref={filterRef}>
           {activeFiltersCount > 0 && (
             <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
-              <h3 className="text-sm font-semibold text-gray-700">Filtros</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold sm:ml-auto">
                 <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                 {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} ativo{activeFiltersCount !== 1 ? 's' : ''}

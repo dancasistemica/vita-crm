@@ -550,7 +550,7 @@ export default function TarefasPage() {
 
       {completed.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="font-semibold text-success">Concluídas ({completed.length})</h2></div>
+          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
           <div className="space-y-2">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
