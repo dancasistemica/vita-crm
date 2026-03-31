@@ -123,7 +123,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
 
       {failedMessages.length > 0 && (
         <div>
-          <h3 className="font-semibold mb-3">Falhas ({failedMessages.length})</h3>
+          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Falhas ({failedMessages.length})</h3>
           <div className="space-y-2">
             {failedMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 bg-red-50 dark:bg-red-950/20">

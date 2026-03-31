@@ -326,7 +326,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Senha do Admin */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Senha do Admin</h3>
+              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Senha do Admin</h3>
               <div className="space-y-3">
                 <div className="flex gap-2">
                   <div className="relative flex-1">
