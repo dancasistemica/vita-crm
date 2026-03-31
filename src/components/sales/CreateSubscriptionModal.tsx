@@ -193,9 +193,9 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
         <div className="bg-neutral-50 border-b border-neutral-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Mensalidade</h2>
-            < variant="ghost" size="sm" onClick={onClose} disabled={loading} className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" onClick={onClose} disabled={loading} className="h-8 w-8 p-0">
               <X className="w-5 h-5 text-neutral-600" />
-            </>
+            </Button>
           </div>
 
           {/* Progress Bar */}
