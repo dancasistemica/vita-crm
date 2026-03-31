@@ -17,11 +17,11 @@ import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDial
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { deleteSale } from '@/services/saleService';
 
-const statusColors: Record<string, string> = {
-  ativo: 'bg-success/20 text-success',
-  concluído: 'bg-info/20 text-info',
-  cancelado: 'bg-muted text-muted-foreground',
-  pendência: 'bg-warning/20 text-warning',
+const statusBadgeVariants: Record<string, any> = {
+  ativo: 'success',
+  concluído: 'default',
+  cancelado: 'neutral',
+  pendência: 'warning',
 };
 
 interface SaleView {
@@ -125,13 +125,9 @@ export default function ClientDetailPage() {
 
     try {
       console.log('[ClientDetailPage] Deletando venda:', saleId);
-
       await deleteSale(saleId, saleType);
-
       console.log('[ClientDetailPage] ✅ Venda deletada com sucesso');
       toast.success('Venda deletada com sucesso!');
-      
-      // Recarregar vendas do cliente
       fetchData();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao deletar venda';
@@ -140,7 +136,6 @@ export default function ClientDetailPage() {
     }
   };
 
-  // Sync notes from client
   useEffect(() => {
     if (client) setNotesValue(client.notes || '');
   }, [client?.id]);
@@ -155,8 +150,8 @@ export default function ClientDetailPage() {
   if (!client) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-muted-foreground">Cliente não encontrado.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate('/clientes')}>
+        <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
+        <Button variant="secondary" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
         </Button>
       </div>
@@ -167,55 +162,48 @@ export default function ClientDetailPage() {
   const getProductName = (pid: string) => products.find(p => p.id === pid)?.name || '—';
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-start gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/clientes')} className="mt-1">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+      <div className="flex flex-col md:flex-row md:items-start gap-6">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
+        
         <div className="flex-1">
-          <div className="flex items-center gap-3">
-            <div className="h-14 w-14 rounded-full bg-primary/20 flex items-center justify-center text-xl font-semibold text-primary">
+          <div className="flex items-center gap-4">
+            <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center text-xl font-bold text-primary-700">
               {client.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()}
             </div>
             <div>
-              <h1 className="text-2xl font-display text-foreground">{client.name}</h1>
-              <p className="text-sm text-muted-foreground">{client.email} • {client.phone} • {client.city}</p>
-              {client.instagram && <p className="text-sm text-muted-foreground">{client.instagram}</p>}
+              <h1 className="text-4xl font-bold text-neutral-900">{client.name}</h1>
+              <p className="text-sm text-neutral-600">{client.email} • {client.phone} • {client.city}</p>
               {client.dealValue != null && client.dealValue > 0 && (
-                <p className="text-sm font-medium text-success mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                <p className="text-sm font-semibold text-success-600 mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
               )}
             </div>
           </div>
-          <div className="flex gap-3 mt-3">
-            <Card className="flex-1">
-              <CardContent className="p-3 text-center">
-                <p className="text-xs text-muted-foreground">Total em Vendas</p>
-                <p className="text-lg font-semibold text-success">R$ {totalValue.toLocaleString('pt-BR')}</p>
-              </CardContent>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <Card variant="default" padding="md" className="text-center">
+              <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Total em Vendas</p>
+              <p className="text-2xl font-bold text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</p>
             </Card>
-            <Card className="flex-1">
-              <CardContent className="p-3 text-center">
-                <p className="text-xs text-muted-foreground">Compras</p>
-                <p className="text-lg font-semibold text-foreground">{sales.length}</p>
-              </CardContent>
+            <Card variant="default" padding="md" className="text-center">
+              <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Compras</p>
+              <p className="text-2xl font-bold text-neutral-900">{sales.length}</p>
             </Card>
-            <Card className="flex-1">
-              <CardContent className="p-3 text-center">
-                <p className="text-xs text-muted-foreground">Interações</p>
-                <p className="text-lg font-semibold text-foreground">{interactions.length}</p>
-              </CardContent>
+            <Card variant="default" padding="md" className="text-center">
+              <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Interações</p>
+              <p className="text-2xl font-bold text-neutral-900">{interactions.length}</p>
             </Card>
           </div>
+
           <div className="flex gap-2 mt-4 flex-wrap">
             <Button
-              variant="outline"
-              size="sm"
+              variant="secondary"
+              size="md"
               onClick={() => setScheduleDialogOpen(true)}
-              className="gap-2 min-h-[44px]"
+              icon={<Clock className="h-4 w-4" />}
               disabled={!client.phone}
             >
-              <Clock className="h-4 w-4" />
               Agendar Mensagem
             </Button>
           </div>
@@ -223,8 +211,9 @@ export default function ClientDetailPage() {
       </div>
 
       {/* Tabs */}
-        <Tabs defaultValue="vendas">
-          <TabsList className="w-full justify-start">
+      <Tabs defaultValue="vendas" className="space-y-4">
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="flex w-max min-w-full">
             <TabsTrigger value="vendas" className="gap-1"><ShoppingCart className="h-4 w-4" /> Vendas</TabsTrigger>
             <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
             <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
@@ -232,117 +221,125 @@ export default function ClientDetailPage() {
             <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
             <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
           </TabsList>
+        </div>
 
-        {/* Vendas */}
-        <TabsContent value="vendas" className="space-y-4">
-          {sales.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">Nenhuma venda registrada.</p>
-          ) : (
-            <div className="space-y-2">
-              {sales.map(sale => (
-                <div
-                  key={sale.id}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
-                  onClick={() => setEditSaleId(sale.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{getProductName(sale.productId)}</p>
-                      <p className="text-xs text-muted-foreground">{sale.date} • {sale.paymentMethod}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-success">R$ {sale.value.toLocaleString('pt-BR')}</span>
-                    <Badge className={statusColors[sale.status] || ''}>{sale.status}</Badge>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }}>
-                        <Edit2 className="h-3.5 w-3.5 text-blue-500" />
-                      </Button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Excluir venda"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Interações */}
-        <TabsContent value="interacoes" className="space-y-4">
-          {interactions.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">Nenhuma interação registrada.</p>
-          ) : (
-            <div className="space-y-3">
-              {interactions.map(int => {
-                const typeLabel = INTERACTION_TYPES.find(t => t.value === int.type)?.label || int.type;
-                return (
-                  <div key={int.id} className="flex gap-3 p-3 rounded-lg border border-border bg-card">
-                    <div className="h-8 w-8 rounded-full bg-info/20 flex items-center justify-center shrink-0">
-                      <MessageSquare className="h-4 w-4 text-info" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px]">{typeLabel}</Badge>
-                        <span className="text-xs text-muted-foreground">{int.date}</span>
+        <Card variant="elevated" padding="lg">
+          {/* Vendas */}
+          <TabsContent value="vendas" className="space-y-4">
+            {sales.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-neutral-600">Nenhuma venda registrada.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {sales.map(sale => (
+                  <div
+                    key={sale.id}
+                    className="flex items-center justify-between p-4 rounded-lg border border-neutral-100 hover:bg-neutral-50 transition-colors cursor-pointer"
+                    onClick={() => setEditSaleId(sale.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-neutral-100 rounded-lg">
+                        <ShoppingCart className="h-5 w-5 text-neutral-600" />
                       </div>
-                      <p className="text-sm text-foreground mt-1">{int.note}</p>
+                      <div>
+                        <p className="font-semibold text-neutral-900">{getProductName(sale.productId)}</p>
+                        <p className="text-xs text-neutral-500">{sale.date} • {sale.paymentMethod}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-success-600">R$ {sale.value.toLocaleString('pt-BR')}</span>
+                      <Badge variant={statusBadgeVariants[sale.status] || 'neutral'}>{sale.status}</Badge>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          icon={<Trash2 className="w-4 h-4 text-error-600" />}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
+                        />
+                      </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </TabsContent>
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
-        {/* Tarefas */}
-        <TabsContent value="tarefas" className="space-y-4">
-          {tasks.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">Nenhuma tarefa vinculada.</p>
-          ) : (
-            <div className="space-y-2">
-              {tasks.map(task => (
-                <div key={task.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
-                  <div className="flex items-center gap-3">
-                    <CheckSquare className={`h-4 w-4 ${task.completed ? 'text-success' : 'text-muted-foreground'}`} />
-                    <div>
-                      <p className={`text-sm ${task.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{task.title}</p>
-                      <p className="text-xs text-muted-foreground">Vencimento: {task.dueDate}</p>
+          {/* Interações */}
+          <TabsContent value="interacoes" className="space-y-4">
+            {interactions.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-neutral-600">Nenhuma interação registrada.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {interactions.map(int => {
+                  const typeLabel = INTERACTION_TYPES.find(t => t.value === int.type)?.label || int.type;
+                  return (
+                    <div key={int.id} className="flex gap-4 p-4 rounded-lg border border-neutral-100 bg-neutral-50">
+                      <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
+                        <MessageSquare className="h-5 w-5 text-primary-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge variant="neutral" size="sm">{typeLabel}</Badge>
+                          <span className="text-xs text-neutral-500">{int.date}</span>
+                        </div>
+                        <p className="text-sm text-neutral-800">{int.note}</p>
+                      </div>
                     </div>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Tarefas */}
+          <TabsContent value="tarefas" className="space-y-4">
+            {tasks.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-neutral-600">Nenhuma tarefa vinculada.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {tasks.map(task => (
+                  <div key={task.id} className="flex items-center justify-between p-4 rounded-lg border border-neutral-100">
+                    <div className="flex items-center gap-3">
+                      <CheckSquare className={`h-5 w-5 ${task.completed ? 'text-success-600' : 'text-neutral-400'}`} />
+                      <div>
+                        <p className={`font-medium ${task.completed ? 'line-through text-neutral-400' : 'text-neutral-900'}`}>{task.title}</p>
+                        <p className="text-xs text-neutral-500">Vencimento: {task.dueDate}</p>
+                      </div>
+                    </div>
+                    <Badge variant={task.completed ? 'success' : 'warning'}>{task.completed ? 'Feita' : 'Pendente'}</Badge>
                   </div>
-                  <Badge variant={task.completed ? 'secondary' : 'outline'}>{task.completed ? 'Feita' : 'Pendente'}</Badge>
-                </div>
-              ))}
-            </div>
-          )}
-        </TabsContent>
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
-        {/* Notas */}
-        <TabsContent value="notas" className="space-y-4">
-          <Textarea
-            placeholder="Notas internas sobre este cliente..."
-            value={notesValue}
-            onChange={e => setNotesValue(e.target.value)}
-            onBlur={handleNotesBlur}
-            className="min-h-[200px]"
-          />
-        </TabsContent>
+          {/* Notas */}
+          <TabsContent value="notas" className="space-y-4">
+            <Textarea
+              placeholder="Notas internas sobre este cliente..."
+              value={notesValue}
+              onChange={e => setNotesValue(e.target.value)}
+              onBlur={handleNotesBlur}
+              className="min-h-[200px] w-full p-4 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+            />
+          </TabsContent>
 
-        {/* Agendamentos */}
-        <TabsContent value="agendamentos" className="space-y-4">
-          <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
-        </TabsContent>
+          {/* Agendamentos */}
+          <TabsContent value="agendamentos" className="space-y-4">
+            <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
+          </TabsContent>
 
-        {/* Histórico */}
-        <TabsContent value="historico" className="space-y-4">
-          <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
-        </TabsContent>
+          {/* Histórico */}
+          <TabsContent value="historico" className="space-y-4">
+            <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
+          </TabsContent>
+        </Card>
       </Tabs>
 
       {editSaleId && (
