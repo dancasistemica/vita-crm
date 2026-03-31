@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead, Interaction } from '@/types/crm';

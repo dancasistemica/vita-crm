@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
 import { ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/ds';
 import { CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
 
 export function OrganizationSwitcher() {

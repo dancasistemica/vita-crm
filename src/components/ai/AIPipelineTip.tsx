@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Sparkles, RefreshCw, Plus } from 'lucide-react';
 import type { Lead } from '@/types/crm';
 

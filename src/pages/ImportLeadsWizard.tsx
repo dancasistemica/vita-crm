@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useImportModal } from '@/hooks/useImportModal';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/ds';
 import { ArrowLeft } from 'lucide-react';
 import Step1Intent from '@/components/import/steps/Step1Intent';
 import Step2Explanation from '@/components/import/steps/Step2Explanation';

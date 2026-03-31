@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
 import { parseFile, getFileType } from '@/services/excelParser';

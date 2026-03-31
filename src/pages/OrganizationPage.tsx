@@ -5,10 +5,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCNPJ, validateCNPJ } from '@/utils/cnpjValidator';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
 import { toast } from 'sonner';
 
 export default function OrganizationPage() {

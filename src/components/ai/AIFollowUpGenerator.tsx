@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead } from '@/types/crm';

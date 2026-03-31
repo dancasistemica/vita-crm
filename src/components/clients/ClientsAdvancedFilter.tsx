@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Input } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
+import { Slider } from '@/components/ui/ds';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/ds';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';
 interface SimpleProduct {
   id: string;

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Progress } from '@/components/ui/ds';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';

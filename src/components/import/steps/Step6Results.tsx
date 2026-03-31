@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/ds';
 import { ImportModalState } from '@/hooks/useImportModal';
 
 interface Props {

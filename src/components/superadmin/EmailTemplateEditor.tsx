@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/ds';
+import { Textarea } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
+import { Label } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
 import { Save, RotateCcw, Loader2 } from 'lucide-react';

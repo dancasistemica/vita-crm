@@ -2,14 +2,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Checkbox } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
+import { Badge } from '@/components/ui/ds';
+import { Switch } from '@/components/ui/ds';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { Lock, Save } from 'lucide-react';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/ds';
 import { toast } from 'sonner';
 
 interface PermissionModule {

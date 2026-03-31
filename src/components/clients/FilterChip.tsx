@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/ds';
 
 interface FilterChipProps {
   label: string;

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Card } from '@/components/ui/ds/Card';
 import { Input } from '@/components/ui/ds/Input';
 import { Button } from '@/components/ui/ds/Button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from '@/components/ui/ds';
 import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

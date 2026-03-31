@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
 import { Mail } from 'lucide-react';
 import EmailTemplateEditor from './EmailTemplateEditor';
 
