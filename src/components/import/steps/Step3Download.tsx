@@ -47,9 +47,9 @@ export default function Step3Download({ onNext, onBack }: Props) {
               <p className="text-sm font-semibold text-foreground">CSV</p>
             </div>
             <p className="text-xs text-muted-foreground">Texto separado por vírgula</p>
-            < size="sm" variant="neutral" className="w-full mt-2">
+            <Button size="sm" variant="secondary" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar CSV
-            </>
+            </Button>
           </CardContent>
         </Card>
       </div>
