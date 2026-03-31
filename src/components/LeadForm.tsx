@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { useCustomFields } from "@/hooks/useCustomFields";
 import { 
-  
+  Button, 
   Input, 
   Select, 
   Badge, 
@@ -167,7 +167,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
                     <Checkbox
                       label={cf.field_label}
                       checked={!!customData[cf.field_name]}
-                      onChange={e => setCustom(cf.field_name, (e.target as HTMLInputElement).checked)}
+                      onCheckedChange={v => setCustom(cf.field_name, v)}
                     />
                   </div>
                 )}
@@ -177,7 +177,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         </div>
       )}
 
-      < variant="primary" className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</>
+      <Button variant="primary" className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</Button>
     </div>
   );
 }
