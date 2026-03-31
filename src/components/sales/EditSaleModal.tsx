@@ -222,18 +222,18 @@ export const EditSaleModal = ({
               <h3 className="text-lg font-semibold text-neutral-700">Erro ao carregar</h3>
               <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
               <div className="flex flex-col gap-3">
-                < variant="secondary" size="sm"
+                <Button variant="secondary" size="sm"
                   onClick={loadData}
                   className="flex items-center justify-center gap-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" /> Tentar Novamente
-                </>
-                < variant="secondary" size="sm"
+                </Button>
+                <Button variant="secondary" size="sm"
                   onClick={onClose}
                   className="px-4 py-2 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
                   Fechar
-                </>
+                </Button>
               </div>
             </div>
           ) : (
