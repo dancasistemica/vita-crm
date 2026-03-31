@@ -63,9 +63,9 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
             </SelectContent>
           </Select>
         </div>
-        < size="sm" onClick={handleGenerate} disabled={loading}>
+        <Button size="sm" onClick={handleGenerate} disabled={loading}>
           {loading ? 'Gerando...' : '✨ Gerar mensagem'}
-        </>
+        </Button>
       </div>
 
       {message && (
