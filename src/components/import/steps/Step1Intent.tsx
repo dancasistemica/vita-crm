@@ -35,8 +35,8 @@ export default function Step1Intent({ onNext, onClose }: Props) {
       </div>
 
       <div className="flex justify-center gap-3 pt-2">
-        < variant="neutral" onClick={onClose}>Cancelar</>
-        < onClick={onNext}>Começar Importação</>
+        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        <Button onClick={onNext}>Começar Importação</Button>
       </div>
     </div>
   );

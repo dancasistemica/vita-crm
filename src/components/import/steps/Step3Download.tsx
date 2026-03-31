@@ -80,8 +80,8 @@ export default function Step3Download({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        < variant="neutral" onClick={onBack}>Voltar</>
-        < onClick={onNext}>Próximo</>
+        <Button variant="secondary" onClick={onBack}>Voltar</Button>
+        <Button onClick={onNext}>Próximo</Button>
       </div>
     </div>
   );

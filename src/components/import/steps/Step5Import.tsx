@@ -289,10 +289,10 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        < variant="neutral" onClick={onBack}>Voltar</>
-        < onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
+        <Button variant="secondary" onClick={onBack}>Voltar</Button>
+        <Button onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
-        </>
+        </Button>
       </div>
 
       {state.importResult && state.importResult.dateConversions > 0 && (

@@ -203,8 +203,8 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        < variant="neutral" onClick={onBack}>Voltar</>
-        < onClick={onNext} disabled={!canProceed}>Validar e Importar</>
+        <Button variant="secondary" onClick={onBack}>Voltar</Button>
+        <Button onClick={onNext} disabled={!canProceed}>Validar e Importar</Button>
       </div>
     </div>
   );
