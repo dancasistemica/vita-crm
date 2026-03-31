@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog } from './Dialog';
+import { Button, Dialog } from './Dialog';
 import { Button } from './Button';
 
 interface AlertDialogProps {
@@ -61,11 +61,11 @@ export const AlertDialog = ({
 };
 
 // Shims for compound components
-export const AlertDialogContent = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-export const AlertDialogHeader = ({ children }: { children: React.ReactNode }) => <div className="mb-4">{children}</div>;
-export const AlertDialogTitle = ({ children }: { children: React.ReactNode }) => <div className="text-xl font-semibold">{children}</div>;
-export const AlertDialogDescription = ({ children }: { children: React.ReactNode }) => <p className="text-sm text-neutral-500 mt-2">{children}</p>;
-export const AlertDialogFooter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>;
-export const AlertDialogAction = ({ children, asChild }: any) => children;
-export const AlertDialogCancel = ({ children, asChild }: any) => children;
-export const AlertDialogTrigger = ({ children, asChild }: any) => children;
+export const AlertDialogContent = ({ Button, children }: { Button, children: React.ReactNode }) => <div>{children}</div>;
+export const AlertDialogHeader = ({ Button, children }: { Button, children: React.ReactNode }) => <div className="mb-4">{children}</div>;
+export const AlertDialogTitle = ({ Button, children }: { Button, children: React.ReactNode }) => <div className="text-xl font-semibold">{children}</div>;
+export const AlertDialogDescription = ({ Button, children }: { Button, children: React.ReactNode }) => <p className="text-sm text-neutral-500 mt-2">{children}</p>;
+export const AlertDialogFooter = ({ Button, children, className = '' }: { Button, children: React.ReactNode; className?: string }) => <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>;
+export const AlertDialogAction = ({ Button, children, asChild }: any) => children;
+export const AlertDialogCancel = ({ Button, children, asChild }: any) => children;
+export const AlertDialogTrigger = ({ Button, children, asChild }: any) => children;

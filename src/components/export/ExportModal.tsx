@@ -1,37 +1,37 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { FileDown, FileSpreadsheet, FileText } from 'lucide-react';
-import { toast } from 'sonner';
-import { exportToCSV, exportToPDF, type ExportColumn } from '@/services/exportService';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Checkbox } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, FileDown, FileSpreadsheet, FileText } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import { Button, exportToCSV, exportToPDF, type ExportColumn } from '@/services/exportService';
 
 const LEAD_COLUMNS: ExportColumn[] = [
-  { value: 'name', label: 'Nome' },
-  { value: 'phone', label: 'Telefone' },
-  { value: 'email', label: 'Email' },
-  { value: 'instagram', label: 'Instagram' },
-  { value: 'city', label: 'Cidade' },
-  { value: 'entryDate', label: 'Data Entrada' },
-  { value: 'origin', label: 'Origem' },
-  { value: 'interestLevel', label: 'Nível Interesse' },
-  { value: 'pipelineStage', label: 'Etapa Funil' },
-  { value: 'mainInterest', label: 'Interesse Principal' },
-  { value: 'tags', label: 'Tags' },
-  { value: 'notes', label: 'Observações' },
-  { value: 'responsible', label: 'Responsável' },
+  { Button, value: 'name', label: 'Nome' },
+  { Button, value: 'phone', label: 'Telefone' },
+  { Button, value: 'email', label: 'Email' },
+  { Button, value: 'instagram', label: 'Instagram' },
+  { Button, value: 'city', label: 'Cidade' },
+  { Button, value: 'entryDate', label: 'Data Entrada' },
+  { Button, value: 'origin', label: 'Origem' },
+  { Button, value: 'interestLevel', label: 'Nível Interesse' },
+  { Button, value: 'pipelineStage', label: 'Etapa Funil' },
+  { Button, value: 'mainInterest', label: 'Interesse Principal' },
+  { Button, value: 'tags', label: 'Tags' },
+  { Button, value: 'notes', label: 'Observações' },
+  { Button, value: 'responsible', label: 'Responsável' },
 ];
 
 const CLIENT_COLUMNS: ExportColumn[] = [
-  { value: 'name', label: 'Nome' },
-  { value: 'phone', label: 'Telefone' },
-  { value: 'email', label: 'Email' },
-  { value: 'origin', label: 'Origem' },
-  { value: 'tags', label: 'Tags' },
-  { value: 'notes', label: 'Observações' },
-  { value: 'responsible', label: 'Responsável' },
+  { Button, value: 'name', label: 'Nome' },
+  { Button, value: 'phone', label: 'Telefone' },
+  { Button, value: 'email', label: 'Email' },
+  { Button, value: 'origin', label: 'Origem' },
+  { Button, value: 'tags', label: 'Tags' },
+  { Button, value: 'notes', label: 'Observações' },
+  { Button, value: 'responsible', label: 'Responsável' },
 ];
 
 interface Props {
@@ -42,7 +42,7 @@ interface Props {
   filteredData: Record<string, any>[];
 }
 
-export default function ExportModal({ open, onOpenChange, type, allData, filteredData }: Props) {
+export default function ExportModal({ Button, open, onOpenChange, type, allData, filteredData }: Props) {
   const availableColumns = type === 'leads' ? LEAD_COLUMNS : CLIENT_COLUMNS;
   const [format, setFormat] = useState<'csv' | 'pdf'>('csv');
   const [dataScope, setDataScope] = useState<'all' | 'filtered'>('filtered');
@@ -72,7 +72,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
     try {
       const data = dataScope === 'all' ? allData : filteredData;
       const columns = availableColumns.filter(c => selectedColumns.includes(c.value));
-      const options = { type, format, columns, data };
+      const options = { Button, type, format, columns, data };
 
       if (format === 'csv') {
         exportToCSV(options);

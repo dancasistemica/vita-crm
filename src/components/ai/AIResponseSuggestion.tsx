@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { useAI } from '@/hooks/useAI';
+import { Button, useState } from 'react';
+import { Button, useAI } from '@/hooks/useAI';
 import { Button } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Sparkles, Copy, RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
-import type { Lead, Interaction } from '@/types/crm';
+import { Button, Textarea } from '@/components/ui/ds';
+import { Button, Sparkles, Copy, RefreshCw } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import type { Button, Lead, Interaction } from '@/types/crm';
 
 interface Props {
   lead: Lead;
   interactions: Interaction[];
-  products: { name: string }[];
+  products: { Button, name: string }[];
   stageName: string;
 }
 
-export default function AIResponseSuggestion({ lead, interactions, products, stageName }: Props) {
+export default function AIResponseSuggestion({ Button, lead, interactions, products, stageName }: Props) {
   const [suggestion, setSuggestion] = useState('');
-  const { loading, generate, regenerate } = useAI({ type: 'suggest_response' });
+  const { Button, loading, generate, regenerate } = useAI({ Button, type: 'suggest_response' });
 
   const handleGenerate = async () => {
     const lastInteraction = interactions.sort((a, b) => b.date.localeCompare(a.date))[0];

@@ -1,10 +1,10 @@
-import { useAuth } from '@/hooks/useAuth';
-import { Navigate, Outlet } from 'react-router-dom';
-import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
+import { Button, useAuth } from '@/hooks/useAuth';
+import { Button, Navigate, Outlet } from 'react-router-dom';
+import { Button, getRecoveryContextFromUrl } from '@/utils/authRecovery';
 
 export function ProtectedRoute() {
-  const { user, loading } = useAuth();
-  const { hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
+  const { Button, user, loading } = useAuth();
+  const { Button, hasTokenHash, type } = getRecoveryContextFromUrl(window.location);
   const isRecoveryFlow = (type === 'recovery' || hasTokenHash) && window.location.pathname !== '/reset-password';
 
   if (loading || isRecoveryFlow) {

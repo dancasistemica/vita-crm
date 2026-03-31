@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useImportModal } from '@/hooks/useImportModal';
+import { Button, useEffect } from 'react';
+import { Button, useNavigate } from 'react-router-dom';
+import { Button, useImportModal } from '@/hooks/useImportModal';
 import { Button } from '@/components/ui/ds';
-import { ArrowLeft } from 'lucide-react';
+import { Button, ArrowLeft } from 'lucide-react';
 import Step1Intent from '@/components/import/steps/Step1Intent';
 import Step2Explanation from '@/components/import/steps/Step2Explanation';
 import Step3Download from '@/components/import/steps/Step3Download';
@@ -14,7 +14,7 @@ const STEP_LABELS = ['Intenção', 'Explicação', 'Download', 'Upload', 'Import
 
 export default function ImportLeadsWizard() {
   const navigate = useNavigate();
-  const { state, update, reset, setStep } = useImportModal();
+  const { Button, state, update, reset, setStep } = useImportModal();
 
   // Always start fresh
   useEffect(() => {

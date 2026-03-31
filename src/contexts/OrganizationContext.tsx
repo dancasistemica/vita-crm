@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { Button, createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
 
 export const CONSOLIDATED_ORG_ID = 'consolidado';
 
@@ -43,7 +43,7 @@ const OrganizationContext = createContext<OrganizationContextType>({
   switchOrg: async () => {},
 });
 
-export function OrganizationProvider({ children }: { children: ReactNode }) {
+export function OrganizationProvider({ Button, children }: { Button, children: ReactNode }) {
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +51,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     console.log('[OrganizationContext] loadOrgById:', orgId);
     setLoading(true);
     try {
-      const { data: org, error } = await supabase
+      const { Button, data: org, error } = await supabase
         .from('organizations')
         .select('*')
         .eq('id', orgId)
@@ -73,7 +73,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   const fetchOrganization = useCallback(async () => {
     console.log('[OrganizationContext] 1️⃣ fetchOrganization iniciado');
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { Button, data: { Button, user } } = await supabase.auth.getUser();
       if (!user) {
         console.warn('[OrganizationContext] ⚠️ Sem user autenticado');
         setOrganization(null);
@@ -81,7 +81,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { _user_id: user.id });
+      const { Button, data: isSuperadmin } = await supabase.rpc('is_superadmin', { Button, _user_id: user.id });
       console.log('[OrganizationContext] 2️⃣ isSuperadmin:', isSuperadmin);
 
       const superadminOrgId = isSuperadmin ? localStorage.getItem('superadmin_current_org') : null;
@@ -97,10 +97,10 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
       } else if (superadminOrgId) {
         targetOrgId = superadminOrgId;
       } else if (isSuperadmin) {
-        const { data: firstOrg } = await supabase
+        const { Button, data: firstOrg } = await supabase
           .from('organizations')
           .select('id')
-          .order('name', { ascending: true })
+          .order('name', { Button, ascending: true })
           .limit(1)
           .maybeSingle();
 
@@ -109,7 +109,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
           localStorage.setItem('superadmin_current_org', firstOrg.id);
         }
       } else {
-        const { data: membership } = await supabase
+        const { Button, data: membership } = await supabase
           .from('organization_members')
           .select('organization_id')
           .eq('user_id', user.id)
@@ -151,7 +151,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchOrganization();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const { Button, data: { Button, subscription } } = supabase.auth.onAuthStateChange(() => {
       fetchOrganization();
     });
 

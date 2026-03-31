@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Input } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
+import { Button, useCallback, useEffect, useState } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { toast } from 'sonner';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, toast } from 'sonner';
 import EmailPreview from './EmailPreview';
-import { Save, RotateCcw, Loader2 } from 'lucide-react';
+import { Button, Save, RotateCcw, Loader2 } from 'lucide-react';
 
 interface EmailTemplateData {
   id?: string;
@@ -50,18 +50,18 @@ const DEFAULTS: Record<string, EmailTemplateData> = {
 };
 
 const VARIABLES = [
-  { key: '{{name}}', desc: 'Nome do usuário' },
-  { key: '{{email}}', desc: 'Email do usuário' },
-  { key: '{{link}}', desc: 'Link de ação' },
-  { key: '{{organization_name}}', desc: 'Nome da organização' },
-  { key: '{{crm_name}}', desc: 'Nome do CRM' },
+  { Button, key: '{{name}}', desc: 'Nome do usuário' },
+  { Button, key: '{{email}}', desc: 'Email do usuário' },
+  { Button, key: '{{link}}', desc: 'Link de ação' },
+  { Button, key: '{{organization_name}}', desc: 'Nome da organização' },
+  { Button, key: '{{crm_name}}', desc: 'Nome do CRM' },
 ];
 
 interface Props {
   templateType: 'confirmation_email' | 'reset_password';
 }
 
-export default function EmailTemplateEditor({ templateType }: Props) {
+export default function EmailTemplateEditor({ Button, templateType }: Props) {
   const [form, setForm] = useState<EmailTemplateData>(DEFAULTS[templateType]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -73,7 +73,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
     setLoading(true);
     try {
       console.log('[EmailTemplateEditor] Loading template:', templateType);
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('email_templates')
         .select('*')
         .eq('template_type', templateType)
@@ -116,7 +116,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
   }, [loadTemplate]);
 
   const updateField = (field: keyof EmailTemplateData, value: string | null) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm(prev => ({ Button, ...prev, [field]: value }));
   };
 
   const validate = (): string | null => {
@@ -134,7 +134,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
 
   const handleSave = async () => {
     const error = validate();
-    if (error) { toast.error(error); return; }
+    if (error) { Button, toast.error(error); return; }
     setSaving(true);
     try {
       console.log('[EmailTemplateEditor] Saving template:', templateType);
@@ -154,19 +154,19 @@ export default function EmailTemplateEditor({ templateType }: Props) {
       };
 
       if (form.id) {
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('email_templates')
           .update(payload)
           .eq('id', form.id);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase
+        const { Button, data, error } = await supabase
           .from('email_templates')
           .insert(payload)
           .select('id')
           .single();
         if (error) throw error;
-        setForm(prev => ({ ...prev, id: data.id }));
+        setForm(prev => ({ Button, ...prev, id: data.id }));
       }
       setIsCustom(true);
       toast.success('Template salvo com sucesso!');
@@ -184,7 +184,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
     setSaving(true);
     try {
       console.log('[EmailTemplateEditor] Restoring default');
-      const { error } = await supabase
+      const { Button, error } = await supabase
         .from('email_templates')
         .delete()
         .eq('id', form.id);
@@ -221,13 +221,13 @@ export default function EmailTemplateEditor({ templateType }: Props) {
       const path = `email-logos/${Date.now()}.${ext}`;
       console.log('[EmailTemplateEditor] Uploading logo:', path);
 
-      const { error: uploadError } = await supabase.storage
+      const { Button, error: uploadError } = await supabase.storage
         .from('brand-assets')
-        .upload(path, file, { upsert: true });
+        .upload(path, file, { Button, upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
+      const { Button, data: { Button, publicUrl } } = supabase.storage
         .from('brand-assets')
         .getPublicUrl(path);
 

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { Button, useState } from "react";
 import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
-import { toast } from "sonner";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Label } from "@/components/ui/ds";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, Plus, Edit2, Trash2, X, Settings } from "lucide-react";
+import { Button, toast } from "sonner";
 
 interface TaskStatus {
   id: string;
@@ -15,8 +15,8 @@ interface TaskStatus {
 
 interface TaskStatusManagerProps {
   statuses: TaskStatus[];
-  onCreateStatus: (data: { name: string; color: string; order_index: number }) => Promise<void>;
-  onUpdateStatus: (id: string, data: { name: string; color: string }) => Promise<void>;
+  onCreateStatus: (data: { Button, name: string; color: string; order_index: number }) => Promise<void>;
+  onUpdateStatus: (id: string, data: { Button, name: string; color: string }) => Promise<void>;
   onDeleteStatus: (id: string) => Promise<void>;
 }
 
@@ -28,7 +28,7 @@ export default function TaskStatusManager({
 }: TaskStatusManagerProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", color: "#6B7280" });
+  const [form, setForm] = useState({ Button, name: "", color: "#6B7280" });
 
   const handleSubmit = async () => {
     if (!form.name.trim()) return;
@@ -37,10 +37,10 @@ export default function TaskStatusManager({
         await onUpdateStatus(editingId, form);
         toast.success("Status atualizado!");
       } else {
-        await onCreateStatus({ ...form, order_index: statuses.length });
+        await onCreateStatus({ Button, ...form, order_index: statuses.length });
         toast.success("Status criado!");
       }
-      setForm({ name: "", color: "#6B7280" });
+      setForm({ Button, name: "", color: "#6B7280" });
       setEditingId(null);
       setShowForm(false);
     } catch {
@@ -50,7 +50,7 @@ export default function TaskStatusManager({
 
   const handleEdit = (s: TaskStatus) => {
     setEditingId(s.id);
-    setForm({ name: s.name, color: s.color });
+    setForm({ Button, name: s.name, color: s.color });
     setShowForm(true);
   };
 
@@ -71,7 +71,7 @@ export default function TaskStatusManager({
           <CardTitle className="text-base font-semibold flex items-center gap-3">
             <Settings className="h-4 w-4" /> Gerenciar Status
           </CardTitle>
-          <Button size="sm" variant="neutral" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
+          <Button size="sm" variant="neutral" onClick={() => { Button, setShowForm(!showForm); setEditingId(null); setForm({ Button, name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </Button>
         </div>
@@ -81,11 +81,11 @@ export default function TaskStatusManager({
           <div className="flex items-end gap-3 p-3 rounded-lg border bg-muted/30">
             <div className="flex-1">
               <Label className="text-xs">Nome</Label>
-              <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Em andamento" />
+              <Input value={form.name} onChange={e => setForm(f => ({ Button, ...f, name: e.target.value }))} placeholder="Ex: Em andamento" />
             </div>
             <div>
               <Label className="text-xs">Cor</Label>
-              <input type="color" value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} className="h-9 w-12 rounded border cursor-pointer" />
+              <input type="color" value={form.color} onChange={e => setForm(f => ({ Button, ...f, color: e.target.value }))} className="h-9 w-12 rounded border cursor-pointer" />
             </div>
             <Button size="sm" onClick={handleSubmit} disabled={!form.name.trim()}>
               {editingId ? "Salvar" : "Criar"}
@@ -98,7 +98,7 @@ export default function TaskStatusManager({
         {statuses.map(s => (
           <div key={s.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition">
             <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: s.color }} />
+              <div className="w-4 h-4 rounded-full" style={{ Button, backgroundColor: s.color }} />
               <span className="text-sm font-medium">{s.name}</span>
             </div>
             <div className="flex gap-1">

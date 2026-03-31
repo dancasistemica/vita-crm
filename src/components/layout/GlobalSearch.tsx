@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/ds/Input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { Button, useCallback, useEffect, useRef, useState } from "react";
+import { Button, useNavigate } from "react-router-dom";
+import { Button, Search } from "lucide-react";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Button, useOrganization } from "@/contexts/OrganizationContext";
 import {
   useGlobalSearch,
   type GlobalSearchResult,
 } from "@/hooks/useGlobalSearch";
-import { SearchResults } from "@/components/search/SearchResults";
+import { Button, SearchResults } from "@/components/search/SearchResults";
 
 export function GlobalSearch() {
-  const { organizationId } = useOrganization();
+  const { Button, organizationId } = useOrganization();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [open, setOpen] = useState(false);
 
-  const { query, setQuery, results, loading, search, clearResults } =
+  const { Button, query, setQuery, results, loading, search, clearResults } =
     useGlobalSearch(organizationId);
 
   useEffect(() => {
@@ -58,17 +58,17 @@ export function GlobalSearch() {
 
     if (result.type === "lead") {
       console.log("[GlobalSearch] Navegando para:", "/leads");
-      navigate("/leads", { state: { leadId: result.id } });
+      navigate("/leads", { Button, state: { Button, leadId: result.id } });
     } else if (result.type === "client") {
       const url = `/clientes/${result.id}`;
       console.log("[GlobalSearch] Navegando para:", url);
       navigate(url);
     } else if (result.type === "task") {
       console.log("[GlobalSearch] Navegando para:", "/tarefas");
-      navigate("/tarefas", { state: { taskId: result.id } });
+      navigate("/tarefas", { Button, state: { Button, taskId: result.id } });
     } else if (result.type === "product") {
       console.log("[GlobalSearch] Navegando para:", "/produtos");
-      navigate("/produtos", { state: { productId: result.id } });
+      navigate("/produtos", { Button, state: { Button, productId: result.id } });
     }
 
     setOpen(false);

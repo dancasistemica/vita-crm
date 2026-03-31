@@ -1,12 +1,12 @@
-import { X } from 'lucide-react';
-import { Badge, Button } from '@/components/ui/ds';
+import { Button, X } from 'lucide-react';
+import { Button, Badge, Button } from '@/components/ui/ds';
 
 interface FilterChipProps {
   label: string;
   onRemove: () => void;
 }
 
-export function FilterChip({ label, onRemove }: FilterChipProps) {
+export function FilterChip({ Button, label, onRemove }: FilterChipProps) {
   return (
     <Badge variant="neutral" className="gap-1 pr-1 text-xs font-normal">
       {label}

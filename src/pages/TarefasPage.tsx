@@ -1,29 +1,29 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, useState, useEffect, useCallback, useMemo } from "react";
+import { Button, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Select } from "@/components/ui/ds/Select";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Button, Select } from "@/components/ui/ds/Select";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Label } from "@/components/ui/ds";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActionButtons from "@/components/tasks/TaskActionButtons";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Checkbox } from "@/components/ui/ds";
-import { Skeleton } from "@/components/ui/ds";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
-import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
-import { formatDateToBR } from "@/utils/dateFormatter";
-import { TASK_TYPES } from "@/types/crm";
-import { toast } from "sonner";
+import { Button, Badge } from "@/components/ui/ds/Badge";
+import { Button, Checkbox } from "@/components/ui/ds";
+import { Button, Skeleton } from "@/components/ui/ds";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Button, Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
+import { Button, formatDateToBR } from "@/utils/dateFormatter";
+import { Button, TASK_TYPES } from "@/types/crm";
+import { Button, toast } from "sonner";
 import AIFollowUpGenerator from "@/components/ai/AIFollowUpGenerator";
-import { useDataAccess } from "@/hooks/useDataAccess";
-import { useLeadsData } from "@/hooks/useLeadsData";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { Button, useDataAccess } from "@/hooks/useDataAccess";
+import { Button, useLeadsData } from "@/hooks/useLeadsData";
+import { Button, useAuth } from "@/hooks/useAuth";
+import { Button, supabase } from "@/integrations/supabase/client";
 
 interface TaskRow {
   id: string;
@@ -36,7 +36,7 @@ interface TaskRow {
   status_id: string | null;
   organization_id: string;
   created_at: string;
-  leads?: { name: string } | null;
+  leads?: { Button, name: string } | null;
 }
 
 interface TaskStatus {
@@ -58,7 +58,7 @@ interface TaskNotification {
 interface OrgMember {
   user_id: string;
   role: string;
-  profiles?: { full_name: string; email: string | null } | null;
+  profiles?: { Button, full_name: string; email: string | null } | null;
 }
 
 export default function TarefasPage() {
@@ -66,8 +66,8 @@ export default function TarefasPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const dataAccess = useDataAccess();
-  const { user } = useAuth();
-  const { leads, pipelineStages } = useLeadsData();
+  const { Button, user } = useAuth();
+  const { Button, leads, pipelineStages } = useLeadsData();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [taskStatuses, setTaskStatuses] = useState<TaskStatus[]>([]);
   const [notifications, setNotifications] = useState<TaskNotification[]>([]);
@@ -121,11 +121,11 @@ export default function TarefasPage() {
   const fetchNotifications = useCallback(async () => {
     if (!user?.id || !dataAccess) return;
     try {
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('task_notifications')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .order('created_at', { Button, ascending: false })
         .limit(20);
       if (error) throw error;
       setNotifications((data || []) as TaskNotification[]);
@@ -142,14 +142,14 @@ export default function TarefasPage() {
   }, [fetchTasks, fetchOrgMembers, fetchTaskStatuses, fetchNotifications]);
 
   useEffect(() => {
-    const state = location.state as { taskId?: string } | null;
+    const state = location.state as { Button, taskId?: string } | null;
     if (!state?.taskId) return;
 
     const targetTask = tasks.find(task => task.id === state.taskId);
     if (targetTask) {
       setEditingTask(targetTask);
       setDialogOpen(true);
-      navigate(location.pathname, { replace: true, state: null });
+      navigate(location.pathname, { Button, replace: true, state: null });
     }
   }, [location.state, tasks, navigate, location.pathname]);
 
@@ -206,7 +206,7 @@ export default function TarefasPage() {
     return taskStatuses.find(s => s.id === statusId) || null;
   };
 
-  const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
+  const handleAdd = async (data: { Button, title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
     if (!dataAccess) return;
     try {
       await dataAccess.createTask({
@@ -235,7 +235,7 @@ export default function TarefasPage() {
     }
   };
 
-  const handleSaveEdit = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
+  const handleSaveEdit = async (data: { Button, title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
     if (!dataAccess || !editingTask) return;
     try {
       await dataAccess.updateTask(editingTask.id, {
@@ -280,8 +280,8 @@ export default function TarefasPage() {
   const handleToggle = async (task: TaskRow) => {
     if (!dataAccess) return;
     try {
-      await dataAccess.updateTask(task.id, { completed: !task.completed });
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t));
+      await dataAccess.updateTask(task.id, { Button, completed: !task.completed });
+      setTasks(prev => prev.map(t => t.id === task.id ? { Button, ...t, completed: !t.completed } : t));
     } catch (err) {
       console.error('[TarefasPage] Erro ao atualizar tarefa:', err);
     }
@@ -302,8 +302,8 @@ export default function TarefasPage() {
   const handleAssign = async (taskId: string, userId: string | null) => {
     if (!dataAccess) return;
     try {
-      await dataAccess.updateTask(taskId, { assigned_to: userId });
-      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, assigned_to: userId } : t));
+      await dataAccess.updateTask(taskId, { Button, assigned_to: userId });
+      setTasks(prev => prev.map(t => t.id === taskId ? { Button, ...t, assigned_to: userId } : t));
       toast.success(userId ? "Tarefa designada!" : "Designação removida");
 
       // Create notification if assigning to someone
@@ -328,8 +328,8 @@ export default function TarefasPage() {
   const handleStatusChange = async (taskId: string, statusId: string | null) => {
     if (!dataAccess) return;
     try {
-      await dataAccess.updateTask(taskId, { status_id: statusId });
-      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status_id: statusId } : t));
+      await dataAccess.updateTask(taskId, { Button, status_id: statusId });
+      setTasks(prev => prev.map(t => t.id === taskId ? { Button, ...t, status_id: statusId } : t));
 
       const task = tasks.find(t => t.id === taskId);
       const newStatus = taskStatuses.find(s => s.id === statusId);
@@ -354,7 +354,7 @@ export default function TarefasPage() {
   };
 
   // Status management handlers
-  const handleCreateStatus = async (data: { name: string; color: string; order_index: number }) => {
+  const handleCreateStatus = async (data: { Button, name: string; color: string; order_index: number }) => {
     if (!dataAccess) return;
     try {
       await dataAccess.createTaskStatus(data);
@@ -365,7 +365,7 @@ export default function TarefasPage() {
     }
   };
 
-  const handleUpdateStatus = async (id: string, data: { name: string; color: string }) => {
+  const handleUpdateStatus = async (id: string, data: { Button, name: string; color: string }) => {
     if (!dataAccess) return;
     try {
       await dataAccess.updateTaskStatus(id, data);
@@ -388,19 +388,19 @@ export default function TarefasPage() {
   };
 
   const handleMarkNotificationRead = async (id: string) => {
-    await supabase.from('task_notifications').update({ read: true }).eq('id', id);
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    await supabase.from('task_notifications').update({ Button, read: true }).eq('id', id);
+    setNotifications(prev => prev.map(n => n.id === id ? { Button, ...n, read: true } : n));
   };
 
   const handleMarkAllRead = async () => {
     if (!user?.id) return;
-    await supabase.from('task_notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    await supabase.from('task_notifications').update({ Button, read: true }).eq('user_id', user.id).eq('read', false);
+    setNotifications(prev => prev.map(n => ({ Button, ...n, read: true })));
   };
 
   const formatCreatedDate = (dateStr: string) => formatDateToBR(dateStr);
 
-  const TaskItem = ({ task }: { task: TaskRow }) => {
+  const TaskItem = ({ Button, task }: { Button, task: TaskRow }) => {
     const assignedName = getMemberName(task.assigned_to);
     const status = getStatusById(task.status_id);
 
@@ -421,7 +421,7 @@ export default function TarefasPage() {
                 </Badge>
               )}
               {status && (
-                <Badge className="text-xs text-white" style={{ backgroundColor: status.color }}>
+                <Badge className="text-xs text-white" style={{ Button, backgroundColor: status.color }}>
                   {status.name}
                 </Badge>
               )}
@@ -443,7 +443,7 @@ export default function TarefasPage() {
                 {taskStatuses.map(s => (
                   <SelectItem key={s.id} value={s.id}>
                     <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: s.color }} />
+                      <span className="w-2 h-2 rounded-full inline-block" style={{ Button, backgroundColor: s.color }} />
                       {s.name}
                     </span>
                   </SelectItem>
@@ -559,7 +559,7 @@ export default function TarefasPage() {
 }
 
 // ── Assign Popover ──
-function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
+function AssignPopover({ Button, taskId, assignedTo, orgMembers, onAssign }: {
   taskId: string;
   assignedTo: string | null;
   orgMembers: OrgMember[];
@@ -594,12 +594,12 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
 }
 
 // ── Task Form ──
-function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, initialData }: {
+function TaskForm({ Button, leads, pipelineStages, orgMembers, taskStatuses, onSave, initialData }: {
   leads: any[];
   pipelineStages: any[];
   orgMembers: OrgMember[];
   taskStatuses: TaskStatus[];
-  onSave: (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => void;
+  onSave: (data: { Button, title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => void;
   initialData?: TaskRow | null;
 }) {
   const [form, setForm] = useState({
@@ -610,7 +610,7 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
     assignedTo: initialData?.assigned_to || '',
     statusId: initialData?.status_id || '',
   });
-  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: string, v: string) => setForm(f => ({ Button, ...f, [k]: v }));
 
   const selectedLead = leads.find((l: any) => l.id === form.leadId);
   const stageName = pipelineStages.find((s: any) => s.id === selectedLead?.pipelineStage)?.name || '';

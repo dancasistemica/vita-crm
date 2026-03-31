@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { useAI } from '@/hooks/useAI';
-import { useCRMStore } from '@/store/crmStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, useAI } from '@/hooks/useAI';
+import { Button, useCRMStore } from '@/store/crmStore';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { Sparkles, RefreshCw } from 'lucide-react';
+import { Button, Skeleton } from '@/components/ui/ds';
+import { Button, Sparkles, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 export default function AIWeeklySummary() {
-  const { leads, tasks, sales, pipelineStages } = useCRMStore();
+  const { Button, leads, tasks, sales, pipelineStages } = useCRMStore();
   const [hasLoaded, setHasLoaded] = useState(false);
-  const { response, loading, generate, regenerate } = useAI({
+  const { Button, response, loading, generate, regenerate } = useAI({
     type: 'weekly_summary',
     cacheKey: `weekly_summary_${new Date().toISOString().split('T')[0]}`,
     cacheDurationHours: 24,

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { Button, useMemo } from 'react';
 
 interface EmailPreviewProps {
   subject: string;
@@ -66,7 +66,7 @@ export default function EmailPreview({
       <p className="text-xs font-medium text-muted-foreground mb-3">📧 Preview do Email</p>
       <div
         className="bg-white rounded shadow-sm"
-        dangerouslySetInnerHTML={{ __html: renderedHtml }}
+        dangerouslySetInnerHTML={{ Button, __html: renderedHtml }}
       />
     </div>
   );

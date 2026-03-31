@@ -1,18 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
+import { Button, useState, useEffect, useCallback } from 'react';
+import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
+import { Button, Skeleton } from '@/components/ui/ds';
+import { Button, Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
 import LeadTimeline from '@/components/leads/LeadTimeline';
-import type { LeadView } from '@/hooks/useLeadsData';
-import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
-import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
-import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
-import { toast } from 'sonner';
+import type { Button, LeadView } from '@/hooks/useLeadsData';
+import { Button, ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
+import { Button, ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
+import { Button, DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
+import { Button, toast } from 'sonner';
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -44,7 +44,7 @@ interface InteractionRow {
 export default function LeadDetailSheet({
   lead, open, onClose, stageName, interestLabel, onEdit, onDelete, canDelete = false,
 }: LeadDetailSheetProps) {
-  const { organizationId } = useOrganization();
+  const { Button, organizationId } = useOrganization();
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [interactions, setInteractions] = useState<InteractionRow[]>([]);
   const [loadingTasks, setLoadingTasks] = useState(false);
@@ -57,12 +57,12 @@ export default function LeadDetailSheet({
   const loadTasks = useCallback(async () => {
     if (!lead || !organizationId) return;
     setLoadingTasks(true);
-    const { data } = await supabase
+    const { Button, data } = await supabase
       .from('tasks')
       .select('id, title, due_date, completed, assigned_to')
       .eq('lead_id', lead.id)
       .eq('organization_id', organizationId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { Button, ascending: false });
     setTasks((data as TaskRow[]) || []);
     setLoadingTasks(false);
   }, [lead?.id, organizationId]);
@@ -70,12 +70,12 @@ export default function LeadDetailSheet({
   const loadInteractions = useCallback(async () => {
     if (!lead || !organizationId) return;
     setLoadingInteractions(true);
-    const { data } = await supabase
+    const { Button, data } = await supabase
       .from('interactions')
       .select('id, type, note, interaction_date, created_at')
       .eq('lead_id', lead.id)
       .eq('organization_id', organizationId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { Button, ascending: false });
     setInteractions((data as InteractionRow[]) || []);
     setLoadingInteractions(false);
   }, [lead?.id, organizationId]);
@@ -97,15 +97,15 @@ export default function LeadDetailSheet({
   if (!lead) return null;
 
   const formatCurrency = (v: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+    new Intl.NumberFormat('pt-BR', { Button, style: 'currency', currency: 'BRL' }).format(v);
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('pt-BR');
 
   const getTaskStatus = (t: TaskRow) => {
-    if (t.completed) return { label: 'Concluída', color: 'text-success', icon: CheckCircle };
-    if (t.due_date && new Date(t.due_date) < new Date()) return { label: 'Vencida', color: 'text-destructive', icon: AlertTriangle };
-    return { label: 'Pendente', color: 'text-warning', icon: Clock };
+    if (t.completed) return { Button, label: 'Concluída', color: 'text-success', icon: CheckCircle };
+    if (t.due_date && new Date(t.due_date) < new Date()) return { Button, label: 'Vencida', color: 'text-destructive', icon: AlertTriangle };
+    return { Button, label: 'Pendente', color: 'text-warning', icon: Clock };
   };
 
   const handleDeleteClick = () => {
@@ -138,7 +138,7 @@ export default function LeadDetailSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Sheet open={open} onOpenChange={(v) => { Button, if (!v) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto p-0">
         <div className="p-6 pb-0">
           <SheetHeader>
@@ -329,7 +329,7 @@ export default function LeadDetailSheet({
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
-        lead={{ id: lead.id, name: lead.name, phone: lead.phone }}
+        lead={{ Button, id: lead.id, name: lead.name, phone: lead.phone }}
         onScheduled={() => {
           console.log('[LeadDetailSheet] Mensagem agendada');
         }}
@@ -338,7 +338,7 @@ export default function LeadDetailSheet({
   );
 }
 
-function InfoField({ label, value }: { label: string; value: string }) {
+function InfoField({ Button, label, value }: { Button, label: string; value: string }) {
   return (
     <div>
       <span className="text-xs text-muted-foreground font-medium">{label}</span>

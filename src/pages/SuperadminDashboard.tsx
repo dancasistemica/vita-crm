@@ -1,33 +1,33 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSuperadmin } from '@/hooks/useSuperadmin';
-import { supabase } from '@/integrations/supabase/client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Button, useEffect, useRef, useState } from 'react';
+import { Button, useNavigate } from 'react-router-dom';
+import { Button, useSuperadmin } from '@/hooks/useSuperadmin';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { Button, Card, Select, Badge, Alert } from '@/components/ui/ds';
-import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
-import { PlansTab } from '@/components/superadmin/PlansTab';
-import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
-import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
-import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
-import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog, Loader } from 'lucide-react';
-import { SystemSettings } from '@/components/superadmin/SystemSettings';
-import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
-import { getAllOrganizations } from '@/services/superadminService';
+import { Button, OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
+import { Button, PlansTab } from '@/components/superadmin/PlansTab';
+import { Button, UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
+import { Button, QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
+import { Button, EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
+import { Button, CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
+import { Button, Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog, Loader } from 'lucide-react';
+import { Button, SystemSettings } from '@/components/superadmin/SystemSettings';
+import { Button, BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
+import { Button, getAllOrganizations } from '@/services/superadminService';
 
 export default function SuperadminDashboard() {
-  const { isSuperadmin, loading } = useSuperadmin();
+  const { Button, isSuperadmin, loading } = useSuperadmin();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('organizations');
-  const [stats, setStats] = useState({ orgs: 0, plans: 0, superadmins: 0 });
-  const [botconversaOrgs, setBotconversaOrgs] = useState<{ id: string; name: string }[]>([]);
+  const [stats, setStats] = useState({ Button, orgs: 0, plans: 0, superadmins: 0 });
+  const [botconversaOrgs, setBotconversaOrgs] = useState<{ Button, id: string; name: string }[]>([]);
   const [botconversaLoading, setBotconversaLoading] = useState(false);
   const [selectedBotconversaOrgId, setSelectedBotconversaOrgId] = useState('');
-  const orgsTabRef = useRef<{ openCreateModal?: () => void }>(null);
+  const orgsTabRef = useRef<{ Button, openCreateModal?: () => void }>(null);
 
   useEffect(() => {
     if (!loading && !isSuperadmin) {
-      navigate('/', { replace: true });
+      navigate('/', { Button, replace: true });
     }
   }, [loading, isSuperadmin, navigate]);
 
@@ -35,9 +35,9 @@ export default function SuperadminDashboard() {
     try {
       console.log('[SuperadminDashboard] Fetching stats');
       const [orgsRes, plansRes, adminsRes] = await Promise.all([
-        supabase.from('organizations').select('*', { count: 'exact', head: true }),
-        supabase.from('organization_plans').select('*', { count: 'exact', head: true }),
-        supabase.from('superadmin_roles').select('*', { count: 'exact', head: true }),
+        supabase.from('organizations').select('*', { Button, count: 'exact', head: true }),
+        supabase.from('organization_plans').select('*', { Button, count: 'exact', head: true }),
+        supabase.from('superadmin_roles').select('*', { Button, count: 'exact', head: true }),
       ]);
       setStats({
         orgs: orgsRes.count || 0,
@@ -190,7 +190,7 @@ export default function SuperadminDashboard() {
             <div>
               <Select
                 label="Selecione uma organização"
-                options={botconversaOrgs.map(org => ({ value: org.id, label: org.name }))}
+                options={botconversaOrgs.map(org => ({ Button, value: org.id, label: org.name }))}
                 value={selectedBotconversaOrgId}
                 onChange={(e) => setSelectedBotconversaOrgId(e.target.value)}
               />

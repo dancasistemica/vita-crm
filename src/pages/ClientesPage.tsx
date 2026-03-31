@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useOrganization } from '@/contexts/OrganizationContext';
+import React, { Button, useState } from 'react';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
 import { Button, Card, Input, Badge, Alert } from '@/components/ui/ds';
-import { Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
-import { toast } from 'sonner';
-import { useClientsFilter } from '@/hooks/useClientsFilter';
+import { Button, Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import { Button, useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
-import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
-import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
+import { Button, CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import { Button, CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -14,7 +14,7 @@ import NewSaleModal from '@/components/sales/NewSaleModal';
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
-  const { organization } = useOrganization();
+  const { Button, organization } = useOrganization();
   
   const [showFilters, setShowFilters] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -153,7 +153,7 @@ export default function ClientesPage() {
         onSuccess={() => {
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
-        items={hook.filteredClients.map((c: any) => ({ id: c.id, name: c.name, email: c.email, phone: c.phone }))}
+        items={hook.filteredClients.map((c: any) => ({ Button, id: c.id, name: c.name, email: c.email, phone: c.phone }))}
       />
       <BulkEditModal
         open={bulkEditOpen}

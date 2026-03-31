@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/ds";
-import { Loader2 } from "lucide-react";
+import { Button, Loader2 } from "lucide-react";
 
 interface ConfirmDeleteDialogProps {
   isOpen: boolean;

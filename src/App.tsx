@@ -1,11 +1,11 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/ds";
-import { Toaster } from "@/components/ui/ds";
-import { TooltipProvider } from "@/components/ui/ds";
-import { OrganizationProvider } from "@/contexts/OrganizationContext";
-import { BrandProvider } from "@/contexts/BrandContext";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { Button, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Button, BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Button, Toaster as Sonner } from "@/components/ui/ds";
+import { Button, Toaster } from "@/components/ui/ds";
+import { Button, TooltipProvider } from "@/components/ui/ds";
+import { Button, OrganizationProvider } from "@/contexts/OrganizationContext";
+import { Button, BrandProvider } from "@/contexts/BrandContext";
+import { Button, ProtectedRoute } from "@/components/ProtectedRoute";
 import CRMLayout from "@/components/CRMLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import ConsolidatedDashboardPage from "@/pages/ConsolidatedDashboardPage";
@@ -28,9 +28,9 @@ import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
-import { VendasPage } from "@/pages/VendasPage";
+import { Button, VendasPage } from "@/pages/VendasPage";
 
-import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
+import { Button, getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
 if (typeof window !== "undefined") {

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { Button, useState, useEffect } from 'react';
+import { Button, useNavigate, Navigate } from 'react-router-dom';
+import { Button, useForm } from 'react-hook-form';
+import { Button, zodResolver } from '@hookform/resolvers/zod';
+import { Button, z } from 'zod';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, toast } from 'sonner';
 import { Button } from '@/components/ui/ds/Button';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { useAuth } from '@/hooks/useAuth';
-import { hasSuperadmin } from '@/services/bootstrapService';
+import { Button, Input } from '@/components/ui/ds/Input';
+import { Button, Card } from '@/components/ui/ds/Card';
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Button, useAuth } from '@/hooks/useAuth';
+import { Button, hasSuperadmin } from '@/services/bootstrapService';
 
 const loginSchema = z.object({
   email: z.string().trim().email('Email inválido').max(255),
@@ -31,7 +31,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function AuthPage() {
-  const { user, loading } = useAuth();
+  const { Button, user, loading } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -41,7 +41,7 @@ export default function AuthPage() {
   useEffect(() => {
     hasSuperadmin().then((exists) => {
       if (!exists) {
-        navigate('/setup', { replace: true });
+        navigate('/setup', { Button, replace: true });
       } else {
         setCheckingBootstrap(false);
       }
@@ -50,12 +50,12 @@ export default function AuthPage() {
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { Button, email: '', password: '' },
   });
 
   const signupForm = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { Button, fullName: '', email: '', password: '', confirmPassword: '' },
   });
 
   if (loading || checkingBootstrap) {
@@ -73,7 +73,7 @@ export default function AuthPage() {
   const handleLogin = async (data: LoginForm) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { Button, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
@@ -100,11 +100,11 @@ export default function AuthPage() {
   const handleSignup = async (data: SignupForm) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { Button, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          data: { full_name: data.fullName },
+          data: { Button, full_name: data.fullName },
           emailRedirectTo: window.location.origin,
         },
       });
@@ -131,7 +131,7 @@ export default function AuthPage() {
     }
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      const { Button, error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) throw error;
@@ -274,10 +274,10 @@ export default function AuthPage() {
 
 async function ensureOrganization() {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { Button, data: { Button, user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: membership } = await supabase
+    const { Button, data: membership } = await supabase
       .from('organization_members')
       .select('id')
       .eq('user_id', user.id)
@@ -289,7 +289,7 @@ async function ensureOrganization() {
     const fullName = user.user_metadata?.full_name || 'Minha';
     const slug = `org-${user.id.slice(0, 8)}`;
 
-    const { data: org, error: orgError } = await supabase
+    const { Button, data: org, error: orgError } = await supabase
       .from('organizations')
       .insert({
         name: `Organização de ${fullName}`,
@@ -301,7 +301,7 @@ async function ensureOrganization() {
 
     if (orgError) throw orgError;
 
-    const { error: memberError } = await supabase
+    const { Button, error: memberError } = await supabase
       .from('organization_members')
       .insert({
         user_id: user.id,

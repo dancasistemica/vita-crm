@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-import { Lead } from "@/types/crm";
-import { cn } from "@/lib/utils";
-import { Search, X, ChevronDown } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/ds";
-import { Skeleton } from "@/components/ui/ds";
-import { ScrollArea } from "@/components/ui/ds";
+import { Button, useState, useRef, useEffect, useMemo } from "react";
+import { Button, Lead } from "@/types/crm";
+import { Button, cn } from "@/lib/utils";
+import { Button, Search, X, ChevronDown } from "lucide-react";
+import { Button, Avatar, AvatarFallback } from "@/components/ui/ds";
+import { Button, Skeleton } from "@/components/ui/ds";
+import { Button, ScrollArea } from "@/components/ui/ds";
 
 interface LeadSelectWithSearchProps {
   value: string;
@@ -93,10 +93,10 @@ export default function LeadSelectWithSearch({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!open) {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(true); }
+      if (e.key === "Enter" || e.key === " ") { Button, e.preventDefault(); setOpen(true); }
       return;
     }
-    if (e.key === "Escape") { setOpen(false); return; }
+    if (e.key === "Escape") { Button, setOpen(false); return; }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setFocusIndex(i => Math.min(i + 1, filtered.length - 1));
@@ -113,7 +113,7 @@ export default function LeadSelectWithSearch({
   useEffect(() => {
     if (focusIndex >= 0 && listRef.current) {
       const el = listRef.current.children[focusIndex] as HTMLElement | undefined;
-      el?.scrollIntoView({ block: "nearest" });
+      el?.scrollIntoView({ Button, block: "nearest" });
     }
   }, [focusIndex]);
 
@@ -162,7 +162,7 @@ export default function LeadSelectWithSearch({
             <input
               ref={inputRef}
               value={query}
-              onChange={e => { setQuery(e.target.value); setFocusIndex(-1); }}
+              onChange={e => { Button, setQuery(e.target.value); setFocusIndex(-1); }}
               placeholder="Buscar por nome, email ou telefone..."
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />

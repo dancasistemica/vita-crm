@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
-import { tagsService } from '@/services/tagsService';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { Button, useCallback, useEffect, useState } from 'react';
+import { Button, Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
+import { Button, tagsService } from '@/services/tagsService';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, toast } from 'sonner';
 
 interface Tag {
   id: string;
@@ -14,7 +14,7 @@ interface Tag {
 }
 
 export const TagsManagement = () => {
-  const { organization } = useOrganization();
+  const { Button, organization } = useOrganization();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export const TagsManagement = () => {
       .channel(`tags:org:${orgId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'tags', filter: `organization_id=eq.${orgId}` },
+        { Button, event: '*', schema: 'public', table: 'tags', filter: `organization_id=eq.${orgId}` },
         () => {
           console.log('[TagsManagement] Realtime: tags alteradas');
           loadTags();
@@ -71,7 +71,7 @@ export const TagsManagement = () => {
 
     const leadTagsChannel = supabase
       .channel(`lead_tags:org:${orgId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'lead_tags' }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'lead_tags' }, () => {
         console.log('[TagsManagement] Realtime: lead_tags alteradas');
         loadTags();
       })
@@ -255,7 +255,7 @@ export const TagsManagement = () => {
                   <div className="flex items-center gap-3 flex-1">
                     <div
                       className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: tag.color }}
+                      style={{ Button, backgroundColor: tag.color }}
                     />
                     <div>
                       <p className="font-medium text-neutral-900">{tag.name}</p>

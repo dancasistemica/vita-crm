@@ -1,18 +1,18 @@
-import { type DragEvent, useEffect, useState } from "react";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, type DragEvent, useEffect, useState } from "react";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Textarea } from "@/components/ui/ds";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
-import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Label } from "@/components/ui/ds";
+import { Button, Textarea } from "@/components/ui/ds";
+import { Button, Badge } from "@/components/ui/ds/Badge";
+import { Button, Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
+import { Button, useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
+import { Button, useOrganization } from "@/contexts/OrganizationContext";
 
 export default function ProdutosPage() {
-  const { organizationId } = useOrganization();
-  const { products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
+  const { Button, organizationId } = useOrganization();
+  const { Button, products, loading, createProduct, updateProduct, deleteProduct } = useProductsData();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProductView | null>(null);
   const [orderedProducts, setOrderedProducts] = useState<ProductView[]>([]);
@@ -85,7 +85,7 @@ export default function ProdutosPage() {
          <h1 className="text-4xl font-bold text-neutral-900">Produtos</h1>
          <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>Arraste para ordenar</span>
-          <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
+          <Dialog open={dialogOpen} onOpenChange={o => { Button, setDialogOpen(o); if (!o) setEditing(null); }}>
             <DialogTrigger asChild>
               <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</Button>
             </DialogTrigger>
@@ -133,7 +133,7 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => { Button, setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
@@ -188,20 +188,20 @@ interface ProductFormData {
   type: string;
   description: string;
   notes: string;
-  salesStages: { id: string; name: string; value: number; link: string; sale_type: 'unica' | 'mensalidade' }[];
+  salesStages: { Button, id: string; name: string; value: number; link: string; sale_type: 'unica' | 'mensalidade' }[];
 }
 
-function ProductForm({ product, onSave }: { product: ProductView | null; onSave: (data: ProductInput) => void }) {
+function ProductForm({ Button, product, onSave }: { Button, product: ProductView | null; onSave: (data: ProductInput) => void }) {
   const [form, setForm] = useState<ProductFormData>(
     product
-      ? { name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }
-      : { name: '', type: '', description: '', notes: '', salesStages: [{ id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }] }
+      ? { Button, name: product.name, type: product.type, description: product.description, notes: product.notes, salesStages: [...product.salesStages] }
+      : { Button, name: '', type: '', description: '', notes: '', salesStages: [{ Button, id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }] }
   );
-  const set = (k: keyof ProductFormData, v: any) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: keyof ProductFormData, v: any) => setForm(f => ({ Button, ...f, [k]: v }));
 
-  const addStage = () => set('salesStages', [...form.salesStages, { id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }]);
+  const addStage = () => set('salesStages', [...form.salesStages, { Button, id: crypto.randomUUID(), name: '', value: 0, link: '', sale_type: 'unica' }]);
   const updateStage = (id: string, key: string, val: any) =>
-    set('salesStages', form.salesStages.map(s => s.id === id ? { ...s, [key]: val } : s));
+    set('salesStages', form.salesStages.map(s => s.id === id ? { Button, ...s, [key]: val } : s));
   const removeStage = (id: string) => set('salesStages', form.salesStages.filter(s => s.id !== id));
 
   return (

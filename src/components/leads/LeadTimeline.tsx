@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { Skeleton } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
+import { Button, useEffect, useState, useCallback } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, Skeleton } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
 import {
   UserPlus, ArrowRight, MessageSquare, CheckSquare, CheckCircle, ShoppingCart, Clock
 } from 'lucide-react';
@@ -15,13 +15,13 @@ interface TimelineEvent {
   description?: string;
 }
 
-const EVENT_CONFIG: Record<TimelineEvent['type'], { icon: typeof Clock; color: string; label: string }> = {
-  creation: { icon: UserPlus, color: 'bg-success/20 text-success', label: 'Criação' },
-  stage_change: { icon: ArrowRight, color: 'bg-accent/20 text-accent', label: 'Mudança de Etapa' },
-  interaction: { icon: MessageSquare, color: 'bg-info/20 text-info', label: 'Interação' },
-  task_created: { icon: CheckSquare, color: 'bg-warning/20 text-warning', label: 'Tarefa Criada' },
-  task_completed: { icon: CheckCircle, color: 'bg-success/20 text-success', label: 'Tarefa Concluída' },
-  sale: { icon: ShoppingCart, color: 'bg-primary/20 text-primary', label: 'Venda' },
+const EVENT_CONFIG: Record<TimelineEvent['type'], { Button, icon: typeof Clock; color: string; label: string }> = {
+  creation: { Button, icon: UserPlus, color: 'bg-success/20 text-success', label: 'Criação' },
+  stage_change: { Button, icon: ArrowRight, color: 'bg-accent/20 text-accent', label: 'Mudança de Etapa' },
+  interaction: { Button, icon: MessageSquare, color: 'bg-info/20 text-info', label: 'Interação' },
+  task_created: { Button, icon: CheckSquare, color: 'bg-warning/20 text-warning', label: 'Tarefa Criada' },
+  task_completed: { Button, icon: CheckCircle, color: 'bg-success/20 text-success', label: 'Tarefa Concluída' },
+  sale: { Button, icon: ShoppingCart, color: 'bg-primary/20 text-primary', label: 'Venda' },
 };
 
 function getRelativeTime(dateStr: string): string {
@@ -57,8 +57,8 @@ interface LeadTimelineProps {
   leadCreatedAt?: string;
 }
 
-export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProps) {
-  const { organizationId } = useOrganization();
+export default function LeadTimeline({ Button, leadId, leadCreatedAt }: LeadTimelineProps) {
+  const { Button, organizationId } = useOrganization();
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,25 +82,25 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
         .select('id, from_stage, to_stage, changed_at')
         .eq('lead_id', leadId)
         .eq('organization_id', organizationId)
-        .order('changed_at', { ascending: false }),
+        .order('changed_at', { Button, ascending: false }),
       supabase
         .from('interactions')
         .select('id, type, note, interaction_date, created_at')
         .eq('lead_id', leadId)
         .eq('organization_id', organizationId)
-        .order('created_at', { ascending: false }),
+        .order('created_at', { Button, ascending: false }),
       supabase
         .from('tasks')
         .select('id, title, completed, created_at, due_date')
         .eq('lead_id', leadId)
         .eq('organization_id', organizationId)
-        .order('created_at', { ascending: false }),
+        .order('created_at', { Button, ascending: false }),
       supabase
         .from('sales')
         .select('id, value, sale_date, status, created_at')
         .eq('lead_id', leadId)
         .eq('organization_id', organizationId)
-        .order('created_at', { ascending: false }),
+        .order('created_at', { Button, ascending: false }),
     ]);
 
     if (stageRes.status === 'fulfilled' && stageRes.value.data) {
@@ -144,7 +144,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
           id: `sale-${s.id}`,
           date: s.created_at,
           type: 'sale',
-          title: `Venda R$ ${Number(s.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+          title: `Venda R$ ${Number(s.value).toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}`,
           description: s.status !== 'ativo' ? `Status: ${s.status}` : undefined,
         });
       }
@@ -166,22 +166,22 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
 
     const channel = supabase
       .channel(`timeline-${leadId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'interactions', filter: `lead_id=eq.${leadId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'interactions', filter: `lead_id=eq.${leadId}` }, () => {
         console.log('[LeadTimeline] Realtime: novo evento detectado, recarregando');
         loadTimeline();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `lead_id=eq.${leadId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'tasks', filter: `lead_id=eq.${leadId}` }, () => {
         loadTimeline();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline_stage_history', filter: `lead_id=eq.${leadId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'pipeline_stage_history', filter: `lead_id=eq.${leadId}` }, () => {
         loadTimeline();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'sales', filter: `lead_id=eq.${leadId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'sales', filter: `lead_id=eq.${leadId}` }, () => {
         loadTimeline();
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { Button, supabase.removeChannel(channel); };
   }, [leadId, organizationId, loadTimeline]);
 
   if (loading) {
@@ -209,13 +209,13 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
   }
 
   // Group events by date
-  const grouped: { label: string; events: TimelineEvent[] }[] = [];
+  const grouped: { Button, label: string; events: TimelineEvent[] }[] = [];
   let currentGroup = '';
   for (const event of events) {
     const group = getDateGroup(event.date);
     if (group !== currentGroup) {
       currentGroup = group;
-      grouped.push({ label: group, events: [event] });
+      grouped.push({ Button, label: group, events: [event] });
     } else {
       grouped[grouped.length - 1].events.push(event);
     }

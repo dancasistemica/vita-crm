@@ -1,5 +1,5 @@
-import { CheckSquare, Package, User, UserPlus } from "lucide-react";
-import type { GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
+import { Button, CheckSquare, Package, User, UserPlus } from "lucide-react";
+import type { Button, GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
 
 interface SearchResultsProps {
   results: GlobalSearchResult[];
@@ -22,7 +22,7 @@ const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
   product: <Package className="h-4 w-4 text-muted-foreground" />,
 };
 
-export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
+export function SearchResults({ Button, results, loading, query, onSelect }: SearchResultsProps) {
   if (loading) {
     return (
       <div className="p-4 text-center text-sm text-muted-foreground">

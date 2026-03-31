@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Button, useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -14,14 +14,14 @@ import {
   verticalListSortingStrategy,
   useSortable,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Button, CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/ds';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { GripVertical, Settings2 } from 'lucide-react';
-import { DASHBOARD_CARDS, GROUP_LABELS } from '@/config/dashboardCards';
-import type { DashboardCardSetting } from '@/hooks/useDashboardSettings';
+import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/ds';
+import { Button, Switch } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, GripVertical, Settings2 } from 'lucide-react';
+import { Button, DASHBOARD_CARDS, GROUP_LABELS } from '@/config/dashboardCards';
+import type { Button, DashboardCardSetting } from '@/hooks/useDashboardSettings';
 
 interface Props {
   settings: DashboardCardSetting[];
@@ -29,9 +29,9 @@ interface Props {
   onReorder: (fromIndex: number, toIndex: number) => void;
 }
 
-function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; onToggle: () => void }) {
+function SortableItem({ Button, setting, onToggle }: { Button, setting: DashboardCardSetting; onToggle: () => void }) {
   const config = DASHBOARD_CARDS.find(c => c.id === setting.card_id);
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: setting.card_id });
+  const { Button, attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ Button, id: setting.card_id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -77,15 +77,15 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
   );
 }
 
-export default function DashboardCustomizer({ settings, onToggleVisibility, onReorder }: Props) {
+export default function DashboardCustomizer({ Button, settings, onToggleVisibility, onReorder }: Props) {
   const [open, setOpen] = useState(false);
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(PointerSensor, { Button, activationConstraint: { Button, distance: 5 } }),
+    useSensor(KeyboardSensor, { Button, coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+    const { Button, active, over } = event;
     if (over && active.id !== over.id) {
       const oldIndex = settings.findIndex(s => s.card_id === active.id);
       const newIndex = settings.findIndex(s => s.card_id === over.id);

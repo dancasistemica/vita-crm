@@ -1,14 +1,14 @@
-import { AlertCircle, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, AlertCircle, Clock } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import type { StuckLead } from '@/hooks/useDashboardData';
+import type { Button, StuckLead } from '@/hooks/useDashboardData';
 
 interface StuckLeadsAlertProps {
   stuckLeads: StuckLead[];
   onLeadClick: (leadId: string) => void;
 }
 
-export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsAlertProps) {
+export default function StuckLeadsAlert({ Button, stuckLeads, onLeadClick }: StuckLeadsAlertProps) {
   if (stuckLeads.length === 0) return null;
 
   return (

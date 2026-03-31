@@ -1,16 +1,16 @@
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Target, AlertCircle, Zap } from "lucide-react";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { Button, Target, AlertCircle, Zap } from "lucide-react";
 
 export interface ProductInsightsData {
-  topProducts: { name: string; sales: number; revenue: number; percentOfTotal: number }[];
+  topProducts: { Button, name: string; sales: number; revenue: number; percentOfTotal: number }[];
   conversionBenchmark: {
     overallRate: number;
-    byStage: { stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
+    byStage: { Button, stage: string; rate: number; leadsCount: number; isBottleneck: boolean }[];
   };
   funnelAnalysis: {
     totalLeads: number;
-    byStage: { stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; nextStageName: string | null; avgDaysInStage: number; isFinalStage: boolean }[];
+    byStage: { Button, stage: string; leads: number; converted: number; conversionRate: number; progressionRate: number; nextStageName: string | null; avgDaysInStage: number; isFinalStage: boolean }[];
     bottleneckStage: string | null;
     recommendedOptimization: string;
   };
@@ -27,7 +27,7 @@ interface ProductInsightsProps {
   isSuperadmin: boolean;
 }
 
-export default function ProductInsights({ insights, isSuperadmin }: ProductInsightsProps) {
+export default function ProductInsights({ Button, insights, isSuperadmin }: ProductInsightsProps) {
   if (!insights) return null;
 
   return (
@@ -46,10 +46,10 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={insights.topProducts}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                  <XAxis dataKey="name" tick={{ Button, fontSize: 11 }} />
                   <YAxis yAxisId="left" allowDecimals={false} />
                   {isSuperadmin && <YAxis yAxisId="right" orientation="right" />}
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))' }} />
+                  <Tooltip contentStyle={{ Button, borderRadius: '8px', border: '1px solid hsl(var(--border))' }} />
                   <Legend />
                   <Bar yAxisId="left" dataKey="sales" fill="hsl(210,70%,55%)" name="Vendas" radius={[4, 4, 0, 0]} />
                   {isSuperadmin && (
@@ -108,7 +108,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                   <div className="w-full bg-muted rounded-full h-1.5">
                     <div
                       className={`h-1.5 rounded-full ${stage.isBottleneck ? 'bg-destructive' : 'bg-success'}`}
-                      style={{ width: `${Math.min(stage.rate, 100)}%` }}
+                      style={{ Button, width: `${Math.min(stage.rate, 100)}%` }}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{stage.leadsCount} leads</p>
@@ -211,7 +211,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                             stage.progressionRate >= 25 ? 'bg-warning' :
                             'bg-destructive'
                           }`}
-                          style={{ width: `${Math.min(stage.progressionRate, 100)}%` }}
+                          style={{ Button, width: `${Math.min(stage.progressionRate, 100)}%` }}
                         />
                       </div>
                       <div className="mt-1">

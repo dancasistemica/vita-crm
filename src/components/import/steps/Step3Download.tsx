@@ -1,16 +1,16 @@
-import { FileSpreadsheet, FileText, Download } from 'lucide-react';
+import { Button, FileSpreadsheet, FileText, Download } from 'lucide-react';
 import { Button } from '@/components/ui/ds';
-import { Card, CardContent } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';
-import { toast } from 'sonner';
+import { Button, Card, CardContent } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';
+import { Button, toast } from 'sonner';
 
 interface Props {
   onNext: () => void;
   onBack: () => void;
 }
 
-export default function Step3Download({ onNext, onBack }: Props) {
+export default function Step3Download({ Button, onNext, onBack }: Props) {
   const handleDownloadXLSX = () => {
     downloadTemplateXLSX();
     toast.success('Modelo XLSX baixado!');

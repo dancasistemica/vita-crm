@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { loginUser, checkRateLimit } from '@/services/loginService';
-import { toast } from 'sonner';
-import { Card } from '@/components/ui/ds/Card';
-import { Input } from '@/components/ui/ds/Input';
+import { Button, useState, useEffect } from 'react';
+import { Button, useNavigate, useSearchParams, Navigate } from 'react-router-dom';
+import { Button, useAuth } from '@/hooks/useAuth';
+import { Button, loginUser, checkRateLimit } from '@/services/loginService';
+import { Button, toast } from 'sonner';
+import { Button, Card } from '@/components/ui/ds/Card';
+import { Button, Input } from '@/components/ui/ds/Input';
 import { Button } from '@/components/ui/ds/Button';
-import { Checkbox } from '@/components/ui/ds';
-import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
+import { Button, Checkbox } from '@/components/ui/ds';
+import { Button, Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';
@@ -16,7 +16,7 @@ const REMEMBER_DAYS = 30;
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { Button, user, loading: authLoading } = useAuth();
   const [searchParams] = useSearchParams();
 
   const token = searchParams.get('token');
@@ -53,8 +53,8 @@ export default function LoginPage() {
 
   // Redirect on token/reset params
   useEffect(() => {
-    if (token) navigate(`/first-login?token=${token}`, { replace: true });
-    if (resetToken) navigate(`/reset-password?reset=${resetToken}`, { replace: true });
+    if (token) navigate(`/first-login?token=${token}`, { Button, replace: true });
+    if (resetToken) navigate(`/reset-password?reset=${resetToken}`, { Button, replace: true });
   }, [token, resetToken, navigate]);
 
   // Rate limit countdown
@@ -112,7 +112,7 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const result = await loginUser({ email, password });
+      const result = await loginUser({ Button, email, password });
 
       if (result.success) {
         if (rememberMe) {
@@ -123,7 +123,7 @@ export default function LoginPage() {
           localStorage.removeItem(REMEMBER_EXPIRY_KEY);
         }
         toast.success('Login realizado com sucesso!');
-        navigate(result.redirectUrl || '/', { replace: true });
+        navigate(result.redirectUrl || '/', { Button, replace: true });
       } else {
         if (result.error?.includes('Muitas tentativas')) {
           setRateLimited(true);

@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
+import { Button, Input } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Slider } from '@/components/ui/ds';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/ds';
-import { ClientsFilterState } from '@/hooks/useClientsFilter';
+import { Button, Checkbox } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Slider } from '@/components/ui/ds';
+import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/ds';
+import { Button, ClientsFilterState } from '@/hooks/useClientsFilter';
 interface SimpleProduct {
   id: string;
   name: string;
@@ -20,11 +20,11 @@ interface Props {
   activeFilterCount: number;
   products: SimpleProduct[];
   origins: string[];
-  users: { id: string; name: string }[];
+  users: { Button, id: string; name: string }[];
   saleStatuses: string[];
 }
 
-function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
+function LogicToggle({ Button, value, onChange }: { Button, value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
       <Button variant="secondary" size="sm"
@@ -39,7 +39,7 @@ function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: '
   );
 }
 
-function FilterSection({ title, count, children, defaultOpen = false }: { title: string; count: number; children: React.ReactNode; defaultOpen?: boolean }) {
+function FilterSection({ Button, title, count, children, defaultOpen = false }: { Button, title: string; count: number; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="border-b border-border pb-3">
@@ -57,7 +57,7 @@ function FilterSection({ title, count, children, defaultOpen = false }: { title:
   );
 }
 
-export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilters, activeFilterCount, products, origins, users, saleStatuses }: Props) {
+export default function ClientsAdvancedFilter({ Button, filters, updateFilter, resetFilters, activeFilterCount, products, origins, users, saleStatuses }: Props) {
   return (
     <div className="flex flex-col h-full">
 
@@ -82,7 +82,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         {/* 1. Produto */}
         <FilterSection title="Produto Comprado" count={filters.products.ids.length}>
           <div className="flex justify-end mb-1">
-            <LogicToggle value={filters.products.logic} onChange={v => updateFilter('products', { ...filters.products, logic: v })} />
+            <LogicToggle value={filters.products.logic} onChange={v => updateFilter('products', { Button, ...filters.products, logic: v })} />
           </div>
           {products.map(p => (
             <label key={p.id} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
@@ -90,7 +90,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 checked={filters.products.ids.includes(p.id)}
                 onCheckedChange={checked => {
                   const ids = checked ? [...filters.products.ids, p.id] : filters.products.ids.filter(x => x !== p.id);
-                  updateFilter('products', { ...filters.products, ids });
+                  updateFilter('products', { Button, ...filters.products, ids });
                 }}
               />
               <span className="truncate text-foreground">{p.name}</span>
@@ -104,17 +104,17 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             <Slider
               min={0} max={10000} step={50}
               value={[filters.valueRange.min, filters.valueRange.max]}
-              onValueChange={([min, max]) => updateFilter('valueRange', { min, max })}
+              onValueChange={([min, max]) => updateFilter('valueRange', { Button, min, max })}
               className="mb-3"
             />
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs text-muted-foreground">De (R$)</Label>
-                <Input type="number" value={filters.valueRange.min} onChange={e => updateFilter('valueRange', { ...filters.valueRange, min: Number(e.target.value) })} className="h-8 text-xs" />
+                <Input type="number" value={filters.valueRange.min} onChange={e => updateFilter('valueRange', { Button, ...filters.valueRange, min: Number(e.target.value) })} className="h-8 text-xs" />
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground">Até (R$)</Label>
-                <Input type="number" value={filters.valueRange.max} onChange={e => updateFilter('valueRange', { ...filters.valueRange, max: Number(e.target.value) })} className="h-8 text-xs" />
+                <Input type="number" value={filters.valueRange.max} onChange={e => updateFilter('valueRange', { Button, ...filters.valueRange, max: Number(e.target.value) })} className="h-8 text-xs" />
               </div>
             </div>
           </div>
@@ -124,18 +124,18 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         <FilterSection title="Data de Compra" count={filters.dateRange.from || filters.dateRange.to ? 1 : 0}>
           <div className="flex flex-wrap gap-1 mb-2">
             {[
-              { label: '7 dias', days: 7 },
-              { label: '30 dias', days: 30 },
-              { label: '90 dias', days: 90 },
-              { label: 'Este ano', days: -1 },
-            ].map(({ label, days }) => (
+              { Button, label: '7 dias', days: 7 },
+              { Button, label: '30 dias', days: 30 },
+              { Button, label: '90 dias', days: 90 },
+              { Button, label: 'Este ano', days: -1 },
+            ].map(({ Button, label, days }) => (
               <Button key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
                 const now = new Date();
                 const to = now.toISOString().split('T')[0];
                 const from = days === -1
                   ? `${now.getFullYear()}-01-01`
                   : new Date(now.getTime() - days * 86400000).toISOString().split('T')[0];
-                updateFilter('dateRange', { from, to });
+                updateFilter('dateRange', { Button, from, to });
               }}>
                 {label}
               </Button>
@@ -144,11 +144,11 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-muted-foreground">De</Label>
-              <Input type="date" value={filters.dateRange.from} onChange={e => updateFilter('dateRange', { ...filters.dateRange, from: e.target.value })} className="h-8 text-xs" />
+              <Input type="date" value={filters.dateRange.from} onChange={e => updateFilter('dateRange', { Button, ...filters.dateRange, from: e.target.value })} className="h-8 text-xs" />
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Até</Label>
-              <Input type="date" value={filters.dateRange.to} onChange={e => updateFilter('dateRange', { ...filters.dateRange, to: e.target.value })} className="h-8 text-xs" />
+              <Input type="date" value={filters.dateRange.to} onChange={e => updateFilter('dateRange', { Button, ...filters.dateRange, to: e.target.value })} className="h-8 text-xs" />
             </div>
           </div>
         </FilterSection>
@@ -156,7 +156,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         {/* 4. Status de venda */}
         <FilterSection title="Status de Venda" count={filters.saleStatuses.values.length}>
           <div className="flex justify-end mb-1">
-            <LogicToggle value={filters.saleStatuses.logic} onChange={v => updateFilter('saleStatuses', { ...filters.saleStatuses, logic: v })} />
+            <LogicToggle value={filters.saleStatuses.logic} onChange={v => updateFilter('saleStatuses', { Button, ...filters.saleStatuses, logic: v })} />
           </div>
           {saleStatuses.map(s => (
             <label key={s} className="flex items-center gap-3 text-sm cursor-pointer py-0.5 capitalize">
@@ -164,7 +164,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 checked={filters.saleStatuses.values.includes(s)}
                 onCheckedChange={checked => {
                   const values = checked ? [...filters.saleStatuses.values, s] : filters.saleStatuses.values.filter(x => x !== s);
-                  updateFilter('saleStatuses', { ...filters.saleStatuses, values });
+                  updateFilter('saleStatuses', { Button, ...filters.saleStatuses, values });
                 }}
               />
               <span className="text-foreground">{s}</span>
@@ -175,7 +175,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         {/* 5. Origem */}
         <FilterSection title="Origem do Cliente" count={filters.origins.values.length}>
           <div className="flex justify-end mb-1">
-            <LogicToggle value={filters.origins.logic} onChange={v => updateFilter('origins', { ...filters.origins, logic: v })} />
+            <LogicToggle value={filters.origins.logic} onChange={v => updateFilter('origins', { Button, ...filters.origins, logic: v })} />
           </div>
           {origins.map(o => (
             <label key={o} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
@@ -183,7 +183,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 checked={filters.origins.values.includes(o)}
                 onCheckedChange={checked => {
                   const values = checked ? [...filters.origins.values, o] : filters.origins.values.filter(x => x !== o);
-                  updateFilter('origins', { ...filters.origins, values });
+                  updateFilter('origins', { Button, ...filters.origins, values });
                 }}
               />
               <span className="truncate text-foreground">{o}</span>
@@ -194,7 +194,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         {/* 6. Responsável */}
         <FilterSection title="Responsável" count={filters.responsibles.ids.length}>
           <div className="flex justify-end mb-1">
-            <LogicToggle value={filters.responsibles.logic} onChange={v => updateFilter('responsibles', { ...filters.responsibles, logic: v })} />
+            <LogicToggle value={filters.responsibles.logic} onChange={v => updateFilter('responsibles', { Button, ...filters.responsibles, logic: v })} />
           </div>
           {users.map(u => (
             <label key={u.id} className="flex items-center gap-3 text-sm cursor-pointer py-0.5">
@@ -202,7 +202,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 checked={filters.responsibles.ids.includes(u.name)}
                 onCheckedChange={checked => {
                   const ids = checked ? [...filters.responsibles.ids, u.name] : filters.responsibles.ids.filter(x => x !== u.name);
-                  updateFilter('responsibles', { ...filters.responsibles, ids });
+                  updateFilter('responsibles', { Button, ...filters.responsibles, ids });
                 }}
               />
               <div className="flex items-center gap-3">
@@ -219,10 +219,10 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         <FilterSection title="Última Interação" count={filters.lastInteraction.preset || filters.lastInteraction.from ? 1 : 0}>
           <div className="flex flex-wrap gap-1 mb-2">
             {[
-              { label: 'Últimos 7 dias', value: '7d' },
-              { label: 'Últimos 30 dias', value: '30d' },
-              { label: 'Sem interação 30+ dias', value: 'no_interaction_30' },
-            ].map(({ label, value }) => (
+              { Button, label: 'Últimos 7 dias', value: '7d' },
+              { Button, label: 'Últimos 30 dias', value: '30d' },
+              { Button, label: 'Sem interação 30+ dias', value: 'no_interaction_30' },
+            ].map(({ Button, label, value }) => (
               <Button
                 key={value}
                 variant={filters.lastInteraction.preset === value ? 'default' : 'outline'}
@@ -240,11 +240,11 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-muted-foreground">De</Label>
-              <Input type="date" value={filters.lastInteraction.from} onChange={e => updateFilter('lastInteraction', { ...filters.lastInteraction, from: e.target.value, preset: '' })} className="h-8 text-xs" />
+              <Input type="date" value={filters.lastInteraction.from} onChange={e => updateFilter('lastInteraction', { Button, ...filters.lastInteraction, from: e.target.value, preset: '' })} className="h-8 text-xs" />
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Até</Label>
-              <Input type="date" value={filters.lastInteraction.to} onChange={e => updateFilter('lastInteraction', { ...filters.lastInteraction, to: e.target.value, preset: '' })} className="h-8 text-xs" />
+              <Input type="date" value={filters.lastInteraction.to} onChange={e => updateFilter('lastInteraction', { Button, ...filters.lastInteraction, to: e.target.value, preset: '' })} className="h-8 text-xs" />
             </div>
           </div>
         </FilterSection>

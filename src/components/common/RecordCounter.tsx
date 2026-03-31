@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 
 interface RecordCounterProps {
   totalCount: number;
@@ -7,7 +7,7 @@ interface RecordCounterProps {
   onPerPageChange: (value: number) => void;
 }
 
-export default function RecordCounter({ totalCount, filteredCount, perPage, onPerPageChange }: RecordCounterProps) {
+export default function RecordCounter({ Button, totalCount, filteredCount, perPage, onPerPageChange }: RecordCounterProps) {
   const isFiltered = filteredCount < totalCount;
 
   return (

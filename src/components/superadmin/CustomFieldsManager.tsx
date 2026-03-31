@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { Button, useState, useEffect } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, toast } from 'sonner';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/ds';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Switch } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Button, Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
+import { Button, ToggleGroup, ToggleGroupItem } from '@/components/ui/ds';
 
 interface CustomField {
   id: string;
@@ -44,12 +44,12 @@ interface GlobalFieldSummary {
 }
 
 const FIELD_TYPES = [
-  { value: 'text', label: 'Texto' },
-  { value: 'number', label: 'Número' },
-  { value: 'date', label: 'Data' },
-  { value: 'select', label: 'Seleção' },
-  { value: 'textarea', label: 'Área de texto' },
-  { value: 'checkbox', label: 'Checkbox' },
+  { Button, value: 'text', label: 'Texto' },
+  { Button, value: 'number', label: 'Número' },
+  { Button, value: 'date', label: 'Data' },
+  { Button, value: 'select', label: 'Seleção' },
+  { Button, value: 'textarea', label: 'Área de texto' },
+  { Button, value: 'checkbox', label: 'Checkbox' },
 ];
 
 function toSnakeCase(str: string): string {
@@ -103,7 +103,7 @@ export function CustomFieldsManager() {
   }, [scope]);
 
   const fetchOrganizations = async () => {
-    const { data } = await supabase.from('organizations').select('id, name').order('name');
+    const { Button, data } = await supabase.from('organizations').select('id, name').order('name');
     if (data) {
       setOrganizations(data);
       setTotalOrgs(data.length);
@@ -114,7 +114,7 @@ export function CustomFieldsManager() {
     if (!selectedOrgId) return;
     setLoading(true);
     console.log('[CustomFieldsManager] Carregando campos da organização:', selectedOrgId);
-    const { data, error } = await supabase
+    const { Button, data, error } = await supabase
       .from('custom_fields')
       .select('*')
       .eq('organization_id', selectedOrgId)
@@ -131,7 +131,7 @@ export function CustomFieldsManager() {
   const fetchGlobalFields = async () => {
     setLoading(true);
     console.log('[CustomFieldsManager] Escopo selecionado: all_organizations');
-    const { data, error } = await supabase
+    const { Button, data, error } = await supabase
       .from('custom_fields')
       .select('field_name, field_label, field_type, field_options, is_required, is_active, display_order, organization_id');
     if (error) {
@@ -142,17 +142,17 @@ export function CustomFieldsManager() {
     }
 
     const allFields = (data || []) as unknown as CustomField[];
-    const grouped = new Map<string, { field: CustomField; orgIds: Set<string> }>();
+    const grouped = new Map<string, { Button, field: CustomField; orgIds: Set<string> }>();
     for (const f of allFields) {
       const existing = grouped.get(f.field_name);
       if (existing) {
         existing.orgIds.add(f.organization_id);
       } else {
-        grouped.set(f.field_name, { field: f, orgIds: new Set([f.organization_id]) });
+        grouped.set(f.field_name, { Button, field: f, orgIds: new Set([f.organization_id]) });
       }
     }
 
-    const summaries: GlobalFieldSummary[] = Array.from(grouped.entries()).map(([, { field, orgIds }]) => ({
+    const summaries: GlobalFieldSummary[] = Array.from(grouped.entries()).map(([, { Button, field, orgIds }]) => ({
       field_name: field.field_name,
       field_label: field.field_label,
       field_type: field.field_type,
@@ -238,7 +238,7 @@ export function CustomFieldsManager() {
       if (editingGlobalField) {
         // Update across all orgs
         console.log('[CustomFieldsManager] Editando campo global:', fieldName);
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('custom_fields')
           .update({
             field_label: fieldLabel,
@@ -269,7 +269,7 @@ export function CustomFieldsManager() {
           is_active: true,
           display_order: maxOrder,
         }));
-        const { error } = await supabase.from('custom_fields').insert(inserts as any);
+        const { Button, error } = await supabase.from('custom_fields').insert(inserts as any);
         if (error) {
           toast.error('Erro ao criar campo global');
           console.error(error);
@@ -279,7 +279,7 @@ export function CustomFieldsManager() {
       }
       fetchGlobalFields();
     } else {
-      if (!selectedOrgId) { setSaving(false); return; }
+      if (!selectedOrgId) { Button, setSaving(false); return; }
       const payload = {
         organization_id: selectedOrgId,
         field_name: fieldName,
@@ -292,7 +292,7 @@ export function CustomFieldsManager() {
       };
 
       if (editingField) {
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('custom_fields')
           .update(payload as any)
           .eq('id', editingField.id);
@@ -305,9 +305,9 @@ export function CustomFieldsManager() {
         }
       } else {
         const maxOrder = fields.length > 0 ? Math.max(...fields.map(f => f.display_order)) + 1 : 0;
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('custom_fields')
-          .insert({ ...payload, display_order: maxOrder } as any);
+          .insert({ Button, ...payload, display_order: maxOrder } as any);
         if (error) {
           toast.error('Erro ao criar campo');
           console.error(error);
@@ -326,7 +326,7 @@ export function CustomFieldsManager() {
 
   const handleDelete = async () => {
     if (!deleteFieldId) return;
-    const { error } = await supabase.from('custom_fields').delete().eq('id', deleteFieldId);
+    const { Button, error } = await supabase.from('custom_fields').delete().eq('id', deleteFieldId);
     if (error) {
       toast.error('Erro ao remover campo');
     } else {
@@ -340,7 +340,7 @@ export function CustomFieldsManager() {
   const handleDeleteGlobal = async () => {
     if (!deleteGlobalFieldName) return;
     console.log('[CustomFieldsManager] Excluindo campo global:', deleteGlobalFieldName);
-    const { error } = await supabase
+    const { Button, error } = await supabase
       .from('custom_fields')
       .delete()
       .eq('field_name', deleteGlobalFieldName);
@@ -355,7 +355,7 @@ export function CustomFieldsManager() {
   };
 
   const handleApplyToAll = async (field: GlobalFieldSummary) => {
-    const { data: allFields } = await supabase
+    const { Button, data: allFields } = await supabase
       .from('custom_fields')
       .select('organization_id')
       .eq('field_name', field.field_name);
@@ -378,7 +378,7 @@ export function CustomFieldsManager() {
       display_order: field.display_order,
     }));
 
-    const { error } = await supabase.from('custom_fields').insert(inserts as any);
+    const { Button, error } = await supabase.from('custom_fields').insert(inserts as any);
     if (error) {
       toast.error('Erro ao aplicar campo');
       console.error(error);
@@ -403,7 +403,7 @@ export function CustomFieldsManager() {
   const handleDragEnd = async () => {
     setDragIndex(null);
     const updates = fields.map((f, i) =>
-      supabase.from('custom_fields').update({ display_order: i } as any).eq('id', f.id)
+      supabase.from('custom_fields').update({ Button, display_order: i } as any).eq('id', f.id)
     );
     await Promise.all(updates);
   };
@@ -429,7 +429,7 @@ export function CustomFieldsManager() {
           <ToggleGroup
             type="single"
             value={scope}
-            onValueChange={(val) => { if (val) setScope(val as 'specific' | 'all'); }}
+            onValueChange={(val) => { Button, if (val) setScope(val as 'specific' | 'all'); }}
             className="justify-start"
           >
             <ToggleGroupItem value="specific" className="text-xs sm:text-sm px-3 min-h-[44px]">
@@ -632,7 +632,7 @@ export function CustomFieldsManager() {
       )}
 
       {/* Create/Edit Modal */}
-      <Dialog open={modalOpen} onOpenChange={open => { if (!open) { setModalOpen(false); resetForm(); } }}>
+      <Dialog open={modalOpen} onOpenChange={open => { Button, if (!open) { Button, setModalOpen(false); resetForm(); } }}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
@@ -670,7 +670,7 @@ export function CustomFieldsManager() {
                   <Input
                     value={optionInput}
                     onChange={e => setOptionInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
+                    onKeyDown={e => { Button, if (e.key === 'Enter') { Button, e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
                   <Button type="button" variant="neutral" size="sm" onClick={addOption}>+</Button>
@@ -696,7 +696,7 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
+            <Button variant="neutral" onClick={() => { Button, setModalOpen(false); resetForm(); }}>Cancelar</Button>
             <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
             </Button>
@@ -705,7 +705,7 @@ export function CustomFieldsManager() {
       </Dialog>
 
       {/* Delete confirmation (specific org) */}
-      <AlertDialog open={!!deleteFieldId} onOpenChange={open => { if (!open) setDeleteFieldId(null); }}>
+      <AlertDialog open={!!deleteFieldId} onOpenChange={open => { Button, if (!open) setDeleteFieldId(null); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remover campo customizado?</AlertDialogTitle>
@@ -723,7 +723,7 @@ export function CustomFieldsManager() {
       </AlertDialog>
 
       {/* Delete confirmation (global) */}
-      <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => { if (!open) { setDeleteGlobalFieldName(null); setDeleteGlobalFieldLabel(''); } }}>
+      <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => { Button, if (!open) { Button, setDeleteGlobalFieldName(null); setDeleteGlobalFieldLabel(''); } }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-3">

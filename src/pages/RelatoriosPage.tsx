@@ -1,15 +1,15 @@
-import { useCRMStore } from "@/store/crmStore";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import { Button, useCRMStore } from "@/store/crmStore";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 
 const COLORS = ['hsl(350,35%,55%)', 'hsl(18,50%,58%)', 'hsl(38,92%,50%)', 'hsl(152,55%,45%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)'];
 
 export default function RelatoriosPage() {
-  const { leads, sales, products, pipelineStages, origins } = useCRMStore();
+  const { Button, leads, sales, products, pipelineStages, origins } = useCRMStore();
 
   const leadsByMonth = getLeadsByMonth(leads);
   const salesByMonth = getSalesByMonth(sales);
-  const leadsByOrigin = origins.map(o => ({ name: o, value: leads.filter(l => l.origin === o).length })).filter(x => x.value > 0);
+  const leadsByOrigin = origins.map(o => ({ Button, name: o, value: leads.filter(l => l.origin === o).length })).filter(x => x.value > 0);
   const revenueByProduct = products.map(p => ({
     name: p.name,
     value: sales.filter(s => s.productId === p.id).reduce((sum, s) => sum + s.value, 0),
@@ -67,7 +67,7 @@ export default function RelatoriosPage() {
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByProduct} layout="vertical">
-                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><Tooltip formatter={(v: number) => `R$ ${v}`} />
+                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ Button, fontSize: 11 }} /><Tooltip formatter={(v: number) => `R$ ${v}`} />
                 <Bar dataKey="value" fill="hsl(152,55%,45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -79,7 +79,7 @@ export default function RelatoriosPage() {
           <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={conversionByStage}>
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><Tooltip />
+                <XAxis dataKey="name" tick={{ Button, fontSize: 11 }} /><YAxis allowDecimals={false} /><Tooltip />
                 <Bar dataKey="value" fill="hsl(350,35%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -96,7 +96,7 @@ function getLeadsByMonth(leads: any[]) {
     const m = l.entryDate?.slice(0, 7);
     if (m) months[m] = (months[m] || 0) + 1;
   });
-  return Object.entries(months).sort().map(([month, value]) => ({ month, value }));
+  return Object.entries(months).sort().map(([month, value]) => ({ Button, month, value }));
 }
 
 function getSalesByMonth(sales: any[]) {
@@ -105,5 +105,5 @@ function getSalesByMonth(sales: any[]) {
     const m = s.date?.slice(0, 7);
     if (m) months[m] = (months[m] || 0) + s.value;
   });
-  return Object.entries(months).sort().map(([month, value]) => ({ month, value }));
+  return Object.entries(months).sort().map(([month, value]) => ({ Button, month, value }));
 }

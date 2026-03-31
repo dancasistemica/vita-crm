@@ -1,33 +1,33 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Card } from "@/components/ui/ds/Card";
+import { Button, useEffect, useMemo, useRef, useState } from "react";
+import { Button, useLocation, useNavigate } from "react-router-dom";
+import { Button, useLeadsData, LeadView } from "@/hooks/useLeadsData";
+import { Button, Card } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Checkbox } from "@/components/ui/ds";
-import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Badge } from "@/components/ui/ds/Badge";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Button, Checkbox } from "@/components/ui/ds";
+import { Button, Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
+import { Button, toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
-import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
-import { useTablePagination } from "@/hooks/useTablePagination";
-import { useUserRole } from "@/hooks/useUserRole";
-import { canDeleteLead } from "@/services/leadsService";
+import { Button, DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
+import { Button, useTablePagination } from "@/hooks/useTablePagination";
+import { Button, useUserRole } from "@/hooks/useUserRole";
+import { Button, canDeleteLead } from "@/services/leadsService";
 
-const interestColors: Record<string, string> = { frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
-const interestBarColors: Record<string, string> = { frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
+const interestColors: Record<string, string> = { Button, frio: 'bg-cold/15 text-cold border-cold/20', morno: 'bg-warm/15 text-warm border-warm/20', quente: 'bg-hot/15 text-hot border-hot/20' };
+const interestBarColors: Record<string, string> = { Button, frio: 'bg-cold', morno: 'bg-warm', quente: 'bg-hot' };
 
 export default function LeadsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
-  const { role, canCreate: userCanCreate, canEdit: userCanEdit } = useUserRole();
+  const { Button, leads, origins, pipelineStages, tags, interestLevels, loading, error, addLead, deleteLead, updateLead, refetch } = useLeadsData();
+  const { Button, role, canCreate: userCanCreate, canEdit: userCanEdit } = useUserRole();
   const userCanDelete = canDeleteLead(role);
 
   const [search, setSearch] = useState("");
@@ -52,7 +52,7 @@ export default function LeadsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<LeadView | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const { page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
+  const { Button, page, setPage, perPage, setPerPage, resetPage } = useTablePagination();
 
   const getFilteredLeads = () => {
     if (!leads) return [];
@@ -180,13 +180,13 @@ export default function LeadsPage() {
   };
 
   useEffect(() => {
-    const state = location.state as { leadId?: string } | null;
+    const state = location.state as { Button, leadId?: string } | null;
     if (!state?.leadId) return;
 
     const targetLead = leads.find(lead => lead.id === state.leadId);
     if (targetLead) {
       setDetailLead(targetLead);
-      navigate(location.pathname, { replace: true, state: null });
+      navigate(location.pathname, { Button, replace: true, state: null });
     }
   }, [location.state, leads, navigate, location.pathname]);
 
@@ -357,7 +357,7 @@ export default function LeadsPage() {
         <Input
           placeholder="Buscar por nome, email ou telefone..."
           value={search}
-          onChange={e => { setSearch(e.target.value); resetPage(); }}
+          onChange={e => { Button, setSearch(e.target.value); resetPage(); }}
           icon={<Search className="h-4 w-4" />}
         />
 
@@ -612,7 +612,7 @@ export default function LeadsPage() {
           <div className="flex-1">
             <select
               value={sortBy}
-              onChange={(e) => { setSortBy(e.target.value as 'date' | 'name'); resetPage(); }}
+              onChange={(e) => { Button, setSortBy(e.target.value as 'date' | 'name'); resetPage(); }}
               className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="date">📅 Data de Cadastro</option>
@@ -622,7 +622,7 @@ export default function LeadsPage() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => { setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
+            onClick={() => { Button, setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
           >
             {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
           </Button>
@@ -716,7 +716,7 @@ export default function LeadsPage() {
       )}
 
       <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
-      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
+      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { Button, setSelectedIds([]); refetch(); }} items={leads.map(l => ({ Button, id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
       <LeadDetailSheet
         lead={detailLead}
@@ -724,7 +724,7 @@ export default function LeadsPage() {
         onClose={() => setDetailLead(null)}
         stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
         interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
-        onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
+        onEdit={(l) => { Button, setDetailLead(null); handleEditLead(l); }}
         onDelete={async (id) => {
           if (!userCanDelete) {
             console.warn('[LeadsPage] Usuario sem permissao para excluir lead');

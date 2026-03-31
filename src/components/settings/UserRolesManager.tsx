@@ -1,135 +1,135 @@
-import { useState, useEffect, useMemo } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
+import { Button, useState, useEffect, useMemo } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, useUserRole } from '@/hooks/useUserRole';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, Checkbox } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { Lock, Save } from 'lucide-react';
-import { ScrollArea, ScrollBar } from '@/components/ui/ds';
-import { toast } from 'sonner';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Switch } from '@/components/ui/ds';
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Button, Lock, Save } from 'lucide-react';
+import { Button, ScrollArea, ScrollBar } from '@/components/ui/ds';
+import { Button, toast } from 'sonner';
 
 interface PermissionModule {
   label: string;
   icon: string;
-  permissions: { key: string; label: string }[];
+  permissions: { Button, key: string; label: string }[];
 }
 
 const MODULES: PermissionModule[] = [
   {
     label: 'Dashboard', icon: '📊',
     permissions: [
-      { key: 'dashboard.view', label: 'Visualizar dashboard' },
-      { key: 'dashboard.financial', label: 'Ver métricas financeiras' },
-      { key: 'dashboard.view_others', label: 'Ver dados de outros usuários' },
+      { Button, key: 'dashboard.view', label: 'Visualizar dashboard' },
+      { Button, key: 'dashboard.financial', label: 'Ver métricas financeiras' },
+      { Button, key: 'dashboard.view_others', label: 'Ver dados de outros usuários' },
     ],
   },
   {
     label: 'Leads', icon: '👥',
     permissions: [
-      { key: 'leads.view', label: 'Visualizar leads' },
-      { key: 'leads.create', label: 'Cadastrar leads' },
-      { key: 'leads.edit', label: 'Editar leads' },
-      { key: 'leads.delete', label: 'Excluir leads' },
-      { key: 'leads.export', label: 'Exportar leads (CSV)' },
-      { key: 'leads.import', label: 'Importar leads (CSV)' },
-      { key: 'leads.view_others', label: 'Ver leads de outros usuários' },
-      { key: 'leads.reassign', label: 'Reatribuir responsável' },
+      { Button, key: 'leads.view', label: 'Visualizar leads' },
+      { Button, key: 'leads.create', label: 'Cadastrar leads' },
+      { Button, key: 'leads.edit', label: 'Editar leads' },
+      { Button, key: 'leads.delete', label: 'Excluir leads' },
+      { Button, key: 'leads.export', label: 'Exportar leads (CSV)' },
+      { Button, key: 'leads.import', label: 'Importar leads (CSV)' },
+      { Button, key: 'leads.view_others', label: 'Ver leads de outros usuários' },
+      { Button, key: 'leads.reassign', label: 'Reatribuir responsável' },
     ],
   },
   {
     label: 'Funil de Vendas', icon: '📈',
     permissions: [
-      { key: 'pipeline.view', label: 'Visualizar funil de vendas' },
-      { key: 'pipeline.move', label: 'Mover cards entre etapas' },
-      { key: 'pipeline.edit_stages', label: 'Editar etapas do funil' },
+      { Button, key: 'pipeline.view', label: 'Visualizar funil de vendas' },
+      { Button, key: 'pipeline.move', label: 'Mover cards entre etapas' },
+      { Button, key: 'pipeline.edit_stages', label: 'Editar etapas do funil' },
     ],
   },
   {
     label: 'Interações', icon: '💬',
     permissions: [
-      { key: 'interactions.view', label: 'Visualizar interações' },
-      { key: 'interactions.create', label: 'Registrar interações' },
-      { key: 'interactions.edit_own', label: 'Editar/excluir próprias interações' },
-      { key: 'interactions.edit_others', label: 'Editar/excluir interações de outros' },
+      { Button, key: 'interactions.view', label: 'Visualizar interações' },
+      { Button, key: 'interactions.create', label: 'Registrar interações' },
+      { Button, key: 'interactions.edit_own', label: 'Editar/excluir próprias interações' },
+      { Button, key: 'interactions.edit_others', label: 'Editar/excluir interações de outros' },
     ],
   },
   {
     label: 'Tarefas', icon: '✅',
     permissions: [
-      { key: 'tasks.view_own', label: 'Visualizar próprias tarefas' },
-      { key: 'tasks.view_team', label: 'Visualizar tarefas da equipe' },
-      { key: 'tasks.create', label: 'Criar tarefas' },
-      { key: 'tasks.complete', label: 'Concluir tarefas' },
-      { key: 'tasks.delete', label: 'Excluir tarefas' },
+      { Button, key: 'tasks.view_own', label: 'Visualizar próprias tarefas' },
+      { Button, key: 'tasks.view_team', label: 'Visualizar tarefas da equipe' },
+      { Button, key: 'tasks.create', label: 'Criar tarefas' },
+      { Button, key: 'tasks.complete', label: 'Concluir tarefas' },
+      { Button, key: 'tasks.delete', label: 'Excluir tarefas' },
     ],
   },
   {
     label: 'Clientes / Vendas', icon: '💰',
     permissions: [
-      { key: 'sales.view', label: 'Visualizar vendas' },
-      { key: 'sales.create', label: 'Registrar venda' },
-      { key: 'sales.edit', label: 'Editar venda' },
-      { key: 'sales.delete', label: 'Excluir venda' },
-      { key: 'sales.view_value', label: 'Ver valor das vendas' },
+      { Button, key: 'sales.view', label: 'Visualizar vendas' },
+      { Button, key: 'sales.create', label: 'Registrar venda' },
+      { Button, key: 'sales.edit', label: 'Editar venda' },
+      { Button, key: 'sales.delete', label: 'Excluir venda' },
+      { Button, key: 'sales.view_value', label: 'Ver valor das vendas' },
     ],
   },
   {
     label: 'Produtos', icon: '📦',
     permissions: [
-      { key: 'products.view', label: 'Visualizar produtos' },
-      { key: 'products.create', label: 'Cadastrar produtos' },
-      { key: 'products.edit', label: 'Editar produtos' },
-      { key: 'products.delete', label: 'Excluir produtos' },
+      { Button, key: 'products.view', label: 'Visualizar produtos' },
+      { Button, key: 'products.create', label: 'Cadastrar produtos' },
+      { Button, key: 'products.edit', label: 'Editar produtos' },
+      { Button, key: 'products.delete', label: 'Excluir produtos' },
     ],
   },
   {
     label: 'Relatórios', icon: '📉',
     permissions: [
-      { key: 'reports.view', label: 'Visualizar relatórios' },
-      { key: 'reports.export', label: 'Exportar relatórios' },
+      { Button, key: 'reports.view', label: 'Visualizar relatórios' },
+      { Button, key: 'reports.export', label: 'Exportar relatórios' },
     ],
   },
   {
     label: 'Configurações', icon: '⚙️',
     permissions: [
-      { key: 'settings.access', label: 'Acessar configurações gerais' },
-      { key: 'settings.manage_users', label: 'Gerenciar usuários' },
-      { key: 'settings.manage_roles', label: 'Gerenciar funções e permissões' },
-      { key: 'settings.customize', label: 'Personalizar CRM (cores, logo)' },
+      { Button, key: 'settings.access', label: 'Acessar configurações gerais' },
+      { Button, key: 'settings.manage_users', label: 'Gerenciar usuários' },
+      { Button, key: 'settings.manage_roles', label: 'Gerenciar funções e permissões' },
+      { Button, key: 'settings.customize', label: 'Personalizar CRM (cores, logo)' },
     ],
   },
   {
     label: 'IA', icon: '🤖',
     permissions: [
-      { key: 'ai.suggestions', label: 'Usar sugestões de IA' },
-      { key: 'ai.weekly_summary', label: 'Ver resumo semanal IA' },
+      { Button, key: 'ai.suggestions', label: 'Usar sugestões de IA' },
+      { Button, key: 'ai.weekly_summary', label: 'Ver resumo semanal IA' },
     ],
   },
 ];
 
 const ALL_PERMISSION_KEYS = MODULES.flatMap(m => m.permissions.map(p => p.key));
 const BASE_ROLES = [
-  { value: 'admin', label: 'Administrador' },
-  { value: 'vendedor', label: 'Vendedor' },
-  { value: 'member', label: 'Usuário' },
+  { Button, value: 'admin', label: 'Administrador' },
+  { Button, value: 'vendedor', label: 'Vendedor' },
+  { Button, value: 'member', label: 'Usuário' },
 ];
 
 interface UserRolesManagerProps {
   preselectedRole?: string | null;
 }
 
-export default function UserRolesManager({ preselectedRole }: UserRolesManagerProps) {
-  const { role } = useUserRole();
-  const { organizationId } = useOrganization();
+export default function UserRolesManager({ Button, preselectedRole }: UserRolesManagerProps) {
+  const { Button, role } = useUserRole();
+  const { Button, organizationId } = useOrganization();
   const [selectedRole, setSelectedRole] = useState('vendedor');
   const [permissions, setPermissions] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [customRoles, setCustomRoles] = useState<{ value: string; label: string }[]>([]);
+  const [customRoles, setCustomRoles] = useState<{ Button, value: string; label: string }[]>([]);
 
   const isAdmin = role === 'superadmin' || role === 'owner' || role === 'admin';
 
@@ -139,13 +139,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   useEffect(() => {
     if (!organizationId || !isAdmin) return;
     const loadCustomRoles = async () => {
-      const { data } = await supabase
+      const { Button, data } = await supabase
         .from('custom_roles')
         .select('name')
         .eq('organization_id', organizationId)
         .order('name');
       if (data) {
-        setCustomRoles(data.map(r => ({ value: r.name, label: r.name })));
+        setCustomRoles(data.map(r => ({ Button, value: r.name, label: r.name })));
       }
     };
     loadCustomRoles();
@@ -166,7 +166,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   const loadPermissions = async (r: string) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('role_permissions')
         .select('permission_key, enabled')
         .eq('organization_id', organizationId!)
@@ -175,8 +175,8 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
       if (error) throw error;
 
       const map: Record<string, boolean> = {};
-      ALL_PERMISSION_KEYS.forEach(k => { map[k] = false; });
-      data?.forEach(row => { map[row.permission_key] = row.enabled; });
+      ALL_PERMISSION_KEYS.forEach(k => { Button, map[k] = false; });
+      data?.forEach(row => { Button, map[row.permission_key] = row.enabled; });
       setPermissions(map);
     } catch {
       toast.error('Erro ao carregar permissões');
@@ -186,13 +186,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   };
 
   const togglePermission = (key: string) => {
-    setPermissions(prev => ({ ...prev, [key]: !prev[key] }));
+    setPermissions(prev => ({ Button, ...prev, [key]: !prev[key] }));
   };
 
   const toggleModule = (module: PermissionModule, enable: boolean) => {
     setPermissions(prev => {
-      const next = { ...prev };
-      module.permissions.forEach(p => { next[p.key] = enable; });
+      const next = { Button, ...prev };
+      module.permissions.forEach(p => { Button, next[p.key] = enable; });
       return next;
     });
   };
@@ -216,7 +216,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
         enabled: permissions[key] || false,
       }));
 
-      const { error } = await supabase.from('role_permissions').insert(rows);
+      const { Button, error } = await supabase.from('role_permissions').insert(rows);
       if (error) throw error;
       toast.success('Permissões salvas com sucesso!');
     } catch {

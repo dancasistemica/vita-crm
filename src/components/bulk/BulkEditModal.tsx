@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { AlertTriangle } from 'lucide-react';
-import { toast } from 'sonner';
-import { useLeadsData } from '@/hooks/useLeadsData';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Checkbox } from '@/components/ui/ds';
+import { Button, AlertTriangle } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import { Button, useLeadsData } from '@/hooks/useLeadsData';
 
 type EditableType = 'leads' | 'clients';
 
@@ -20,21 +20,21 @@ interface Props {
 }
 
 const LEAD_FIELDS = [
-  { value: 'origin', label: 'Origem', inputType: 'select' },
-  { value: 'interestLevel', label: 'Nível de Interesse', inputType: 'select' },
-  { value: 'pipelineStage', label: 'Etapa do Funil', inputType: 'select' },
-  { value: 'responsible', label: 'Responsável', inputType: 'select' },
-  { value: 'tags', label: 'Tags', inputType: 'multi' },
-  { value: 'notes', label: 'Observações', inputType: 'textarea' },
+  { Button, value: 'origin', label: 'Origem', inputType: 'select' },
+  { Button, value: 'interestLevel', label: 'Nível de Interesse', inputType: 'select' },
+  { Button, value: 'pipelineStage', label: 'Etapa do Funil', inputType: 'select' },
+  { Button, value: 'responsible', label: 'Responsável', inputType: 'select' },
+  { Button, value: 'tags', label: 'Tags', inputType: 'multi' },
+  { Button, value: 'notes', label: 'Observações', inputType: 'textarea' },
 ];
 
 const CLIENT_FIELDS = [
-  { value: 'responsible', label: 'Responsável', inputType: 'select' },
-  { value: 'notes', label: 'Observações', inputType: 'textarea' },
+  { Button, value: 'responsible', label: 'Responsável', inputType: 'select' },
+  { Button, value: 'notes', label: 'Observações', inputType: 'textarea' },
 ];
 
-export default function BulkEditModal({ open, onOpenChange, selectedIds, type, onSuccess }: Props) {
-  const { origins, interestLevels, pipelineStages, tags, updateLead } = useLeadsData();
+export default function BulkEditModal({ Button, open, onOpenChange, selectedIds, type, onSuccess }: Props) {
+  const { Button, origins, interestLevels, pipelineStages, tags, updateLead } = useLeadsData();
   const [selectedField, setSelectedField] = useState('');
   const [value, setValue] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -65,7 +65,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
         } else {
           updateData[selectedField] = value;
         }
-        console.log('[BulkEditModal] Atualizando lead:', { id, updateData });
+        console.log('[BulkEditModal] Atualizando lead:', { Button, id, updateData });
         await updateLead(id, updateData);
       }
 
@@ -97,7 +97,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
         <div className="space-y-4">
           <div>
             <Label className="text-sm">Qual campo deseja alterar?</Label>
-            <Select value={selectedField} onValueChange={v => { setSelectedField(v); setValue(''); setSelectedTags([]); }}>
+            <Select value={selectedField} onValueChange={v => { Button, setSelectedField(v); setValue(''); setSelectedTags([]); }}>
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Selecione um campo" />
               </SelectTrigger>

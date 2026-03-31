@@ -1,6 +1,6 @@
-import { Check } from 'lucide-react';
+import { Button, Check } from 'lucide-react';
 import { Button } from '@/components/ui/ds';
-import { ImportModalState } from '@/hooks/useImportModal';
+import { Button, ImportModalState } from '@/hooks/useImportModal';
 
 interface Props {
   state: ImportModalState;
@@ -8,7 +8,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function Step6Results({ state, onImportMore, onClose }: Props) {
+export default function Step6Results({ Button, state, onImportMore, onClose }: Props) {
   const result = state.importResult;
   if (!result) return null;
 

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { AlertCircle } from 'lucide-react';
-import { useBotconversaConfig } from '@/hooks/useBotconversaConfig';
-import { Alert, AlertDescription } from '@/components/ui/ds';
+import { Button, useEffect, useState } from 'react';
+import { Button, toast } from 'sonner';
+import { Button, AlertCircle } from 'lucide-react';
+import { Button, useBotconversaConfig } from '@/hooks/useBotconversaConfig';
+import { Button, Alert, AlertDescription } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
 
 interface BotconversaSettingsProps {
   organizationId: string;
@@ -16,15 +16,15 @@ export const BotconversaSettings = ({
   organizationId,
   organizationName,
 }: BotconversaSettingsProps) => {
-  console.log('[BotconversaSettings] Renderizando:', { organizationId, organizationName });
+  console.log('[BotconversaSettings] Renderizando:', { Button, organizationId, organizationName });
 
-  const { config, loading, error, saveConfig, deleteConfig } = useBotconversaConfig(organizationId);
+  const { Button, config, loading, error, saveConfig, deleteConfig } = useBotconversaConfig(organizationId);
   const [apiKey, setApiKey] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setSaving] = useState(false);
 
   useEffect(() => {
-    console.log('[BotconversaSettings] Config mudou:', { configId: config?.id, loading, error });
+    console.log('[BotconversaSettings] Config mudou:', { Button, configId: config?.id, loading, error });
     if (config) {
       setApiKey(config.api_key || '');
       setIsEditing(false);

@@ -1,14 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
+import { Button, useNavigate } from 'react-router-dom';
+import { Button, ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
+import { Button, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Checkbox } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { SortField, SortDir } from '@/hooks/useClientsFilter';
+import { Button, Skeleton } from '@/components/ui/ds';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
+import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, SortField, SortDir } from '@/hooks/useClientsFilter';
 
 interface ClientLead {
   id: string;
@@ -63,7 +63,7 @@ function getInitialColor(name: string) {
 function formatDate(dateStr: string) {
   if (!dateStr) return '—';
   const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
+  return d.toLocaleDateString('pt-BR', { Button, day: '2-digit', month: 'short' }).replace('.', '');
 }
 
 function relativeDate(dateStr: string) {
@@ -101,7 +101,7 @@ interface Props {
   onSelectClient?: (client: ClientLead) => void;
 }
 
-function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
+function SortIcon({ Button, field, current, dir }: { Button, field: SortField; current: SortField; dir: SortDir }) {
   if (field !== current) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-40" />;
   return dir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
 }
@@ -119,7 +119,7 @@ export default function ClientsTable({
   if (loading) {
     return (
       <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => (
+        {Array.from({ Button, length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-16 w-full rounded-lg" />
         ))}
       </div>
@@ -179,8 +179,8 @@ export default function ClientsTable({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
-                  <DropdownMenuItem onClick={e => { e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { Button, e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
+                  <DropdownMenuItem onClick={e => { Button, e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
                   <DropdownMenuItem>Registrar interação</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

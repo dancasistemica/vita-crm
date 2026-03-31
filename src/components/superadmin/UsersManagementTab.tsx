@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
+import { Button, useState, useEffect } from 'react';
+import { Button, toast } from 'sonner';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
-import { Plus, Trash2, ShieldCheck } from 'lucide-react';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
+import { Button, Plus, Trash2, ShieldCheck } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
 interface SuperadminUser {
@@ -35,7 +35,7 @@ export function UsersManagementTab() {
     }
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+  useEffect(() => { Button, fetchUsers(); }, []);
 
   const handleAdd = async () => {
     if (!email) {
@@ -57,13 +57,13 @@ export function UsersManagementTab() {
     }
   };
 
-  const [removeConfirm, setRemoveConfirm] = useState<{ isOpen: boolean; id: string; name: string }>({ isOpen: false, id: '', name: '' });
+  const [removeConfirm, setRemoveConfirm] = useState<{ Button, isOpen: boolean; id: string; name: string }>({ Button, isOpen: false, id: '', name: '' });
 
   const handleRemoveConfirm = async () => {
     try {
       await removeSuperadmin(removeConfirm.id);
       toast.success('Superadmin removido');
-      setRemoveConfirm({ isOpen: false, id: '', name: '' });
+      setRemoveConfirm({ Button, isOpen: false, id: '', name: '' });
       fetchUsers();
     } catch (err) {
       console.error('[UsersManagementTab] remove:', err);
@@ -82,7 +82,7 @@ export function UsersManagementTab() {
         itemName={removeConfirm.name}
         itemType="Superadmin"
         onConfirm={handleRemoveConfirm}
-        onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
+        onCancel={() => setRemoveConfirm({ Button, isOpen: false, id: '', name: '' })}
       />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-muted-foreground text-sm">
@@ -112,7 +112,7 @@ export function UsersManagementTab() {
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
-                <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
+                <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ Button, isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button>
               </TableCell>

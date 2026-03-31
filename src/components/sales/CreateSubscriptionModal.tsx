@@ -1,14 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
-import { X, Loader, ChevronRight, Check, Search, ShieldCheck } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { createSubscription } from '@/services/subscriptionService';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { toast } from 'sonner';
+import { Button, useState, useEffect, useMemo } from 'react';
+import { Button, X, Loader, ChevronRight, Check, Search, ShieldCheck } from 'lucide-react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, createSubscription } from '@/services/subscriptionService';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, toast } from 'sonner';
 import { Button } from '@/components/ui/ds/Button';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Select } from '@/components/ui/ds/Select';
-import { Badge } from '@/components/ui/ds/Badge';
+import { Button, Input } from '@/components/ui/ds/Input';
+import { Button, Card } from '@/components/ui/ds/Card';
+import { Button, Select } from '@/components/ui/ds/Select';
+import { Button, Badge } from '@/components/ui/ds/Badge';
 
 interface CreateSubscriptionModalProps {
   isOpen: boolean;
@@ -35,13 +35,13 @@ interface Client {
   email: string;
 }
 
-export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSubscriptionModalProps) => {
-  const { organization } = useOrganization();
+export const CreateSubscriptionModal = ({ Button, isOpen, onClose, onSuccess }: CreateSubscriptionModalProps) => {
+  const { Button, organization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
+  const [paymentMethods, setPaymentMethods] = useState<Array<{ Button, id: string; name: string; active: boolean }>>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   const [clientSearch, setClientSearch] = useState('');
@@ -200,7 +200,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
 
           {/* Progress Bar */}
           <div className="flex items-center gap-3">
-            {Array.from({ length: totalPhases }).map((_, i) => (
+            {Array.from({ Button, length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                   i + 1 < currentPhase ? 'bg-success-600 text-white' : i + 1 === currentPhase ? 'bg-primary-600 text-white' : 'bg-neutral-200 text-neutral-600'
@@ -233,7 +233,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                     <Input
                       placeholder="Buscar por nome ou email..."
                       value={clientSearch}
-                      onChange={(e) => { setClientSearch(e.target.value); setShowClientDropdown(true); }}
+                      onChange={(e) => { Button, setClientSearch(e.target.value); setShowClientDropdown(true); }}
                       onFocus={() => setShowClientDropdown(true)}
                       icon={<Search className="w-5 h-5" />}
                     />
@@ -244,7 +244,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                         ) : (
                           filteredClients.map((client) => (
                             <Button variant="secondary" size="sm" key={client.id} type="button"
-                              onClick={() => { setFormData({ ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
+                              onClick={() => { Button, setFormData({ Button, ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
                               className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0">
                               <p className="font-medium text-neutral-900">{client.name}</p>
                               <p className="text-sm text-neutral-500">{client.email}</p>
@@ -277,9 +277,9 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 ) : (
                   <Select
                     value={formData.product_id}
-                    onChange={(e) => setFormData({ ...formData, product_id: e.target.value, sales_stage_id: '', monthly_value: 0 })}
+                    onChange={(e) => setFormData({ Button, ...formData, product_id: e.target.value, sales_stage_id: '', monthly_value: 0 })}
                     placeholder="Escolha um produto..."
-                    options={products.map(p => ({ value: p.id, label: p.name }))}
+                    options={products.map(p => ({ Button, value: p.id, label: p.name }))}
                   />
                 )}
               </div>
@@ -298,7 +298,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                   <div className="space-y-3">
                     {productSalesStages.filter(s => s.product_id === formData.product_id).map((stage) => (
                       <Button variant="secondary" size="sm" key={stage.id} type="button"
-                        onClick={() => setFormData({ ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
+                        onClick={() => setFormData({ Button, ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
                         className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                           formData.sales_stage_id === stage.id ? 'border-primary-600 bg-primary-50' : 'border-neutral-200 hover:border-primary-300'
                         }`}>
@@ -323,9 +323,9 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 ) : (
                   <Select
                     value={formData.payment_method_id}
-                    onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
+                    onChange={(e) => setFormData({ Button, ...formData, payment_method_id: e.target.value })}
                     placeholder="Escolha a forma de pagamento..."
-                    options={activePaymentMethods.map(m => ({ value: m.id, label: m.name }))}
+                    options={activePaymentMethods.map(m => ({ Button, value: m.id, label: m.name }))}
                   />
                 )}
               </div>
@@ -343,13 +343,13 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                     label="Data de Início *"
                     type="date"
                     value={formData.start_date}
-                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    onChange={(e) => setFormData({ Button, ...formData, start_date: e.target.value })}
                   />
                   <Input
                     label="Vencimento da 1ª Parcela *"
                     type="date"
                     value={formData.first_payment_due_date}
-                    onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
+                    onChange={(e) => setFormData({ Button, ...formData, first_payment_due_date: e.target.value })}
                   />
                 </div>
                 <p className="text-sm text-neutral-600">
@@ -371,7 +371,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 <Input
                   type="date"
                   value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                  onChange={(e) => setFormData({ Button, ...formData, end_date: e.target.value })}
                 />
               </div>
             )}
@@ -391,7 +391,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                   <input
                     type="checkbox"
                     checked={formData.auto_payment_enabled}
-                    onChange={(e) => setFormData({ ...formData, auto_payment_enabled: e.target.checked })}
+                    onChange={(e) => setFormData({ Button, ...formData, auto_payment_enabled: e.target.checked })}
                     className="w-5 h-5 accent-primary-600"
                   />
                 </Card>
@@ -407,7 +407,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 </h3>
                 <textarea
                   value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  onChange={(e) => setFormData({ Button, ...formData, notes: e.target.value })}
                   placeholder="Observações importantes..."
                   className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-[120px]"
                 />

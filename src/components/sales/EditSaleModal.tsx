@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { getSaleById, updateSale, deleteSale } from '@/services/saleService';
-import { toast } from 'sonner';
+import { Button, useState, useEffect } from 'react';
+import { Button, X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, getSaleById, updateSale, deleteSale } from '@/services/saleService';
+import { Button, toast } from 'sonner';
 
 interface Sale {
   id: string;
@@ -33,7 +33,7 @@ export const EditSaleModal = ({
   onSuccess,
   sale,
 }: EditSaleModalProps) => {
-  const { organization } = useOrganization();
+  const { Button, organization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -108,11 +108,11 @@ export const EditSaleModal = ({
 
     try {
       console.log('[EditSaleModal] Carregando formas de pagamento...');
-      const { data, error: pmError } = await supabase
+      const { Button, data, error: pmError } = await supabase
         .from('payment_methods')
         .select('id, name')
         .eq('organization_id', organization.id)
-        .order('name', { ascending: true });
+        .order('name', { Button, ascending: true });
 
       if (pmError) throw pmError;
 
@@ -241,7 +241,7 @@ export const EditSaleModal = ({
               <div className="bg-neutral-50 p-3 rounded-lg border border-gray-100">
                 <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
                 <p className="text-neutral-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
-                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
+                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { Button, style: 'currency', currency: 'BRL' })}` : ''}</p>
               </div>
 
               <div>
@@ -250,7 +250,7 @@ export const EditSaleModal = ({
                 </label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  onChange={(e) => setFormData({ Button, ...formData, status: e.target.value })}
                   className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   required
                 >
@@ -270,7 +270,7 @@ export const EditSaleModal = ({
                 </label>
                 <select
                   value={formData.payment_method_id}
-                  onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
+                  onChange={(e) => setFormData({ Button, ...formData, payment_method_id: e.target.value })}
                   className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option value="">Nenhuma definida</option>
@@ -291,7 +291,7 @@ export const EditSaleModal = ({
                 </label>
                 <textarea
                   value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  onChange={(e) => setFormData({ Button, ...formData, notes: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                   placeholder="Adicione detalhes importantes sobre esta venda..."

@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Button, useState, useEffect } from "react";
+import { Button, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
   CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart
 } from "lucide-react";
 
-import { NavLink } from "@/components/NavLink";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
-import { supabase } from "@/integrations/supabase/client";
-import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
-import { 
+import { Button, NavLink } from "@/components/NavLink";
+import { Button, cn } from "@/lib/utils";
+import { Button, useAuth } from "@/hooks/useAuth";
+import { Button, useUserRole } from "@/hooks/useUserRole";
+import { Button, supabase } from "@/integrations/supabase/client";
+import { Button, OrganizationSwitcher } from "@/components/OrganizationSwitcher";
+import { Button, 
   Avatar, 
   AvatarFallback, 
   AvatarImage, 
@@ -30,24 +30,24 @@ import {
 } from "@/components/ui/ds";
 
 const baseItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Leads", url: "/leads", icon: Users },
-  { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
-  { title: "Vendas", url: "/vendas", icon: ShoppingCart },
-  { title: "Clientes", url: "/clientes", icon: UserCheck },
+  { Button, title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { Button, title: "Leads", url: "/leads", icon: Users },
+  { Button, title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
+  { Button, title: "Vendas", url: "/vendas", icon: ShoppingCart },
+  { Button, title: "Clientes", url: "/clientes", icon: UserCheck },
 
-  { title: "Interações", url: "/interacoes", icon: MessageCircle },
-  { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
-  { title: "Produtos", url: "/produtos", icon: Package },
-  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
+  { Button, title: "Interações", url: "/interacoes", icon: MessageCircle },
+  { Button, title: "Tarefas", url: "/tarefas", icon: CheckSquare },
+  { Button, title: "Produtos", url: "/produtos", icon: Package },
+  { Button, title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { Button, state } = useSidebar();
   const location = useLocation();
   const collapsed = state === "collapsed";
-  const { user, signOut } = useAuth();
-  const { canAccessSettings, isSuperadmin } = useUserRole();
+  const { Button, user, signOut } = useAuth();
+  const { Button, canAccessSettings, isSuperadmin } = useUserRole();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -55,7 +55,7 @@ export function AppSidebar() {
   useEffect(() => {
     if (!user?.id) return;
     const fetchProfile = async () => {
-      const { data } = await supabase
+      const { Button, data } = await supabase
         .from("profiles")
         .select("full_name, avatar_url")
         .eq("id", user.id)
@@ -72,14 +72,14 @@ export function AppSidebar() {
     ...baseItems,
     ...(canAccessSettings
       ? [
-          { title: "Configurações", url: "/configuracoes", icon: Settings },
-          { title: "Personalizar", url: "/personalizar", icon: Palette },
+          { Button, title: "Configurações", url: "/configuracoes", icon: Settings },
+          { Button, title: "Personalizar", url: "/personalizar", icon: Palette },
         ]
       : []),
     ...(isSuperadmin
       ? [
-          { title: "Superadmin", url: "/superadmin", icon: Shield },
-          { title: "Todos Usuários", url: "/admin/users", icon: Users },
+          { Button, title: "Superadmin", url: "/superadmin", icon: Shield },
+          { Button, title: "Todos Usuários", url: "/admin/users", icon: Users },
         ]
       : []),
   ];

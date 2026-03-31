@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Edit2, Copy, Trash2 } from 'lucide-react';
+import { Button, useState } from 'react';
+import { Button, Edit2, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/ds';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
 
@@ -26,7 +26,7 @@ export default function TaskActionButtons({
         isOpen={showConfirm}
         itemName={taskTitle}
         itemType="tarefa"
-        onConfirm={() => { onDelete(taskId); setShowConfirm(false); }}
+        onConfirm={() => { Button, onDelete(taskId); setShowConfirm(false); }}
         onCancel={() => setShowConfirm(false)}
       />
 

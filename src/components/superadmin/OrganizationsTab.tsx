@@ -1,15 +1,15 @@
-import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { toast } from 'sonner';
-import { Badge } from '@/components/ui/ds';
+import { Button, useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { Button, toast } from 'sonner';
+import { Button, Badge } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
-import { CreateOrganizationModal } from './CreateOrganizationModal';
-import { EditOrganizationModal } from './EditOrganizationModal';
-import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { Button, getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
+import { Button, CreateOrganizationModal } from './CreateOrganizationModal';
+import { Button, EditOrganizationModal } from './EditOrganizationModal';
+import { Button, Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
 
 interface Org {
   id: string;
@@ -22,7 +22,7 @@ interface Org {
   max_leads: number;
   max_users: number;
   created_at: string;
-  organization_members: { user_id: string; role: string }[];
+  organization_members: { Button, user_id: string; role: string }[];
 }
 
 interface Plan {
@@ -40,8 +40,8 @@ interface OrganizationsTabProps {
   onStatsChange?: () => void;
 }
 
-export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, OrganizationsTabProps>(
-  ({ onStatsChange }, ref) => {
+export const OrganizationsTab = forwardRef<{ Button, openCreateModal?: () => void }, OrganizationsTabProps>(
+  ({ Button, onStatsChange }, ref) => {
     const [orgs, setOrgs] = useState<Org[]>([]);
     const [plans, setPlans] = useState<Plan[]>([]);
     const [loading, setLoading] = useState(true);
@@ -95,7 +95,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
       }
     };
 
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { Button, fetchData(); }, []);
 
     const handleToggleStatus = async (org: Org) => {
       try {
@@ -285,12 +285,12 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
 
         <EditOrganizationModal
           open={!!editOrgId}
-          onOpenChange={(open) => { if (!open) setEditOrgId(null); }}
+          onOpenChange={(open) => { Button, if (!open) setEditOrgId(null); }}
           orgId={editOrgId}
-          onSuccess={() => { fetchData(); onStatsChange?.(); }}
+          onSuccess={() => { Button, fetchData(); onStatsChange?.(); }}
         />
 
-        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { if (!open) setDeleteConfirmOrg(null); }}>
+        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { Button, if (!open) setDeleteConfirmOrg(null); }}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Deletar organização</AlertDialogTitle>

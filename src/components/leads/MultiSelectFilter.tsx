@@ -1,14 +1,14 @@
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button, X } from "lucide-react";
+import { Button, cn } from "@/lib/utils";
 
 interface MultiSelectFilterProps {
   label: string;
-  options: { value: string; label: string }[];
+  options: { Button, value: string; label: string }[];
   selected: string[];
   onChange: (values: string[]) => void;
 }
 
-export default function MultiSelectFilter({ label, options, selected, onChange }: MultiSelectFilterProps) {
+export default function MultiSelectFilter({ Button, label, options, selected, onChange }: MultiSelectFilterProps) {
   const toggle = (value: string) => {
     onChange(
       selected.includes(value)

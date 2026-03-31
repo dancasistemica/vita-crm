@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { Button, createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
 
 export interface BrandSettings {
   primary_color: string;
@@ -172,7 +172,7 @@ function applyBrandCSS(brand: BrandSettings, advanced: AdvancedColors) {
 
 /** Load system_settings as a fallback map */
 async function loadSystemDefaults(): Promise<Record<string, string | null>> {
-  const { data } = await supabase
+  const { Button, data } = await supabase
     .from('system_settings')
     .select('setting_key, setting_value');
   const map: Record<string, string | null> = {};
@@ -262,7 +262,7 @@ function buildBrand(
   };
 }
 
-export function BrandProvider({ children }: { children: ReactNode }) {
+export function BrandProvider({ Button, children }: { Button, children: ReactNode }) {
   const [brand, setBrand] = useState<BrandSettings>(DEFAULT_BRAND);
   const [advancedColors, setAdvancedColors] = useState<AdvancedColors>(DEFAULT_ADVANCED);
   const [loading, setLoading] = useState(true);
@@ -271,7 +271,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadBrand = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { Button, data: { Button, user } } = await supabase.auth.getUser();
         if (!user) {
           console.log('[BrandContext] No user, using defaults');
           const sysMap = await loadSystemDefaults();
@@ -292,14 +292,14 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         const superadminOrgId = localStorage.getItem('superadmin_current_org');
 
         if (superadminOrgId && superadminOrgId !== 'consolidado') {
-          const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { _user_id: user.id });
+          const { Button, data: isSuperadmin } = await supabase.rpc('is_superadmin', { Button, _user_id: user.id });
           if (isSuperadmin) {
             orgId = superadminOrgId;
           }
         }
 
         if (!orgId) {
-          const { data: membership } = await supabase
+          const { Button, data: membership } = await supabase
             .from('organization_members')
             .select('organization_id')
             .eq('user_id', user.id)
@@ -352,7 +352,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
     loadBrand();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const { Button, data: { Button, subscription } } = supabase.auth.onAuthStateChange(() => {
       loadBrand();
     });
 
@@ -384,7 +384,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const updateLocalBrand = useCallback((partial: Partial<BrandSettings>) => {
     console.log('[BrandContext] updateLocalBrand:', partial);
     setBrand(prev => {
-      const next = { ...prev, ...partial };
+      const next = { Button, ...prev, ...partial };
       applyBrandCSS(next, advancedColors);
       return next;
     });
@@ -395,9 +395,9 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       throw new Error('Organização não encontrada. Recarregue a página e tente novamente.');
     }
 
-    const updated = { ...brand, ...partial };
+    const updated = { Button, ...brand, ...partial };
 
-    const { error } = await supabase
+    const { Button, error } = await supabase
       .from('brand_settings')
       .upsert(
         {
@@ -405,7 +405,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           ...updated,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: 'organization_id' }
+        { Button, onConflict: 'organization_id' }
       );
 
     if (error) throw error;
@@ -423,7 +423,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, [resolvedOrgId, saveBrand]);
 
   return (
-    <BrandContext.Provider value={{ brand, advancedColors, loading, saveBrand, resetBrand, updateLocalBrand }}>
+    <BrandContext.Provider value={{ Button, brand, advancedColors, loading, saveBrand, resetBrand, updateLocalBrand }}>
       {children}
     </BrandContext.Provider>
   );
@@ -433,4 +433,4 @@ export function useBrand() {
   return useContext(BrandContext);
 }
 
-export { DEFAULT_BRAND };
+export { Button, DEFAULT_BRAND };

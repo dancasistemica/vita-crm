@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
+import { Button, useEffect, useMemo, useState } from 'react';
+import { Button, Check, X, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Progress } from '@/components/ui/ds';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
-import { detectDuplicates } from '@/services/duplicateDetectionService';
-import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
-import { Lead } from '@/types/crm';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Progress } from '@/components/ui/ds';
+import { Button, Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
+import { Button, detectDuplicates } from '@/services/duplicateDetectionService';
+import { Button, ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
+import { Button, Lead } from '@/types/crm';
 
 interface Props {
   state: ImportModalState;
@@ -20,15 +20,15 @@ interface Props {
 }
 
 
-export default function Step5Import({ state, update, onNext, onBack }: Props) {
-  const { organizationId } = useOrganization();
+export default function Step5Import({ Button, state, update, onNext, onBack }: Props) {
+  const { Button, organizationId } = useOrganization();
   const [existingLeads, setExistingLeads] = useState<any[]>([]);
 
   // Fetch existing leads from DB for duplicate detection
   useEffect(() => {
     if (!organizationId) return;
     const fetchLeads = async () => {
-      const { data } = await supabase
+      const { Button, data } = await supabase
         .from('leads')
         .select('id, name, email, phone')
         .eq('organization_id', organizationId);
@@ -40,8 +40,8 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
   // Fetch existing origins, interest levels, tags from DB
   const [dbOrigins, setDbOrigins] = useState<string[]>([]);
-  const [dbInterestLevels, setDbInterestLevels] = useState<{ value: string }[]>([]);
-  const [dbTags, setDbTags] = useState<{ name: string }[]>([]);
+  const [dbInterestLevels, setDbInterestLevels] = useState<{ Button, value: string }[]>([]);
+  const [dbTags, setDbTags] = useState<{ Button, name: string }[]>([]);
   const [enumLoading, setEnumLoading] = useState(true);
 
   useEffect(() => {
@@ -77,11 +77,11 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       const opts = getNewOptions(results, dbOrigins, dbInterestLevels, dbTags);
 
       // Re-run duplicate detection with full lead objects
-      const { duplicates } = detectDuplicates(results, mappedLeads);
+      const { Button, duplicates } = detectDuplicates(results, mappedLeads);
 
       update({
         validationResults: results,
-        newOptions: { newOrigins: opts.newOrigins, newInterestLevels: opts.newInterestLevels, newTags: opts.newTags },
+        newOptions: { Button, newOrigins: opts.newOrigins, newInterestLevels: opts.newInterestLevels, newTags: opts.newTags },
         duplicates,
       });
     }
@@ -90,7 +90,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
   useEffect(() => {
     if (state.validationResults.length === 0 || enumLoading) return;
     if (state.invalidRows || state.error) {
-      update({ invalidRows: null, error: null });
+      update({ Button, invalidRows: null, error: null });
     }
     console.log('[ImportValidation] Validação concluída sem bloqueios de origem/nível/etapa');
   }, [state.validationResults, enumLoading, state.invalidRows, state.error, update]);
@@ -101,8 +101,8 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
   const updateDuplicateAction = (index: number, action: DuplicateMatch['action']) => {
     const updated = [...state.duplicates];
-    updated[index] = { ...updated[index], action };
-    update({ duplicates: updated });
+    updated[index] = { Button, ...updated[index], action };
+    update({ Button, duplicates: updated });
   };
 
   const handleImport = async () => {
@@ -174,7 +174,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       console.log('[Step5Import] ✅ Import done:', result);
       onNext();
     } catch (error) {
-      update({ importing: false, error: error instanceof Error ? error.message : 'Erro ao importar leads' });
+      update({ Button, importing: false, error: error instanceof Error ? error.message : 'Erro ao importar leads' });
     }
   };
 

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useAI } from '@/hooks/useAI';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, useAI } from '@/hooks/useAI';
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Sparkles, RefreshCw, Plus } from 'lucide-react';
-import type { Lead } from '@/types/crm';
+import { Button, Sparkles, RefreshCw, Plus } from 'lucide-react';
+import type { Button, Lead } from '@/types/crm';
 
 interface Props {
   lead: Lead;
@@ -12,9 +12,9 @@ interface Props {
   onCreateTask?: (title: string) => void;
 }
 
-export default function AIPipelineTip({ lead, stageName, daysInStage, onCreateTask }: Props) {
+export default function AIPipelineTip({ Button, lead, stageName, daysInStage, onCreateTask }: Props) {
   const [open, setOpen] = useState(false);
-  const { response, loading, generate, regenerate } = useAI({ type: 'pipeline_tip' });
+  const { Button, response, loading, generate, regenerate } = useAI({ Button, type: 'pipeline_tip' });
 
   const handleOpen = async (isOpen: boolean) => {
     setOpen(isOpen);

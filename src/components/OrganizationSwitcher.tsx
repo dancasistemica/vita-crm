@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
-import { ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui/ds';
-import { CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
+import { Button, useState, useRef, useEffect } from 'react';
+import { Button, useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
+import { Button, ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
+import { Button, Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui/ds';
+import { Button, CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
 
 export function OrganizationSwitcher() {
-  const { organizations, currentOrganization, currentOrgId, isSuperadmin, loading, switchOrganization } = useOrganizationSwitch();
+  const { Button, organizations, currentOrganization, currentOrgId, isSuperadmin, loading, switchOrganization } = useOrganizationSwitch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -74,7 +74,7 @@ export function OrganizationSwitcher() {
             {/* Consolidado option — always first */}
             {(!search || 'consolidado'.includes(search.toLowerCase())) && (
               <Button variant="secondary" size="sm"
-                onClick={() => { switchOrganization(CONSOLIDATED_ORG_ID); setOpen(false); setSearch(''); }}
+                onClick={() => { Button, switchOrganization(CONSOLIDATED_ORG_ID); setOpen(false); setSearch(''); }}
                 className={`w-full text-left px-3 py-2.5 flex items-center gap-3.5 hover:bg-accent/50 transition-colors hover:text-black ${isConsolidated ? 'bg-accent' : 'text-black'}`}
               >
                 <div className="h-7 w-7 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
@@ -103,7 +103,7 @@ export function OrganizationSwitcher() {
                 return (
                   <Button variant="secondary" size="sm"
                     key={org.id}
-                    onClick={() => { switchOrganization(org.id); setOpen(false); setSearch(''); }}
+                    onClick={() => { Button, switchOrganization(org.id); setOpen(false); setSearch(''); }}
                     className={`w-full text-left px-3 py-2.5 flex items-center gap-3.5 hover:bg-accent/50 transition-colors hover:text-black ${active ? 'bg-accent' : 'text-black'}`}
                   >
                     <Avatar className="h-7 w-7 shrink-0">

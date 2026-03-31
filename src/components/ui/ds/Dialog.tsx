@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from './Card';
-import { X } from 'lucide-react';
+import { Button, Card } from './Card';
+import { Button, X } from 'lucide-react';
 
 interface DialogProps {
   isOpen?: boolean;
@@ -12,7 +12,7 @@ interface DialogProps {
   modal?: boolean;
 }
 
-export const Dialog = ({ isOpen, open, onClose, onOpenChange, title, children }: DialogProps) => {
+export const Dialog = ({ Button, isOpen, open, onClose, onOpenChange, title, children }: DialogProps) => {
   const isCurrentlyOpen = open ?? isOpen;
   const handleClose = () => {
     if (onClose) onClose();
@@ -41,19 +41,19 @@ export const Dialog = ({ isOpen, open, onClose, onOpenChange, title, children }:
 };
 
 // Shims for compound components
-export const DialogContent = ({ children, className = '' }: any) => (
+export const DialogContent = ({ Button, children, className = '' }: any) => (
   <div className={className}>{children}</div>
 );
-export const DialogHeader = ({ children, className = '' }: any) => (
+export const DialogHeader = ({ Button, children, className = '' }: any) => (
   <div className={`mb-4 ${className}`}>{children}</div>
 );
-export const DialogTitle = ({ children, className = '' }: any) => (
+export const DialogTitle = ({ Button, children, className = '' }: any) => (
   <div className={`text-xl font-semibold ${className}`}>{children}</div>
 );
-export const DialogFooter = ({ children, className = '' }: any) => (
+export const DialogFooter = ({ Button, children, className = '' }: any) => (
   <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>
 );
-export const DialogTrigger = ({ children, asChild }: any) => children;
-export const DialogDescription = ({ children, className = '' }: any) => (
+export const DialogTrigger = ({ Button, children, asChild }: any) => children;
+export const DialogDescription = ({ Button, children, className = '' }: any) => (
   <p className={`text-sm text-neutral-500 mt-2 ${className}`}>{children}</p>
 );

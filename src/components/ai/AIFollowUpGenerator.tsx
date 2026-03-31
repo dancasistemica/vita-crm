@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useAI } from '@/hooks/useAI';
+import { Button, useState } from 'react';
+import { Button, useAI } from '@/hooks/useAI';
 import { Button } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Sparkles, Copy, RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
-import type { Lead } from '@/types/crm';
+import { Button, Textarea } from '@/components/ui/ds';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Sparkles, Copy, RefreshCw } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import type { Button, Lead } from '@/types/crm';
 
 interface Props {
   lead: Lead;
@@ -14,15 +14,15 @@ interface Props {
 }
 
 const CHANNELS = [
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'email', label: 'Email' },
-  { value: 'instagram', label: 'Instagram DM' },
+  { Button, value: 'whatsapp', label: 'WhatsApp' },
+  { Button, value: 'email', label: 'Email' },
+  { Button, value: 'instagram', label: 'Instagram DM' },
 ];
 
-export default function AIFollowUpGenerator({ lead, stageName }: Props) {
+export default function AIFollowUpGenerator({ Button, lead, stageName }: Props) {
   const [channel, setChannel] = useState('whatsapp');
   const [message, setMessage] = useState('');
-  const { loading, generate, regenerate } = useAI({ type: 'followup_message' });
+  const { Button, loading, generate, regenerate } = useAI({ Button, type: 'followup_message' });
 
   const handleGenerate = async () => {
     const prompt = `Gere uma mensagem de follow-up via ${CHANNELS.find(c => c.value === channel)?.label || channel} para:

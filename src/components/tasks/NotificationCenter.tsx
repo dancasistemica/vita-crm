@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { Button, useState } from "react";
 import { Button } from "@/components/ui/ds/Button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
-import { Bell, CheckCircle } from "lucide-react";
-import { ScrollArea } from "@/components/ui/ds";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Button, Bell, CheckCircle } from "lucide-react";
+import { Button, ScrollArea } from "@/components/ui/ds";
 
 interface Notification {
   id: string;
@@ -18,7 +18,7 @@ interface NotificationCenterProps {
   onMarkAllAsRead: () => void;
 }
 
-export default function NotificationCenter({ notifications, onMarkAsRead, onMarkAllAsRead }: NotificationCenterProps) {
+export default function NotificationCenter({ Button, notifications, onMarkAsRead, onMarkAllAsRead }: NotificationCenterProps) {
   const unread = notifications.filter(n => !n.read).length;
 
   return (

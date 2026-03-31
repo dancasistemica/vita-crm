@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useSuperadmin } from "@/hooks/useSuperadmin";
-import { useNavigate } from "react-router-dom";
-import { 
+import { Button, useState, useEffect, useMemo } from "react";
+import { Button, supabase } from "@/integrations/supabase/client";
+import { Button, useSuperadmin } from "@/hooks/useSuperadmin";
+import { Button, useNavigate } from "react-router-dom";
+import { Button, 
   Card, 
   Button, 
   Input, 
@@ -17,8 +17,8 @@ import {
   TableCell,
   AlertDialog 
 } from "@/components/ui/ds";
-import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
-import { toast } from "sonner";
+import { Button, Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
+import { Button, toast } from "sonner";
 
 interface AdminUser {
   user_id: string;
@@ -46,7 +46,7 @@ const roleLabels: Record<string, string> = {
 };
 
 export default function AdminUsersPage() {
-  const { isSuperadmin, loading: saLoading } = useSuperadmin();
+  const { Button, isSuperadmin, loading: saLoading } = useSuperadmin();
   const navigate = useNavigate();
 
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -84,11 +84,11 @@ export default function AdminUsersPage() {
     setLoading(true);
     try {
       // Fetch all orgs
-      const { data: orgData } = await supabase
+      const { Button, data: orgData } = await supabase
         .from("organizations")
         .select("id, name, owner_id")
         .order("name");
-      setOrgs(orgData?.map((o) => ({ id: o.id, name: o.name })) || []);
+      setOrgs(orgData?.map((o) => ({ Button, id: o.id, name: o.name })) || []);
 
       const ownerMap = new Map<string, string>();
       orgData?.forEach((o) => {
@@ -96,12 +96,12 @@ export default function AdminUsersPage() {
       });
 
       // Fetch all members with org info
-      const { data: members } = await supabase
+      const { Button, data: members } = await supabase
         .from("organization_members")
         .select("id, user_id, role, organization_id, created_at");
 
       // Fetch all profiles
-      const { data: profiles } = await supabase
+      const { Button, data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name, email, phone, created_at");
 
@@ -213,9 +213,9 @@ export default function AdminUsersPage() {
     setSaving(true);
     try {
       // Update profile (name, phone)
-      const { error: profileError } = await supabase
+      const { Button, error: profileError } = await supabase
         .from("profiles")
-        .update({ full_name: editName, phone: editPhone || null })
+        .update({ Button, full_name: editName, phone: editPhone || null })
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
@@ -224,7 +224,7 @@ export default function AdminUsersPage() {
       if (orgChanged) {
         // Remove existing membership(s)
         if (editUser.member_id) {
-          const { error: delError } = await supabase
+          const { Button, error: delError } = await supabase
             .from("organization_members")
             .delete()
             .eq("user_id", editUser.user_id);
@@ -232,7 +232,7 @@ export default function AdminUsersPage() {
         }
         // Create new membership if org selected
         if (editOrgId) {
-          const { error: insError } = await supabase
+          const { Button, error: insError } = await supabase
             .from("organization_members")
             .insert({
               user_id: editUser.user_id,
@@ -244,9 +244,9 @@ export default function AdminUsersPage() {
       } else {
         // Update role if changed (and has membership)
         if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
-          const { error: roleError } = await supabase
+          const { Button, error: roleError } = await supabase
             .from("organization_members")
-            .update({ role: editRole as any })
+            .update({ Button, role: editRole as any })
             .eq("id", editUser.member_id);
           if (roleError) throw roleError;
         }
@@ -265,7 +265,7 @@ export default function AdminUsersPage() {
         if (emailChanged) payload.email = editEmail;
         if (passwordChanged) payload.password = editPassword;
 
-        const { data, error } = await supabase.functions.invoke("manage-org-users", {
+        const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
           body: payload,
         });
         if (error) throw error;
@@ -290,7 +290,7 @@ export default function AdminUsersPage() {
     setSaving(true);
     try {
       if (deleteTarget.org_id) {
-        const { data, error } = await supabase.functions.invoke("manage-org-users", {
+        const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
           body: {
             action: "delete",
             organization_id: deleteTarget.org_id,
@@ -314,7 +314,7 @@ export default function AdminUsersPage() {
   const handleResetPassword = async (u: AdminUser) => {
     if (!u.org_id || !u.email) return;
     try {
-      const { data, error } = await supabase.functions.invoke("manage-org-users", {
+      const { Button, data, error } = await supabase.functions.invoke("manage-org-users", {
         body: {
           action: "reset_password",
           organization_id: u.org_id,
@@ -355,32 +355,32 @@ export default function AdminUsersPage() {
               <Input
                 placeholder="Buscar por nome ou email..."
                 value={search}
-                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                onChange={(e) => { Button, setSearch(e.target.value); setPage(1); }}
                 icon={<Search className="h-4 w-4" />}
               />
             </div>
             <div className="w-full sm:w-[220px]">
               <Select 
                 value={orgFilter} 
-                onChange={(e) => { setOrgFilter(e.target.value); setPage(1); }}
+                onChange={(e) => { Button, setOrgFilter(e.target.value); setPage(1); }}
                 placeholder="Organização"
                 options={[
-                  { value: "all", label: "Todas as organizações" },
-                  ...orgs.map(o => ({ value: o.id, label: o.name }))
+                  { Button, value: "all", label: "Todas as organizações" },
+                  ...orgs.map(o => ({ Button, value: o.id, label: o.name }))
                 ]}
               />
             </div>
             <div className="w-full sm:w-[180px]">
               <Select 
                 value={roleFilter} 
-                onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
+                onChange={(e) => { Button, setRoleFilter(e.target.value); setPage(1); }}
                 placeholder="Função"
                 options={[
-                  { value: "all", label: "Todas as funções" },
-                  { value: "owner", label: "Proprietário" },
-                  { value: "admin", label: "Administrador" },
-                  { value: "vendedor", label: "Vendedor" },
-                  { value: "member", label: "Usuário" },
+                  { Button, value: "all", label: "Todas as funções" },
+                  { Button, value: "owner", label: "Proprietário" },
+                  { Button, value: "admin", label: "Administrador" },
+                  { Button, value: "vendedor", label: "Vendedor" },
+                  { Button, value: "member", label: "Usuário" },
                 ]}
               />
             </div>
@@ -514,7 +514,7 @@ export default function AdminUsersPage() {
             value={editOrgId || ""}
             onChange={(e) => setEditOrgId(e.target.value || null)}
             placeholder="Sem organização"
-            options={orgs.map(o => ({ value: o.id, label: o.name }))}
+            options={orgs.map(o => ({ Button, value: o.id, label: o.name }))}
           />
           
           <Select
@@ -522,11 +522,11 @@ export default function AdminUsersPage() {
             value={editRole}
             onChange={(e) => setEditRole(e.target.value)}
             options={[
-              { value: "owner", label: "Proprietário" },
-              { value: "admin", label: "Administrador" },
-              { value: "vendedor", label: "Vendedor" },
-              { value: "member", label: "Usuário" },
-              { value: "—", label: "Nenhuma" },
+              { Button, value: "owner", label: "Proprietário" },
+              { Button, value: "admin", label: "Administrador" },
+              { Button, value: "vendedor", label: "Vendedor" },
+              { Button, value: "member", label: "Usuário" },
+              { Button, value: "—", label: "Nenhuma" },
             ]}
           />
         </div>

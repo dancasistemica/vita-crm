@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, useState } from 'react';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { AlertTriangle } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button, Checkbox } from '@/components/ui/ds';
+import { Button, AlertTriangle } from 'lucide-react';
+import { Button, toast } from 'sonner';
 
 type DeletableType = 'leads' | 'clients';
 
@@ -24,7 +24,7 @@ interface Props {
   onDelete?: (id: string) => Promise<void>;
 }
 
-export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type, onSuccess, items = [], onDelete }: Props) {
+export default function BulkDeleteModal({ Button, open, onOpenChange, selectedIds, type, onSuccess, items = [], onDelete }: Props) {
   const [confirmed, setConfirmed] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -53,7 +53,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!deleting) { onOpenChange(o); setConfirmed(false); } }}>
+    <Dialog open={open} onOpenChange={(o) => { Button, if (!deleting) { Button, onOpenChange(o); setConfirmed(false); } }}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-destructive">
@@ -97,7 +97,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
         </div>
 
         <DialogFooter className="gap-3 sm:gap-0">
-          <Button variant="neutral" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+          <Button variant="neutral" onClick={() => { Button, onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
             Cancelar
           </Button>
           <Button variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>

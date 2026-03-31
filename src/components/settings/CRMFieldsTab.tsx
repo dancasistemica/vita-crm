@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { TagsManagement } from "@/components/settings/TagsManagement";
-import { useDataAccess } from "@/hooks/useDataAccess";
-import { useOrganization } from "@/contexts/OrganizationContext";
-import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, useState, useEffect, useCallback } from "react";
+import { Button, supabase } from "@/integrations/supabase/client";
+import { Button, TagsManagement } from "@/components/settings/TagsManagement";
+import { Button, useDataAccess } from "@/hooks/useDataAccess";
+import { Button, useOrganization } from "@/contexts/OrganizationContext";
+import { Button, useValidateUniqueField } from "@/hooks/useValidateUniqueField";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
+import { Button, toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
 
 interface DBPipelineStage {
@@ -42,21 +42,21 @@ interface CRMFieldDef {
 }
 
 const DEFAULT_FIELDS: CRMFieldDef[] = [
-  { key: "origin", label: "Origem do Lead", icon: "🌐" },
-  { key: "interest_level", label: "Nível de Interesse", icon: "⭐" },
-  { key: "funnel_stages", label: "Etapas do Funil", icon: "📈" },
-  { key: "tags", label: "Tags", icon: "🏷️" },
+  { Button, key: "origin", label: "Origem do Lead", icon: "🌐" },
+  { Button, key: "interest_level", label: "Nível de Interesse", icon: "⭐" },
+  { Button, key: "funnel_stages", label: "Etapas do Funil", icon: "📈" },
+  { Button, key: "tags", label: "Tags", icon: "🏷️" },
 ];
 
 export default function CRMFieldsTab() {
   const dataAccess = useDataAccess();
-  const { organizationId } = useOrganization();
+  const { Button, organizationId } = useOrganization();
 
   const originValidation = useValidateUniqueField('lead_origins', organizationId, 'name');
   const levelValidation = useValidateUniqueField('interest_levels', organizationId, 'value');
   const stageValidation = useValidateUniqueField('pipeline_stages', organizationId, 'name');
 
-  const getErrorCode = (err: unknown) => (err as { code?: string })?.code;
+  const getErrorCode = (err: unknown) => (err as { Button, code?: string })?.code;
 
   // ── Tab ordering state ──
   const [orderedFields, setOrderedFields] = useState<CRMFieldDef[]>(DEFAULT_FIELDS);
@@ -76,7 +76,7 @@ export default function CRMFieldsTab() {
   const [levels, setLevels] = useState<DBInterestLevel[]>([]);
   const [levelsLoading, setLevelsLoading] = useState(true);
   const [levelsSaving, setLevelsSaving] = useState(false);
-  const [newLevel, setNewLevel] = useState({ value: '', label: '' });
+  const [newLevel, setNewLevel] = useState({ Button, value: '', label: '' });
   const [editingLevel, setEditingLevel] = useState<DBInterestLevel | null>(null);
   const [draggedLevelId, setDraggedLevelId] = useState<string | null>(null);
 
@@ -94,18 +94,18 @@ export default function CRMFieldsTab() {
     id: string;
     name: string;
     type: 'origem' | 'nível de interesse' | 'etapa do funil';
-  }>({ isOpen: false, id: '', name: '', type: 'origem' });
+  }>({ Button, isOpen: false, id: '', name: '', type: 'origem' });
 
   const openDeleteConfirm = (id: string, name: string, type: typeof deleteConfirm.type) => {
-    setDeleteConfirm({ isOpen: true, id, name, type });
+    setDeleteConfirm({ Button, isOpen: true, id, name, type });
   };
 
   const closeDeleteConfirm = () => {
-    setDeleteConfirm({ isOpen: false, id: '', name: '', type: 'origem' });
+    setDeleteConfirm({ Button, isOpen: false, id: '', name: '', type: 'origem' });
   };
 
   const confirmAndDelete = async () => {
-    const { id, type } = deleteConfirm;
+    const { Button, id, type } = deleteConfirm;
     if (!id) return;
     closeDeleteConfirm();
     if (type === 'origem') await handleDeleteOrigin(id);
@@ -115,7 +115,7 @@ export default function CRMFieldsTab() {
 
 
   useEffect(() => {
-    if (!dataAccess) { setOrderLoading(false); return; }
+    if (!dataAccess) { Button, setOrderLoading(false); return; }
     (async () => {
       try {
         const data = await dataAccess.getCRMFieldOrder();
@@ -144,7 +144,7 @@ export default function CRMFieldsTab() {
 
     if (!dataAccess) return;
     try {
-      await dataAccess.reorderCRMFields(next.map((f, i) => ({ name: f.key, order: i })));
+      await dataAccess.reorderCRMFields(next.map((f, i) => ({ Button, name: f.key, order: i })));
       toast.success("Ordem salva");
     } catch {
       toast.error("Erro ao salvar ordem");
@@ -167,7 +167,7 @@ export default function CRMFieldsTab() {
     }
   }, [dataAccess]);
 
-  useEffect(() => { loadOrigins(); }, [loadOrigins]);
+  useEffect(() => { Button, loadOrigins(); }, [loadOrigins]);
 
   const handleAddOrigin = async () => {
     const validation = originValidation.validate(newOrigin);
@@ -175,7 +175,7 @@ export default function CRMFieldsTab() {
       toast.error(validation.error || 'Valor inválido');
       return;
     }
-    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
+    if (!dataAccess) { Button, toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setOriginsSaving(true);
       const nextOrder = origins.length > 0 ? Math.max(...origins.map(o => o.sort_order)) + 1 : 0;
@@ -199,7 +199,7 @@ export default function CRMFieldsTab() {
     if (!editingOrigin || !dataAccess) return;
     try {
       setOriginsSaving(true);
-      await dataAccess.updateLeadOrigin(editingOrigin.id, { name: editingOrigin.name });
+      await dataAccess.updateLeadOrigin(editingOrigin.id, { Button, name: editingOrigin.name });
       toast.success("Origem atualizada");
       setEditingOrigin(null);
       await loadOrigins();
@@ -229,12 +229,12 @@ export default function CRMFieldsTab() {
     const next = [...origins];
     const [moved] = next.splice(fromIdx, 1);
     next.splice(toIdx, 0, moved);
-    const reordered = next.map((o, i) => ({ ...o, sort_order: i }));
+    const reordered = next.map((o, i) => ({ Button, ...o, sort_order: i }));
     setOrigins(reordered);
     setDraggedOriginId(null);
     try {
       setOriginsSaving(true);
-      await dataAccess.reorderLeadOrigins(reordered.map(o => ({ id: o.id, sort_order: o.sort_order })));
+      await dataAccess.reorderLeadOrigins(reordered.map(o => ({ Button, id: o.id, sort_order: o.sort_order })));
       toast.success("Ordem salva");
     } catch {
       toast.error("Erro ao reordenar");
@@ -260,7 +260,7 @@ export default function CRMFieldsTab() {
     }
   }, [dataAccess]);
 
-  useEffect(() => { loadLevels(); }, [loadLevels]);
+  useEffect(() => { Button, loadLevels(); }, [loadLevels]);
 
   const handleAddLevel = async () => {
     const validation = levelValidation.validate(newLevel.value);
@@ -268,12 +268,12 @@ export default function CRMFieldsTab() {
       toast.error(validation.error || 'Campo obrigatório');
       return;
     }
-    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
+    if (!dataAccess) { Button, toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setLevelsSaving(true);
       const nextOrder = levels.length > 0 ? Math.max(...levels.map(l => l.sort_order)) + 1 : 0;
       await dataAccess.createInterestLevel(newLevel.value.trim(), newLevel.label.trim(), nextOrder);
-      setNewLevel({ value: '', label: '' });
+      setNewLevel({ Button, value: '', label: '' });
       toast.success("Nível adicionado");
       await loadLevels();
     } catch (err) {
@@ -292,7 +292,7 @@ export default function CRMFieldsTab() {
     if (!editingLevel || !dataAccess) return;
     try {
       setLevelsSaving(true);
-      await dataAccess.updateInterestLevel(editingLevel.id, { value: editingLevel.value, label: editingLevel.label });
+      await dataAccess.updateInterestLevel(editingLevel.id, { Button, value: editingLevel.value, label: editingLevel.label });
       toast.success("Nível atualizado");
       setEditingLevel(null);
       await loadLevels();
@@ -322,12 +322,12 @@ export default function CRMFieldsTab() {
     const next = [...levels];
     const [moved] = next.splice(fromIdx, 1);
     next.splice(toIdx, 0, moved);
-    const reordered = next.map((l, i) => ({ ...l, sort_order: i }));
+    const reordered = next.map((l, i) => ({ Button, ...l, sort_order: i }));
     setLevels(reordered);
     setDraggedLevelId(null);
     try {
       setLevelsSaving(true);
-      await dataAccess.reorderInterestLevels(reordered.map(l => ({ id: l.id, sort_order: l.sort_order })));
+      await dataAccess.reorderInterestLevels(reordered.map(l => ({ Button, id: l.id, sort_order: l.sort_order })));
       toast.success("Ordem salva");
     } catch {
       toast.error("Erro ao reordenar");
@@ -353,7 +353,7 @@ export default function CRMFieldsTab() {
     }
   }, [dataAccess]);
 
-  useEffect(() => { loadStages(); }, [loadStages]);
+  useEffect(() => { Button, loadStages(); }, [loadStages]);
 
   // ── Realtime subscriptions ──
   useEffect(() => {
@@ -362,7 +362,7 @@ export default function CRMFieldsTab() {
 
     const originsChannel = supabase
       .channel(`lead_origins:org:${orgId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'lead_origins', filter: `organization_id=eq.${orgId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'lead_origins', filter: `organization_id=eq.${orgId}` }, () => {
         console.log('[CRMFieldsTab] Realtime: lead_origins changed');
         loadOrigins();
       })
@@ -370,7 +370,7 @@ export default function CRMFieldsTab() {
 
     const levelsChannel = supabase
       .channel(`interest_levels:org:${orgId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'interest_levels', filter: `organization_id=eq.${orgId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'interest_levels', filter: `organization_id=eq.${orgId}` }, () => {
         console.log('[CRMFieldsTab] Realtime: interest_levels changed');
         loadLevels();
       })
@@ -378,7 +378,7 @@ export default function CRMFieldsTab() {
 
     const stagesChannel = supabase
       .channel(`pipeline_stages:org:${orgId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline_stages', filter: `organization_id=eq.${orgId}` }, () => {
+      .on('postgres_changes', { Button, event: '*', schema: 'public', table: 'pipeline_stages', filter: `organization_id=eq.${orgId}` }, () => {
         console.log('[CRMFieldsTab] Realtime: pipeline_stages changed');
         loadStages();
       })
@@ -397,7 +397,7 @@ export default function CRMFieldsTab() {
       toast.error(validation.error || 'Valor inválido');
       return;
     }
-    if (!dataAccess) { toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
+    if (!dataAccess) { Button, toast.error("Serviço de dados não inicializado. Faça login novamente."); return; }
     try {
       setStagesSaving(true);
       const nextOrder = stages.length > 0 ? Math.max(...stages.map(s => s.sort_order)) + 1 : 0;
@@ -421,7 +421,7 @@ export default function CRMFieldsTab() {
     if (!editingStage || !dataAccess) return;
     try {
       setStagesSaving(true);
-      await dataAccess.updatePipelineStage(editingStage.id, { name: editingStage.name });
+      await dataAccess.updatePipelineStage(editingStage.id, { Button, name: editingStage.name });
       toast.success("Etapa atualizada");
       setEditingStage(null);
       await loadStages();
@@ -451,12 +451,12 @@ export default function CRMFieldsTab() {
     const next = [...stages];
     const [moved] = next.splice(fromIdx, 1);
     next.splice(toIdx, 0, moved);
-    const reordered = next.map((s, i) => ({ ...s, sort_order: i }));
+    const reordered = next.map((s, i) => ({ Button, ...s, sort_order: i }));
     setStages(reordered);
     setDraggedStageId(null);
     try {
       setStagesSaving(true);
-      await dataAccess.reorderPipelineStages(reordered.map(s => ({ id: s.id, sort_order: s.sort_order })));
+      await dataAccess.reorderPipelineStages(reordered.map(s => ({ Button, id: s.id, sort_order: s.sort_order })));
       toast.success("Ordem salva");
     } catch {
       toast.error("Erro ao reordenar");
@@ -470,7 +470,7 @@ export default function CRMFieldsTab() {
   // RENDER HELPERS
   // ══════════════════════════════════════════════════════════
 
-  const renderDraggableList = <T extends { id: string; sort_order: number }>(
+  const renderDraggableList = <T extends { Button, id: string; sort_order: number }>(
     items: T[],
     loading: boolean,
     saving: boolean,
@@ -538,7 +538,7 @@ export default function CRMFieldsTab() {
           (o) => (
             <>
               {editingOrigin?.id === o.id ? (
-                <Input value={editingOrigin.name} onChange={e => setEditingOrigin({ ...editingOrigin, name: e.target.value })} className="h-8 flex-1" />
+                <Input value={editingOrigin.name} onChange={e => setEditingOrigin({ Button, ...editingOrigin, name: e.target.value })} className="h-8 flex-1" />
               ) : (
                 <span className="flex-1 text-foreground">{o.name}</span>
               )}
@@ -581,8 +581,8 @@ export default function CRMFieldsTab() {
             <>
               {editingLevel?.id === l.id ? (
                 <div className="flex gap-3 flex-1 mr-2">
-                  <Input value={editingLevel.value} onChange={e => setEditingLevel({ ...editingLevel, value: e.target.value })} className="h-8" placeholder="Valor" />
-                  <Input value={editingLevel.label} onChange={e => setEditingLevel({ ...editingLevel, label: e.target.value })} className="h-8" placeholder="Label" />
+                  <Input value={editingLevel.value} onChange={e => setEditingLevel({ Button, ...editingLevel, value: e.target.value })} className="h-8" placeholder="Valor" />
+                  <Input value={editingLevel.label} onChange={e => setEditingLevel({ Button, ...editingLevel, label: e.target.value })} className="h-8" placeholder="Label" />
                 </div>
               ) : (
                 <span className="flex-1 text-foreground">{l.label}</span>
@@ -601,8 +601,8 @@ export default function CRMFieldsTab() {
           "Arraste para reordenar. A ordem é salva automaticamente."
         )}
         <div className="flex gap-3 mt-3">
-          <Input placeholder="Valor (ex: frio)" value={newLevel.value} onChange={e => setNewLevel(p => ({ ...p, value: e.target.value }))} className="h-8" />
-          <Input placeholder="Label (ex: Frio)" value={newLevel.label} onChange={e => setNewLevel(p => ({ ...p, label: e.target.value }))} className="h-8" />
+          <Input placeholder="Valor (ex: frio)" value={newLevel.value} onChange={e => setNewLevel(p => ({ Button, ...p, value: e.target.value }))} className="h-8" />
+          <Input placeholder="Label (ex: Frio)" value={newLevel.label} onChange={e => setNewLevel(p => ({ Button, ...p, label: e.target.value }))} className="h-8" />
           <Button size="sm" onClick={handleAddLevel} disabled={!newLevel.value.trim() || !newLevel.label.trim() || levelsSaving}>
             {levelsSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           </Button>
@@ -625,7 +625,7 @@ export default function CRMFieldsTab() {
           (s) => (
             <>
               {editingStage?.id === s.id ? (
-                <Input value={editingStage.name} onChange={e => setEditingStage({ ...editingStage, name: e.target.value })} className="h-8 flex-1" />
+                <Input value={editingStage.name} onChange={e => setEditingStage({ Button, ...editingStage, name: e.target.value })} className="h-8 flex-1" />
               ) : (
                 <span className="flex-1 text-foreground">{s.name}</span>
               )}

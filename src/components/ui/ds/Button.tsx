@@ -1,5 +1,5 @@
 import React from 'react';
-import { designSystemStandards } from '@/styles/design-system-standards';
+import { Button, designSystemStandards } from '@/styles/design-system-standards';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'error' | 'ghost';

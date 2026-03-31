@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, useState, useEffect } from 'react';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, useUserRole } from '@/hooks/useUserRole';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
+import { Button, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
+import { Button, Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
+import { Button, toast } from 'sonner';
 
 interface CustomRole {
   id: string;
@@ -26,9 +26,9 @@ interface CustomRolesTabProps {
   onRoleCreated?: (roleName: string) => void;
 }
 
-export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
-  const { organizationId } = useOrganization();
-  const { role, canAccessSettings } = useUserRole();
+export default function CustomRolesTab({ Button, onRoleCreated }: CustomRolesTabProps) {
+  const { Button, organizationId } = useOrganization();
+  const { Button, role, canAccessSettings } = useUserRole();
   const [roles, setRoles] = useState<CustomRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
@@ -42,11 +42,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
     if (!organizationId) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('custom_roles')
         .select('*')
         .eq('organization_id', organizationId)
-        .order('is_default', { ascending: false })
+        .order('is_default', { Button, ascending: false })
         .order('name');
       if (error) throw error;
       setRoles(data || []);
@@ -85,16 +85,16 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
     setSaving(true);
     try {
       if (editing) {
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('custom_roles')
-          .update({ name: formName.trim(), description: formDescription.trim() || null, updated_at: new Date().toISOString() })
+          .update({ Button, name: formName.trim(), description: formDescription.trim() || null, updated_at: new Date().toISOString() })
           .eq('id', editing.id);
         if (error) throw error;
         toast.success('Role atualizada!');
       } else {
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('custom_roles')
-          .insert({ organization_id: organizationId, name: formName.trim(), description: formDescription.trim() || null });
+          .insert({ Button, organization_id: organizationId, name: formName.trim(), description: formDescription.trim() || null });
         if (error) {
           if (error.code === '23505') {
             toast.error('Já existe uma role com esse nome nesta organização');
@@ -123,14 +123,14 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
     setSaving(true);
     try {
       // Delete associated permissions first
-      const { error: permError } = await supabase
+      const { Button, error: permError } = await supabase
         .from('role_permissions')
         .delete()
         .eq('organization_id', organizationId!)
         .eq('role', deleteTarget.name);
       if (permError) console.warn('Error cleaning permissions:', permError);
 
-      const { error } = await supabase
+      const { Button, error } = await supabase
         .from('custom_roles')
         .delete()
         .eq('id', deleteTarget.id);
@@ -227,7 +227,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
       </Card>
 
       {/* Create/Edit Dialog */}
-      <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
+      <Dialog open={formOpen} onOpenChange={(o) => { Button, setFormOpen(o); if (!o) setEditing(null); }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>{editing ? 'Editar Role' : 'Nova Role'}</DialogTitle>
@@ -253,7 +253,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
+      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { Button, if (!o) setDeleteTarget(null); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remover role "{deleteTarget?.name}"?</AlertDialogTitle>

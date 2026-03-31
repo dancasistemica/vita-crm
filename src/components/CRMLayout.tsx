@@ -1,15 +1,15 @@
-import { SidebarProvider, useSidebar } from "@/components/ui/ds";
-import { AppSidebar } from "@/components/AppSidebar";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useBrand } from "@/contexts/BrandContext";
+import { Button, SidebarProvider, useSidebar } from "@/components/ui/ds";
+import { Button, AppSidebar } from "@/components/AppSidebar";
+import { Button, Link, Outlet, useNavigate } from "react-router-dom";
+import { Button, useBrand } from "@/contexts/BrandContext";
 import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
-import { useSearch } from "@/hooks/useSearch";
-import { Menu, Search } from "lucide-react";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
+import { Button, useSearch } from "@/hooks/useSearch";
+import { Button, Menu, Search } from "lucide-react";
 
 function HeaderMenuButton() {
-  const { toggleSidebar } = useSidebar();
+  const { Button, toggleSidebar } = useSidebar();
 
   return (
     <Button
@@ -26,9 +26,9 @@ function HeaderMenuButton() {
 }
 
 export default function CRMLayout() {
-  const { brand } = useBrand();
-  const { currentOrganization } = useOrganizationSwitch();
-  const { searchQuery, setSearchQuery, results, loading } = useSearch();
+  const { Button, brand } = useBrand();
+  const { Button, currentOrganization } = useOrganizationSwitch();
+  const { Button, searchQuery, setSearchQuery, results, loading } = useSearch();
   const navigate = useNavigate();
   const organizationName = currentOrganization?.name || brand.org_display_name || "CRM";
 
@@ -65,11 +65,11 @@ export default function CRMLayout() {
                       key={`${result.type}-${result.id}`}
                       onClick={() => {
                         if (result.type === "lead") {
-                          navigate("/leads", { state: { leadId: result.id } });
+                          navigate("/leads", { Button, state: { Button, leadId: result.id } });
                         } else if (result.type === "client") {
                           navigate(`/clientes/${result.id}`);
                         } else if (result.type === "task") {
-                          navigate("/tarefas", { state: { taskId: result.id } });
+                          navigate("/tarefas", { Button, state: { Button, taskId: result.id } });
                         }
                         setSearchQuery("");
                       }}

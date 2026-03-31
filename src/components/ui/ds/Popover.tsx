@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { Button, useState, useEffect } from 'react';
 
-export const Popover = ({ open, onOpenChange, children }: any) => {
+export const Popover = ({ Button, open, onOpenChange, children }: any) => {
   const [isOpen, setIsOpen] = useState(open || false);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export const Popover = ({ open, onOpenChange, children }: any) => {
     <div className="relative inline-block">
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<any>, { isOpen, setIsOpen: handleOpenChange });
+          return React.cloneElement(child as React.ReactElement<any>, { Button, isOpen, setIsOpen: handleOpenChange });
         }
         return child;
       })}
@@ -24,7 +24,7 @@ export const Popover = ({ open, onOpenChange, children }: any) => {
   );
 };
 
-export const PopoverTrigger = ({ children, setIsOpen }: any) => {
+export const PopoverTrigger = ({ Button, children, setIsOpen }: any) => {
   if (React.isValidElement(children)) {
     return React.cloneElement(children as React.ReactElement<any>, {
       onClick: (e: any) => {
@@ -36,7 +36,7 @@ export const PopoverTrigger = ({ children, setIsOpen }: any) => {
   return <div onClick={() => setIsOpen((v: boolean) => !v)}>{children}</div>;
 };
 
-export const PopoverContent = ({ children, isOpen, className = '' }: any) => {
+export const PopoverContent = ({ Button, children, isOpen, className = '' }: any) => {
   if (!isOpen) return null;
   return (
     <div className={`absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg ${className}`}>

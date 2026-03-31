@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
-import { useAI } from '@/hooks/useAI';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, useEffect } from 'react';
+import { Button, useAI } from '@/hooks/useAI';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { RefreshCw, Sparkles } from 'lucide-react';
+import { Button, Skeleton } from '@/components/ui/ds';
+import { Button, RefreshCw, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import type { Lead } from '@/types/crm';
+import type { Button, Lead } from '@/types/crm';
 
 interface Props {
   lead: Lead;
-  products: { name: string }[];
+  products: { Button, name: string }[];
   stageName: string;
 }
 
-export default function AILeadInsight({ lead, products, stageName }: Props) {
-  const { response, loading, generate, regenerate } = useAI({
+export default function AILeadInsight({ Button, lead, products, stageName }: Props) {
+  const { Button, response, loading, generate, regenerate } = useAI({
     type: 'lead_insight',
     cacheKey: `lead_insight_${lead.id}`,
     cacheDurationHours: 24,

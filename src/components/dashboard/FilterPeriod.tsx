@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { Button, useState } from 'react';
 import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Card, CardContent } from '@/components/ui/ds';
-import { CalendarDays } from 'lucide-react';
+import { Button, Input } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Card, CardContent } from '@/components/ui/ds';
+import { Button, CalendarDays } from 'lucide-react';
 
 export interface DateRange {
   start: Date;
@@ -17,14 +17,14 @@ interface FilterPeriodProps {
 }
 
 const PRESET_PERIODS = [
-  { label: 'Hoje', days: 0 },
-  { label: '7 dias', days: 7 },
-  { label: '15 dias', days: 15 },
-  { label: '30 dias', days: 30 },
-  { label: '60 dias', days: 60 },
+  { Button, label: 'Hoje', days: 0 },
+  { Button, label: '7 dias', days: 7 },
+  { Button, label: '15 dias', days: 15 },
+  { Button, label: '30 dias', days: 30 },
+  { Button, label: '60 dias', days: 60 },
 ];
 
-export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias' }: FilterPeriodProps) {
+export default function FilterPeriod({ Button, onPeriodChange, selectedLabel = '30 dias' }: FilterPeriodProps) {
   const [isCustom, setIsCustom] = useState(false);
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
@@ -37,12 +37,12 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - defaultPreset.days, 0, 0, 0, 0);
       console.log('[FilterPeriod] Toggle off, voltando para 30 dias');
-      onPeriodChange({ start, end, label: defaultPreset.label });
+      onPeriodChange({ Button, start, end, label: defaultPreset.label });
     } else {
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - preset.days, 0, 0, 0, 0);
       console.log('[FilterPeriod] Toggle on:', preset.label);
-      onPeriodChange({ start, end, label: preset.label });
+      onPeriodChange({ Button, start, end, label: preset.label });
     }
     setIsCustom(false);
   };
@@ -55,7 +55,7 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
     const start = new Date(sy, sm - 1, sd, 0, 0, 0, 0);
     const end = new Date(ey, em - 1, ed, 23, 59, 59, 999);
     if (start > end) return;
-    onPeriodChange({ start, end, label: `${start.toLocaleDateString('pt-BR')} - ${end.toLocaleDateString('pt-BR')}` });
+    onPeriodChange({ Button, start, end, label: `${start.toLocaleDateString('pt-BR')} - ${end.toLocaleDateString('pt-BR')}` });
   };
 
   return (

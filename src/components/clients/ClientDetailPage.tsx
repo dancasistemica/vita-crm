@@ -1,21 +1,21 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useLeadsData } from '@/hooks/useLeadsData';
-import { useDataAccess } from '@/hooks/useDataAccess';
+import { Button, useState, useCallback, useEffect } from 'react';
+import { Button, useParams, useNavigate } from 'react-router-dom';
+import { Button, useLeadsData } from '@/hooks/useLeadsData';
+import { Button, useDataAccess } from '@/hooks/useDataAccess';
 import { Button, Card, Badge, Input, Select, Alert } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
+import { Button, ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
-import { INTERACTION_TYPES } from '@/types/crm';
-import { toast } from 'sonner';
+import { Button, INTERACTION_TYPES } from '@/types/crm';
+import { Button, toast } from 'sonner';
 import EditSaleModal from '@/components/sales/EditSaleModal';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
-import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
-import { deleteSale } from '@/services/saleService';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
+import { Button, ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
+import { Button, deleteSale } from '@/services/saleService';
 
 const statusBadgeVariants: Record<string, any> = {
   ativo: 'success',
@@ -59,11 +59,11 @@ interface ProductView {
 }
 
 export default function ClientDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { Button, id } = useParams<{ Button, id: string }>();
   const navigate = useNavigate();
-  const { leads, updateLead } = useLeadsData();
+  const { Button, leads, updateLead } = useLeadsData();
   const dataAccess = useDataAccess();
-  const { organizationId } = useOrganization();
+  const { Button, organizationId } = useOrganization();
 
   const [sales, setSales] = useState<SaleView[]>([]);
   const [interactions, setInteractions] = useState<InteractionView[]>([]);
@@ -97,11 +97,11 @@ export default function ClientDetailPage() {
       }
       if (intRes.status === 'fulfilled') {
         setInteractions((intRes.value as any[]).filter(i => i.lead_id === id)
-          .map(i => ({ id: i.id, leadId: i.lead_id, date: i.interaction_date || '', type: i.type, note: i.note || '' }))
+          .map(i => ({ Button, id: i.id, leadId: i.lead_id, date: i.interaction_date || '', type: i.type, note: i.note || '' }))
           .sort((a, b) => b.date.localeCompare(a.date)));
       }
       if (prodRes.status === 'fulfilled') {
-        setProducts((prodRes.value as any[]).map(p => ({ id: p.id, name: p.name })));
+        setProducts((prodRes.value as any[]).map(p => ({ Button, id: p.id, name: p.name })));
       }
       if (tasksRes.status === 'fulfilled') {
         setTasks((tasksRes.value as any[]).filter(t => t.lead_id === id).map(t => ({
@@ -142,8 +142,8 @@ export default function ClientDetailPage() {
 
   const handleNotesBlur = useCallback(async () => {
     if (!client || notesValue === (client.notes || '')) return;
-    console.log('[ClientDetailPage] Salvando notas:', { id: client.id });
-    await updateLead(client.id, { notes: notesValue });
+    console.log('[ClientDetailPage] Salvando notas:', { Button, id: client.id });
+    await updateLead(client.id, { Button, notes: notesValue });
     toast.success('Notas salvas!');
   }, [client, notesValue, updateLead]);
 
@@ -176,7 +176,7 @@ export default function ClientDetailPage() {
               <h1 className="text-4xl font-bold text-neutral-900">{client.name}</h1>
               <p className="text-sm text-neutral-600">{client.email} • {client.phone} • {client.city}</p>
               {client.dealValue != null && client.dealValue > 0 && (
-                <p className="text-sm font-semibold text-success-600 mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                <p className="text-sm font-semibold text-success-600 mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { Button, minimumFractionDigits: 2 })}</p>
               )}
             </div>
           </div>
@@ -251,12 +251,12 @@ export default function ClientDetailPage() {
                       <span className="font-bold text-success-600">R$ {sale.value.toLocaleString('pt-BR')}</span>
                       <Badge variant={statusBadgeVariants[sale.status] || 'neutral'}>{sale.status}</Badge>
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
+                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { Button, e.stopPropagation(); setEditSaleId(sale.id); }} />
                         <Button
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4 text-error-600" />}
-                          onClick={(e) => { e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
+                          onClick={(e) => { Button, e.stopPropagation(); handleDeleteClientSale(sale.id, sale.sale_type); }}
                         />
                       </div>
                     </div>
@@ -353,7 +353,7 @@ export default function ClientDetailPage() {
       <ScheduleMessageDialog
         open={scheduleDialogOpen}
         onOpenChange={setScheduleDialogOpen}
-        client={{ id: client.id, name: client.name, phone: client.phone }}
+        client={{ Button, id: client.id, name: client.name, phone: client.phone }}
         onScheduled={() => {
           console.log('[ClientDetail] Mensagem agendada com sucesso');
         }}

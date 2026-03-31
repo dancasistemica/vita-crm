@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Button, ChevronDown } from 'lucide-react';
 
 interface SelectOption {
   value: string;
@@ -113,9 +113,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 Select.displayName = 'Select';
 
 // Shims for compound components
-export const SelectTrigger = ({ children, className = '' }: any) => children;
-export const SelectValue = ({ placeholder }: any) => null;
-export const SelectContent = ({ children }: any) => <>{children}</>;
-export const SelectItem = ({ value, children }: any) => <option value={value}>{children}</option>;
-export const SelectGroup = ({ children }: any) => <optgroup label="">{children}</optgroup>;
-export const SelectLabel = ({ children }: any) => null;
+export const SelectTrigger = ({ Button, children, className = '' }: any) => children;
+export const SelectValue = ({ Button, placeholder }: any) => null;
+export const SelectContent = ({ Button, children }: any) => <>{children}</>;
+export const SelectItem = ({ Button, value, children }: any) => <option value={value}>{children}</option>;
+export const SelectGroup = ({ Button, children }: any) => <optgroup label="">{children}</optgroup>;
+export const SelectLabel = ({ Button, children }: any) => null;

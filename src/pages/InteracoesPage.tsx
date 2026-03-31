@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { useCRMStore } from "@/store/crmStore";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button, useState } from "react";
+import { Button, useCRMStore } from "@/store/crmStore";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Button } from "@/components/ui/ds/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Select } from "@/components/ui/ds/Select";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Textarea } from "@/components/ui/ds";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Plus, MessageCircle } from "lucide-react";
-import { Interaction, INTERACTION_TYPES } from "@/types/crm";
-import { toast } from "sonner";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
+import { Button, Select } from "@/components/ui/ds/Select";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Label } from "@/components/ui/ds";
+import { Button, Textarea } from "@/components/ui/ds";
+import { Button, Badge } from "@/components/ui/ds/Badge";
+import { Button, Plus, MessageCircle } from "lucide-react";
+import { Button, Interaction, INTERACTION_TYPES } from "@/types/crm";
+import { Button, toast } from "sonner";
 import AIResponseSuggestion from "@/components/ai/AIResponseSuggestion";
 
 export default function InteracoesPage() {
-  const { leads, interactions, addInteraction } = useCRMStore();
+  const { Button, leads, interactions, addInteraction } = useCRMStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterLead, setFilterLead] = useState("all");
 
@@ -79,10 +79,10 @@ export default function InteracoesPage() {
   );
 }
 
-function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Partial<Interaction>) => void }) {
-  const { interactions, products, pipelineStages } = useCRMStore();
-  const [form, setForm] = useState<Partial<Interaction>>({ date: new Date().toISOString().split('T')[0], type: 'mensagem' });
-  const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
+function InteractionForm({ Button, leads, onSave }: { Button, leads: any[]; onSave: (data: Partial<Interaction>) => void }) {
+  const { Button, interactions, products, pipelineStages } = useCRMStore();
+  const [form, setForm] = useState<Partial<Interaction>>({ Button, date: new Date().toISOString().split('T')[0], type: 'mensagem' });
+  const set = (k: string, v: any) => setForm(f => ({ Button, ...f, [k]: v }));
 
   const selectedLead = leads.find((l: any) => l.id === form.leadId);
   const leadInteractions = interactions.filter(i => i.leadId === form.leadId);

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
-import { Card, Badge, Alert } from "@/components/ui/ds";
+import { Button, useState } from "react";
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Button, Card, Badge, Alert } from "@/components/ui/ds";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
 import PaymentMethodsTab from "@/components/settings/PaymentMethodsTab";
@@ -8,12 +8,12 @@ import UserRolesManager from "@/components/settings/UserRolesManager";
 import CustomRolesTab from "@/components/settings/CustomRolesTab";
 import OrganizationPage from "@/pages/OrganizationPage";
 import AIContextTab from "@/components/settings/AIContextTab";
-import { useUserRole } from "@/hooks/useUserRole";
-import { ScrollArea, ScrollBar } from "@/components/ui/ds";
-import { Users, ClipboardList, CreditCard, Shield, Lock, Building2, Brain } from "lucide-react";
+import { Button, useUserRole } from "@/hooks/useUserRole";
+import { Button, ScrollArea, ScrollBar } from "@/components/ui/ds";
+import { Button, Users, ClipboardList, CreditCard, Shield, Lock, Building2, Brain } from "lucide-react";
 
 export default function ConfiguracoesPage() {
-  const { canAccessSettings } = useUserRole();
+  const { Button, canAccessSettings } = useUserRole();
   const [activeTab, setActiveTab] = useState("usuarios");
   const [preselectedRole, setPreselectedRole] = useState<string | null>(null);
 
@@ -30,7 +30,7 @@ export default function ConfiguracoesPage() {
         <p className="text-sm text-neutral-600 mt-1">Gerencie usuários, permissões e parâmetros do sistema</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); if (v !== "permissoes") setPreselectedRole(null); }} className="w-full space-y-4">
+      <Tabs value={activeTab} onValueChange={(v) => { Button, setActiveTab(v); if (v !== "permissoes") setPreselectedRole(null); }} className="w-full space-y-4">
         <div className="overflow-x-auto pb-2">
           <TabsList className="flex w-max min-w-full">
             <TabsTrigger value="usuarios" className="gap-3"><Users className="w-4 h-4" /> Usuários</TabsTrigger>

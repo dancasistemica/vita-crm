@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
+import { Button, useState } from "react";
+import { Button, Input } from "@/components/ui/ds/Input";
+import { Button, Label } from "@/components/ui/ds";
 import { Button } from "@/components/ui/ds/Button";
-import { Select } from "@/components/ui/ds/Select";
-import { Search, X, Filter } from "lucide-react";
-import { TASK_TYPES } from "@/types/crm";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
+import { Button, Select } from "@/components/ui/ds/Select";
+import { Button, Search, X, Filter } from "lucide-react";
+import { Button, TASK_TYPES } from "@/types/crm";
+import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
 
 interface OrgMember {
   user_id: string;
-  profiles?: { full_name: string; email: string | null } | null;
+  profiles?: { Button, full_name: string; email: string | null } | null;
 }
 
 interface TaskFiltersProps {

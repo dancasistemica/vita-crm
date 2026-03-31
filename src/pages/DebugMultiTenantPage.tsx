@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
+import { Button, useState, useEffect } from 'react';
+import { Button, useAuth } from '@/hooks/useAuth';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { RefreshCw } from 'lucide-react';
+import { Button, RefreshCw } from 'lucide-react';
 
 interface DebugInfo {
   timestamp: string;
@@ -26,13 +26,13 @@ interface DebugInfo {
     org_leads_visible: number;
     unique_org_ids: string[];
   };
-  tables_checked: Record<string, { visible: number; org_ids: string[] }>;
+  tables_checked: Record<string, { Button, visible: number; org_ids: string[] }>;
   error?: string;
 }
 
 export default function DebugMultiTenantPage() {
-  const { user } = useAuth();
-  const { organization, organizationId } = useOrganization();
+  const { Button, user } = useAuth();
+  const { Button, organization, organizationId } = useOrganization();
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -51,8 +51,8 @@ export default function DebugMultiTenantPage() {
           id: organizationId,
           name: organization?.name ?? null,
         },
-        rls_status: { isolation_working: false, message: '' },
-        data_isolation: { total_leads_visible: 0, org_leads_visible: 0, unique_org_ids: [] },
+        rls_status: { Button, isolation_working: false, message: '' },
+        data_isolation: { Button, total_leads_visible: 0, org_leads_visible: 0, unique_org_ids: [] },
         tables_checked: {},
       };
 
@@ -60,13 +60,13 @@ export default function DebugMultiTenantPage() {
       const tables = ['leads', 'sales', 'tasks', 'interactions', 'products', 'tags'] as const;
 
       for (const table of tables) {
-        const { data, error } = await supabase
+        const { Button, data, error } = await supabase
           .from(table)
           .select('id, organization_id')
           .limit(500);
 
         if (error) {
-          info.tables_checked[table] = { visible: 0, org_ids: [] };
+          info.tables_checked[table] = { Button, visible: 0, org_ids: [] };
           continue;
         }
 
@@ -83,7 +83,7 @@ export default function DebugMultiTenantPage() {
       info.data_isolation.unique_org_ids = leadsData?.org_ids || [];
 
       if (organizationId) {
-        const { data: orgLeads } = await supabase
+        const { Button, data: orgLeads } = await supabase
           .from('leads')
           .select('id')
           .eq('organization_id', organizationId)
@@ -94,20 +94,20 @@ export default function DebugMultiTenantPage() {
       // RLS check: if all visible leads belong to only this org, RLS is working
       const uniqueOrgs = info.data_isolation.unique_org_ids;
       if (uniqueOrgs.length === 0) {
-        info.rls_status = { isolation_working: true, message: '✅ Sem dados para verificar, mas RLS está habilitado' };
+        info.rls_status = { Button, isolation_working: true, message: '✅ Sem dados para verificar, mas RLS está habilitado' };
       } else if (uniqueOrgs.length === 1 && uniqueOrgs[0] === organizationId) {
-        info.rls_status = { isolation_working: true, message: '✅ RLS está funcionando — só vê dados da sua organização' };
+        info.rls_status = { Button, isolation_working: true, message: '✅ RLS está funcionando — só vê dados da sua organização' };
       } else if (uniqueOrgs.length > 1) {
-        info.rls_status = { isolation_working: false, message: '❌ RLS NÃO está funcionando — vê dados de múltiplas organizações!' };
+        info.rls_status = { Button, isolation_working: false, message: '❌ RLS NÃO está funcionando — vê dados de múltiplas organizações!' };
       } else {
-        info.rls_status = { isolation_working: true, message: '✅ Dados visíveis pertencem apenas à sua organização' };
+        info.rls_status = { Button, isolation_working: true, message: '✅ Dados visíveis pertencem apenas à sua organização' };
       }
 
       console.log('[DebugMultiTenant] Diagnóstico completo:', info);
       setDebugInfo(info);
     } catch (error: any) {
       console.error('[DebugMultiTenant] Erro:', error);
-      setDebugInfo({ error: error.message } as any);
+      setDebugInfo({ Button, error: error.message } as any);
     } finally {
       setLoading(false);
     }

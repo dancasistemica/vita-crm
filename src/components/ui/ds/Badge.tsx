@@ -23,7 +23,7 @@ const sizeStyles = {
 };
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ variant = 'default', size = 'md', className = '', children, ...props }, ref) => {
+  ({ Button, variant = 'default', size = 'md', className = '', children, ...props }, ref) => {
     return (
       <span
         ref={ref}

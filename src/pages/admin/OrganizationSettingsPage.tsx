@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { useUserRole } from '@/hooks/useUserRole';
-import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
+import { Button, useEffect, useMemo, useState } from 'react';
+import { Button, Loader2 } from 'lucide-react';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, useUserRole } from '@/hooks/useUserRole';
+import { Button, supabase } from '@/integrations/supabase/client';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
+import { Button, Input } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
+import { Button, Label } from '@/components/ui/ds';
+import { Button, Badge } from '@/components/ui/ds';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/ds';
-import { toast } from 'sonner';
+import { Button, toast } from 'sonner';
 
 const CRON_URL = 'https://yelawymcltqewpkwsxxb.supabase.co/functions/v1/send-scheduled-messages';
 const CRON_SCHEDULE_MINUTES = 5;
@@ -43,7 +43,7 @@ interface BotconversaSettingsProps {
  * Dependências: useBotconversaConfig hook
  * Último teste: 2026-03-25
  */
-const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSettingsProps) => {
+const BotconversaSettings = ({ Button, organizationId, cronSecretToken }: BotconversaSettingsProps) => {
   const [botconversaKey, setBotconversaKey] = useState('');
   const [botconversaConfigId, setBotconversaConfigId] = useState<string | null>(null);
   const [botconversaSaving, setBotconversaSaving] = useState(false);
@@ -53,7 +53,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
   );
   const [botconversaLoading, setBotconversaLoading] = useState(false);
 
-  const getStatusMessage = (config?: { api_key?: string | null } | null) => {
+  const getStatusMessage = (config?: { Button, api_key?: string | null } | null) => {
     const key = config?.api_key?.trim() ?? '';
     if (!key) return 'Nenhuma chave configurada';
     return 'Chave configurada';
@@ -79,7 +79,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
     if (!organizationId) return;
     setBotconversaLoading(true);
     try {
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('botconversa_config')
         .select('id, api_key')
         .eq('organization_id', organizationId)
@@ -174,7 +174,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
 
     try {
       if (botconversaConfigId) {
-        const { error } = await supabase
+        const { Button, error } = await supabase
           .from('botconversa_config')
           .update({
             api_key: trimmedKey,
@@ -184,10 +184,10 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
 
         if (error) throw error;
       } else {
-        const { data: userData } = await supabase.auth.getUser();
+        const { Button, data: userData } = await supabase.auth.getUser();
         const createdBy = userData.user?.id;
 
-        const { data, error } = await supabase
+        const { Button, data, error } = await supabase
           .from('botconversa_config')
           .insert({
             organization_id: organizationId,
@@ -207,7 +207,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
         apiKeyLength: trimmedKey.length,
       });
 
-      const { data: config } = await supabase
+      const { Button, data: config } = await supabase
         .from('botconversa_config')
         .select('*')
         .eq('organization_id', organizationId)
@@ -355,8 +355,8 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
 };
 
 export default function OrganizationSettingsPage() {
-  const { organization, organizationId } = useOrganization();
-  const { role, loading: roleLoading } = useUserRole();
+  const { Button, organization, organizationId } = useOrganization();
+  const { Button, role, loading: roleLoading } = useUserRole();
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [lastExecution, setLastExecution] = useState<string | null>(null);
@@ -369,7 +369,7 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { Button, data, error } = await supabase
         .from('organizations')
         .select('*')
         .eq('id', organizationId)
@@ -425,8 +425,8 @@ export default function OrganizationSettingsPage() {
     if (!organizationId) return;
     setRegenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('regenerate-cron-secret-token', {
-        body: { organization_id: organizationId },
+      const { Button, data, error } = await supabase.functions.invoke('regenerate-cron-secret-token', {
+        body: { Button, organization_id: organizationId },
       });
 
       if (error) throw error;

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useOrganization } from '@/contexts/OrganizationContext';
-import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
+import React, { Button, useState, useEffect } from 'react';
+import { Button, useOrganization } from '@/contexts/OrganizationContext';
+import { Button, getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
 import { Button, Card, Input, Select, Badge, Alert } from '@/components/ui/ds';
-import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
-import { toast } from 'sonner';
-import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
+import { Button, Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
+import { Button, toast } from 'sonner';
+import { Button, CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import EditSaleModal from '@/components/sales/EditSaleModal';
 
 export function VendasPage() {
-  const { organization } = useOrganization();
+  const { Button, organization } = useOrganization();
   
   const [sales, setSales] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -121,9 +121,9 @@ export function VendasPage() {
           <Select
             label="Status"
             options={[
-              { value: 'todos', label: 'Todos' },
-              { value: 'ativa', label: 'Ativa' },
-              { value: 'cancelada', label: 'Cancelada' },
+              { Button, value: 'todos', label: 'Todos' },
+              { Button, value: 'ativa', label: 'Ativa' },
+              { Button, value: 'cancelada', label: 'Cancelada' },
             ]}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -131,9 +131,9 @@ export function VendasPage() {
           <Select
             label="Tipo"
             options={[
-              { value: 'todos', label: 'Todos' },
-              { value: 'unica', label: 'Venda Única' },
-              { value: 'mensalidade', label: 'Mensalidade' },
+              { Button, value: 'todos', label: 'Todos' },
+              { Button, value: 'unica', label: 'Venda Única' },
+              { Button, value: 'mensalidade', label: 'Mensalidade' },
             ]}
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
