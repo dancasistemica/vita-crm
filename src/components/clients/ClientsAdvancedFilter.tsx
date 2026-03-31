@@ -128,7 +128,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: '90 dias', days: 90 },
               { label: 'Este ano', days: -1 },
             ].map(({ label, days }) => (
-              < key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
+              <Button key={label} variant="secondary" size="sm" className="h-7 text-xs" onClick={() => {
                 const now = new Date();
                 const to = now.toISOString().split('T')[0];
                 const from = days === -1
@@ -137,7 +137,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 updateFilter('dateRange', { from, to });
               }}>
                 {label}
-              </>
+              </Button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">
