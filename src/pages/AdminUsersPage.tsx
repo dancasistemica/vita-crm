@@ -2,12 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Select } from "@/components/ui/ds/Select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -340,260 +339,234 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex items-center gap-3">
-        <Users className="h-6 w-6 text-primary" />
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Todos os Usuários</h1>
-        <Badge variant="secondary" className="ml-auto">{filtered.length} usuários</Badge>
+        <Users className="h-6 w-6 text-primary-600" />
+        <h1 className="text-4xl font-bold text-neutral-900">Todos os Usuários</h1>
+        <Badge variant="neutral" className="ml-auto">{filtered.length} usuários</Badge>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Filtros</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card padding="md">
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <div className="flex-1 relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <div className="flex-1">
               <Input
                 placeholder="Buscar por nome ou email..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                className="pl-9"
+                icon={<Search className="h-4 w-4" />}
               />
             </div>
-            <Select value={orgFilter} onValueChange={(v) => { setOrgFilter(v); setPage(1); }}>
-              <SelectTrigger className="w-full sm:w-[220px]">
-                <SelectValue placeholder="Organização" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as organizações</SelectItem>
-                {orgs.map((o) => (
-                  <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Função" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as funções</SelectItem>
-                <SelectItem value="owner">Proprietário</SelectItem>
-                <SelectItem value="admin">Administrador</SelectItem>
-                <SelectItem value="vendedor">Vendedor</SelectItem>
-                <SelectItem value="member">Usuário</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="w-full sm:w-[220px]">
+              <Select 
+                value={orgFilter} 
+                onChange={(e) => { setOrgFilter(e.target.value); setPage(1); }}
+                placeholder="Organização"
+                options={[
+                  { value: "all", label: "Todas as organizações" },
+                  ...orgs.map(o => ({ value: o.id, label: o.name }))
+                ]}
+              />
+            </div>
+            <div className="w-full sm:w-[180px]">
+              <Select 
+                value={roleFilter} 
+                onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
+                placeholder="Função"
+                options={[
+                  { value: "all", label: "Todas as funções" },
+                  { value: "owner", label: "Proprietário" },
+                  { value: "admin", label: "Administrador" },
+                  { value: "vendedor", label: "Vendedor" },
+                  { value: "member", label: "Usuário" },
+                ]}
+              />
+            </div>
             {hasFilters && (
               <Button variant="ghost" size="sm" onClick={resetFilters}>
                 <X className="h-4 w-4 mr-1" /> Resetar
               </Button>
             )}
           </div>
-        </CardContent>
+        </div>
       </Card>
 
-      <Card>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : filtered.length === 0 ? (
-            <p className="text-center text-muted-foreground py-12">Nenhum usuário encontrado.</p>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead className="hidden md:table-cell">Telefone</TableHead>
-                      <TableHead>Organização</TableHead>
-                      <TableHead>Função</TableHead>
-                      <TableHead className="hidden lg:table-cell">Criado em</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginated.map((u, idx) => (
-                      <TableRow key={`${u.user_id}-${u.org_id}-${idx}`}>
-                        <TableCell className="font-medium">
-                          {u.full_name}
-                          {u.is_owner && (
-                            <Badge variant="destructive" className="ml-2 text-[10px] px-1 py-0">Owner</Badge>
+      <Card padding="none">
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : filtered.length === 0 ? (
+          <p className="text-center text-muted-foreground py-12">Nenhum usuário encontrado.</p>
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead className="hidden md:table-cell">Telefone</TableHead>
+                    <TableHead>Organização</TableHead>
+                    <TableHead>Função</TableHead>
+                    <TableHead className="hidden lg:table-cell">Criado em</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginated.map((u, idx) => (
+                    <TableRow key={`${u.user_id}-${u.org_id}-${idx}`}>
+                      <TableCell className="font-medium">
+                        {u.full_name}
+                        {u.is_owner && (
+                          <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-sm">{u.email}</TableCell>
+                      <TableCell className="hidden md:table-cell text-sm text-neutral-600">
+                        {u.phone || "—"}
+                      </TableCell>
+                      <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
+                      <TableCell>
+                        <Badge variant="neutral">{roleLabels[u.role] || u.role}</Badge>
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
+                        {new Date(u.created_at).toLocaleDateString("pt-BR")}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Editar" onClick={() => openEdit(u)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          {u.email && u.org_id && (
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Resetar senha" onClick={() => handleResetPassword(u)}>
+                              <RotateCcw className="h-4 w-4" />
+                            </Button>
                           )}
-                        </TableCell>
-                        <TableCell className="text-sm">{u.email}</TableCell>
-                        <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
-                          {u.phone || "—"}
-                        </TableCell>
-                        <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge>
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                          {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button variant="ghost" size="icon" className="h-8 w-8" title="Editar" onClick={() => openEdit(u)}>
-                              <Edit className="h-4 w-4" />
+                          {u.org_id && (
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver organização" onClick={() => navigate("/superadmin")}>
+                              <Eye className="h-4 w-4" />
                             </Button>
-                            {u.email && u.org_id && (
-                              <Button variant="ghost" size="icon" className="h-8 w-8" title="Resetar senha" onClick={() => handleResetPassword(u)}>
-                                <RotateCcw className="h-4 w-4" />
-                              </Button>
-                            )}
-                            {u.org_id && (
-                              <Button variant="ghost" size="icon" className="h-8 w-8" title="Ver organização" onClick={() => navigate("/superadmin")}>
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                            )}
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(u)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                          )}
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" title="Remover" onClick={() => setDeleteTarget(u)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between text-sm text-muted-foreground p-4 border-t">
-                  <span>Página {page} de {totalPages}</span>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-                    <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
-                  </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t">
+                <span>Página {page} de {totalPages}</span>
+                <div className="flex gap-1">
+                  <Button variant="neutral" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+                  <Button variant="neutral" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
                 </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Edit Dialog */}
-      <Dialog open={editOpen} onOpenChange={(o) => { setEditOpen(o); if (!o) setEditUser(null); }}>
-        <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
-          <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
-            <DialogTitle>Editar Usuário</DialogTitle>
-          </DialogHeader>
-          <div className="p-6 space-y-4">
-            <div className="space-y-1">
-              <Label>Nome</Label>
-              <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
-            </div>
-            <div className="space-y-1">
-              <Label>Email</Label>
-              <Input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} type="email" />
-              {editEmail !== editUser?.email && (
-                <p className="text-xs text-amber-600">O email será atualizado na autenticação e no perfil.</p>
-              )}
-            </div>
-            <div className="space-y-1">
-              <Label>Nova Senha</Label>
-              <div className="relative">
-                <Input
-                  value={editPassword}
-                  onChange={(e) => setEditPassword(e.target.value)}
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Deixe em branco para não alterar"
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                </button>
-              </div>
-              <p className="text-xs text-muted-foreground">Mínimo 6 caracteres. Deixe em branco para não alterar.</p>
-            </div>
-            <div className="space-y-1">
-              <Label>Telefone</Label>
-              <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
-            </div>
-            {editOrgId && (
-              <div className="space-y-1">
-                <Label>Função</Label>
-                <Select value={editRole === "—" ? "member" : editRole} onValueChange={setEditRole}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="owner">Proprietário</SelectItem>
-                    <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="vendedor">Vendedor</SelectItem>
-                    <SelectItem value="member">Usuário</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             )}
-            <div className="space-y-1">
-              <Label>Organização</Label>
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-10" />
-                <Input
-                  value={orgSearch}
-                  onChange={(e) => setOrgSearch(e.target.value)}
-                  placeholder="Buscar organização..."
-                  className="pl-9 min-h-[44px]"
-                />
-              </div>
-              <div className="max-h-[160px] overflow-y-auto border rounded-md mt-1">
-                <button
-                  type="button"
-                  className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${!editOrgId ? 'bg-accent font-medium' : ''}`}
-                  onClick={() => { setEditOrgId(null); setEditRole("—"); }}
-                >
-                  Sem organização
-                </button>
-                {orgs
-                  .filter((o) => !orgSearch || o.name.toLowerCase().includes(orgSearch.toLowerCase()))
-                  .map((o) => (
-                    <button
-                      key={o.id}
-                      type="button"
-                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${editOrgId === o.id ? 'bg-accent font-medium' : ''}`}
-                      onClick={() => { setEditOrgId(o.id); if (editRole === "—") setEditRole("member"); }}
-                    >
-                      {o.name}
-                    </button>
-                  ))}
-              </div>
+          </>
+        )}
+      </Card>
+
+      {/* Edit User Modal */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              <h2 className="text-2xl font-semibold text-neutral-900">Editar Usuário</h2>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            <Input
+              label="Nome Completo"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              placeholder="Nome do usuário"
+            />
+            <Input
+              label="Telefone"
+              value={editPhone}
+              onChange={(e) => setEditPhone(e.target.value)}
+              placeholder="(00) 00000-0000"
+            />
+            <Input
+              label="Email"
+              type="email"
+              value={editEmail}
+              onChange={(e) => setEditEmail(e.target.value)}
+              placeholder="email@exemplo.com"
+            />
+            <div className="space-y-3">
+              <Input
+                label="Nova Senha (deixe em branco para não alterar)"
+                type={showPassword ? "text" : "password"}
+                value={editPassword}
+                onChange={(e) => setEditPassword(e.target.value)}
+                placeholder="Mínimo 6 caracteres"
+                icon={
+                  <Button variant="secondary" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
+                    {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                  </Button>
+                }
+              />
             </div>
+            
+            <Select
+              label="Organização"
+              value={editOrgId || ""}
+              onChange={(e) => setEditOrgId(e.target.value || null)}
+              placeholder="Sem organização"
+              options={orgs.map(o => ({ value: o.id, label: o.name }))}
+            />
+            
+            <Select
+              label="Função na Organização"
+              value={editRole}
+              onChange={(e) => setEditRole(e.target.value)}
+              options={[
+                { value: "owner", label: "Proprietário" },
+                { value: "admin", label: "Administrador" },
+                { value: "vendedor", label: "Vendedor" },
+                { value: "member", label: "Usuário" },
+                { value: "—", label: "Nenhuma" },
+              ]}
+            />
           </div>
-          <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-            <Button variant="outline" onClick={() => setEditOpen(false)}>Cancelar</Button>
-            <Button onClick={handleEditSave} disabled={saving}>
-              {saving && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
-              {saving ? "Salvando..." : "Salvar"}
+
+          <DialogFooter className="flex gap-3 pt-4 border-t">
+            <Button variant="neutral" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
+              Cancelar
+            </Button>
+            <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
+              Salvar Alterações
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover usuário</AlertDialogTitle>
+            <AlertDialogTitle>
+              <h2 className="text-2xl font-semibold text-neutral-900">Remover Usuário</h2>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong>?
-              {deleteTarget?.is_owner && (
-                <span className="block mt-2 text-destructive font-medium">
-                  ⚠️ Este usuário é proprietário (owner) da organização "{deleteTarget?.org_name}". Removê-lo pode causar problemas na organização.
-                </span>
-              )}
+              Tem certeza que deseja remover o usuário <strong>{deleteTarget?.full_name}</strong>? 
+              Esta ação removerá o acesso dele à organização.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {saving ? "Removendo..." : "Remover"}
+          <AlertDialogFooter className="flex gap-3 pt-4 border-t">
+            <AlertDialogCancel asChild>
+              <Button variant="neutral" className="flex-1">Cancelar</Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button variant="error" onClick={handleDelete} loading={saving} className="flex-1">
+                Remover Usuário
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

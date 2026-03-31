@@ -288,7 +288,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
         <CardDescription>Salve a chave API e ative a automação de envios</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Label htmlFor="botconversa-api-key">Chave API do Botconversa</Label>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Input
@@ -300,10 +300,10 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
               className="font-mono"
               disabled={botconversaLoading}
             />
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
                 {botconversaSaving ? (
-                  <span className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Salvando...
                   </span>
@@ -330,7 +330,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-3 text-sm">
           <Badge
             className={
               botconversaStatus === 'valid'
@@ -466,7 +466,7 @@ export default function OrganizationSettingsPage() {
           <CardDescription>Gerencie o token e status do cron de mensagens agendadas</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Cron Secret Token</Label>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Input
@@ -474,12 +474,12 @@ export default function OrganizationSettingsPage() {
                 value={loading ? 'Carregando...' : maskedToken || '—'}
                 className="font-mono"
               />
-              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                <Button variant="outline" onClick={handleCopy} disabled={!token || loading}>
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                <Button variant="neutral" onClick={handleCopy} disabled={!token || loading}>
                   Copy
                 </Button>
                 <Button
-                  variant="destructive"
+                  variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
@@ -489,7 +489,7 @@ export default function OrganizationSettingsPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
+          <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
             <p className="text-sm font-medium">Instruções para Cron-Job.org</p>
             <div className="text-sm text-muted-foreground space-y-1">
               <p>1. Go to https://cron-job.org</p>

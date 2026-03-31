@@ -120,7 +120,7 @@ export default function LeadSelectWithSearch({
   return (
     <div ref={containerRef} className="relative w-full" onKeyDown={handleKeyDown}>
       {/* Trigger */}
-      <button
+      <Button variant="secondary" size="sm"
         type="button"
         disabled={disabled}
         onClick={() => setOpen(o => !o)}
@@ -134,7 +134,7 @@ export default function LeadSelectWithSearch({
         aria-expanded={open}
       >
         {selected ? (
-          <span className="flex items-center gap-2 truncate">
+          <span className="flex items-center gap-3 truncate">
             <Avatar className="h-5 w-5 text-[10px]">
               <AvatarFallback className={cn("text-[10px]", colorFor(selected.id))}>
                 {getInitials(selected.name)}
@@ -151,13 +151,13 @@ export default function LeadSelectWithSearch({
           <span className="text-muted-foreground">{placeholder}</span>
         )}
         <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-      </button>
+      </Button>
 
       {/* Dropdown */}
       {open && (
         <div className="absolute z-50 mt-1 w-full rounded-md border border-input bg-popover shadow-md animate-in fade-in-0 zoom-in-95">
           {/* Search */}
-          <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+          <div className="flex items-center gap-3 border-b border-border px-3 py-2">
             <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
               ref={inputRef}
@@ -167,9 +167,9 @@ export default function LeadSelectWithSearch({
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
             {query && (
-              <button type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+              <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -186,7 +186,7 @@ export default function LeadSelectWithSearch({
                 </p>
               ) : (
                 filtered.map((lead, idx) => (
-                  <button
+                  <Button variant="secondary" size="sm"
                     key={lead.id}
                     type="button"
                     role="option"
@@ -206,7 +206,7 @@ export default function LeadSelectWithSearch({
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{lead.name}</p>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {lead.email && (
                           <span className="text-xs text-muted-foreground truncate">{lead.email}</span>
                         )}
@@ -217,7 +217,7 @@ export default function LeadSelectWithSearch({
                         )}
                       </div>
                     </div>
-                  </button>
+                  </Button>
                 ))
               )}
             </div>

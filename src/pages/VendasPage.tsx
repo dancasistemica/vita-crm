@@ -139,7 +139,7 @@ export function VendasPage() {
             onChange={(e) => setTypeFilter(e.target.value)}
           />
           <div className="flex items-end">
-            <Button variant="secondary" size="md" className="w-full">
+            <Button variant="neutral" size="md" className="w-full">
               <Filter className="w-4 h-4" />
               Mais Filtros
             </Button>
@@ -200,7 +200,7 @@ export function VendasPage() {
                       </Badge>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         <Button 
                           variant="ghost" 
                           size="sm" 

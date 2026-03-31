@@ -209,12 +209,12 @@ export default function UserProfileTab() {
             </div>
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+          <div className="flex gap-3">
+            <Button variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
             </Button>
             {(displayAvatar) && (
-              <Button variant="outline" size="sm" onClick={handleRemovePhoto}>
+              <Button variant="neutral" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
               </Button>
             )}
@@ -230,25 +230,25 @@ export default function UserProfileTab() {
           <CardTitle className="text-lg">Dados Pessoais</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Nome Completo *</Label>
             <Input value={formData.full_name} onChange={e => setFormData(p => ({ ...p, full_name: e.target.value }))} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> Email</Label>
             <Input type="email" value={formData.email} readOnly className="bg-muted" />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" /> Telefone</Label>
             <Input type="tel" value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} placeholder="(11) 99999-9999" />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>CPF</Label>
             <Input value={formData.cpf} onChange={e => handleCPFChange(e.target.value)} placeholder="000.000.000-00" maxLength={14} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Função Atual</Label>
-            <Badge variant="secondary" className="text-sm">{roleLabels[role || 'member'] || role}</Badge>
+            <Badge variant="neutral" className="text-sm">{roleLabels[role || 'member'] || role}</Badge>
           </div>
         </CardContent>
       </Card>
@@ -256,22 +256,22 @@ export default function UserProfileTab() {
       {/* Endereço */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2"><MapPin className="h-5 w-5" /> Endereço</CardTitle>
+          <CardTitle className="text-lg flex items-center gap-3"><MapPin className="h-5 w-5" /> Endereço</CardTitle>
           <CardDescription>Preencha o CEP para busca automática</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>CEP</Label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Input value={formData.cep} onChange={e => handleCEPChange(e.target.value)} placeholder="00000-000" maxLength={9} className="max-w-[200px]" />
               {cepLoading && <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />}
             </div>
           </div>
-          <div className="space-y-2"><Label>Rua</Label><Input value={formData.street} disabled className="bg-muted" /></div>
-          <div className="space-y-2"><Label>Bairro</Label><Input value={formData.neighborhood} disabled className="bg-muted" /></div>
+          <div className="space-y-3"><Label>Rua</Label><Input value={formData.street} disabled className="bg-muted" /></div>
+          <div className="space-y-3"><Label>Bairro</Label><Input value={formData.neighborhood} disabled className="bg-muted" /></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>Cidade</Label><Input value={formData.city} disabled className="bg-muted" /></div>
-            <div className="space-y-2"><Label>Estado</Label><Input value={formData.state} disabled className="bg-muted" /></div>
+            <div className="space-y-3"><Label>Cidade</Label><Input value={formData.city} disabled className="bg-muted" /></div>
+            <div className="space-y-3"><Label>Estado</Label><Input value={formData.state} disabled className="bg-muted" /></div>
           </div>
         </CardContent>
       </Card>

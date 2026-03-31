@@ -49,3 +49,24 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = 'Card';
+
+// Compatibility exports for standard Card sub-components
+export const CardHeader = ({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`p-0 mb-4 ${className}`} {...props} />
+);
+
+export const CardContent = ({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`p-0 ${className}`} {...props} />
+);
+
+export const CardTitle = ({ className = '', ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  <h3 className={`text-lg font-semibold text-neutral-900 ${className}`} {...props} />
+);
+
+export const CardDescription = ({ className = '', ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+  <p className={`text-sm text-neutral-500 ${className}`} {...props} />
+);
+
+export const CardFooter = ({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`mt-4 pt-4 border-t border-neutral-100 ${className}`} {...props} />
+);

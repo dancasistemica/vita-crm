@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Target, AlertCircle, Zap } from "lucide-react";
 
@@ -36,7 +36,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       {insights.topProducts.length > 0 && (
         <Card className="shadow-card border-border/60">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display flex items-center gap-2">
+            <CardTitle className="text-base font-display flex items-center gap-3">
               <Target className="h-5 w-5 text-primary" />
               Top 5 Produtos por Receita
             </CardTitle>
@@ -128,7 +128,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       {insights.funnelAnalysis.byStage.length > 0 && (
         <Card className="shadow-card border-border/60">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display flex items-center gap-2">
+            <CardTitle className="text-base font-display flex items-center gap-3">
               <Zap className="h-5 w-5 text-warning" />
               Análise do Funil de Vendas
             </CardTitle>
@@ -169,7 +169,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                 </table>
               </div>
 
-              <div className="bg-info/5 rounded-lg p-5 border border-info/20 flex flex-col justify-center">
+              <div className="bg-info/5 rounded-lg p-6 border border-info/20 flex flex-col justify-center">
                 <h4 className="text-base font-bold text-foreground mb-3">💡 Recomendação</h4>
                 <p className="text-sm text-muted-foreground mb-4">{insights.funnelAnalysis.recommendedOptimization}</p>
                 {insights.funnelAnalysis.bottleneckStage && (

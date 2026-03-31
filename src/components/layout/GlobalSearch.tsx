@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/ds/Input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/ds/Button";
+import { Select } from "@/components/ui/ds/Select";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -41,7 +41,7 @@ export default function TaskFilters({
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -52,7 +52,7 @@ export default function TaskFilters({
           />
         </div>
         <CollapsibleTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="neutral" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
             Filtros
           </Button>

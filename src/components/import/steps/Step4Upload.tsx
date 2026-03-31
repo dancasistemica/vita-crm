@@ -109,12 +109,12 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
 
   return (
     <div className="space-y-4 py-2">
-      <h3 className="text-lg font-semibold text-neutral-700 text-center">Upload e Mapeamento</h3>
+      <h3 className="text-lg font-semibold text-neutral-700">Upload e Mapeamento</h3>
 
       {/* Upload area */}
       {state.csvRows.length === 0 ? (
         <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
             dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
           }`}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
@@ -123,7 +123,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
           onClick={() => document.getElementById('import-file-input')?.click()}
         >
           {state.loading ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="h-10 w-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-sm text-muted-foreground">Processando arquivo...</p>
             </div>
@@ -140,10 +140,10 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
         <>
           {/* File info */}
           <div className="flex items-center justify-between bg-muted/50 rounded-lg p-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <CheckCircle className="h-4 w-4 text-success" />
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
-              <Badge variant="secondary">{state.csvRows.length} linhas</Badge>
+              <Badge variant="neutral">{state.csvRows.length} linhas</Badge>
             </div>
             <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar
@@ -178,7 +178,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
             {!hasMappedContact && <p className="text-xs text-destructive mb-1">⚠ Mapeie "Email" ou "Telefone" (obrigatório)</p>}
             <div className="space-y-1.5 max-h-[250px] overflow-y-auto">
               {state.csvHeaders.map(header => (
-                <div key={header} className="flex items-center gap-2 p-2 rounded bg-muted/30">
+                <div key={header} className="flex items-center gap-3 p-2 rounded bg-muted/30">
                   <span className="text-xs font-medium text-foreground flex-1 truncate">{header}</span>
                   <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
                   <Select
@@ -203,7 +203,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={onNext} disabled={!canProceed}>Validar e Importar</Button>
       </div>
     </div>

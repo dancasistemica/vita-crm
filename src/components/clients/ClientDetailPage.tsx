@@ -151,7 +151,7 @@ export default function ClientDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
-        <Button variant="secondary" onClick={() => navigate('/clientes')}>
+        <Button variant="neutral" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
         </Button>
       </div>
@@ -173,7 +173,7 @@ export default function ClientDetailPage() {
               {client.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-neutral-900 mb-6">{client.name}</h1>
+              <h1 className="text-4xl font-bold text-neutral-900">{client.name}</h1>
               <p className="text-sm text-neutral-600">{client.email} • {client.phone} • {client.city}</p>
               {client.dealValue != null && client.dealValue > 0 && (
                 <p className="text-sm font-semibold text-success-600 mt-1">💰 Valor do Negócio: R$ {client.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
@@ -196,9 +196,9 @@ export default function ClientDetailPage() {
             </Card>
           </div>
 
-          <div className="flex gap-2 mt-4 flex-wrap">
+          <div className="flex gap-3 mt-4 flex-wrap">
             <Button
-              variant="secondary"
+              variant="neutral"
               size="md"
               onClick={() => setScheduleDialogOpen(true)}
               icon={<Clock className="h-4 w-4" />}
@@ -231,7 +231,7 @@ export default function ClientDetailPage() {
                 <p className="text-neutral-600">Nenhuma venda registrada.</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {sales.map(sale => (
                   <div
                     key={sale.id}
@@ -282,7 +282,7 @@ export default function ClientDetailPage() {
                         <MessageSquare className="h-5 w-5 text-primary-600" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-3 mb-1">
                           <Badge variant="neutral" size="sm">{typeLabel}</Badge>
                           <span className="text-xs text-neutral-500">{int.date}</span>
                         </div>
@@ -302,7 +302,7 @@ export default function ClientDetailPage() {
                 <p className="text-neutral-600">Nenhuma tarefa vinculada.</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {tasks.map(task => (
                   <div key={task.id} className="flex items-center justify-between p-4 rounded-lg border border-neutral-100">
                     <div className="flex items-center gap-3">

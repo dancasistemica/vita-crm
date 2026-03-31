@@ -111,9 +111,9 @@ export default function CustomizePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">🎨 Personalizar</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleReset} disabled={saving}>
+        <h1 className="text-4xl font-bold text-neutral-900">🎨 Personalizar</h1>
+        <div className="flex gap-3">
+          <Button variant="neutral" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
           </Button>
           <Button onClick={handleSave} disabled={saving}>
@@ -128,7 +128,7 @@ export default function CustomizePage() {
           {/* Logo Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2"><Image className="h-5 w-5" /> Logomarca</CardTitle>
+              <CardTitle className="text-lg flex items-center gap-3"><Image className="h-5 w-5" /> Logomarca</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -155,7 +155,7 @@ export default function CustomizePage() {
                       <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
                     </div>
@@ -242,12 +242,12 @@ export default function CustomizePage() {
                   <input ref={faviconInputRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/vnd.microsoft.icon" className="hidden"
                     onChange={e => { if (e.target.files?.[0]) handleUpload(e.target.files[0], 'favicon'); e.target.value = ''; }} />
                   {brand.favicon_url ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <img src={brand.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
                       <span className="text-xs text-muted-foreground">Clique para trocar</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Upload className="h-5 w-5 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">Upload favicon</span>
                     </div>
@@ -260,11 +260,11 @@ export default function CustomizePage() {
           {/* Colors Section */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <CardTitle className="text-lg flex items-center gap-2"><Palette className="h-5 w-5" /> Cores</CardTitle>
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="min-h-[44px] gap-2">
+                    <Button variant="neutral" size="sm" className="min-h-[44px] gap-3">
                       <Globe className="h-4 w-4" /> Usar Cores Globais
                     </Button>
                   </AlertDialogTrigger>
@@ -326,15 +326,15 @@ export default function CustomizePage() {
                 <Label className="text-sm font-medium mb-2 block">Paletas prontas</Label>
                 <div className="flex flex-wrap gap-3">
                   {PALETTES.map(p => (
-                    <button key={p.name} onClick={() => handlePalette(p)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg border hover:border-primary transition-colors bg-card">
+                    <Button variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg border hover:border-primary transition-colors bg-card">
                       <div className="flex gap-1">
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.primary }} />
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.secondary }} />
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.accent }} />
                       </div>
                       <span className="text-xs font-medium">{p.name}</span>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -351,7 +351,7 @@ export default function CustomizePage() {
           {/* Typography Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2"><Type className="h-5 w-5" /> Tipografia</CardTitle>
+              <CardTitle className="text-lg flex items-center gap-3"><Type className="h-5 w-5" /> Tipografia</CardTitle>
             </CardHeader>
             <CardContent>
               <Label>Fonte do CRM</Label>
@@ -371,12 +371,12 @@ export default function CustomizePage() {
 
         {/* Right: Live Preview */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-neutral-700 mb-2">Preview ao vivo</h3>
+          <h3 className="text-lg font-semibold text-neutral-700">Preview ao vivo</h3>
 
           {/* Sidebar preview */}
           <Card className="overflow-hidden">
             <div className="p-4 rounded-t-lg" style={{ backgroundColor: `hsl(${brand.sidebar_color})` }}>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-3 mb-4">
                 {brand.logo_url ? (
                   <img src={brand.logo_url} alt="Logo" className="h-8 object-contain" />
                 ) : (
@@ -420,11 +420,11 @@ export default function CustomizePage() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs text-muted-foreground">Botão primário</p>
-              <button className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
-              </button>
-              <div className="flex gap-2 mt-2">
+              </Button>
+              <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: brand.accent_color }}>Tag 1</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
@@ -445,7 +445,7 @@ function ColorPicker({ label, description, value, onChange }: {
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
       <p className="text-xs text-muted-foreground">{description}</p>
-      <div className="flex items-center gap-2 mt-1">
+      <div className="flex items-center gap-3 mt-1">
         <input type="color" value={value} onChange={e => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />
         <Input value={value} onChange={e => onChange(e.target.value)}
@@ -509,7 +509,7 @@ function SidebarColorPicker({ label, description, hslValue, onChange }: {
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
       <p className="text-xs text-muted-foreground">{description}</p>
-      <div className="flex items-center gap-2 mt-1">
+      <div className="flex items-center gap-3 mt-1">
         <input type="color" value={hexValue} onChange={e => onChange(hexToHSLString(e.target.value))}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />
         <Input value={hexValue} onChange={e => {

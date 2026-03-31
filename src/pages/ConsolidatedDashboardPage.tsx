@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Users, DollarSign, TrendingUp, Target, Building2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -28,7 +28,7 @@ export default function ConsolidatedDashboardPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard Consolidado</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Carregando...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -57,7 +57,7 @@ export default function ConsolidatedDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard Consolidado</h1>
+        <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
 
@@ -108,7 +108,7 @@ export default function ConsolidatedDashboardPage() {
 
       {stageMetrics.length > 0 && (
         <>
-          <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Métricas por Etapa</h2>
+          <h2 className="text-2xl font-semibold text-neutral-900">Métricas por Etapa</h2>
           <StageMetrics metrics={stageMetrics} />
         </>
       )}
@@ -184,7 +184,7 @@ export default function ConsolidatedDashboardPage() {
           <Card className="shadow-card border-border/60">
             <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {salesByDay.slice(-7).map((day) => (
                   <div key={day.day} className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground w-24">{day.day}</span>

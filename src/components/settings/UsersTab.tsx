@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Select } from "@/components/ui/ds/Select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -309,7 +309,7 @@ export default function UsersTab() {
   return (
     <Card>
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="text-lg flex items-center gap-3">
           <Users className="h-5 w-5" />
           Usuários da Organização
         </CardTitle>
@@ -319,7 +319,7 @@ export default function UsersTab() {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -383,7 +383,7 @@ export default function UsersTab() {
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             className="h-8 w-8"
                             title="Editar"
                             onClick={() => openEdit(u)}
@@ -392,7 +392,7 @@ export default function UsersTab() {
                           </Button>
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             className="h-8 w-8"
                             title="Resetar senha"
                             onClick={() => handleResetPassword(u)}
@@ -402,7 +402,7 @@ export default function UsersTab() {
                           {u.role !== "owner" && (
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="sm"
                               className="h-8 w-8 text-destructive"
                               title="Remover"
                               onClick={() => setDeleteTarget(u)}
@@ -426,7 +426,7 @@ export default function UsersTab() {
                 </span>
                 <div className="flex gap-1">
                   <Button
-                    variant="outline"
+                    variant="neutral"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
@@ -434,7 +434,7 @@ export default function UsersTab() {
                     Anterior
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="neutral"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
@@ -482,7 +482,7 @@ export default function UsersTab() {
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
                       <Button
-                        variant="outline"
+                        variant="neutral"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
                         className="w-full justify-between font-normal"
@@ -557,7 +557,7 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="outline" onClick={() => setFormOpen(false)}>Cancelar</Button>
+              <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
               <Button onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}

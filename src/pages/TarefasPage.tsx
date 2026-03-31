@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/ds/Select";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActionButtons from "@/components/tasks/TaskActionButtons";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -410,12 +410,12 @@ export default function TarefasPage() {
           <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task)} />
           <div className="flex-1 min-w-0">
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <div className="flex items-center gap-3 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
-              <Badge variant="outline" className="text-xs">{getTypeLabel(task.type)}</Badge>
+              <Badge variant="neutral" className="text-xs">{getTypeLabel(task.type)}</Badge>
               {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
-                <Badge variant="secondary" className="text-xs gap-1">
+                <Badge variant="neutral" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
                   {assignedName}
                 </Badge>
@@ -467,8 +467,8 @@ export default function TarefasPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Tarefas</h1>
-        <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
+        <h1 className="text-4xl font-bold text-neutral-900">Tarefas</h1>
+        <div className="space-y-3">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       </div>
     );
   }
@@ -476,14 +476,14 @@ export default function TarefasPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
-        <div className="flex items-center gap-2">
+        <h1 className="text-4xl font-bold text-neutral-900">Tarefas</h1>
+        <div className="flex items-center gap-3">
           <NotificationCenter
             notifications={notifications}
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          <Button variant="outline" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          <Button variant="neutral" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
           </Button>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -529,29 +529,29 @@ export default function TarefasPage() {
 
       {overdue.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
-          <div className="space-y-2">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
+          <div className="space-y-3">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       <section>
-        <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
-        <div className="space-y-2">
+        <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
+        <div className="space-y-3">
           {todayTasks.length === 0 ? <p className="text-sm text-muted-foreground">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
         </div>
       </section>
 
       {upcoming.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
-          <div className="space-y-2">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
+          <div className="space-y-3">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
 
       {completed.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
-          <div className="space-y-2">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
+          <div className="space-y-3">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}
     </div>
@@ -573,20 +573,20 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
-        <button
+        <Button variant="secondary" size="sm"
           onClick={() => onAssign(taskId, null)}
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
-        </button>
+        </Button>
         {orgMembers.map(m => (
-          <button
+          <Button variant="secondary" size="sm"
             key={m.user_id}
             onClick={() => onAssign(taskId, m.user_id)}
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
           >
             {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-          </button>
+          </Button>
         ))}
       </PopoverContent>
     </Popover>

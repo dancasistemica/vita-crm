@@ -442,7 +442,7 @@ export function CustomFieldsManager() {
         </div>
 
         {isGlobalMode && (
-          <div className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 p-3">
+          <div className="flex items-start gap-3 rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 p-3">
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300">
               Alterações afetarão <strong>TODAS as {totalOrgs} organizações</strong>
@@ -471,7 +471,7 @@ export function CustomFieldsManager() {
 
         {/* Search + Add button */}
         {(isGlobalMode || selectedOrgId) && (
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-3">
             <div className="relative flex-1 sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -516,7 +516,7 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="neutral" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
@@ -526,7 +526,7 @@ export function CustomFieldsManager() {
                       </Badge>
                       {field.org_count < totalOrgs && (
                         <Button
-                          variant="link"
+                          variant="ghost"
                           size="sm"
                           className="text-xs px-1 h-auto"
                           onClick={() => handleApplyToAll(field)}
@@ -537,12 +537,12 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="sm"
                           className="h-7 w-7 text-destructive"
                           onClick={() => {
                             setDeleteGlobalFieldName(field.field_name);
@@ -601,7 +601,7 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="neutral" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
@@ -615,10 +615,10 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEditModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
@@ -638,7 +638,7 @@ export function CustomFieldsManager() {
             <DialogTitle>
               {editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo Customizado'}
               {isGlobalMode && (
-                <Badge variant="outline" className="ml-2 text-xs">Global</Badge>
+                <Badge variant="neutral" className="ml-2 text-xs">Global</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -666,18 +666,18 @@ export function CustomFieldsManager() {
             {fieldType === 'select' && (
               <div>
                 <Label>Opções</Label>
-                <div className="flex gap-2 mt-1">
+                <div className="flex gap-3 mt-1">
                   <Input
                     value={optionInput}
                     onChange={e => setOptionInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  <Button type="button" variant="outline" size="sm" onClick={addOption}>+</Button>
+                  <Button type="button" variant="neutral" size="sm" onClick={addOption}>+</Button>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
-                    <Badge key={opt} variant="secondary" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
+                    <Badge key={opt} variant="neutral" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
                       {opt} <X className="h-3 w-3" />
                     </Badge>
                   ))}
@@ -696,7 +696,7 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
+            <Button variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
             <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
             </Button>
@@ -726,7 +726,7 @@ export function CustomFieldsManager() {
       <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => { if (!open) { setDeleteGlobalFieldName(null); setDeleteGlobalFieldLabel(''); } }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className="flex items-center gap-3">
               <AlertTriangle className="h-5 w-5 text-destructive" />
               Remover campo de TODAS as organizações?
             </AlertDialogTitle>

@@ -1,5 +1,5 @@
 import { useCRMStore } from "@/store/crmStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 
 const COLORS = ['hsl(350,35%,55%)', 'hsl(18,50%,58%)', 'hsl(38,92%,50%)', 'hsl(152,55%,45%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)'];
@@ -21,7 +21,7 @@ export default function RelatoriosPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-4xl font-bold text-neutral-900 mb-6">Relatórios</h1>
+      <h1 className="text-4xl font-bold text-neutral-900">Relatórios</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>

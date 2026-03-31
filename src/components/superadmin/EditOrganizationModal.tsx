@@ -213,13 +213,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
           <div className="space-y-6">
             {/* Dados Básicos */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Dados Básicos</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Dados Básicos</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Nome *</Label>
                   <Input value={form.name} onChange={set('name')} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>CNPJ</Label>
                   <div className="relative">
                     <Input
@@ -248,20 +248,20 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     <p className="text-xs text-destructive">{cnpjValidation.error}</p>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Email de Contato</Label>
                   <Input type="email" value={form.contact_email} onChange={set('contact_email')} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Telefone</Label>
                   <Input value={form.phone} onChange={set('phone')} placeholder="(11) 98765-4321" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Website</Label>
                   <Input value={form.website} onChange={set('website')} placeholder="https://empresa.com" />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label>Descrição</Label>
                 <Textarea rows={2} value={form.description} onChange={set('description')} />
               </div>
@@ -271,9 +271,9 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Endereço */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Endereço</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Endereço</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>
                     CEP {loadingCEP && <Loader2 className="inline h-3 w-3 animate-spin ml-1" />}
                   </Label>
@@ -286,27 +286,27 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     disabled={loadingCEP}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Rua/Avenida</Label>
                   <Input value={form.rua} onChange={set('rua')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Número</Label>
                   <Input value={form.numero} onChange={set('numero')} placeholder="123" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Complemento</Label>
                   <Input value={form.complemento} onChange={set('complemento')} placeholder="Apto 101" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Bairro</Label>
                   <Input value={form.bairro} onChange={set('bairro')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Município</Label>
                   <Input value={form.municipio} onChange={set('municipio')} disabled={loadingCEP} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Estado (UF)</Label>
                   <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ ...prev, estado: v }))}>
                     <SelectTrigger disabled={loadingCEP}>
@@ -326,9 +326,9 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
             {/* Senha do Admin */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-700 mb-2">Senha do Admin</h3>
+              <h3 className="text-lg font-semibold text-neutral-700">Senha do Admin</h3>
               <div className="space-y-3">
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <div className="relative flex-1">
                     <Input
                       type={showPassword ? 'text' : 'password'}
@@ -337,27 +337,27 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       placeholder="Mínimo 8 caracteres"
                       className="pr-10"
                     />
-                    <button
+                    <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
+                    </Button>
                   </div>
-                  <Button type="button" variant="outline" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                  <Button type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
                   </Button>
                 </div>
 
                 {passwordStrength && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className={`h-1.5 flex-1 rounded-full ${passwordStrength.color}`} />
                     <span className="text-xs font-medium text-muted-foreground">{passwordStrength.label}</span>
                   </div>
                 )}
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Checkbox
                     id="manual-pwd"
                     checked={form.senhaManual}
@@ -371,7 +371,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}

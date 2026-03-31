@@ -49,12 +49,12 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
 
   return (
     <div className="space-y-3 border rounded-lg p-3 bg-muted/30">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <Sparkles className="h-4 w-4 text-purple-500" />
         <span className="text-sm font-medium">Gerar mensagem de follow-up</span>
         <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
       </div>
-      <div className="flex gap-2 items-end">
+      <div className="flex gap-3 items-end">
         <div className="flex-1">
           <Label className="text-xs">Canal</Label>
           <Select value={channel} onValueChange={setChannel}>
@@ -70,11 +70,11 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
       </div>
 
       {message && (
-        <div className="space-y-2 animate-in fade-in-50">
+        <div className="space-y-3 animate-in fade-in-50">
           <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} className="text-sm" />
-          <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
-            <Button size="sm" variant="outline" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
+          <div className="flex gap-3">
+            <Button size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
           <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
         </div>

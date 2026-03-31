@@ -85,7 +85,7 @@ export function UsersManagementTab() {
         onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <div className="flex items-center gap-3 text-muted-foreground text-sm">
           <ShieldCheck className="h-4 w-4" />
           <span>{users.length} superadmin(s)</span>
         </div>
@@ -112,7 +112,7 @@ export function UsersManagementTab() {
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
-                <Button variant="destructive" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
+                <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button>
               </TableCell>
@@ -127,7 +127,7 @@ export function UsersManagementTab() {
             <DialogTitle>Adicionar Superadmin</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Email do usuário existente</Label>
               <Input
                 type="email"
@@ -141,7 +141,7 @@ export function UsersManagementTab() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button variant="neutral" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button onClick={handleAdd} disabled={submitting}>
               {submitting ? 'Adicionando...' : 'Adicionar'}
             </Button>

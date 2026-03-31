@@ -189,7 +189,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {Array.from({ length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2 ${
@@ -225,7 +225,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                 {showClientDropdown && clientSearch && (
                   <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-lg bg-white">
                     {filteredClients.map(client => (
-                      <button
+                      <Button variant="secondary" size="sm"
                         key={client.id}
                         type="button"
                         className="w-full text-left p-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
@@ -237,7 +237,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                       >
                         <p className="font-semibold text-neutral-900">{client.name}</p>
                         <p className="text-xs text-neutral-500">{client.email}</p>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -344,7 +344,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
         {/* Footer com Ações */}
         <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex justify-between gap-4">
-          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
+          <Button variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
             Voltar
           </Button>
           {currentPhase < totalPhases ? (

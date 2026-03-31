@@ -56,7 +56,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
     <Dialog open={open} onOpenChange={(o) => { if (!deleting) { onOpenChange(o); setConfirmed(false); } }}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-destructive">
+          <DialogTitle className="flex items-center gap-3 text-destructive">
             <AlertTriangle className="h-5 w-5" />
             Deletar {type === 'leads' ? 'Leads' : 'Clientes'}
           </DialogTitle>
@@ -84,7 +84,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Checkbox
               id="confirm-delete"
               checked={confirmed}
@@ -96,11 +96,11 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+        <DialogFooter className="gap-3 sm:gap-0">
+          <Button variant="neutral" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
             Cancelar
           </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={!confirmed || deleting}>
+          <Button variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
           </Button>
         </DialogFooter>

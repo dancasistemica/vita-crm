@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/ds/Badge";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
@@ -33,7 +33,7 @@ export default function PipelinePage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-4xl font-bold text-neutral-900 mb-6">Funil de Vendas</h1>
+      <h1 className="text-4xl font-bold text-neutral-900">Funil de Vendas</h1>
       <ScrollArea className="w-full">
         <div className="flex gap-4 pb-4 min-w-max">
           {pipelineStages.sort((a, b) => a.order - b.order).map(stage => {
@@ -48,12 +48,12 @@ export default function PipelinePage() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-lg font-semibold text-neutral-700">{stage.name}</h3>
-                  <Badge variant="secondary" className="text-xs">{stageLeads.length}</Badge>
+                  <Badge variant="neutral" className="text-xs">{stageLeads.length}</Badge>
                 </div>
                 {totalDealValue > 0 && (
                   <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
                 )}
-                <div className="space-y-2 min-h-[100px]">
+                <div className="space-y-3 min-h-[100px]">
                   {stageLeads.map(lead => (
                     <Card
                       key={lead.id}
@@ -65,7 +65,7 @@ export default function PipelinePage() {
                       <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
                       {lead.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
+                          {lead.tags.map(tag => <Badge key={tag} variant="neutral" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
                         </div>
                       )}
                       {lead.dealValue != null && lead.dealValue > 0 && (

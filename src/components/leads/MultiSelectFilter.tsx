@@ -26,7 +26,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
         {options.map(opt => {
           const isActive = selected.includes(opt.value);
           return (
-            <button
+            <Button variant="secondary" size="sm"
               key={opt.value}
               type="button"
               onClick={() => toggle(opt.value)}
@@ -39,7 +39,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
             >
               {opt.label}
               {isActive && <X className="h-3 w-3" />}
-            </button>
+            </Button>
           );
         })}
       </div>

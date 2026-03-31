@@ -52,14 +52,14 @@ export default function AIContextTab() {
     updateServices(key, current.filter(s => s !== value));
   };
 
-  if (loading) return <div className="flex items-center justify-center p-8 text-muted-foreground">Carregando...</div>;
+  if (loading) return <div className="flex items-center justify-center p-6 text-muted-foreground">Carregando...</div>;
 
   return (
     <div className="space-y-6">
       {/* Descrição do Negócio */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <Brain className="h-5 w-5 text-primary" />
             Descrição do Negócio
           </CardTitle>
@@ -80,7 +80,7 @@ export default function AIContextTab() {
       {/* Serviços */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <Briefcase className="h-5 w-5 text-primary" />
             Serviços
           </CardTitle>
@@ -88,31 +88,31 @@ export default function AIContextTab() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Serviços Oferecidos */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Serviços Oferecidos</Label>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Input
                 placeholder="Adicionar serviço..."
                 value={newService}
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              <Button type="button" size="icon" variant="outline" onClick={() => addTag('services', newService, setNewService)}>
+              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
-                <Badge key={s} variant="secondary" className="gap-1">
+                <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  <button onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></button>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
             {services.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTED_SERVICES.map(s => (
-                  <Badge key={s} variant="outline" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
+                  <Badge key={s} variant="neutral" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
                     + {s}
                   </Badge>
                 ))}
@@ -123,24 +123,24 @@ export default function AIContextTab() {
           <Separator />
 
           {/* Serviços NÃO Oferecidos */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Serviços NÃO Oferecidos <span className="text-muted-foreground text-xs">(IA evitará sugerir)</span></Label>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Input
                 placeholder="Adicionar serviço a excluir..."
                 value={newExcluded}
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              <Button type="button" size="icon" variant="outline" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
-                <Badge key={s} variant="destructive" className="gap-1">
+                <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  <button onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></button>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
@@ -151,13 +151,13 @@ export default function AIContextTab() {
       {/* Público-Alvo e Modelo */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <Target className="h-5 w-5 text-primary" />
             Público e Modelo de Negócio
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Público-Alvo</Label>
             <Textarea
               placeholder="Ex: Pequenas e médias empresas de e-commerce"
@@ -167,7 +167,7 @@ export default function AIContextTab() {
             />
             <p className="text-xs text-muted-foreground">{form.ai_target_audience.length}/300 caracteres</p>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Modelo de Negócio</Label>
             <Select value={form.ai_business_model} onValueChange={v => setForm(prev => ({ ...prev, ai_business_model: v }))}>
               <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
@@ -182,7 +182,7 @@ export default function AIContextTab() {
       {/* Instruções Customizadas */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <Sparkles className="h-5 w-5 text-primary" />
             Instruções Customizadas para IA
           </CardTitle>
@@ -206,7 +206,7 @@ export default function AIContextTab() {
       {/* Preview */}
       <Card>
         <CardHeader className="cursor-pointer" onClick={() => setShowPreview(!showPreview)}>
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <Eye className="h-5 w-5 text-primary" />
             Preview do Contexto
             <span className="text-xs text-muted-foreground">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>

@@ -14,13 +14,13 @@ export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsA
   return (
     <Card className="border-destructive/40 shadow-card">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-display flex items-center gap-2 text-destructive">
+        <CardTitle className="text-base font-display flex items-center gap-3 text-destructive">
           <AlertCircle className="h-5 w-5" />
           {stuckLeads.length} Lead(s) Travado(s)
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2 max-h-48 overflow-y-auto">
+        <div className="space-y-3 max-h-48 overflow-y-auto">
           {stuckLeads.slice(0, 5).map((lead) => (
             <div
               key={lead.id}
@@ -34,7 +34,7 @@ export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsA
                   {lead.daysInStage} dias em "{lead.stage}"
                 </div>
               </div>
-              <Button size="sm" variant="destructive" className="text-xs h-7">
+              <Button size="sm" variant="error" className="text-xs h-7">
                 Ver
               </Button>
             </div>

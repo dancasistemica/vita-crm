@@ -52,7 +52,7 @@ Gere o resumo semanal.`;
     <Card className="border-purple-200 dark:border-purple-800/50 shadow-card">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-display flex items-center gap-2">
+          <CardTitle className="text-base font-display flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-purple-500" />
             Resumo da Semana IA
             <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
@@ -68,12 +68,12 @@ Gere o resumo semanal.`;
         {!hasLoaded && !loading ? (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">Clique para gerar o resumo inteligente da semana</p>
-            <Button onClick={handleLoad} variant="outline" size="sm">
+            <Button onClick={handleLoad} variant="neutral" size="sm">
               <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" /> Gerar Resumo
             </Button>
           </div>
         ) : loading ? (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
             <Skeleton className="h-4 w-3/4" />
@@ -81,7 +81,7 @@ Gere o resumo semanal.`;
             <Skeleton className="h-4 w-2/3" />
           </div>
         ) : response ? (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
               <ReactMarkdown>{response}</ReactMarkdown>
             </div>

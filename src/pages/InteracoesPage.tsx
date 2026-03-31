@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/ds/Select";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
 import { toast } from "sonner";
@@ -39,7 +39,7 @@ export default function InteracoesPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Interações</h1>
+        <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-1" /> Nova Interação</Button></DialogTrigger>
           <DialogContent>
@@ -57,16 +57,16 @@ export default function InteracoesPage() {
         </SelectContent>
       </Select>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {sorted.length === 0 && <p className="text-muted-foreground text-center py-8">Nenhuma interação registrada.</p>}
         {sorted.map(interaction => (
           <Card key={interaction.id}>
             <CardContent className="py-3 px-4 flex items-start gap-3">
               <MessageCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-medium text-sm">{getLeadName(interaction.leadId)}</span>
-                  <Badge variant="outline" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
+                  <Badge variant="neutral" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
                   <span className="text-xs text-muted-foreground">{interaction.date}</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">{interaction.note}</p>

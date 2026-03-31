@@ -24,7 +24,7 @@ export default function RecordCounter({ totalCount, filteredCount, perPage, onPe
       </div>
 
       {/* Per page selector */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <span className="text-sm text-muted-foreground">Exibir por página:</span>
         <Select value={String(perPage)} onValueChange={v => onPerPageChange(Number(v))}>
           <SelectTrigger className="h-8 w-20 text-xs">

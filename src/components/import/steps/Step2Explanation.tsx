@@ -17,7 +17,7 @@ const timeline = [
 export default function Step2Explanation({ onNext, onBack }: Props) {
   return (
     <div className="space-y-6 py-2">
-      <h3 className="text-lg font-semibold text-neutral-700 text-center">Como funciona</h3>
+      <h3 className="text-lg font-semibold text-neutral-700">Como funciona</h3>
 
       <div className="space-y-3">
         {timeline.map(({ icon: Icon, label, desc }, i) => (
@@ -48,7 +48,7 @@ export default function Step2Explanation({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={onNext}>Próximo</Button>
       </div>
     </div>

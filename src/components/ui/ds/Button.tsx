@@ -40,14 +40,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     return (
-      <button
+      <Button variant="secondary" size="sm"
         ref={ref}
         disabled={disabled || loading}
         className={`
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${fullWidth ? 'w-full' : ''}
-          flex items-center justify-center gap-2
+          flex items-center justify-center gap-3
           transition-colors duration-200
           disabled:opacity-50 disabled:cursor-not-allowed
           min-h-[44px] md:min-h-auto
@@ -69,7 +69,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {icon && !loading && icon}
         {children}
-      </button>
+      </Button>
     );
   }
 );

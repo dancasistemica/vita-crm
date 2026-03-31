@@ -190,7 +190,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
         {[1, 2, 3].map(i => (
           <div key={i} className="flex gap-3">
             <Skeleton className="h-8 w-8 rounded-full shrink-0" />
-            <div className="space-y-2 flex-1">
+            <div className="space-y-3 flex-1">
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-3 w-1/2" />
             </div>
@@ -223,12 +223,12 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
 
   return (
     <div className="relative py-2">
-      <div className="absolute left-[15px] top-8 bottom-4 w-px bg-border" />
+      <div className="absolute left-[15px] top-6 bottom-4 w-px bg-border" />
 
       {grouped.map((group, gi) => (
         <div key={gi}>
           {/* Date group header */}
-          <div className="relative z-10 flex items-center gap-2 mb-3 mt-4 first:mt-0">
+          <div className="relative z-10 flex items-center gap-3 mb-3 mt-4 first:mt-0">
             <span className="text-xs font-bold text-muted-foreground bg-background pr-2 uppercase tracking-wider">
               {group.label}
             </span>
@@ -245,8 +245,8 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
                   <Icon className="h-4 w-4" />
                 </div>
                 <div className="flex-1 pt-0.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="neutral" className="text-[10px] px-1.5 py-0">
                       {config.label}
                     </Badge>
                     <span className="text-xs text-muted-foreground">

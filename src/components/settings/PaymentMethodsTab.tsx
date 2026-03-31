@@ -1,9 +1,9 @@
 import { useEffect, useState, type DragEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Switch } from "@/components/ui/switch";
 import { Check, Edit, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
@@ -173,7 +173,7 @@ export default function PaymentMethodsTab() {
       <Card>
         <CardHeader><CardTitle className="text-lg">Adicionar Nova Forma de Pagamento</CardTitle></CardHeader>
         <CardContent>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Input
               placeholder="Ex: Pix, Cartão Crédito, Boleto..."
               value={newMethod}
@@ -189,7 +189,7 @@ export default function PaymentMethodsTab() {
 
       <Card>
         <CardHeader><CardTitle className="text-lg">Formas de Pagamento Cadastradas</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-3">
           {loading && (
             <p className="text-sm text-muted-foreground text-center py-4">Carregando formas de pagamento...</p>
           )}
@@ -200,9 +200,9 @@ export default function PaymentMethodsTab() {
               onDragStart={() => handleDragStart(index)}
               onDragOver={event => handleDragOver(event, index)}
               onDragEnd={handleDragEnd}
-              className={`flex flex-col gap-2 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between ${dragIndex === index ? 'opacity-60' : ''}`}
+              className={`flex flex-col gap-3 p-3 rounded-lg bg-muted/50 sm:flex-row sm:items-center sm:justify-between ${dragIndex === index ? 'opacity-60' : ''}`}
             >
-              <div className="flex items-center gap-2 flex-1">
+              <div className="flex items-center gap-3 flex-1">
                 <span className="cursor-grab text-muted-foreground">
                   <GripVertical className="h-4 w-4" />
                 </span>
@@ -218,8 +218,8 @@ export default function PaymentMethodsTab() {
                     <span className="text-foreground font-medium flex-1">{m.name}</span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 justify-between sm:justify-end">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 justify-between sm:justify-end">
+                  <div className="flex items-center gap-3">
                     <Switch checked={m.active} onCheckedChange={() => handleToggle(m)} />
                     <span className={`text-xs font-medium ${m.active ? 'text-primary' : 'text-muted-foreground'}`}>
                       {m.active ? '✓ Ativo' : '✗ Inativo'}
@@ -228,19 +228,19 @@ export default function PaymentMethodsTab() {
                   <div className="flex items-center gap-1">
                     {editingMethod?.id === m.id ? (
                     <>
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
+                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
                         <Check className="h-3 w-3" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
+                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
                         <X className="h-3 w-3" />
                       </Button>
                     </>
                   ) : (
-                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
+                    <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
                       <Edit className="h-3 w-3" />
                     </Button>
                   )}
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
+                  <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>

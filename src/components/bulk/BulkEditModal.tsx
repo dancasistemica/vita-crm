@@ -148,9 +148,9 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 </Select>
               )}
               {currentFieldDef.inputType === 'multi' && selectedField === 'tags' && (
-                <div className="mt-1 space-y-2 max-h-[200px] overflow-y-auto border rounded-md p-2">
+                <div className="mt-1 space-y-3 max-h-[200px] overflow-y-auto border rounded-md p-2">
                   {tags.map(tag => (
-                    <div key={tag.id} className="flex items-center gap-2">
+                    <div key={tag.id} className="flex items-center gap-3">
                       <Checkbox
                         checked={selectedTags.includes(tag.name)}
                         onCheckedChange={checked => {
@@ -167,7 +167,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
           )}
 
           {selectedField && hasValue && (
-            <div className="bg-info/10 border border-info/20 rounded-lg p-3 flex items-start gap-2">
+            <div className="bg-info/10 border border-info/20 rounded-lg p-3 flex items-start gap-3">
               <AlertTriangle className="h-4 w-4 text-info mt-0.5 shrink-0" />
               <p className="text-sm text-foreground">
                 Você vai alterar <strong>{getFieldLabel()}</strong> para <strong>{getDisplayValue()}</strong> em{' '}
@@ -178,7 +178,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
             {loading ? 'Atualizando...' : 'Aplicar'}
           </Button>

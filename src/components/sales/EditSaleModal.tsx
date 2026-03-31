@@ -191,19 +191,19 @@ export const EditSaleModal = ({
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-neutral-900">Editar Venda</h2>
             <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>
           </div>
-          <button
+          <Button variant="secondary" size="sm"
             onClick={onClose}
             disabled={loading}
             className="p-1 hover:bg-white/20 rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-white" />
-          </button>
+          </Button>
         </div>
 
         {/* Conteúdo */}
@@ -211,47 +211,47 @@ export const EditSaleModal = ({
           {loadingData ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-              <p className="text-gray-500 font-medium">Carregando informações...</p>
+              <p className="text-neutral-500 font-medium">Carregando informações...</p>
             </div>
           ) : error ? (
             <div className="text-center py-8">
               <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Erro ao carregar</h3>
-              <p className="text-gray-600 text-sm mb-6 px-4">{error}</p>
-              <div className="flex flex-col gap-2">
-                <button
+              <h3 className="text-lg font-semibold text-neutral-700">Erro ao carregar</h3>
+              <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
+              <div className="flex flex-col gap-3">
+                <Button variant="secondary" size="sm"
                   onClick={loadData}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex items-center justify-center gap-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" /> Tentar Novamente
-                </button>
-                <button
+                </Button>
+                <Button variant="secondary" size="sm"
                   onClick={onClose}
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="px-4 py-2 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
                   Fechar
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Info do Cliente (ReadOnly) */}
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
-                <p className="text-gray-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
-                <p className="text-xs text-gray-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
+              <div className="bg-neutral-50 p-3 rounded-lg border border-gray-100">
+                <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Cliente</p>
+                <p className="text-neutral-900 font-semibold">{sale?.client_name || 'Cliente'}</p>
+                <p className="text-xs text-neutral-500">{sale?.stage_name || ''}{sale?.stage_value != null ? ` • ${sale.stage_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : ''}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-3">
                   Status da Venda
                 </label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   required
                 >
                   <option value="">Selecione um status</option>
@@ -265,13 +265,13 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5 flex items-center gap-3">
                   Forma de Pagamento
                 </label>
                 <select
                   value={formData.payment_method_id}
                   onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
-                  className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option value="">Nenhuma definida</option>
                   {paymentMethods.map((method) => (
@@ -286,50 +286,50 @@ export const EditSaleModal = ({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label className="block text-sm font-semibold text-neutral-700 mb-1.5">
                   Observações
                 </label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                   placeholder="Adicione detalhes importantes sobre esta venda..."
                 />
               </div>
 
               <div className="flex gap-3 pt-4 border-t mt-4">
                 {/* Botão Excluir à esquerda */}
-                <button
+                <Button variant="secondary" size="sm"
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   title="Excluir esta venda"
                 >
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
                   <Trash2 className="w-4 h-4" />
                   <span>Excluir</span>
-                </button>
+                </Button>
 
                 {/* Botões Cancelar e Salvar à direita */}
-                <div className="flex gap-2 flex-1">
-                  <button
+                <div className="flex gap-3 flex-1">
+                  <Button variant="secondary" size="sm"
                     type="button"
                     onClick={onClose}
                     disabled={loading || deleting}
-                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
+                    className="flex-1 px-4 py-2 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="secondary" size="sm"
                     type="submit"
                     disabled={loading || deleting}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   >
                     {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar
-                  </button>
+                  </Button>
                 </div>
               </div>
             </form>

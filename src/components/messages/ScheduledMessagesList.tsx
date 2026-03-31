@@ -34,11 +34,11 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
   const getStatusBadge = (status: string | null) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline">⏳ Pendente</Badge>;
+        return <Badge variant="neutral">⏳ Pendente</Badge>;
       case 'sent':
         return <Badge variant="default">✓ Enviado</Badge>;
       case 'failed':
-        return <Badge variant="destructive">✗ Falha</Badge>;
+        return <Badge variant="error">✗ Falha</Badge>;
       default:
         return <Badge>{status || '—'}</Badge>;
     }
@@ -63,22 +63,22 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
     <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-1">
       {pendingMessages.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Mensagens Pendentes ({pendingMessages.length})</h3>
-          <div className="space-y-2">
+          <h3 className="text-lg font-semibold text-neutral-700">Mensagens Pendentes ({pendingMessages.length})</h3>
+          <div className="space-y-3">
             {pendingMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 hover:bg-muted/50 transition">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{getRecipientName(msg)}</p>
                     <p className="text-xs text-muted-foreground mt-1">{msg.message_text}</p>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-3 mt-2">
                       <Clock className="h-3 w-3 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">
                         {formatDateTime(msg.scheduled_at)}
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {getStatusBadge(msg.status)}
                     <Button
                       variant="ghost"
@@ -98,15 +98,15 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
 
       {sentMessages.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Enviadas ({sentMessages.length})</h3>
-          <div className="space-y-2">
+          <h3 className="text-lg font-semibold text-neutral-700">Enviadas ({sentMessages.length})</h3>
+          <div className="space-y-3">
             {sentMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 bg-green-50 dark:bg-green-950/20">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{getRecipientName(msg)}</p>
                     <p className="text-xs text-muted-foreground mt-1">{msg.message_text}</p>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-3 mt-2">
                       <CheckCircle className="h-3 w-3 text-green-600" />
                       <span className="text-xs text-muted-foreground">
                         Enviado em {formatDateTime(msg.sent_at)}
@@ -123,8 +123,8 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
 
       {failedMessages.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-neutral-700 mb-3">Falhas ({failedMessages.length})</h3>
-          <div className="space-y-2">
+          <h3 className="text-lg font-semibold text-neutral-700">Falhas ({failedMessages.length})</h3>
+          <div className="space-y-3">
             {failedMessages.map(msg => (
               <div key={msg.id} className="border rounded-lg p-3 bg-red-50 dark:bg-red-950/20">
                 <div className="flex items-start justify-between gap-3">

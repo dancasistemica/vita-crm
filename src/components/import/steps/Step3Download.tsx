@@ -22,16 +22,16 @@ export default function Step3Download({ onNext, onBack }: Props) {
   };
 
   return (
-    <div className="space-y-5 py-2">
-      <h3 className="text-lg font-semibold text-neutral-700 text-center">Baixe o modelo</h3>
+    <div className="space-y-6 py-2">
+      <h3 className="text-lg font-semibold text-neutral-700">Baixe o modelo</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="border-primary/30 bg-primary/5 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadXLSX}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-2">
+          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
             <FileSpreadsheet className="h-8 w-8 text-primary mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">XLSX</p>
-              <Badge variant="secondary" className="text-[10px] mt-1">Recomendado</Badge>
+              <Badge variant="neutral" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
             <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
             <Button size="sm" className="w-full mt-2">
@@ -41,13 +41,13 @@ export default function Step3Download({ onNext, onBack }: Props) {
         </Card>
 
         <Card className="border-border/50 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadCSV}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-2">
+          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
             <FileText className="h-8 w-8 text-muted-foreground mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">CSV</p>
             </div>
             <p className="text-xs text-muted-foreground">Texto separado por vírgula</p>
-            <Button size="sm" variant="outline" className="w-full mt-2">
+            <Button size="sm" variant="neutral" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar CSV
             </Button>
           </CardContent>
@@ -80,7 +80,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={onNext}>Próximo</Button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
@@ -55,7 +55,7 @@ export default function DashboardPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">Dashboard</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Visão geral do seu CRM</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -97,7 +97,7 @@ export default function DashboardPage() {
     leads_parados: () => <StuckLeadsAlert stuckLeads={stuckLeads} onLeadClick={() => navigate('/leads')} />,
     metricas_estagio: () => stageMetrics.length > 0 ? (
       <>
-        <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Métricas por Etapa</h2>
+        <h2 className="text-2xl font-semibold text-neutral-900">Métricas por Etapa</h2>
         <StageMetrics metrics={stageMetrics} />
       </>
     ) : null,
@@ -171,7 +171,7 @@ export default function DashboardPage() {
       <Card className="shadow-card border-border/60">
         <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {salesByDay.slice(-7).map((day) => (
               <div key={day.day} className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground w-24">{day.day}</span>
@@ -198,9 +198,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">📊 Dashboard</h1>
+          <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             Dados de <strong>{organization?.name || 'sua organização'}</strong>
           </p>

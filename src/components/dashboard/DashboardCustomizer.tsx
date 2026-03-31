@@ -60,9 +60,9 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <p className="text-sm font-medium text-foreground truncate">{config.title}</p>
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
+          <Badge variant="neutral" className="text-[10px] px-1.5 py-0 shrink-0">
             {groupLabel}
           </Badge>
         </div>
@@ -98,7 +98,7 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="min-h-[44px] gap-2">
+        <Button variant="neutral" size="sm" className="min-h-[44px] gap-3">
           <Settings2 className="h-4 w-4" />
           Personalizar
         </Button>
@@ -108,7 +108,7 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
           <SheetTitle className="text-lg font-display">Personalizar Dashboard</SheetTitle>
           <p className="text-sm text-muted-foreground">Arraste para reordenar e alterne a visibilidade dos cards.</p>
         </SheetHeader>
-        <div className="mt-6 space-y-2">
+        <div className="mt-6 space-y-3">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={settings.map(s => s.card_id)} strategy={verticalListSortingStrategy}>
               {settings.map(s => (

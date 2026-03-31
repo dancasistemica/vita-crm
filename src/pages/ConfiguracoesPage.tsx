@@ -33,13 +33,13 @@ export default function ConfiguracoesPage() {
       <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); if (v !== "permissoes") setPreselectedRole(null); }} className="w-full space-y-4">
         <div className="overflow-x-auto pb-2">
           <TabsList className="flex w-max min-w-full">
-            <TabsTrigger value="usuarios" className="gap-2"><Users className="w-4 h-4" /> Usuários</TabsTrigger>
-            <TabsTrigger value="campos" className="gap-2"><ClipboardList className="w-4 h-4" /> Campos do CRM</TabsTrigger>
-            <TabsTrigger value="pagamento" className="gap-2"><CreditCard className="w-4 h-4" /> Pagamento</TabsTrigger>
-            {canAccessSettings && <TabsTrigger value="roles" className="gap-2"><Shield className="w-4 h-4" /> Roles</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="permissoes" className="gap-2"><Lock className="w-4 h-4" /> Permissões</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="organizacao" className="gap-2"><Building2 className="w-4 h-4" /> Organização</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="ia" className="gap-2"><Brain className="w-4 h-4" /> Contexto IA</TabsTrigger>}
+            <TabsTrigger value="usuarios" className="gap-3"><Users className="w-4 h-4" /> Usuários</TabsTrigger>
+            <TabsTrigger value="campos" className="gap-3"><ClipboardList className="w-4 h-4" /> Campos do CRM</TabsTrigger>
+            <TabsTrigger value="pagamento" className="gap-3"><CreditCard className="w-4 h-4" /> Pagamento</TabsTrigger>
+            {canAccessSettings && <TabsTrigger value="roles" className="gap-3"><Shield className="w-4 h-4" /> Roles</TabsTrigger>}
+            {canAccessSettings && <TabsTrigger value="permissoes" className="gap-3"><Lock className="w-4 h-4" /> Permissões</TabsTrigger>}
+            {canAccessSettings && <TabsTrigger value="organizacao" className="gap-3"><Building2 className="w-4 h-4" /> Organização</TabsTrigger>}
+            {canAccessSettings && <TabsTrigger value="ia" className="gap-3"><Brain className="w-4 h-4" /> Contexto IA</TabsTrigger>}
           </TabsList>
         </div>
 

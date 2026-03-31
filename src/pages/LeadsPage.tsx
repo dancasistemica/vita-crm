@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/ds/Card";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
@@ -302,8 +302,8 @@ export default function LeadsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-3 text-muted-foreground">Carregando leads...</span>
+        <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+        <span className="ml-3 text-neutral-600">Carregando leads...</span>
       </div>
     );
   }
@@ -320,29 +320,31 @@ export default function LeadsPage() {
   const activeFiltersCount = getActiveFiltersCount();
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div className="space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900 mb-6">Leads</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus contatos e oportunidades</p>
+          <h1 className="text-4xl font-bold text-neutral-900 mb-2">Leads</h1>
+          <p className="text-sm text-neutral-600">Gerencie seus contatos e oportunidades</p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
-            <Button variant="outline" size="sm" onClick={() => navigate('/import-wizard')}>
-              <Upload className="h-4 w-4 mr-1" /> Importar Leads
+            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
+              <Upload className="h-4 w-4" /> Importar Leads
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
-            <FileDown className="h-4 w-4 mr-1" /> Exportar
+          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4" /> Exportar
           </Button>
           {userCanCreate && (
             <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
               <DialogTrigger asChild>
-                <Button size="sm" onClick={handleNewLead}><Plus className="h-4 w-4 mr-1" /> Novo Lead</Button>
+                <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle className="font-display">{editingLead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+                  <DialogTitle>
+                    <h2 className="text-2xl font-semibold text-neutral-900">{editingLead ? 'Editar Lead' : 'Novo Lead'}</h2>
+                  </DialogTitle>
                 </DialogHeader>
                 <LeadForm lead={editingLead} onSave={handleSave} />
               </DialogContent>
@@ -351,35 +353,27 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      {/* Search + Filters */}
-      <div className="space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nome, email ou telefone..."
-            value={search}
-            onChange={e => {
-              setSearch(e.target.value);
-              resetPage();
-            }}
-            className="pl-9"
-          />
-        </div>
+      <div className="space-y-4">
+        <Input
+          placeholder="Buscar por nome, email ou telefone..."
+          value={search}
+          onChange={e => { setSearch(e.target.value); resetPage(); }}
+          icon={<Search className="h-4 w-4" />}
+        />
 
-        <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200 mb-6" ref={filterRef}>
+        <Card padding="md" className="space-y-4" ref={filterRef}>
           {activeFiltersCount > 0 && (
-            <div className="flex flex-col gap-2 pb-2 border-b border-gray-100 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
               <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold sm:ml-auto">
-                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+              <Badge variant="default" size="sm">
                 {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} ativo{activeFiltersCount !== 1 ? 's' : ''}
-              </span>
+              </Badge>
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Origem</label>
-              <button
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="relative space-y-3">
+              <label className="block text-sm font-semibold text-neutral-700">Origem</label>
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenOrigin(!openOrigin);
@@ -387,27 +381,27 @@ export default function LeadsPage() {
                   setOpenStage(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedOrigins.length === 0 ? 'Selecione origens...' : `${selectedOrigins.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openOrigin && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {origins.map((origin) => (
-                    <label key={origin} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={origin} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedOrigins.includes(origin)}
                         onChange={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                       />
-                      <span className="text-sm text-gray-700">{origin}</span>
+                      <span className="text-sm text-neutral-700">{origin}</span>
                     </label>
                   ))}
                 </div>
@@ -416,24 +410,24 @@ export default function LeadsPage() {
               {selectedOrigins.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedOrigins.map((origin) => (
-                    <span key={origin} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                    <Badge key={origin} variant="default" size="sm" className="gap-1">
                       {origin}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
-                        className="ml-1 hover:text-blue-900"
+                        className="ml-1 hover:text-primary-900"
                       >
                         ×
-                      </button>
-                    </span>
+                      </Button>
+                    </Badge>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Nível de Interesse</label>
-              <button
+            <div className="relative space-y-3">
+              <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenInterest(!openInterest);
@@ -441,27 +435,27 @@ export default function LeadsPage() {
                   setOpenStage(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedInterests.length === 0 ? 'Selecione níveis...' : `${selectedInterests.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openInterest && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {interestLevels.map((level) => (
-                    <label key={level.value} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={level.value} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedInterests.includes(level.value)}
                         onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
-                        className="w-4 h-4 rounded border-gray-300 text-green-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-green-600"
                       />
-                      <span className="text-sm text-gray-700">{level.label}</span>
+                      <span className="text-sm text-neutral-700">{level.label}</span>
                     </label>
                   ))}
                 </div>
@@ -472,13 +466,13 @@ export default function LeadsPage() {
                   {selectedInterests.map((interest) => (
                     <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                       {getInterestLabel(interest)}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
                         className="ml-1 hover:text-green-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>
@@ -486,10 +480,10 @@ export default function LeadsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Etapa do Funil</label>
-              <button
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="relative space-y-3">
+              <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenStage(!openStage);
@@ -497,27 +491,27 @@ export default function LeadsPage() {
                   setOpenInterest(false);
                   setOpenTags(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedStages.length === 0 ? 'Selecione etapas...' : `${selectedStages.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openStage && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {pipelineStages.map((stage) => (
-                    <label key={stage.id} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={stage.id} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedStages.includes(stage.id)}
                         onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
-                        className="w-4 h-4 rounded border-gray-300 text-purple-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-purple-600"
                       />
-                      <span className="text-sm text-gray-700">{stage.name}</span>
+                      <span className="text-sm text-neutral-700">{stage.name}</span>
                     </label>
                   ))}
                 </div>
@@ -528,22 +522,22 @@ export default function LeadsPage() {
                   {selectedStages.map((stage) => (
                     <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
                       {getStageName(stage)}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
                         className="ml-1 hover:text-purple-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="relative space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Tags</label>
-              <button
+            <div className="relative space-y-3">
+              <label className="block text-sm font-semibold text-neutral-700">Tags</label>
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenTags(!openTags);
@@ -551,30 +545,30 @@ export default function LeadsPage() {
                   setOpenInterest(false);
                   setOpenStage(false);
                 }}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-4 py-2 border border-neutral-200 rounded-lg bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
               >
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {selectedTags.length === 0 ? 'Selecione tags...' : `${selectedTags.length} selecionado(s)`}
                 </span>
                 <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openTags && (
-                <div className="absolute z-50 w-full border border-gray-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
-                  <div className="px-4 py-2 border-b border-gray-200 font-semibold bg-gray-50 text-sm text-gray-600">
+                <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  <div className="px-4 py-2 border-b border-neutral-200 font-semibold bg-neutral-50 text-sm text-neutral-600">
                     Selecione as tags desejadas
                   </div>
                   {tags.map((tag) => (
-                    <label key={tag.name} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={tag.name} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedTags.includes(tag.name)}
                         onChange={() => toggleSelection(tag.name, selectedTags, setSelectedTags, 'Tags')}
-                        className="w-4 h-4 rounded border-gray-300 text-orange-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-orange-600"
                       />
-                      <span className="text-sm text-gray-700">{tag.name}</span>
+                      <span className="text-sm text-neutral-700">{tag.name}</span>
                     </label>
                   ))}
                 </div>
@@ -585,41 +579,24 @@ export default function LeadsPage() {
                   {selectedTags.map((tag) => (
                     <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                       {tag}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
                         className="ml-1 hover:text-orange-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>
               )}
             </div>
           </div>
-
+          
           <div className="flex justify-end pt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedOrigins([]);
-                setSelectedInterests([]);
-                setSelectedStages([]);
-                setSelectedTags([]);
-                setOpenOrigin(false);
-                setOpenInterest(false);
-                setOpenStage(false);
-                setOpenTags(false);
-                resetPage();
-                console.log('[LeadsFilters] Todos os filtros foram limpos');
-              }}
-            >
-              Limpar Filtros
-            </Button>
+            <Button variant="secondary" size="sm" onClick={resetFilters}>Limpar Filtros</Button>
           </div>
-        </div>
+        </Card>
       </div>
 
       <RecordCounter
@@ -629,120 +606,100 @@ export default function LeadsPage() {
         onPerPageChange={setPerPage}
       />
 
-      <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 bg-gray-50 rounded-lg">
-        <label className="text-sm font-medium text-gray-700">Ordenar por:</label>
-        <select
-          value={sortBy}
-          onChange={(e) => {
-            setSortBy(e.target.value as 'date' | 'name');
-            resetPage();
-          }}
-          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="date">📅 Data de Cadastro (Padrão)</option>
-          <option value="name">🔤 Ordem Alfabética</option>
-        </select>
-        <button
-          type="button"
-          onClick={() => {
-            setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
-            resetPage();
-          }}
-          className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center gap-2"
-        >
-          {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-        </button>
+      <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-neutral-100 rounded-lg">
+        <span className="text-sm font-medium text-neutral-700">Ordenar por:</span>
+        <div className="flex-1 flex gap-3">
+          <div className="flex-1">
+            <select
+              value={sortBy}
+              onChange={(e) => { setSortBy(e.target.value as 'date' | 'name'); resetPage(); }}
+              className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="date">📅 Data de Cadastro</option>
+              <option value="name">🔤 Ordem Alfabética</option>
+            </select>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => { setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
+          >
+            {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
+          </Button>
+        </div>
       </div>
 
       {selectedIds.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
-          <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
-          {userCanEdit && (
-            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
-              <Pencil className="h-3 w-3 mr-1" /> Editar em massa
-            </Button>
-          )}
-          {userCanDelete && (
-            <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
-              <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
-            </Button>
-          )}
-          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedIds([])}>
-            Limpar seleção
-          </Button>
-        </div>
+        <Card padding="sm" className="bg-primary-50 border-primary-200 flex items-center gap-3">
+          <span className="text-sm font-medium text-primary-700">{selectedIds.length} selecionado(s)</span>
+          <div className="ml-auto flex gap-2">
+            {userCanEdit && (
+              <Button variant="secondary" size="sm" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3 w-3" />}>
+                Editar
+              </Button>
+            )}
+            {userCanDelete && (
+              <Button variant="error" size="sm" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3 w-3" />}>
+                Deletar
+              </Button>
+            )}
+            <Button variant="ghost" size="sm" onClick={() => setSelectedIds([])}>Limpar</Button>
+          </div>
+        </Card>
       )}
 
-      <div className="space-y-2">
-        {paginated.length === 0 && <p className="text-muted-foreground text-center py-12 text-sm">Nenhum lead encontrado.</p>}
+      <div className="space-y-4">
+        {paginated.length === 0 && <p className="text-neutral-500 text-center py-12">Nenhum lead encontrado.</p>}
 
         {paginated.length > 0 && (
-          <div className="flex items-center gap-2 px-4 py-1">
+          <div className="flex items-center gap-3 px-2">
             <Checkbox
               checked={selectedIds.length === paginated.length && paginated.length > 0}
               onCheckedChange={toggleSelectAll}
             />
-            <span className="text-xs text-muted-foreground">Selecionar todos</span>
+            <span className="text-xs text-neutral-500">Selecionar todos</span>
           </div>
         )}
 
         {paginated.map((lead, idx) => (
-          <Card key={lead.id} className="hover-lift shadow-card border-border/60 relative overflow-hidden animate-slide-up" style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'backwards' }}>
-            <div className={`interest-bar ${interestBarColors[lead.interestLevel] || 'bg-muted'}`} />
-            <CardContent className="py-3 px-4 pl-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <div className="flex items-center gap-3 flex-1 min-w-0">
+          <Card key={lead.id} padding="none" className="overflow-hidden hover:shadow-md transition-shadow">
+            <div className={`h-1 w-full ${interestBarColors[lead.interestLevel] || 'bg-neutral-200'}`} />
+            <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
                 <Checkbox
                   checked={selectedIds.includes(lead.id)}
                   onCheckedChange={() => toggleSelect(lead.id)}
-                  onClick={e => e.stopPropagation()}
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-foreground text-sm cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</span>
-                    <Badge variant="outline" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
-                    <Badge variant="outline" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>
-                    {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] bg-primary/8 text-primary border-primary/15">{tag}</Badge>)}
+                    <span className="font-semibold text-neutral-900 text-sm cursor-pointer hover:underline hover:text-primary-600" onClick={() => setDetailLead(lead)}>
+                      {lead.name}
+                    </span>
+                    <Badge variant="neutral" size="sm">{getInterestLabel(lead.interestLevel)}</Badge>
+                    <Badge variant="default" size="sm">{getStageName(lead.pipelineStage)}</Badge>
                   </div>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+                  <div className="flex items-center gap-3 mt-1 text-xs text-neutral-500">
                     <span>{lead.origin}</span>
                     {lead.city && <span>• {lead.city}</span>}
-                    {lead.responsible && <span className="text-primary/70">→ {lead.responsible}</span>}
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-1">
                 {lead.phone && (
-                  <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-success hover:bg-success/10 hover:text-success"><Phone className="h-4 w-4" /></Button>
-                  </a>
-                )}
-                {lead.email && (
-                  <a href={`mailto:${lead.email}`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-info/10 hover:text-info"><Mail className="h-4 w-4" /></Button>
-                  </a>
-                )}
-                {lead.instagram && (
-                  <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
-                  </a>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(`https://wa.me/${lead.phone}`, '_blank')}>
+                    <Phone className="h-4 w-4" />
+                  </Button>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => handleEditLead(lead)}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => handleDeleteClick(lead)}
-                  disabled={!userCanDelete || deleteLoading}
-                  title={userCanDelete ? 'Excluir lead' : 'Voce nao tem permissao'}
-                >
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" onClick={() => handleDeleteClick(lead)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
@@ -751,9 +708,9 @@ export default function LeadsPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
           <div className="flex items-center gap-1">
-            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
             <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
           </div>
         </div>
       )}

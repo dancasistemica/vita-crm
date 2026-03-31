@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { useCustomFields } from "@/hooks/useCustomFields";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/ds/Button";
+import { Input } from "@/components/ui/ds/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/ds/Badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select } from "@/components/ui/ds/Select";
 import { X } from "lucide-react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
 
@@ -169,7 +169,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
                   </Select>
                 )}
                 {cf.field_type === 'checkbox' && (
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-3 mt-1">
                     <Checkbox
                       checked={!!customData[cf.field_name]}
                       onCheckedChange={v => setCustom(cf.field_name, v)}

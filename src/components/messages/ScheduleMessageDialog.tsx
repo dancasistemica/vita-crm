@@ -146,7 +146,7 @@ export const ScheduleMessageDialog = ({
           </div>
 
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="error">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -159,7 +159,7 @@ export const ScheduleMessageDialog = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="min-h-[44px]">
+          <Button variant="neutral" onClick={() => onOpenChange(false)} className="min-h-[44px]">
             Cancelar
           </Button>
           <Button onClick={handleSchedule} disabled={loading} className="min-h-[44px]">

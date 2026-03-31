@@ -174,7 +174,7 @@ export default function ClientsTable({
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={e => e.stopPropagation()}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -187,9 +187,9 @@ export default function ClientsTable({
             </div>
             <div className="flex flex-wrap gap-1 mb-2">
               {clientSales.slice(0, 2).map(s => (
-                <Badge key={s.id} variant="outline" className="text-[10px]">{getProductName(s.productId)}</Badge>
+                <Badge key={s.id} variant="neutral" className="text-[10px]">{getProductName(s.productId)}</Badge>
               ))}
-              {clientSales.length > 2 && <Badge variant="outline" className="text-[10px]">+{clientSales.length - 2}</Badge>}
+              {clientSales.length > 2 && <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
@@ -280,12 +280,12 @@ export default function ClientsTable({
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {clientSales.slice(0, 2).map(s => (
-                      <Badge key={s.id} variant="outline" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
+                      <Badge key={s.id} variant="neutral" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
                     ))}
                     {clientSales.length > 2 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Badge variant="outline" className="text-[10px]">+{clientSales.length - 2}</Badge>
+                          <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>
                         </TooltipTrigger>
                         <TooltipContent>
                           {clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}
@@ -322,12 +322,12 @@ export default function ClientsTable({
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
+                    <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
                     </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <Button variant="ghost" size="sm" className="h-7 w-7">
                           <MoreVertical className="h-3.5 w-3.5" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -353,8 +353,8 @@ export default function ClientsTable({
       {selectedIds.length >= 2 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionados</span>
-          <Button variant="outline" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
-          <Button variant="outline" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
+          <Button variant="neutral" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
+          <Button variant="neutral" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
         </div>
       )}
 
@@ -363,7 +363,7 @@ export default function ClientsTable({
 
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>{totalFiltered} clientes</span>
           <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
             <SelectTrigger className="h-8 w-20 text-xs">
@@ -379,9 +379,9 @@ export default function ClientsTable({
           <span>por página</span>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+          <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
           <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-          <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+          <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
       </div>
     </div>

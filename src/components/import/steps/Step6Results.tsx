@@ -16,7 +16,7 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
   const total = result.created + result.updated + result.converted + errorCount;
 
   return (
-    <div className="text-center py-6 space-y-5">
+    <div className="text-center py-6 space-y-6">
       <div className="h-16 w-16 rounded-full bg-success/20 flex items-center justify-center mx-auto">
         <Check className="h-8 w-8 text-success" />
       </div>
@@ -70,7 +70,7 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
       )}
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button variant="outline" onClick={onImportMore}>Importar mais</Button>
+        <Button variant="neutral" onClick={onImportMore}>Importar mais</Button>
         <Button onClick={onClose}>Voltar para Leads</Button>
       </div>
     </div>

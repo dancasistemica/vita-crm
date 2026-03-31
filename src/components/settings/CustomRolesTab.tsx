@@ -161,7 +161,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-3">
             <Shield className="h-5 w-5" />
             Roles Customizáveis
           </CardTitle>
@@ -196,9 +196,9 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                   {roles.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           {r.name}
-                          {r.is_default && <Badge variant="outline" className="text-xs">Padrão</Badge>}
+                          {r.is_default && <Badge variant="neutral" className="text-xs">Padrão</Badge>}
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">{r.description || '—'}</TableCell>
@@ -207,11 +207,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
                           </Button>
                           {!r.is_default && (
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
@@ -243,7 +243,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
             <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               {editing ? 'Salvar' : 'Criar'}
