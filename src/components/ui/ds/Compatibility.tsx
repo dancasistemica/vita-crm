@@ -22,7 +22,7 @@ export const DropdownMenuSeparator = () => <div className="h-px bg-neutral-100 m
 // Slider
 export const Slider = (props: any) => (
   <input type="range" className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600" {...props} />
-);
+)
 
 // Collapsible
 export const Collapsible = ({ children }: any) => <div>{children}</div>;
@@ -32,16 +32,17 @@ export const CollapsibleContent = ({ children }: any) => <div>{children}</div>;
 // Sheet
 export const Sheet = ({ open, onOpenChange, children }: any) => open ? (
   <div className="fixed inset-0 z-50 flex justify-end bg-black bg-opacity-50">
-    <div className="w-full max-w-md bg-white h-full shadow-xl p-6 relative">
-      <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 p-2">×</button>
+    <div className="w-full max-w-md bg-white h-full shadow-xl p-6 relative overflow-y-auto">
+      <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 p-2 text-2xl">×</button>
       {children}
     </div>
   </div>
 ) : null;
-export const SheetContent = ({ children }: any) => <div>{children}</div>;
-export const SheetHeader = ({ children }: any) => <div className="mb-4">{children}</div>;
-export const SheetTitle = ({ children }: any) => <h2 className="text-xl font-bold">{children}</h2>;
+export const SheetContent = ({ children, className = '' }: any) => <div className={className}>{children}</div>;
+export const SheetHeader = ({ children, className = '' }: any) => <div className={`mb-4 ${className}`}>{children}</div>;
+export const SheetTitle = ({ children, className = '' }: any) => <h2 className={`text-xl font-bold ${className}`}>{children}</h2>;
 export const SheetTrigger = ({ children, asChild }: any) => children;
+export const SheetDescription = ({ children, className = '' }: any) => <p className={`text-sm text-neutral-500 ${className}`}>{children}</p>;
 
 // Switch
 export const Switch = ({ checked, onCheckedChange, ...props }: any) => (
