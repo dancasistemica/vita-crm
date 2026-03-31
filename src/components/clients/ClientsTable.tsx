@@ -174,9 +174,9 @@ export default function ClientsTable({
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  < variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
                     <MoreVertical className="h-4 w-4" />
-                  </>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
