@@ -65,15 +65,15 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
           <CalendarDays className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium text-muted-foreground mr-1">Período:</span>
           {PRESET_PERIODS.map(preset => (
-            <
+            <Button
               key={preset.label}
               size="sm"
-              variant={selectedLabel === preset.label && !isCustom ? 'default' : 'outline'}
+              variant={selectedLabel === preset.label && !isCustom ? 'primary' : 'secondary'}
               onClick={() => handlePresetClick(preset)}
               className="text-xs"
             >
               {preset.label}
-            </>
+            </Button>
           ))}
           <
             size="sm"
