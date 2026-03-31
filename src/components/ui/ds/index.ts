@@ -17,3 +17,6 @@ export * from './Skeleton';
 export * from './Avatar';
 export * from './Separator';
 export * from './Popover';
+export * from './Toaster';
+export * from './Tooltip';
+export * from './Sidebar';
