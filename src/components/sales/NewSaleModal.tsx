@@ -327,10 +327,10 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  < variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
-                  </>
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
