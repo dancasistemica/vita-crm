@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead, Interaction } from '@/types/crm';
@@ -49,10 +48,10 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
 
   return (
     <div className="space-y-3">
-      < variant="neutral" size="sm" onClick={handleGenerate} disabled={loading}>
+      <Button variant="secondary" size="sm" onClick={handleGenerate} disabled={loading}>
         <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
         {loading ? 'Gerando...' : '✨ Sugerir resposta'}
-      </>
+      </Button>
 
       {suggestion && (
         <div className="space-y-3 animate-in fade-in-50">
@@ -64,8 +63,8 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
           <div className="flex gap-3">
-            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
-            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
+            <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
         </div>
       )}

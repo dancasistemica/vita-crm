@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Textarea } from '@/components/ui/ds';
@@ -223,9 +223,9 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
                   </Badge>
                 </div>
-                < variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
+                <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
                   <X className="h-4 w-4" />
-                </>
+                </Button>
               </div>
             ) : (
               <div className="relative">
@@ -240,7 +240,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 {showResults && searchResults.length > 0 && (
                   <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(lead => (
-                      < variant="secondary" size="sm"
+                      <Button variant="secondary" size="sm"
                         key={lead.id}
                         onClick={() => handleSelectLead(lead)}
                         className="w-full text-left px-3 py-2.5 hover:bg-muted/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
@@ -252,7 +252,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
                         </Badge>
-                      </>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -327,10 +327,10 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  < variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
-                  </>
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
@@ -398,12 +398,12 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
           {/* Section 3: Actions */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            < variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
+            <Button variant="secondary" onClick={() => onOpenChange(false)} disabled={saving}>
               Cancelar
-            </>
-            < onClick={handleSubmit} disabled={saving}>
+            </Button>
+            <Button onClick={handleSubmit} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar Venda'}
-            </>
+            </Button>
           </div>
         </div>
       </DialogContent>

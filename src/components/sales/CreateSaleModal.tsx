@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Input, Select, Badge, Alert, Card } from '@/components/ui/ds';
+import { Input, Select, Badge, Alert, Card, Button } from '@/components/ui/ds';
 
 interface CreateSaleModalProps {
   isOpen: boolean;
@@ -186,7 +186,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
-            < variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
+            <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
           </div>
 
           <div className="flex items-center gap-3">
@@ -225,7 +225,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                 {showClientDropdown && clientSearch && (
                   <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-lg bg-white">
                     {filteredClients.map(client => (
-                      < variant="secondary" size="sm"
+                      <Button variant="secondary" size="sm"
                         key={client.id}
                         type="button"
                         className="w-full text-left p-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
@@ -237,7 +237,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                       >
                         <p className="font-semibold text-neutral-900">{client.name}</p>
                         <p className="text-xs text-neutral-500">{client.email}</p>
-                      </>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -344,17 +344,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
         {/* Footer com Ações */}
         <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex justify-between gap-4">
-          < variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
+          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
             Voltar
-          </>
+          </Button>
           {currentPhase < totalPhases ? (
-            < variant="primary" onClick={handleNextPhase}>
+            <Button variant="primary" onClick={handleNextPhase}>
               Próximo
-            </>
+            </Button>
           ) : (
-            < variant="success" type="submit" form="sale-form" loading={loading}>
+            <Button variant="success" type="submit" form="sale-form" loading={loading}>
               Finalizar {saleType === 'unica' ? 'Venda' : 'Assinatura'}
-            </>
+            </Button>
           )}
         </div>
       </div>

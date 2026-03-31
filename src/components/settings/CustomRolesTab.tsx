@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
@@ -165,9 +165,9 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             <Shield className="h-5 w-5" />
             Roles Customizáveis
           </CardTitle>
-          < size="sm" onClick={openCreate}>
+          <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4 mr-1" /> Nova Role
-          </>
+          </Button>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
@@ -207,13 +207,13 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          < variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
-                          </>
+                          </Button>
                           {!r.is_default && (
-                            < variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
                               <Trash2 className="h-4 w-4" />
-                            </>
+                            </Button>
                           )}
                         </div>
                       </TableCell>
@@ -243,11 +243,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </div>
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</>
-            < onClick={handleSave} disabled={saving}>
+            <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               {editing ? 'Salvar' : 'Criar'}
-            </>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

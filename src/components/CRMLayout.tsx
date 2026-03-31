@@ -2,7 +2,7 @@ import { SidebarProvider, useSidebar } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
-import { } from "@/components/ui/ds/";
+import { Button } from "@/components/ui/ds";
 import { Input } from "@/components/ui/ds/Input";
 import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
 import { useSearch } from "@/hooks/useSearch";
@@ -12,7 +12,7 @@ function HeaderMenu() {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <
+    <Button
       variant="ghost"
       size="sm"
       onClick={toggleSidebar}
@@ -21,7 +21,7 @@ function HeaderMenu() {
       type="button"
     >
       <Menu className="h-5 w-5" />
-    </>
+    </Button>
   );
 }
 
@@ -61,7 +61,7 @@ export default function CRMLayout() {
               {searchQuery && results.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
                   {results.map((result) => (
-                    < variant="secondary" size="sm"
+                    <Button variant="secondary" size="sm"
                       key={`${result.type}-${result.id}`}
                       onClick={() => {
                         if (result.type === "lead") {
@@ -81,7 +81,7 @@ export default function CRMLayout() {
                         <p className="text-xs text-neutral-500">{result.subtitle}</p>
                       )}
                       <span className="text-xs text-neutral-400 capitalize">{result.type}</span>
-                    </>
+                    </Button>
                   ))}
                 </div>
               )}

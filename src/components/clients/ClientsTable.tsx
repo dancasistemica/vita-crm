@@ -3,7 +3,7 @@ import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLi
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
 import { Checkbox } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Skeleton } from '@/components/ui/ds';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
@@ -174,9 +174,9 @@ export default function ClientsTable({
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  < variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
                     <MoreVertical className="h-4 w-4" />
-                  </>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
@@ -322,14 +322,14 @@ export default function ClientsTable({
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
-                    < variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
+                    <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
-                    </>
+                    </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        < variant="ghost" size="sm" className="h-7 w-7">
+                        <Button variant="ghost" size="sm" className="h-7 w-7">
                           <MoreVertical className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
@@ -353,8 +353,8 @@ export default function ClientsTable({
       {selectedIds.length >= 2 && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionados</span>
-          < variant="neutral" size="sm" className="h-7 text-xs">Exportar selecionados</>
-          < variant="neutral" size="sm" className="h-7 text-xs">Atribuir responsável</>
+          <Button variant="secondary" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
+          <Button variant="secondary" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
         </div>
       )}
 
@@ -379,9 +379,9 @@ export default function ClientsTable({
           <span>por página</span>
         </div>
         <div className="flex items-center gap-1">
-          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
+          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
           <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-          < variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
+          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
       </div>
     </div>

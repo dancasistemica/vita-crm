@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Card, CardContent } from '@/components/ui/ds';
@@ -65,24 +65,24 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
           <CalendarDays className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium text-muted-foreground mr-1">Período:</span>
           {PRESET_PERIODS.map(preset => (
-            <
+            <Button
               key={preset.label}
               size="sm"
-              variant={selectedLabel === preset.label && !isCustom ? 'default' : 'outline'}
+              variant={selectedLabel === preset.label && !isCustom ? 'primary' : 'secondary'}
               onClick={() => handlePresetClick(preset)}
               className="text-xs"
             >
               {preset.label}
-            </>
+            </Button>
           ))}
-          <
+          <Button
             size="sm"
-            variant={isCustom ? 'default' : 'outline'}
+            variant={isCustom ? 'primary' : 'secondary'}
             onClick={() => setIsCustom(!isCustom)}
             className="text-xs"
           >
             Customizado
-          </>
+          </Button>
         </div>
 
         {isCustom && (
@@ -95,9 +95,9 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
               <Label className="text-xs">Fim</Label>
               <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="h-8 text-xs w-36" />
             </div>
-            < size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
+            <Button size="sm" onClick={handleCustomApply} disabled={!customStart || !customEnd} className="text-xs">
               Aplicar
-            </>
+            </Button>
           </div>
         )}
       </CardContent>

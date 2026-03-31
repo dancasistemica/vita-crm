@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
 import { Progress } from '@/components/ui/ds';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
@@ -289,10 +289,10 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        < variant="neutral" onClick={onBack}>Voltar</>
-        < onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
+        <Button variant="secondary" onClick={onBack}>Voltar</Button>
+        <Button onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
-        </>
+        </Button>
       </div>
 
       {state.importResult && state.importResult.dateConversions > 0 && (

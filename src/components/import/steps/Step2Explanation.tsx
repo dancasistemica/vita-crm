@@ -1,5 +1,5 @@
 import { Download, FileSpreadsheet, Upload, CheckCircle, Database } from 'lucide-react';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 
 interface Props {
   onNext: () => void;
@@ -48,8 +48,8 @@ export default function Step2Explanation({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        < variant="neutral" onClick={onBack}>Voltar</>
-        < onClick={onNext}>Próximo</>
+        <Button variant="secondary" onClick={onBack}>Voltar</Button>
+        <Button onClick={onNext}>Próximo</Button>
       </div>
     </div>
   );

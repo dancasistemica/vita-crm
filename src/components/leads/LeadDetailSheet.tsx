@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Skeleton } from '@/components/ui/ds';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -215,11 +215,11 @@ export default function LeadDetailSheet({
             <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-border">
               {lead.phone && (
                 <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                  < variant="neutral" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</>
+                  <Button variant="secondary" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
                 </a>
               )}
-              <
-                variant="neutral"
+              <Button
+                variant="secondary"
                 size="sm"
                 onClick={() => setScheduleDialogOpen(true)}
                 className="gap-3 min-h-[44px]"
@@ -227,23 +227,23 @@ export default function LeadDetailSheet({
               >
                 <Clock className="h-4 w-4" />
                 Agendar Mensagem
-              </>
+              </Button>
               {lead.email && (
                 <a href={`mailto:${lead.email}`}>
-                  < variant="neutral" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</>
+                  <Button variant="secondary" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</Button>
                 </a>
               )}
               {lead.instagram && (
                 <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                  < variant="neutral" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</>
+                  <Button variant="secondary" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</Button>
                 </a>
               )}
               {onEdit && (
-                < variant="neutral" size="sm" onClick={() => onEdit(lead)}>
+                <Button variant="secondary" size="sm" onClick={() => onEdit(lead)}>
                   <Edit className="h-4 w-4 mr-1" /> Editar
-                </>
+                </Button>
               )}
-              <
+              <Button
                 variant="error"
                 size="sm"
                 onClick={handleDeleteClick}
@@ -251,7 +251,7 @@ export default function LeadDetailSheet({
                 title={canDelete ? 'Excluir lead' : 'Voce nao tem permissao'}
               >
                 <Trash2 className="h-4 w-4 mr-1" /> Excluir
-              </>
+              </Button>
             </div>
           </TabsContent>
 

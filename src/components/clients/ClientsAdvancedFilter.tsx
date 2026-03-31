@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Input, Button } from '@/components/ui/ds';
 import { Checkbox } from '@/components/ui/ds';
 import { Badge } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
@@ -27,14 +26,14 @@ interface Props {
 function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
-      < variant="secondary" size="sm"
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('AND')}
-      >E</>
-      < variant="secondary" size="sm"
+      >E</Button>
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('OR')}
-      >OU</>
+      >OU</Button>
     </div>
   );
 }
@@ -71,9 +70,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           className="pl-9 h-9 text-sm"
         />
         {filters.search && (
-          < variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
+          <Button variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
             <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </>
+          </Button>
         )}
       </div>
 
@@ -129,7 +128,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: '90 dias', days: 90 },
               { label: 'Este ano', days: -1 },
             ].map(({ label, days }) => (
-              < key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
+              <Button key={label} variant="secondary" size="sm" className="h-7 text-xs" onClick={() => {
                 const now = new Date();
                 const to = now.toISOString().split('T')[0];
                 const from = days === -1
@@ -138,7 +137,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 updateFilter('dateRange', { from, to });
               }}>
                 {label}
-              </>
+              </Button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -223,9 +222,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: 'Últimos 30 dias', value: '30d' },
               { label: 'Sem interação 30+ dias', value: 'no_interaction_30' },
             ].map(({ label, value }) => (
-              <
+              <Button
                 key={value}
-                variant={filters.lastInteraction.preset === value ? 'default' : 'outline'}
+                variant={filters.lastInteraction.preset === value ? 'primary' : 'secondary'}
                 size="sm"
                 className="h-7 text-xs"
                 onClick={() => updateFilter('lastInteraction', {
@@ -234,7 +233,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 })}
               >
                 {label}
-              </>
+              </Button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">

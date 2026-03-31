@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Textarea } from '@/components/ui/ds';
@@ -97,15 +97,15 @@ export default function AIContextTab() {
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              < type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
+              <Button type="button" size="sm" variant="secondary" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
-              </>
+              </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
                 <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  < variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
@@ -132,15 +132,15 @@ export default function AIContextTab() {
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              < type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              <Button type="button" size="sm" variant="secondary" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
-              </>
+              </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
                 <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  < variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
@@ -223,9 +223,9 @@ export default function AIContextTab() {
 
       {/* Salvar */}
       <div className="flex justify-end">
-        < onClick={() => save(form)} disabled={saving}>
+        <Button onClick={() => save(form)} disabled={saving}>
           {saving ? 'Salvando...' : '💾 Salvar Contexto da IA'}
-        </>
+        </Button>
       </div>
     </div>
   );

@@ -151,9 +151,9 @@ export default function ClientDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
-        < variant="neutral" onClick={() => navigate('/clientes')}>
+        <Button variant="secondary" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
-        </>
+        </Button>
       </div>
     );
   }
@@ -165,7 +165,7 @@ export default function ClientDetailPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start gap-6">
-        < variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
+        <Button variant="ghost" size="sm" onClick={() => navigate('/clientes')} icon={<ArrowLeft className="h-5 w-5" />} />
         
         <div className="flex-1">
           <div className="flex items-center gap-4">
@@ -197,15 +197,15 @@ export default function ClientDetailPage() {
           </div>
 
           <div className="flex gap-3 mt-4 flex-wrap">
-            <
-              variant="neutral"
+            <Button
+              variant="secondary"
               size="md"
               onClick={() => setScheduleDialogOpen(true)}
               icon={<Clock className="h-4 w-4" />}
               disabled={!client.phone}
             >
               Agendar Mensagem
-            </>
+            </Button>
           </div>
         </div>
       </div>
@@ -251,8 +251,8 @@ export default function ClientDetailPage() {
                       <span className="font-bold text-success-600">R$ {sale.value.toLocaleString('pt-BR')}</span>
                       <Badge variant={statusBadgeVariants[sale.status] || 'neutral'}>{sale.status}</Badge>
                       <div className="flex items-center gap-1">
-                        < variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
-                        <
+                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
+                        <Button
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4 text-error-600" />}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from '@/components/ui/ds';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { Textarea } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
@@ -178,10 +177,10 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
         </div>
 
         <DialogFooter>
-          < variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</>
-          < onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
             {loading ? 'Atualizando...' : 'Aplicar'}
-          </>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

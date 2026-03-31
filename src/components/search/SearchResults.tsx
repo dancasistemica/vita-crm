@@ -1,4 +1,5 @@
 import { CheckSquare, Package, User, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/ds";
 import type { GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
 
 interface SearchResultsProps {
@@ -61,7 +62,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
                     : "📦"} {typeLabels[type]}
             </div>
             {typeResults.map((result) => (
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 key={result.id}
                 onClick={() => onSelect(result)}
                 className="flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-accent transition-colors min-h-11"
@@ -78,7 +79,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
                     </div>
                   )}
                 </div>
-              </>
+              </Button>
             ))}
           </div>
         );

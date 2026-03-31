@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
+import { Button, Textarea } from '@/components/ui/ds';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
@@ -64,17 +63,17 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
             </SelectContent>
           </Select>
         </div>
-        < size="sm" onClick={handleGenerate} disabled={loading}>
+        <Button size="sm" onClick={handleGenerate} disabled={loading}>
           {loading ? 'Gerando...' : '✨ Gerar mensagem'}
-        </>
+        </Button>
       </div>
 
       {message && (
         <div className="space-y-3 animate-in fade-in-50">
           <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} className="text-sm" />
           <div className="flex gap-3">
-            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
-            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
+            <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
           <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
         </div>

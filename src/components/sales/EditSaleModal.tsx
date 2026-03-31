@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/ds';
 import { X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -197,13 +198,13 @@ export const EditSaleModal = ({
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>
           </div>
-          < variant="secondary" size="sm"
+          <Button variant="secondary" size="sm"
             onClick={onClose}
             disabled={loading}
             className="p-1 hover:bg-white/20 rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-white" />
-          </>
+          </Button>
         </div>
 
         {/* Conteúdo */}
@@ -221,18 +222,18 @@ export const EditSaleModal = ({
               <h3 className="text-lg font-semibold text-neutral-700">Erro ao carregar</h3>
               <p className="text-neutral-600 text-sm mb-6 px-4">{error}</p>
               <div className="flex flex-col gap-3">
-                < variant="secondary" size="sm"
+                <Button variant="secondary" size="sm"
                   onClick={loadData}
                   className="flex items-center justify-center gap-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" /> Tentar Novamente
-                </>
-                < variant="secondary" size="sm"
+                </Button>
+                <Button variant="secondary" size="sm"
                   onClick={onClose}
                   className="px-4 py-2 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
                   Fechar
-                </>
+                </Button>
               </div>
             </div>
           ) : (
@@ -300,7 +301,7 @@ export const EditSaleModal = ({
 
               <div className="flex gap-3 pt-4 border-t mt-4">
                 {/* Botão Excluir à esquerda */}
-                < variant="secondary" size="sm"
+                <Button variant="secondary" size="sm"
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
@@ -310,26 +311,26 @@ export const EditSaleModal = ({
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
                   <Trash2 className="w-4 h-4" />
                   <span>Excluir</span>
-                </>
+                </Button>
 
                 {/* Botões Cancelar e Salvar à direita */}
                 <div className="flex gap-3 flex-1">
-                  < variant="secondary" size="sm"
+                  <Button variant="secondary" size="sm"
                     type="button"
                     onClick={onClose}
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-gray-300 text-neutral-800 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 font-medium"
                   >
                     Cancelar
-                  </>
-                  < variant="secondary" size="sm"
+                  </Button>
+                  <Button variant="secondary" size="sm"
                     type="submit"
                     disabled={loading || deleting}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
                   >
                     {loading && <Loader className="w-4 h-4 animate-spin" />}
                     Salvar
-                  </>
+                  </Button>
                 </div>
               </div>
             </form>

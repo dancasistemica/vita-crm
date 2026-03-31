@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { useCRMStore } from '@/store/crmStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
+import { Button, Skeleton } from '@/components/ui/ds';
 import { Sparkles, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -58,9 +57,9 @@ Gere o resumo semanal.`;
             <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
           </CardTitle>
           {hasLoaded && (
-            < variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
               <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
-            </>
+            </Button>
           )}
         </div>
       </CardHeader>
@@ -68,9 +67,9 @@ Gere o resumo semanal.`;
         {!hasLoaded && !loading ? (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">Clique para gerar o resumo inteligente da semana</p>
-            < onClick={handleLoad} variant="neutral" size="sm">
+            <Button onClick={handleLoad} variant="secondary" size="sm">
               <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" /> Gerar Resumo
-            </>
+            </Button>
           </div>
         ) : loading ? (
           <div className="space-y-3">

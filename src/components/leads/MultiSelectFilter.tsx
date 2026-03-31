@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/ds";
 
 interface MultiSelectFilterProps {
   label: string;
@@ -26,7 +27,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
         {options.map(opt => {
           const isActive = selected.includes(opt.value);
           return (
-            < variant="secondary" size="sm"
+            <Button variant="secondary" size="sm"
               key={opt.value}
               type="button"
               onClick={() => toggle(opt.value)}
@@ -39,7 +40,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
             >
               {opt.label}
               {isActive && <X className="h-3 w-3" />}
-            </>
+            </Button>
           );
         })}
       </div>

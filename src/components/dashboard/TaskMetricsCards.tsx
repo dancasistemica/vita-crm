@@ -2,8 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Card, CardContent } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Card, CardContent, Button } from '@/components/ui/ds';
 import { Skeleton } from '@/components/ui/ds';
 import { AlertCircle, Clock, ArrowRight } from 'lucide-react';
 
@@ -147,9 +146,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {overdueCount > 0 && (
-            < variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
+            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-destructive hover:text-destructive" onClick={() => navigate('/tarefas?filter=overdue')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </>
+            </Button>
           )}
         </CardContent>
       </Card>
@@ -179,9 +178,9 @@ export default function TaskMetricsCards() {
             </div>
           )}
           {pendingCount > 0 && (
-            < variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
+            <Button variant="ghost" size="sm" className="w-full min-h-[44px] text-warning hover:text-warning" onClick={() => navigate('/tarefas?filter=pending')}>
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
-            </>
+            </Button>
           )}
         </CardContent>
       </Card>
