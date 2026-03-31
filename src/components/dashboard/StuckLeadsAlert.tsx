@@ -34,7 +34,7 @@ export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsA
                   {lead.daysInStage} dias em "{lead.stage}"
                 </div>
               </div>
-              <Button size="sm" variant="destructive" className="text-xs h-7">
+              <Button size="sm" variant="error" className="text-xs h-7">
                 Ver
               </Button>
             </div>

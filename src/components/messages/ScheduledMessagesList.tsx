@@ -34,11 +34,11 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
   const getStatusBadge = (status: string | null) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline">⏳ Pendente</Badge>;
+        return <Badge variant="neutral">⏳ Pendente</Badge>;
       case 'sent':
         return <Badge variant="default">✓ Enviado</Badge>;
       case 'failed':
-        return <Badge variant="destructive">✗ Falha</Badge>;
+        return <Badge variant="error">✗ Falha</Badge>;
       default:
         return <Badge>{status || '—'}</Badge>;
     }

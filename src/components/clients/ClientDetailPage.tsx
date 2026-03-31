@@ -151,7 +151,7 @@ export default function ClientDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="text-neutral-600 mb-4">Cliente não encontrado.</p>
-        <Button variant="secondary" onClick={() => navigate('/clientes')}>
+        <Button variant="neutral" onClick={() => navigate('/clientes')}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
         </Button>
       </div>
@@ -198,7 +198,7 @@ export default function ClientDetailPage() {
 
           <div className="flex gap-3 mt-4 flex-wrap">
             <Button
-              variant="secondary"
+              variant="neutral"
               size="md"
               onClick={() => setScheduleDialogOpen(true)}
               icon={<Clock className="h-4 w-4" />}

@@ -31,7 +31,7 @@ export default function TagsTab() {
               {editingTag?.id === t.id ? (
                 <Input value={editingTag.name} onChange={e => setEditingTag({ ...editingTag, name: e.target.value })} className="h-6 text-xs w-32" />
               ) : (
-                <Badge variant="secondary">{t.name}</Badge>
+                <Badge variant="neutral">{t.name}</Badge>
               )}
               {editingTag?.id === t.id ? (
                 <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { updateTag(t.id, editingTag); toast.success("Tag atualizada"); setEditingTag(null); }}>✓</Button>

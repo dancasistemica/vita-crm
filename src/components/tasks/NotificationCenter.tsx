@@ -24,7 +24,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="relative">
+        <Button variant="neutral" size="sm" className="relative">
           <Bell className="h-4 w-4" />
           {unread > 0 && (
             <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">

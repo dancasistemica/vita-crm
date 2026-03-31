@@ -345,7 +345,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  <Button type="button" variant="outline" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                  <Button type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
                   </Button>
                 </div>
@@ -371,7 +371,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}

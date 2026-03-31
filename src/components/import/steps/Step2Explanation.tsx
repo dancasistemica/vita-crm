@@ -48,7 +48,7 @@ export default function Step2Explanation({ onNext, onBack }: Props) {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={onNext}>Próximo</Button>
       </div>
     </div>

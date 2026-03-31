@@ -49,7 +49,7 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
 
   return (
     <div className="space-y-3">
-      <Button variant="outline" size="sm" onClick={handleGenerate} disabled={loading}>
+      <Button variant="neutral" size="sm" onClick={handleGenerate} disabled={loading}>
         <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
         {loading ? 'Gerando...' : '✨ Sugerir resposta'}
       </Button>
@@ -64,8 +64,8 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
           <div className="flex gap-3">
-            <Button size="sm" variant="outline" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
-            <Button size="sm" variant="outline" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
+            <Button size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
         </div>
       )}

@@ -383,7 +383,7 @@ export default function UsersTab() {
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             className="h-8 w-8"
                             title="Editar"
                             onClick={() => openEdit(u)}
@@ -392,7 +392,7 @@ export default function UsersTab() {
                           </Button>
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             className="h-8 w-8"
                             title="Resetar senha"
                             onClick={() => handleResetPassword(u)}
@@ -402,7 +402,7 @@ export default function UsersTab() {
                           {u.role !== "owner" && (
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="sm"
                               className="h-8 w-8 text-destructive"
                               title="Remover"
                               onClick={() => setDeleteTarget(u)}
@@ -426,7 +426,7 @@ export default function UsersTab() {
                 </span>
                 <div className="flex gap-1">
                   <Button
-                    variant="outline"
+                    variant="neutral"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
@@ -434,7 +434,7 @@ export default function UsersTab() {
                     Anterior
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="neutral"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
@@ -482,7 +482,7 @@ export default function UsersTab() {
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
                       <Button
-                        variant="outline"
+                        variant="neutral"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
                         className="w-full justify-between font-normal"
@@ -557,7 +557,7 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="outline" onClick={() => setFormOpen(false)}>Cancelar</Button>
+              <Button variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</Button>
               <Button onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}

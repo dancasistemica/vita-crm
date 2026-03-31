@@ -48,7 +48,7 @@ export default function PipelinePage() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-lg font-semibold text-neutral-700">{stage.name}</h3>
-                  <Badge variant="secondary" className="text-xs">{stageLeads.length}</Badge>
+                  <Badge variant="neutral" className="text-xs">{stageLeads.length}</Badge>
                 </div>
                 {totalDealValue > 0 && (
                   <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
@@ -65,7 +65,7 @@ export default function PipelinePage() {
                       <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
                       {lead.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
+                          {lead.tags.map(tag => <Badge key={tag} variant="neutral" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
                         </div>
                       )}
                       {lead.dealValue != null && lead.dealValue > 0 && (

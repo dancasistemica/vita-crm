@@ -123,7 +123,7 @@ export default function ProdutosPage() {
                     <div>
                     <CardTitle className="text-lg font-display">{product.name}</CardTitle>
                     <div className="flex flex-wrap items-center gap-3 mt-1">
-                      {product.type && <Badge variant="secondary">{product.type}</Badge>}
+                      {product.type && <Badge variant="neutral">{product.type}</Badge>}
                       {product.createdAt && (
                         <span className="text-xs text-muted-foreground">
                           Criado em {new Date(product.createdAt).toLocaleDateString("pt-BR")}
@@ -133,8 +133,8 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
               </CardHeader>
@@ -159,7 +159,7 @@ export default function ProdutosPage() {
                         <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
                           <div className="flex items-center gap-3">
                             <span>{stage.name}</span>
-                            <Badge variant="outline" className="text-[10px] py-0 px-1">
+                            <Badge variant="neutral" className="text-[10px] py-0 px-1">
                               {stage.sale_type === 'mensalidade' ? '📅 Mensal' : '💳 Única'}
                             </Badge>
                           </div>
@@ -213,14 +213,14 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
       <div>
         <div className="flex items-center justify-between mb-2">
           <Label>Etapas de Venda</Label>
-          <Button variant="outline" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</Button>
+          <Button variant="neutral" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</Button>
         </div>
         {form.salesStages.map(stage => (
           <div key={stage.id} className="p-3 border rounded-lg bg-muted/20 mb-3 space-y-3">
             <div className="grid grid-cols-[1fr_80px_auto] gap-3 items-end">
               <div><Label className="text-xs">Nome</Label><Input placeholder="Nome" value={stage.name} onChange={e => updateStage(stage.id, 'name', e.target.value)} /></div>
               <div><Label className="text-xs">R$</Label><Input type="number" placeholder="R$" value={stage.value || ''} onChange={e => updateStage(stage.id, 'value', Number(e.target.value))} /></div>
-              <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></Button>
+              <Button variant="ghost" size="sm" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></Button>
             </div>
             <div className="grid grid-cols-2 gap-3">
                <div>

@@ -223,7 +223,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
                   </Badge>
                 </div>
-                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
+                <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => setSelectedLead(null)}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -327,7 +327,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  <Button variant="neutral" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
                   </Button>
@@ -398,7 +398,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
           {/* Section 3: Actions */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
+            <Button variant="neutral" onClick={() => onOpenChange(false)} disabled={saving}>
               Cancelar
             </Button>
             <Button onClick={handleSubmit} disabled={saving}>

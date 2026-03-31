@@ -475,11 +475,11 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Button variant="outline" onClick={handleCopy} disabled={!token || loading}>
+                <Button variant="neutral" onClick={handleCopy} disabled={!token || loading}>
                   Copy
                 </Button>
                 <Button
-                  variant="destructive"
+                  variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >

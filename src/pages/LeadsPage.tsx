@@ -328,11 +328,11 @@ export default function LeadsPage() {
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
-            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
+            <Button variant="neutral" size="sm" onClick={() => navigate('/import-wizard')}>
               <Upload className="h-4 w-4 mr-1" /> Importar Leads
             </Button>
           )}
-          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
+          <Button variant="neutral" size="sm" onClick={() => setExportOpen(true)}>
             <FileDown className="h-4 w-4 mr-1" /> Exportar
           </Button>
           {userCanCreate && (
@@ -601,7 +601,7 @@ export default function LeadsPage() {
 
           <div className="flex justify-end pt-2">
             <Button
-              variant="outline"
+              variant="neutral"
               size="sm"
               onClick={() => {
                 setSelectedOrigins([]);
@@ -658,12 +658,12 @@ export default function LeadsPage() {
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionado(s)</span>
           {userCanEdit && (
-            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
+            <Button variant="neutral" size="sm" className="h-7 text-xs" onClick={() => setBulkEditOpen(true)}>
               <Pencil className="h-3 w-3 mr-1" /> Editar em massa
             </Button>
           )}
           {userCanDelete && (
-            <Button variant="destructive" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
+            <Button variant="error" size="sm" className="h-7 text-xs" onClick={() => setBulkDeleteOpen(true)}>
               <Trash2 className="h-3 w-3 mr-1" /> Deletar selecionados
             </Button>
           )}
@@ -699,9 +699,9 @@ export default function LeadsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="font-semibold text-foreground text-sm cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</span>
-                    <Badge variant="outline" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
-                    <Badge variant="outline" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>
-                    {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] bg-primary/8 text-primary border-primary/15">{tag}</Badge>)}
+                    <Badge variant="neutral" className={`text-[10px] border ${interestColors[lead.interestLevel] || 'bg-muted text-muted-foreground'}`}>{getInterestLabel(lead.interestLevel)}</Badge>
+                    <Badge variant="neutral" className="text-[10px] bg-muted/50">{getStageName(lead.pipelineStage)}</Badge>
+                    {lead.tags.map(tag => <Badge key={tag} variant="neutral" className="text-[10px] bg-primary/8 text-primary border-primary/15">{tag}</Badge>)}
                   </div>
                   <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
                     <span>{lead.origin}</span>
@@ -713,27 +713,27 @@ export default function LeadsPage() {
               <div className="flex items-center gap-0.5">
                 {lead.phone && (
                   <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-success hover:bg-success/10 hover:text-success"><Phone className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 text-success hover:bg-success/10 hover:text-success"><Phone className="h-4 w-4" /></Button>
                   </a>
                 )}
                 {lead.email && (
                   <a href={`mailto:${lead.email}`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-info/10 hover:text-info"><Mail className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 hover:bg-info/10 hover:text-info"><Mail className="h-4 w-4" /></Button>
                   </a>
                 )}
                 {lead.instagram && (
                   <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 hover:bg-accent/10 hover:text-accent"><Instagram className="h-4 w-4" /></Button>
                   </a>
                 )}
                 {userCanEdit && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => handleEditLead(lead)}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10"
                   onClick={() => handleDeleteClick(lead)}
                   disabled={!userCanDelete || deleteLoading}
@@ -751,9 +751,9 @@ export default function LeadsPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
           <div className="flex items-center gap-1">
-            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
             <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-            <Button variant="outline" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+            <Button variant="neutral" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
           </div>
         </div>
       )}

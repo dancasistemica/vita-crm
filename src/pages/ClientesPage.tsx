@@ -48,7 +48,7 @@ export default function ClientesPage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <Button 
-            variant="secondary" 
+            variant="neutral" 
             size="md" 
             icon={<FileDown className="w-4 h-4" />}
             onClick={() => setExportOpen(true)}
@@ -56,7 +56,7 @@ export default function ClientesPage() {
             Exportar
           </Button>
           <Button 
-            variant="secondary" 
+            variant="neutral" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowSubscriptionModal(true)}
@@ -78,7 +78,7 @@ export default function ClientesPage() {
       {hook.selectedIds.length > 0 && (
         <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
           <div className="flex gap-3 mt-2">
-            <Button variant="secondary" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
+            <Button variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
               Editar em Massa
             </Button>
             <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>

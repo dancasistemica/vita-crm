@@ -40,9 +40,9 @@ export default function FunnelStagesTab() {
               {editingStage?.id === s.id ? (
                 <Button size="sm" variant="ghost" onClick={() => { updatePipelineStage(s.id, editingStage); toast.success("Etapa atualizada"); setEditingStage(null); }}>✓</Button>
               ) : (
-                <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
               )}
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: s.id, name: s.name })}><Trash2 className="h-3 w-3" /></Button>
+              <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirm({ isOpen: true, id: s.id, name: s.name })}><Trash2 className="h-3 w-3" /></Button>
             </div>
           </div>
         ))}

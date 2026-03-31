@@ -68,7 +68,7 @@ Gere o resumo semanal.`;
         {!hasLoaded && !loading ? (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">Clique para gerar o resumo inteligente da semana</p>
-            <Button onClick={handleLoad} variant="outline" size="sm">
+            <Button onClick={handleLoad} variant="neutral" size="sm">
               <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" /> Gerar Resumo
             </Button>
           </div>

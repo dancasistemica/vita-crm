@@ -97,13 +97,13 @@ export default function AIContextTab() {
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              <Button type="button" size="icon" variant="outline" onClick={() => addTag('services', newService, setNewService)}>
+              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
-                <Badge key={s} variant="secondary" className="gap-1">
+                <Badge key={s} variant="neutral" className="gap-1">
                   {s}
                   <button onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></button>
                 </Badge>
@@ -112,7 +112,7 @@ export default function AIContextTab() {
             {services.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTED_SERVICES.map(s => (
-                  <Badge key={s} variant="outline" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
+                  <Badge key={s} variant="neutral" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
                     + {s}
                   </Badge>
                 ))}
@@ -132,13 +132,13 @@ export default function AIContextTab() {
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              <Button type="button" size="icon" variant="outline" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              <Button type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
-                <Badge key={s} variant="destructive" className="gap-1">
+                <Badge key={s} variant="error" className="gap-1">
                   {s}
                   <button onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></button>
                 </Badge>

@@ -274,7 +274,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-sm flex items-center gap-3">
                             <span>{mod.icon}</span> {mod.label}
-                            <Badge variant="outline" className="ml-1 text-xs">
+                            <Badge variant="neutral" className="ml-1 text-xs">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
                           </CardTitle>

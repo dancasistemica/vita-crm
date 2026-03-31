@@ -144,8 +144,8 @@ export default function LeadDetailSheet({
           <SheetHeader>
             <SheetTitle className="text-lg font-display">{lead.name}</SheetTitle>
             <SheetDescription className="flex items-center gap-3 flex-wrap">
-              {stageName && <Badge variant="outline" className="text-xs">{stageName}</Badge>}
-              {interestLabel && <Badge variant="secondary" className="text-xs">{interestLabel}</Badge>}
+              {stageName && <Badge variant="neutral" className="text-xs">{stageName}</Badge>}
+              {interestLabel && <Badge variant="neutral" className="text-xs">{interestLabel}</Badge>}
               {lead.origin && <span className="text-xs">{lead.origin}</span>}
             </SheetDescription>
           </SheetHeader>
@@ -157,11 +157,11 @@ export default function LeadDetailSheet({
               <TabsTrigger value="info" className="text-xs">Informações</TabsTrigger>
               <TabsTrigger value="tasks" className="text-xs">
                 Tarefas
-                {tasks.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
+                {tasks.length > 0 && <Badge variant="neutral" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
               </TabsTrigger>
               <TabsTrigger value="interactions" className="text-xs">
                 Interações
-                {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
+                {interactions.length > 0 && <Badge variant="neutral" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
               </TabsTrigger>
               <TabsTrigger value="scheduled" className="text-xs">Agendamentos</TabsTrigger>
               <TabsTrigger value="history" className="text-xs">Histórico</TabsTrigger>
@@ -187,7 +187,7 @@ export default function LeadDetailSheet({
               <div>
                 <span className="text-xs text-muted-foreground font-medium">Tags</span>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {lead.tags.map(t => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
+                  {lead.tags.map(t => <Badge key={t} variant="neutral" className="text-xs">{t}</Badge>)}
                 </div>
               </div>
             )}
@@ -215,11 +215,11 @@ export default function LeadDetailSheet({
             <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-border">
               {lead.phone && (
                 <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                  <Button variant="outline" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
+                  <Button variant="neutral" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
                 </a>
               )}
               <Button
-                variant="outline"
+                variant="neutral"
                 size="sm"
                 onClick={() => setScheduleDialogOpen(true)}
                 className="gap-3 min-h-[44px]"
@@ -230,21 +230,21 @@ export default function LeadDetailSheet({
               </Button>
               {lead.email && (
                 <a href={`mailto:${lead.email}`}>
-                  <Button variant="outline" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</Button>
+                  <Button variant="neutral" size="sm"><Mail className="h-4 w-4 mr-1" /> Email</Button>
                 </a>
               )}
               {lead.instagram && (
                 <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noreferrer">
-                  <Button variant="outline" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</Button>
+                  <Button variant="neutral" size="sm"><Instagram className="h-4 w-4 mr-1" /> Instagram</Button>
                 </a>
               )}
               {onEdit && (
-                <Button variant="outline" size="sm" onClick={() => onEdit(lead)}>
+                <Button variant="neutral" size="sm" onClick={() => onEdit(lead)}>
                   <Edit className="h-4 w-4 mr-1" /> Editar
                 </Button>
               )}
               <Button
-                variant="destructive"
+                variant="error"
                 size="sm"
                 onClick={handleDeleteClick}
                 disabled={!canDelete || deleteLoading}
@@ -295,7 +295,7 @@ export default function LeadDetailSheet({
               interactions.map(i => (
                 <div key={i.id} className="p-3 rounded-lg border border-border bg-card">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="text-xs">{i.type}</Badge>
+                    <Badge variant="neutral" className="text-xs">{i.type}</Badge>
                     <span className="text-xs text-muted-foreground">
                       {i.interaction_date ? formatDate(i.interaction_date) : formatDate(i.created_at)}
                     </span>

@@ -246,7 +246,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
                 </div>
                 <div className="flex-1 pt-0.5">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                    <Badge variant="neutral" className="text-[10px] px-1.5 py-0">
                       {config.label}
                     </Badge>
                     <span className="text-xs text-muted-foreground">

@@ -227,10 +227,10 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
               <p><span className="text-muted-foreground">Email:</span> {form.admin_email}</p>
               <div className="flex items-center justify-between">
                 <p><span className="text-muted-foreground">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>
-                <Button variant="ghost" size="icon" onClick={copyPassword}><Copy className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></Button>
               </div>
             </div>
-            <Badge variant="outline" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
+            <Badge variant="neutral" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
           </div>
         )}
 
@@ -238,7 +238,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
         <div className="flex justify-between pt-2">
           {step <= 3 ? (
             <>
-              <Button variant="outline" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
+              <Button variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
                 {step === 1 ? 'Cancelar' : '← Anterior'}
               </Button>
               {step < 3 ? (

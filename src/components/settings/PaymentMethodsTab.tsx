@@ -228,19 +228,19 @@ export default function PaymentMethodsTab() {
                   <div className="flex items-center gap-1">
                     {editingMethod?.id === m.id ? (
                     <>
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
+                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => handleEditSave(m)}>
                         <Check className="h-3 w-3" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
+                      <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
                         <X className="h-3 w-3" />
                       </Button>
                     </>
                   ) : (
-                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
+                    <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
                       <Edit className="h-3 w-3" />
                     </Button>
                   )}
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
+                  <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleDelete(m)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>

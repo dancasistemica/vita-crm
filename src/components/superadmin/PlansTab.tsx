@@ -111,7 +111,7 @@ export function PlansTab() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{plan.name}</CardTitle>
-                <Badge variant="outline">
+                <Badge variant="neutral">
                   {plan.period === 'monthly' ? 'Mensal' : 'Anual'}
                 </Badge>
               </div>
@@ -142,7 +142,7 @@ export function PlansTab() {
                 </div>
               </div>
 
-              <Button variant="destructive" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
+              <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </Button>
             </CardContent>
@@ -198,7 +198,7 @@ export function PlansTab() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button variant="neutral" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button onClick={handleCreate}>Criar Plano</Button>
           </DialogFooter>
         </DialogContent>

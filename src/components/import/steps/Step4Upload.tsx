@@ -143,7 +143,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-4 w-4 text-success" />
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
-              <Badge variant="secondary">{state.csvRows.length} linhas</Badge>
+              <Badge variant="neutral">{state.csvRows.length} linhas</Badge>
             </div>
             <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar
@@ -203,7 +203,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={onNext} disabled={!canProceed}>Validar e Importar</Button>
       </div>
     </div>

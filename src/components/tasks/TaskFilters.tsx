@@ -52,7 +52,7 @@ export default function TaskFilters({
           />
         </div>
         <CollapsibleTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="neutral" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
             Filtros
           </Button>

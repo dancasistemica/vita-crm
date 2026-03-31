@@ -369,7 +369,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
             Salvar Template
           </Button>
           {isCustom && (
-            <Button variant="outline" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
+            <Button variant="neutral" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
               <RotateCcw className="h-4 w-4" />
               Restaurar Padrão
             </Button>

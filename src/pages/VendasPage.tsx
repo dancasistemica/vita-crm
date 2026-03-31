@@ -139,7 +139,7 @@ export function VendasPage() {
             onChange={(e) => setTypeFilter(e.target.value)}
           />
           <div className="flex items-end">
-            <Button variant="secondary" size="md" className="w-full">
+            <Button variant="neutral" size="md" className="w-full">
               <Filter className="w-4 h-4" />
               Mais Filtros
             </Button>

@@ -113,7 +113,7 @@ export default function CustomizePage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900 mb-6">🎨 Personalizar</h1>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleReset} disabled={saving}>
+          <Button variant="neutral" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
           </Button>
           <Button onClick={handleSave} disabled={saving}>
@@ -264,7 +264,7 @@ export default function CustomizePage() {
                 <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="min-h-[44px] gap-3">
+                    <Button variant="neutral" size="sm" className="min-h-[44px] gap-3">
                       <Globe className="h-4 w-4" /> Usar Cores Globais
                     </Button>
                   </AlertDialogTrigger>

@@ -49,7 +49,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
               <p className="text-sm text-foreground leading-relaxed">{response}</p>
               <div className="flex gap-1.5 pt-1">
                 {onCreateTask && (
-                  <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
+                  <Button size="sm" variant="neutral" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
                     <Plus className="h-3 w-3 mr-1" /> Criar tarefa
                   </Button>
                 )}

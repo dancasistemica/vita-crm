@@ -222,7 +222,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 <TableCell className="font-medium">{org.name}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">{org.plan}</Badge>
+                  <Badge variant="neutral">{org.plan}</Badge>
                 </TableCell>
                 <TableCell>
                   <Select
@@ -256,10 +256,10 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => setEditOrgId(org.id)} title="Editar">
+                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                     <Button

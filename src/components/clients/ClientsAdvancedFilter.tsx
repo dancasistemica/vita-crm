@@ -48,7 +48,7 @@ function FilterSection({ title, count, children, defaultOpen = false }: { title:
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           {title}
         </div>
-        {count > 0 && <Badge variant="destructive" className="h-5 min-w-5 justify-center rounded-full px-1.5 text-[10px]">{count}</Badge>}
+        {count > 0 && <Badge variant="error" className="h-5 min-w-5 justify-center rounded-full px-1.5 text-[10px]">{count}</Badge>}
       </CollapsibleTrigger>
       <CollapsibleContent className="pt-2 space-y-3">
         {children}
@@ -129,7 +129,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: '90 dias', days: 90 },
               { label: 'Este ano', days: -1 },
             ].map(({ label, days }) => (
-              <Button key={label} variant="outline" size="sm" className="h-7 text-xs" onClick={() => {
+              <Button key={label} variant="neutral" size="sm" className="h-7 text-xs" onClick={() => {
                 const now = new Date();
                 const to = now.toISOString().split('T')[0];
                 const from = days === -1

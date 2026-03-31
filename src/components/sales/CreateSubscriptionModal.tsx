@@ -433,7 +433,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
 
         {/* Footer */}
         <div className="p-6 border-t border-neutral-200 bg-neutral-50 flex gap-4">
-          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
+          <Button variant="neutral" onClick={handlePreviousPhase} disabled={currentPhase === 1 || loading} className="flex-1">
             Anterior
           </Button>
           {currentPhase < totalPhases ? (

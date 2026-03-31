@@ -178,7 +178,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
             {loading ? 'Atualizando...' : 'Aplicar'}
           </Button>

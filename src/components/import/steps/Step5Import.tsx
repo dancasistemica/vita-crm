@@ -201,14 +201,14 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
       {/* Summary badges */}
       <div className="flex gap-3 justify-center flex-wrap">
-        <Badge variant="secondary" className="bg-success/20 text-success">{successCount} novos</Badge>
-        {state.duplicates.length > 0 && <Badge variant="secondary" className="bg-warning/20 text-warning">{state.duplicates.length} duplicatas</Badge>}
-        {errorCount > 0 && <Badge variant="destructive">{errorCount} erros</Badge>}
-        {warningCount > 0 && <Badge variant="secondary" className="bg-accent/20 text-accent">{warningCount} avisos</Badge>}
+        <Badge variant="neutral" className="bg-success/20 text-success">{successCount} novos</Badge>
+        {state.duplicates.length > 0 && <Badge variant="neutral" className="bg-warning/20 text-warning">{state.duplicates.length} duplicatas</Badge>}
+        {errorCount > 0 && <Badge variant="error">{errorCount} erros</Badge>}
+        {warningCount > 0 && <Badge variant="neutral" className="bg-accent/20 text-accent">{warningCount} avisos</Badge>}
       </div>
 
       {state.error && (
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Erro na Importação</AlertTitle>
           <AlertDescription>
@@ -236,7 +236,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           {state.newOptions.newTags.length > 0 && (
             <div className="flex flex-wrap gap-1 items-center">
               <span className="text-[11px] text-muted-foreground">Tags:</span>
-              {state.newOptions.newTags.map(t => <Badge key={t} variant="outline" className="text-[10px]">{t}</Badge>)}
+              {state.newOptions.newTags.map(t => <Badge key={t} variant="neutral" className="text-[10px]">{t}</Badge>)}
             </div>
           )}
         </div>
@@ -289,7 +289,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>Voltar</Button>
+        <Button variant="neutral" onClick={onBack}>Voltar</Button>
         <Button onClick={handleImport} disabled={!organizationId || (successCount === 0 && state.duplicates.filter(d => d.action !== 'skip').length === 0)}>
           Importar {successCount + state.duplicates.filter(d => d.action !== 'skip').length} leads
         </Button>

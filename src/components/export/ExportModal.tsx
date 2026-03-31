@@ -177,7 +177,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleExport} disabled={selectedColumns.length === 0 || loading}>
             {loading ? 'Exportando...' : `Exportar ${format.toUpperCase()}`}
           </Button>

@@ -462,8 +462,8 @@ export default function AdminUsersPage() {
               <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t">
                 <span>Página {page} de {totalPages}</span>
                 <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-                  <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+                  <Button variant="neutral" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+                  <Button variant="neutral" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
                 </div>
               </div>
             )}
@@ -538,7 +538,7 @@ export default function AdminUsersPage() {
           </div>
 
           <DialogFooter className="flex gap-3 pt-4 border-t">
-            <Button variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
+            <Button variant="neutral" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
               Cancelar
             </Button>
             <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
@@ -561,7 +561,7 @@ export default function AdminUsersPage() {
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3 pt-4 border-t">
             <AlertDialogCancel asChild>
-              <Button variant="secondary" className="flex-1">Cancelar</Button>
+              <Button variant="neutral" className="flex-1">Cancelar</Button>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button variant="error" onClick={handleDelete} loading={saving} className="flex-1">

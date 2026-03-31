@@ -97,10 +97,10 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
         </div>
 
         <DialogFooter className="gap-3 sm:gap-0">
-          <Button variant="outline" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+          <Button variant="neutral" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
             Cancelar
           </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={!confirmed || deleting}>
+          <Button variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
           </Button>
         </DialogFooter>

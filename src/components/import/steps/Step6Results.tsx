@@ -70,7 +70,7 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
       )}
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button variant="outline" onClick={onImportMore}>Importar mais</Button>
+        <Button variant="neutral" onClick={onImportMore}>Importar mais</Button>
         <Button onClick={onClose}>Voltar para Leads</Button>
       </div>
     </div>

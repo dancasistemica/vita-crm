@@ -77,7 +77,7 @@ export const BotconversaSettings = ({
           </p>
         </div>
 
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             <p className="font-semibold mb-2">Erro ao carregar configurações:</p>
@@ -117,13 +117,13 @@ export const BotconversaSettings = ({
 
           <div className="flex gap-3">
             <Button
-              variant="outline"
+              variant="neutral"
               onClick={() => setIsEditing(true)}
               disabled={isSaving}
             >
               Editar
             </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={isSaving}>
+            <Button variant="error" onClick={handleDelete} disabled={isSaving}>
               Remover
             </Button>
           </div>
@@ -148,7 +148,7 @@ export const BotconversaSettings = ({
             </Button>
             {config && (
               <Button
-                variant="outline"
+                variant="neutral"
                 onClick={() => {
                   setIsEditing(false);
                   setApiKey(config.api_key || '');

@@ -546,9 +546,9 @@ export default function CRMFieldsTab() {
                 {editingOrigin?.id === o.id ? (
                   <Button size="sm" variant="ghost" onClick={handleUpdateOrigin} disabled={originsSaving}>✓</Button>
                 ) : (
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></Button>
+                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingOrigin(o)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
@@ -591,9 +591,9 @@ export default function CRMFieldsTab() {
                 {editingLevel?.id === l.id ? (
                   <Button size="sm" variant="ghost" onClick={handleUpdateLevel} disabled={levelsSaving}>✓</Button>
                 ) : (
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingLevel(l)}><Edit className="h-3 w-3" /></Button>
+                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingLevel(l)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),
@@ -633,9 +633,9 @@ export default function CRMFieldsTab() {
                 {editingStage?.id === s.id ? (
                   <Button size="sm" variant="ghost" onClick={handleUpdateStage} disabled={stagesSaving}>✓</Button>
                 ) : (
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
+                  <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingStage(s)}><Edit className="h-3 w-3" /></Button>
                 )}
-                <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
             </>
           ),

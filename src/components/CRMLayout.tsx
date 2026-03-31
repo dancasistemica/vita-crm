@@ -14,7 +14,7 @@ function HeaderMenuButton() {
   return (
     <Button
       variant="ghost"
-      size="icon"
+      size="sm"
       onClick={toggleSidebar}
       className="h-9 w-9"
       aria-label="Alternar sidebar"
