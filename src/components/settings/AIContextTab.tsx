@@ -140,7 +140,7 @@ export default function AIContextTab() {
               {excluded.map(s => (
                 <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  < variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
