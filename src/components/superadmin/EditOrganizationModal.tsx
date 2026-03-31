@@ -337,13 +337,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       placeholder="Mínimo 8 caracteres"
                       className="pr-10"
                     />
-                    <button
+                    <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
+                    </Button>
                   </div>
                   <Button type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar

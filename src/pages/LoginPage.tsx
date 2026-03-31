@@ -199,14 +199,14 @@ export default function LoginPage() {
                 icon={<Lock className="h-4 w-4" />}
                 required
               />
-              <button
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={loading}
                 className="absolute right-3 top-[38px] text-neutral-500 hover:text-neutral-700 disabled:opacity-50 transition"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+              </Button>
             </div>
 
             <div className="flex items-center gap-3">
@@ -243,12 +243,12 @@ export default function LoginPage() {
             </Button>
             <p className="text-sm text-neutral-600">
               Não tem conta?{' '}
-              <button
+              <Button variant="secondary" size="sm"
                 onClick={() => navigate('/auth')}
                 className="text-primary-600 hover:underline font-medium"
               >
                 Criar conta
-              </button>
+              </Button>
             </p>
           </div>
 

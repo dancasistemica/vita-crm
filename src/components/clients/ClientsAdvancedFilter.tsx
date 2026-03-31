@@ -27,14 +27,14 @@ interface Props {
 function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: 'AND' | 'OR') => void }) {
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
-      <button
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('AND')}
-      >E</button>
-      <button
+      >E</Button>
+      <Button variant="secondary" size="sm"
         className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
         onClick={() => onChange('OR')}
-      >OU</button>
+      >OU</Button>
     </div>
   );
 }
@@ -71,9 +71,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           className="pl-9 h-9 text-sm"
         />
         {filters.search && (
-          <button onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
+          <Button variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
             <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </button>
+          </Button>
         )}
       </div>
 

@@ -103,7 +103,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <Label className="text-sm font-medium">Formato</Label>
             <div className="flex gap-3 mt-2">
-              <button
+              <Button variant="secondary" size="sm"
                 onClick={() => setFormat('csv')}
                 className={`flex-1 flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   format === 'csv' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -114,8 +114,8 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   <p className="text-sm font-medium text-foreground">CSV</p>
                   <p className="text-xs text-muted-foreground">Excel</p>
                 </div>
-              </button>
-              <button
+              </Button>
+              <Button variant="secondary" size="sm"
                 onClick={() => setFormat('pdf')}
                 className={`flex-1 flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   format === 'pdf' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -126,7 +126,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   <p className="text-sm font-medium text-foreground">PDF</p>
                   <p className="text-xs text-muted-foreground">Relatório</p>
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -134,22 +134,22 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <Label className="text-sm font-medium">Dados</Label>
             <div className="flex gap-3 mt-2">
-              <button
+              <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('all')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
                   dataScope === 'all' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
                 }`}
               >
                 Todos ({allData.length})
-              </button>
-              <button
+              </Button>
+              <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('filtered')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
                   dataScope === 'filtered' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
                 }`}
               >
                 Filtrados ({filteredData.length})
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -157,9 +157,9 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           <div>
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Colunas</Label>
-              <button onClick={toggleAll} className="text-xs text-primary hover:underline">
+              <Button variant="secondary" size="sm" onClick={toggleAll} className="text-xs text-primary hover:underline">
                 {selectedColumns.length === availableColumns.length ? 'Desmarcar todas' : 'Selecionar todas'}
-              </button>
+              </Button>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-[200px] overflow-y-auto border rounded-md p-2">
               {availableColumns.map(col => (

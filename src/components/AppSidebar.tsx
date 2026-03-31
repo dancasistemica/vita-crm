@@ -156,13 +156,13 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <button
+        <Button variant="secondary" size="sm"
           onClick={signOut}
           className="flex items-center gap-3 w-full px-3 py-2 text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Sair</span>}
-        </button>
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );

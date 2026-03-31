@@ -105,7 +105,7 @@ export default function AIContextTab() {
               {services.map(s => (
                 <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  <button onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></button>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
@@ -140,7 +140,7 @@ export default function AIContextTab() {
               {excluded.map(s => (
                 <Badge key={s} variant="error" className="gap-1">
                   {s}
-                  <button onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></button>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('excluded_services', s)} className="ml-1"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>

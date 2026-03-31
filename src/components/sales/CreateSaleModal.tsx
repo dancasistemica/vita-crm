@@ -225,7 +225,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                 {showClientDropdown && clientSearch && (
                   <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-lg bg-white">
                     {filteredClients.map(client => (
-                      <button
+                      <Button variant="secondary" size="sm"
                         key={client.id}
                         type="button"
                         className="w-full text-left p-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
@@ -237,7 +237,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                       >
                         <p className="font-semibold text-neutral-900">{client.name}</p>
                         <p className="text-xs text-neutral-500">{client.email}</p>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}

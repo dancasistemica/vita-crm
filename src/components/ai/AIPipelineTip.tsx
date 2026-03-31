@@ -29,9 +29,9 @@ Sugira uma ação prática para avançar esta lead no funil.`;
   return (
     <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild>
-        <button className="p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors" title="Sugestão IA">
+        <Button variant="secondary" size="sm" className="p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors" title="Sugestão IA">
           <Sparkles className="h-3.5 w-3.5 text-purple-500" />
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-3" align="start">
         <div className="space-y-3">

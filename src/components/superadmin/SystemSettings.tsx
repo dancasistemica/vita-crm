@@ -509,10 +509,10 @@ export function SystemSettings() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
-              <button className="px-4 py-2 rounded-md text-sm font-medium"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
-              </button>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: settings.accent_color }}>Tag 1</span>

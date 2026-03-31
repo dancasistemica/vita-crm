@@ -243,12 +243,12 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                           <div className="p-4 text-center text-neutral-500">Nenhum cliente encontrado</div>
                         ) : (
                           filteredClients.map((client) => (
-                            <button key={client.id} type="button"
+                            <Button variant="secondary" size="sm" key={client.id} type="button"
                               onClick={() => { setFormData({ ...formData, client_id: client.id }); setClientSearch(client.name); setShowClientDropdown(false); }}
                               className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0">
                               <p className="font-medium text-neutral-900">{client.name}</p>
                               <p className="text-sm text-neutral-500">{client.email}</p>
-                            </button>
+                            </Button>
                           ))
                         )}
                       </div>
@@ -297,14 +297,14 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
                 ) : (
                   <div className="space-y-3">
                     {productSalesStages.filter(s => s.product_id === formData.product_id).map((stage) => (
-                      <button key={stage.id} type="button"
+                      <Button variant="secondary" size="sm" key={stage.id} type="button"
                         onClick={() => setFormData({ ...formData, sales_stage_id: stage.id, monthly_value: stage.value })}
                         className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                           formData.sales_stage_id === stage.id ? 'border-primary-600 bg-primary-50' : 'border-neutral-200 hover:border-primary-300'
                         }`}>
                         <p className="font-semibold text-neutral-900">{stage.name}</p>
                         <p className="text-lg font-bold text-primary-600">R$ {stage.value.toFixed(2)}/mês</p>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}

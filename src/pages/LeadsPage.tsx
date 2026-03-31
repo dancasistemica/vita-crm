@@ -373,7 +373,7 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Origem</label>
-              <button
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenOrigin(!openOrigin);
@@ -389,7 +389,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openOrigin && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -412,13 +412,13 @@ export default function LeadsPage() {
                   {selectedOrigins.map((origin) => (
                     <Badge key={origin} variant="default" size="sm" className="gap-1">
                       {origin}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
                         className="ml-1 hover:text-primary-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </Badge>
                   ))}
                 </div>
@@ -427,7 +427,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
-              <button
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenInterest(!openInterest);
@@ -443,7 +443,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openInterest && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -466,13 +466,13 @@ export default function LeadsPage() {
                   {selectedInterests.map((interest) => (
                     <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                       {getInterestLabel(interest)}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
                         className="ml-1 hover:text-green-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>
@@ -483,7 +483,7 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
-              <button
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenStage(!openStage);
@@ -499,7 +499,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openStage && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -522,13 +522,13 @@ export default function LeadsPage() {
                   {selectedStages.map((stage) => (
                     <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
                       {getStageName(stage)}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
                         className="ml-1 hover:text-purple-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>
@@ -537,7 +537,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Tags</label>
-              <button
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenTags(!openTags);
@@ -553,7 +553,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </button>
+              </Button>
 
               {openTags && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -579,13 +579,13 @@ export default function LeadsPage() {
                   {selectedTags.map((tag) => (
                     <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                       {tag}
-                      <button
+                      <Button variant="secondary" size="sm"
                         type="button"
                         onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
                         className="ml-1 hover:text-orange-900"
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>

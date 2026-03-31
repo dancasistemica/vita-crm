@@ -573,20 +573,20 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
-        <button
+        <Button variant="secondary" size="sm"
           onClick={() => onAssign(taskId, null)}
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
-        </button>
+        </Button>
         {orgMembers.map(m => (
-          <button
+          <Button variant="secondary" size="sm"
             key={m.user_id}
             onClick={() => onAssign(taskId, m.user_id)}
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
           >
             {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-          </button>
+          </Button>
         ))}
       </PopoverContent>
     </Popover>

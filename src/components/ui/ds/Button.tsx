@@ -40,7 +40,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     return (
-      <button
+      <Button variant="secondary" size="sm"
         ref={ref}
         disabled={disabled || loading}
         className={`
@@ -69,7 +69,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {icon && !loading && icon}
         {children}
-      </button>
+      </Button>
     );
   }
 );

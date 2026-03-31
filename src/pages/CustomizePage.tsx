@@ -326,7 +326,7 @@ export default function CustomizePage() {
                 <Label className="text-sm font-medium mb-2 block">Paletas prontas</Label>
                 <div className="flex flex-wrap gap-3">
                   {PALETTES.map(p => (
-                    <button key={p.name} onClick={() => handlePalette(p)}
+                    <Button variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg border hover:border-primary transition-colors bg-card">
                       <div className="flex gap-1">
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.primary }} />
@@ -334,7 +334,7 @@ export default function CustomizePage() {
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.accent }} />
                       </div>
                       <span className="text-xs font-medium">{p.name}</span>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -420,10 +420,10 @@ export default function CustomizePage() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs text-muted-foreground">Botão primário</p>
-              <button className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
-              </button>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: brand.accent_color }}>Tag 1</span>
