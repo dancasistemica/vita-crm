@@ -467,7 +467,7 @@ export default function TarefasPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-display text-foreground">Tarefas</h1>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-6">Tarefas</h1>
         <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       </div>
     );
