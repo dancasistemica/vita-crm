@@ -251,8 +251,8 @@ export default function ClientDetailPage() {
                       <span className="font-bold text-success-600">R$ {sale.value.toLocaleString('pt-BR')}</span>
                       <Badge variant={statusBadgeVariants[sale.status] || 'neutral'}>{sale.status}</Badge>
                       <div className="flex items-center gap-1">
-                        < variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
-                        <
+                        <Button variant="ghost" size="sm" icon={<Edit2 className="h-4 w-4" />} onClick={e => { e.stopPropagation(); setEditSaleId(sale.id); }} />
+                        <Button
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4 text-error-600" />}

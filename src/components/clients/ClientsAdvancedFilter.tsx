@@ -222,9 +222,9 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
               { label: 'Últimos 30 dias', value: '30d' },
               { label: 'Sem interação 30+ dias', value: 'no_interaction_30' },
             ].map(({ label, value }) => (
-              <
+              <Button
                 key={value}
-                variant={filters.lastInteraction.preset === value ? 'default' : 'outline'}
+                variant={filters.lastInteraction.preset === value ? 'primary' : 'secondary'}
                 size="sm"
                 className="h-7 text-xs"
                 onClick={() => updateFilter('lastInteraction', {
@@ -233,7 +233,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
                 })}
               >
                 {label}
-              </>
+              </Button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3">
