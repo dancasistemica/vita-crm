@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Textarea } from '@/components/ui/ds';

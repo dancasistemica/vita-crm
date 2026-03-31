@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
 
 interface ScheduledMessagesListProps {

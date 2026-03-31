@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds/';
+import { Button } from '@/components/ui/ds/';
 import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
 import { Select } from '@/components/ui/ds/Select';
