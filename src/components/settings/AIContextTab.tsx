@@ -132,9 +132,9 @@ export default function AIContextTab() {
                 onChange={e => setNewExcluded(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('excluded_services', newExcluded, setNewExcluded))}
               />
-              < type="button" size="sm" variant="neutral" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
+              <Button type="button" size="sm" variant="secondary" onClick={() => addTag('excluded_services', newExcluded, setNewExcluded)}>
                 <Plus className="h-4 w-4" />
-              </>
+              </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {excluded.map(s => (
