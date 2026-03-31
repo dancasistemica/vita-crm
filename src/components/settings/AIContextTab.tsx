@@ -105,7 +105,7 @@ export default function AIContextTab() {
               {services.map(s => (
                 <Badge key={s} variant="neutral" className="gap-1">
                   {s}
-                  < variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></>
+                  <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
               ))}
             </div>
