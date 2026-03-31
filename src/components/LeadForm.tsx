@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { useCustomFields } from "@/hooks/useCustomFields";
-import { Button } from "@/components/ui/ds/Button";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select } from "@/components/ui/ds/Select";
+import { 
+  Button, 
+  Input, 
+  Select, 
+  Badge, 
+  Textarea, 
+  Checkbox, 
+  Label 
+} from "@/components/ui/ds";
 import { X } from "lucide-react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
 
@@ -48,19 +50,22 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label>Nome *</Label><Input value={form.name || ''} onChange={e => set('name', e.target.value)} /></div>
-        <div><Label>Telefone / WhatsApp</Label><Input value={form.phone || ''} onChange={e => set('phone', e.target.value)} placeholder="5511999999999" /></div>
-        <div><Label>Email</Label><Input type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} /></div>
-        <div><Label>Instagram</Label><Input value={form.instagram || ''} onChange={e => set('instagram', e.target.value)} placeholder="@usuario" /></div>
-        <div><Label>Cidade</Label><Input value={form.city || ''} onChange={e => set('city', e.target.value)} /></div>
-        <div><Label>Data de entrada</Label><Input type="date" value={form.entryDate || ''} onChange={e => set('entryDate', e.target.value)} /></div>
+        <Input label="Nome *" value={form.name || ''} onChange={e => set('name', e.target.value)} />
+        <Input label="Telefone / WhatsApp" value={form.phone || ''} onChange={e => set('phone', e.target.value)} placeholder="5511999999999" />
+        <Input label="Email" type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} />
+        <Input label="Instagram" value={form.instagram || ''} onChange={e => set('instagram', e.target.value)} placeholder="@usuario" />
+        <Input label="Cidade" value={form.city || ''} onChange={e => set('city', e.target.value)} />
+        <Input label="Data de entrada" type="date" value={form.entryDate || ''} onChange={e => set('entryDate', e.target.value)} />
+        <Input 
+          label="RG"
+          value={form.rg || ''} 
+          onChange={e => set('rg', formatRG(e.target.value))} 
+          placeholder="00.000.000-0" 
+          maxLength={12} 
+        />
         <div>
-          <Label>RG</Label>
-          <Input value={form.rg || ''} onChange={e => set('rg', formatRG(e.target.value))} placeholder="00.000.000-0" maxLength={12} />
-        </div>
-        <div>
-          <Label>CPF</Label>
           <Input
+            label="CPF"
             value={form.cpf || ''}
             onChange={e => set('cpf', formatCPF(e.target.value))}
             onBlur={() => {
@@ -74,59 +79,50 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
             placeholder="000.000.000-00"
             maxLength={14}
           />
-          {cpfWarning && <p className="text-xs text-amber-500 mt-1">⚠️ CPF inválido</p>}
+          {cpfWarning && <p className="text-xs text-error-600 mt-1">⚠️ CPF inválido</p>}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label>Origem</Label>
-          <Select value={form.origin || ''} onValueChange={v => set('origin', v)}>
-            <SelectTrigger><SelectValue placeholder="Selecionar" /></SelectTrigger>
-            <SelectContent>{origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Nível de interesse</Label>
-          <Select value={form.interestLevel || 'frio'} onValueChange={v => set('interestLevel', v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Etapa do funil</Label>
-          <Select value={form.pipelineStage || '1'} onValueChange={v => set('pipelineStage', v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Responsável</Label>
-          <Input value={form.responsible || ''} onChange={e => set('responsible', e.target.value)} placeholder="Nome do responsável" />
-        </div>
-      </div>
-      <div><Label>Interesse principal</Label><Input value={form.mainInterest || ''} onChange={e => set('mainInterest', e.target.value)} /></div>
-      <div>
-        <Label>Valor do Negócio</Label>
-        <Input
-          inputMode="decimal"
-          placeholder="R$ 0,00"
-          value={form.dealValue != null ? `R$ ${Number(form.dealValue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
-          onChange={e => {
-            const raw = e.target.value.replace(/[R$\s.]/g, '').replace(',', '.');
-            const num = parseFloat(raw);
-            set('dealValue', isNaN(num) ? null : num);
-          }}
+        <Select 
+          label="Origem"
+          value={form.origin || ''} 
+          onChange={e => set('origin', e.target.value)}
+          placeholder="Selecionar"
+          options={origins.map(o => ({ value: o, label: o }))}
         />
+        <Select 
+          label="Nível de interesse"
+          value={form.interestLevel || 'frio'} 
+          onChange={e => set('interestLevel', e.target.value)}
+          options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+        />
+        <Select 
+          label="Etapa do funil"
+          value={form.pipelineStage || '1'} 
+          onChange={e => set('pipelineStage', e.target.value)}
+          options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+        />
+        <Input label="Responsável" value={form.responsible || ''} onChange={e => set('responsible', e.target.value)} placeholder="Nome do responsável" />
       </div>
+      <Input label="Interesse principal" value={form.mainInterest || ''} onChange={e => set('mainInterest', e.target.value)} />
+      <Input
+        label="Valor do Negócio"
+        inputMode="decimal"
+        placeholder="R$ 0,00"
+        value={form.dealValue != null ? `R$ ${Number(form.dealValue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
+        onChange={e => {
+          const raw = e.target.value.replace(/[R$\s.]/g, '').replace(',', '.');
+          const num = parseFloat(raw);
+          set('dealValue', isNaN(num) ? null : num);
+        }}
+      />
       <div>
         <Label>Tags</Label>
         <div className="flex flex-wrap gap-1.5 mt-1">
           {tags.map(t => (
             <Badge
               key={t.id}
-              variant={(form.tags || []).includes(t.name) ? "default" : "outline"}
+              variant={(form.tags || []).includes(t.name) ? "default" : "neutral"}
               className="cursor-pointer"
               onClick={() => toggleTag(t.name)}
             >
@@ -136,45 +132,43 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
           ))}
         </div>
       </div>
-      <div><Label>Observações</Label><Textarea value={form.notes || ''} onChange={e => set('notes', e.target.value)} /></div>
+      <Textarea label="Observações" value={form.notes || ''} onChange={e => set('notes', e.target.value)} />
 
       {/* Custom Fields */}
       {customFields.length > 0 && (
-        <div className="space-y-3 border-t pt-3">
-          <p className="text-sm font-medium text-muted-foreground">Campos Customizados</p>
+        <div className="space-y-3 border-t pt-3 border-neutral-100">
+          <p className="text-sm font-medium text-neutral-500">Campos Customizados</p>
           <div className="grid grid-cols-2 gap-3">
             {customFields.map(cf => (
               <div key={cf.id}>
-                <Label>{cf.field_label}{cf.is_required ? ' *' : ''}</Label>
                 {cf.field_type === 'text' && (
-                  <Input value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                  <Input label={`${cf.field_label}${cf.is_required ? ' *' : ''}`} value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
                 )}
                 {cf.field_type === 'number' && (
-                  <Input type="number" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                  <Input label={`${cf.field_label}${cf.is_required ? ' *' : ''}`} type="number" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
                 )}
                 {cf.field_type === 'date' && (
-                  <Input type="date" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
+                  <Input label={`${cf.field_label}${cf.is_required ? ' *' : ''}`} type="date" value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} />
                 )}
                 {cf.field_type === 'textarea' && (
-                  <Textarea value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} className="min-h-[60px]" />
+                  <Textarea label={`${cf.field_label}${cf.is_required ? ' *' : ''}`} value={customData[cf.field_name] || ''} onChange={e => setCustom(cf.field_name, e.target.value)} className="min-h-[60px]" />
                 )}
                 {cf.field_type === 'select' && (
-                  <Select value={customData[cf.field_name] || ''} onValueChange={v => setCustom(cf.field_name, v)}>
-                    <SelectTrigger><SelectValue placeholder="Selecionar" /></SelectTrigger>
-                    <SelectContent>
-                      {(cf.field_options || []).map(opt => (
-                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Select 
+                    label={`${cf.field_label}${cf.is_required ? ' *' : ''}`}
+                    value={customData[cf.field_name] || ''} 
+                    onChange={e => setCustom(cf.field_name, e.target.value)}
+                    placeholder="Selecionar"
+                    options={(cf.field_options || []).map(opt => ({ value: opt, label: opt }))}
+                  />
                 )}
                 {cf.field_type === 'checkbox' && (
-                  <div className="flex items-center gap-3 mt-1">
+                  <div className="mt-1">
                     <Checkbox
+                      label={cf.field_label}
                       checked={!!customData[cf.field_name]}
-                      onCheckedChange={v => setCustom(cf.field_name, v)}
+                      onChange={e => setCustom(cf.field_name, (e.target as HTMLInputElement).checked)}
                     />
-                    <span className="text-sm">{cf.field_label}</span>
                   </div>
                 )}
               </div>
@@ -183,7 +177,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
         </div>
       )}
 
-      <Button className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</Button>
+      <Button variant="primary" className="w-full" onClick={() => onSave({ ...form, custom_data: customData } as any)} disabled={!form.name?.trim()}>Salvar</Button>
     </div>
   );
 }
