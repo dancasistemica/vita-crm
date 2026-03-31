@@ -6,7 +6,7 @@ interface SelectOption {
   label: string;
 }
 
-interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   helperText?: string;
@@ -32,6 +32,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       size = 'md',
       className = '',
       disabled,
+      required,
       ...props
     },
     ref
@@ -41,7 +42,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label className="block text-sm font-medium text-neutral-700 mb-2">
             {label}
-            {props.required && <span className="text-error-500 ml-1">*</span>}
+            {required && <span className="text-error-500 ml-1">*</span>}
           </label>
         )}
 
@@ -49,13 +50,14 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <select
             ref={ref}
             disabled={disabled}
+            required={required}
             className={`
               ${sizeStyles[size]}
               w-full
+              bg-white
               border border-neutral-300
               rounded-lg
               appearance-none
-              bg-white
               focus:outline-none
               focus:ring-2
               focus:ring-primary-500
@@ -65,6 +67,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               disabled:text-neutral-500
               disabled:cursor-not-allowed
               pr-10
+              min-h-[44px] md:min-h-auto
               ${error ? 'border-error-500 focus:ring-error-500' : ''}
               ${className}
             `}

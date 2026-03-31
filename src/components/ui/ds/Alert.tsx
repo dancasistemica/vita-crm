@@ -8,10 +8,10 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles = {
-  info: 'bg-primary-50 text-primary-800 border-primary-200',
-  success: 'bg-success-50 text-success-800 border-success-200',
-  warning: 'bg-warning-50 text-warning-800 border-warning-200',
-  error: 'bg-error-50 text-error-800 border-error-200',
+  info: 'bg-primary-50 text-primary-700 border-primary-200',
+  success: 'bg-success-50 text-success-700 border-success-200',
+  warning: 'bg-warning-50 text-warning-700 border-warning-200',
+  error: 'bg-error-50 text-error-700 border-error-200',
 };
 
 const icons = {
@@ -28,7 +28,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         ref={ref}
         className={`
           flex gap-3 p-4 border rounded-lg
-          ${variantStyles[variant as keyof typeof variantStyles]}
+          ${variantStyles[variant]}
           ${className}
         `}
         {...props}
