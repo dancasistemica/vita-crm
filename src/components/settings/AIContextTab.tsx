@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
+import { Button } from '@/components/ui/ds';
 import { Input } from '@/components/ui/ds';
 import { Label } from '@/components/ui/ds';
 import { Textarea } from '@/components/ui/ds';

@@ -5,7 +5,7 @@ import { useDataAccess } from "@/hooks/useDataAccess";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
+import { Button } from "@/components/ui/ds/";
 import { Input } from "@/components/ui/ds/Input";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
