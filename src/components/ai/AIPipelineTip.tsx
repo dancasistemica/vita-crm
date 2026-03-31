@@ -48,13 +48,13 @@ Sugira uma ação prática para avançar esta lead no funil.`;
               <p className="text-sm text-foreground leading-relaxed">{response}</p>
               <div className="flex gap-1.5 pt-1">
                 {onCreateTask && (
-                  < size="sm" variant="neutral" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
+                  <Button size="sm" variant="secondary" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
                     <Plus className="h-3 w-3 mr-1" /> Criar tarefa
-                  </>
+                  </Button>
                 )}
-                < size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
+                <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Nova sugestão
-                </>
+                </Button>
               </div>
               <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA</p>
             </>

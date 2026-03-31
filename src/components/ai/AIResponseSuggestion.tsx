@@ -63,8 +63,8 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
           <div className="flex gap-3">
-            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
-            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
+            <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
         </div>
       )}

@@ -72,8 +72,8 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
         <div className="space-y-3 animate-in fade-in-50">
           <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} className="text-sm" />
           <div className="flex gap-3">
-            < size="sm" variant="neutral" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</>
-            < size="sm" variant="neutral" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</>
+            <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
+            <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
           <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
         </div>
