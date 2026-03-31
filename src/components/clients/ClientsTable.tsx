@@ -322,14 +322,14 @@ export default function ClientsTable({
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
-                    < variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
+                    <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
-                    </>
+                    </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        < variant="ghost" size="sm" className="h-7 w-7">
+                        <Button variant="ghost" size="sm" className="h-7 w-7">
                           <MoreVertical className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
