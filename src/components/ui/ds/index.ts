@@ -4,3 +4,6 @@ export * from './Input';
 export * from './Select';
 export * from './Badge';
 export * from './Alert';
+export * from './Textarea';
+export * from './Dialog';
+export * from './PageTitle';
