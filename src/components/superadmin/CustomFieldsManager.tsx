@@ -453,10 +453,12 @@ export function CustomFieldsManager() {
         {/* Org selector (specific mode only) */}
         {!isGlobalMode && (
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
+            <div className="flex-1 bg-white rounded-lg p-4 border border-neutral-200">
               <Label>Organização</Label>
               <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                <SelectTrigger><SelectValue placeholder="Selecione uma organização" /></SelectTrigger>
+                <SelectTrigger className="bg-white border-neutral-300 min-h-[44px] focus:ring-primary-500 focus:ring-offset-0">
+                  <SelectValue placeholder="Selecione uma organização" />
+                </SelectTrigger>
                 <SelectContent>
                   {organizations.map(org => (
                     <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
