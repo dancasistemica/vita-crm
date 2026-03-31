@@ -10,13 +10,22 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/ds";
-import { Separator } from "@/components/ui/ds";
-import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
-import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarFooter, useSidebar,
+import { 
+  Avatar, 
+  AvatarFallback, 
+  AvatarImage, 
+  Separator,
+  Sidebar, 
+  SidebarContent, 
+  SidebarGroup, 
+  SidebarGroupContent,
+  SidebarGroupLabel, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem,
+  SidebarFooter, 
+  useSidebar,
+  Button
 } from "@/components/ui/ds";
 
 const baseItems = [
