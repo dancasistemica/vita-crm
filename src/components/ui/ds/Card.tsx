@@ -2,7 +2,7 @@ import React from 'react';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'elevated' | 'outlined';
-  padding?: 'sm' | 'md' | 'lg';
+  padding?: 'sm' | 'md' | 'lg' | 'none';
   interactive?: boolean;
 }
 
@@ -16,6 +16,7 @@ const paddingStyles = {
   sm: 'p-3',
   md: 'p-4',
   lg: 'p-6',
+  none: 'p-0',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(

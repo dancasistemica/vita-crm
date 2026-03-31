@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { Button, Card, Select, Badge, Alert } from '@/components/ui/ds';
 import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
 import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
 import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog } from 'lucide-react';
+import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog, Loader } from 'lucide-react';
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
 import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
 import { getAllOrganizations } from '@/services/superadminService';
@@ -83,8 +82,8 @@ export default function SuperadminDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground">Verificando permissões...</p>
+          <Loader className="h-8 w-8 text-primary-600 animate-spin" />
+          <p className="text-sm text-neutral-600 font-medium">Verificando permissões...</p>
         </div>
       </div>
     );
@@ -93,59 +92,60 @@ export default function SuperadminDashboard() {
   if (!isSuperadmin) return null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <ShieldCheck className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Painel Superadmin</h1>
-          <p className="text-sm text-muted-foreground">Gestão de organizações, planos e usuários</p>
-        </div>
-      </div>
-        {/* Quick Access Cards */}
-        <div>
-          <h2 className="text-sm font-medium text-muted-foreground mb-3">⚡ Atalhos Rápidos</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <QuickAccessCard
-              icon={Plus}
-              title="Nova Organização"
-              description="Criar organização com admin"
-              stat={stats.orgs}
-              statLabel="Organizações"
-              onClick={() => {
-                setActiveTab('organizations');
-                setTimeout(() => orgsTabRef.current?.openCreateModal?.(), 100);
-              }}
-            />
-            <QuickAccessCard
-              icon={CreditCard}
-              title="Novo Plano"
-              description="Criar plano de assinatura"
-              stat={stats.plans}
-              statLabel="Planos"
-              onClick={() => setActiveTab('plans')}
-            />
-            <QuickAccessCard
-              icon={Users}
-              title="Novo Superadmin"
-              description="Promover usuário existente"
-              stat={stats.superadmins}
-              statLabel="Superadmins"
-              onClick={() => setActiveTab('users')}
-            />
-            <QuickAccessCard
-              icon={BarChart3}
-              title="Ver Métricas"
-              description="Dashboard de métricas"
-              onClick={() => setActiveTab('organizations')}
-            />
+    <div className="p-4 md:p-6 space-y-6">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="h-14 w-14 rounded-xl bg-primary-50 flex items-center justify-center border border-primary-100 shadow-sm">
+            <ShieldCheck className="h-8 w-8 text-primary-600" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold text-neutral-900">Superadmin</h1>
+            <p className="text-sm text-neutral-600 mt-1">Gestão global do ecossistema</p>
           </div>
         </div>
+      </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4">
+      {/* QUICK STATS */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card interactive variant="elevated" padding="md" onClick={() => setActiveTab('organizations')}>
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary-100 rounded-lg"><Building2 className="w-6 h-6 text-primary-600" /></div>
+            <div>
+              <p className="text-sm text-neutral-600">Organizações</p>
+              <h4 className="text-2xl font-bold">{stats.orgs}</h4>
+            </div>
+          </div>
+        </Card>
+        <Card interactive variant="elevated" padding="md" onClick={() => setActiveTab('plans')}>
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-success-100 rounded-lg"><CreditCard className="w-6 h-6 text-success-600" /></div>
+            <div>
+              <p className="text-sm text-neutral-600">Planos Ativos</p>
+              <h4 className="text-2xl font-bold">{stats.plans}</h4>
+            </div>
+          </div>
+        </Card>
+        <Card interactive variant="elevated" padding="md" onClick={() => setActiveTab('users')}>
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-warning-100 rounded-lg"><Users className="w-6 h-6 text-warning-600" /></div>
+            <div>
+              <p className="text-sm text-neutral-600">Superadmins</p>
+              <h4 className="text-2xl font-bold">{stats.superadmins}</h4>
+            </div>
+          </div>
+        </Card>
+        <Card interactive variant="elevated" padding="md">
+          <Button variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
+            Nova Org
+          </Button>
+        </Card>
+      </div>
+
+      {/* MAIN TABS */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="flex w-max min-w-full">
             <TabsTrigger value="organizations" className="gap-2">
               <Building2 className="h-4 w-4" /> Organizações
             </TabsTrigger>
@@ -168,7 +168,9 @@ export default function SuperadminDashboard() {
               <Cog className="h-4 w-4" /> Sistema
             </TabsTrigger>
           </TabsList>
+        </div>
 
+        <Card variant="default" padding="lg">
           <TabsContent value="organizations">
             <OrganizationsTab ref={orgsTabRef} onStatsChange={fetchStats} />
           </TabsContent>
@@ -184,31 +186,18 @@ export default function SuperadminDashboard() {
           <TabsContent value="custom-fields">
             <CustomFieldsManager />
           </TabsContent>
-          <TabsContent value="botconversa" className="space-y-4">
+          <TabsContent value="botconversa" className="space-y-6">
             <div>
-              <Label htmlFor="botconversa-org-select">Selecione uma organização</Label>
               <Select
+                label="Selecione uma organização"
+                options={botconversaOrgs.map(org => ({ value: org.id, label: org.name }))}
                 value={selectedBotconversaOrgId}
-                onValueChange={(orgId) => setSelectedBotconversaOrgId(orgId)}
-              >
-                <SelectTrigger id="botconversa-org-select" className="mt-2 h-11">
-                  <SelectValue placeholder="Escolha uma organização..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {botconversaOrgs.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(e) => setSelectedBotconversaOrgId(e.target.value)}
+              />
               {botconversaLoading && (
-                <p className="mt-2 text-xs text-muted-foreground">Carregando organizações...</p>
-              )}
-              {!botconversaLoading && botconversaOrgs.length === 0 && (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Nenhuma organização encontrada.
-                </p>
+                <div className="flex items-center gap-2 mt-2 text-sm text-neutral-600">
+                  <Loader className="w-3 h-3 animate-spin" /> Carregando organizações...
+                </div>
               )}
             </div>
 
@@ -222,7 +211,8 @@ export default function SuperadminDashboard() {
           <TabsContent value="system-settings">
             <SystemSettings />
           </TabsContent>
-        </Tabs>
+        </Card>
+      </Tabs>
     </div>
   );
 }
