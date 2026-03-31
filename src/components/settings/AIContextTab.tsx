@@ -97,9 +97,9 @@ export default function AIContextTab() {
                 onChange={e => setNewService(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag('services', newService, setNewService))}
               />
-              < type="button" size="sm" variant="neutral" onClick={() => addTag('services', newService, setNewService)}>
+              <Button type="button" size="sm" variant="secondary" onClick={() => addTag('services', newService, setNewService)}>
                 <Plus className="h-4 w-4" />
-              </>
+              </Button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
