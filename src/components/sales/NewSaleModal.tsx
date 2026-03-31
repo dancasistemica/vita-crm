@@ -240,7 +240,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 {showResults && searchResults.length > 0 && (
                   <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(lead => (
-                      < variant="secondary" size="sm"
+                      <Button variant="secondary" size="sm"
                         key={lead.id}
                         onClick={() => handleSelectLead(lead)}
                         className="w-full text-left px-3 py-2.5 hover:bg-muted/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
@@ -252,7 +252,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
                         </Badge>
-                      </>
+                      </Button>
                     ))}
                   </div>
                 )}
