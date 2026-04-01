@@ -284,26 +284,73 @@ export default function TarefasPage() {
     }
   };
 
-  const handleStatusChange = async (taskId: string, statusId: string | null) => {
+  const handleMarkNotificationRead = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('task_notifications')
+        .update({ read: true })
+        .eq('id', id);
+      if (error) throw error;
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao marcar como lida:', err);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    if (!user?.id) return;
+    try {
+      const { error } = await supabase
+        .from('task_notifications')
+        .update({ read: true })
+        .eq('user_id', user.id)
+        .eq('read', false);
+      if (error) throw error;
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao marcar todas como lidas:', err);
+    }
+  };
+
+  const handleCreateStatus = async (data: any) => {
     if (!dataAccess) return;
     try {
-      await dataAccess.updateTask(taskId, { status_id: statusId });
-      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status_id: statusId } : t));
-      const task = tasks.find(t => t.id === taskId);
-      const newStatus = taskStatuses.find(s => s.id === statusId);
-      if (task?.assigned_to && user?.id && task.assigned_to !== user.id && newStatus) {
-        await supabase.from('task_notifications').insert({
-          organization_id: task.organization_id,
-          task_id: taskId,
-          user_id: task.assigned_to,
-          type: 'status_changed',
-          message: `Tarefa "${task.title}" foi movida para "${newStatus.name}"`,
-        } as any);
-      }
+      await dataAccess.createTaskStatus(data);
+      fetchTaskStatuses();
+      toast.success("Status criado!");
     } catch (err) {
-      console.error('[TarefasPage] Erro ao alterar status:', err);
-      toast.error("Erro ao alterar status");
+      console.error('[TarefasPage] Erro ao criar status:', err);
+      toast.error("Erro ao criar status");
     }
+  };
+
+  const handleUpdateStatus = async (id: string, data: any) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.updateTaskStatus(id, data);
+      fetchTaskStatuses();
+      toast.success("Status atualizado!");
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao atualizar status:', err);
+      toast.error("Erro ao atualizar status");
+    }
+  };
+
+  const handleDeleteStatus = async (id: string) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.deleteTaskStatus(id);
+      fetchTaskStatuses();
+      toast.success("Status removido!");
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao deletar status:', err);
+      toast.error("Erro ao remover status");
+    }
+  };
+
+  const handleDialogChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) setEditingTask(null);
   };
 
   const renderTask = (task: TaskRow) => {
