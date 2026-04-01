@@ -1,4 +1,4 @@
-import { Badge, Button, Sheet, Skeleton, Tabs } from "@/components/ui/ds";
+import { Badge, Button, Sheet, Skeleton, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from 'react';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -149,23 +149,23 @@ export default function LeadDetailSheet({
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <div className="px-6">
-            <div className="flex gap-2 border-b border-neutral-200 mb-4">
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Informações</button>
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            <TabsList className="mb-4">
+              <TabsTrigger value="info">Informações</TabsTrigger>
+              <TabsTrigger value="tasks">
                 Tarefas
                 {tasks.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
-              </button>
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+              </TabsTrigger>
+              <TabsTrigger value="interactions">
                 Interações
                 {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
-              </button>
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Agendamentos</button>
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Histórico</button>
-            </div>
+              </TabsTrigger>
+              <TabsTrigger value="scheduled">Agendamentos</TabsTrigger>
+              <TabsTrigger value="history">Histórico</TabsTrigger>
+            </TabsList>
           </div>
 
           {/* INFO TAB */}
-          <div>
+          <TabsContent value="info" className="px-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <InfoField label="Email" value={lead.email} />
               <InfoField label="Telefone" value={lead.phone} />
@@ -180,7 +180,7 @@ export default function LeadDetailSheet({
             </div>
 
             {lead.tags.length > 0 && (
-              <div>
+              <div className="mt-4">
                 <span className="text-xs text-neutral-500 font-medium">Tags</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {lead.tags.map(t => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
@@ -189,7 +189,7 @@ export default function LeadDetailSheet({
             )}
 
             {lead.notes && (
-              <div>
+              <div className="mt-4">
                 <span className="text-xs text-neutral-500 font-medium">Observações</span>
                 <p className="text-sm text-foreground mt-1 whitespace-pre-wrap">{lead.notes}</p>
               </div>
@@ -197,7 +197,7 @@ export default function LeadDetailSheet({
 
             {/* Custom data */}
             {lead.customData && Object.keys(lead.customData).length > 0 && (
-              <div>
+              <div className="mt-4">
                 <span className="text-xs text-neutral-500 font-medium">Campos Personalizados</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {Object.entries(lead.customData).map(([key, value]) => (
@@ -208,7 +208,7 @@ export default function LeadDetailSheet({
             )}
 
             {/* Quick actions */}
-            <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-border">
+            <div className="flex items-center gap-3 flex-wrap pt-4 mt-4 border-t border-border">
               {lead.phone && (
                 <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
                   <Button variant="secondary" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
@@ -249,10 +249,10 @@ export default function LeadDetailSheet({
                 <Trash2 className="h-4 w-4 mr-1" /> Excluir
               </Button>
             </div>
-          </div>
+          </TabsContent>
 
           {/* TASKS TAB */}
-          <div>
+          <TabsContent value="tasks" className="px-6 space-y-3">
             {loadingTasks ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
@@ -277,10 +277,10 @@ export default function LeadDetailSheet({
                 );
               })
             )}
-          </div>
+          </TabsContent>
 
           {/* INTERACTIONS TAB */}
-          <div>
+          <TabsContent value="interactions" className="px-6 space-y-3">
             {loadingInteractions ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
@@ -300,17 +300,17 @@ export default function LeadDetailSheet({
                 </div>
               ))
             )}
-          </div>
+          </TabsContent>
 
           {/* HISTORY TAB */}
-          <div>
+          <TabsContent value="history" className="px-6">
             <LeadTimeline leadId={lead.id} leadCreatedAt={lead.entryDate || undefined} />
-          </div>
+          </TabsContent>
 
           {/* SCHEDULED TAB */}
-          <div>
+          <TabsContent value="scheduled" className="px-6">
             <ScheduledMessagesList organizationId={organizationId} leadId={lead.id} />
-          </div>
+          </TabsContent>
         </Tabs>
       
       <DeleteConfirmationModal
