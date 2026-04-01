@@ -65,7 +65,7 @@ export default function CRMLayout() {
             <div className="flex items-center gap-2 md:gap-3 min-w-fit">
               <HeaderMenu />
               <div className="flex flex-col">
-                <span className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wide font-medium">
+                <span className="text-xs text-neutral-500 uppercase tracking-wide font-medium">
                   {isDashboard ? "CRM" : getPageTitle()}
                 </span>
                 <span className="text-sm font-bold text-neutral-900 truncate max-w-[120px] md:max-w-none">
