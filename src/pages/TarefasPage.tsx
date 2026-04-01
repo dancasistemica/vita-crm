@@ -68,13 +68,12 @@ export default function TarefasPage() {
   const [editingTask, setEditingTask] = useState<TaskRow | null>(null);
   const [showStatusManager, setShowStatusManager] = useState(false);
 
-  // Filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [assignedFilter, setAssignedFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-  const dashboardFilter = searchParams.get('filter'); // 'overdue' | 'pending' | null
+  const dashboardFilter = searchParams.get('filter');
 
   const fetchTasks = useCallback(async () => {
     if (!dataAccess) return;
@@ -144,11 +143,9 @@ export default function TarefasPage() {
     }
   }, [location.state, tasks, navigate, location.pathname]);
 
-  // Client-side filtering
   const filteredTasks = useMemo(() => {
     const todayStr = new Date().toISOString().split('T')[0];
     return tasks.filter(t => {
-      // Dashboard pre-filter
       if (dashboardFilter === 'overdue') {
         if (t.completed || !t.due_date || t.due_date >= todayStr) return false;
       } else if (dashboardFilter === 'pending') {
@@ -182,20 +179,14 @@ export default function TarefasPage() {
   const upcoming = filteredTasks.filter(t => !t.completed && (!t.due_date || t.due_date > today));
   const completed = filteredTasks.filter(t => t.completed);
 
-  const getLeadName = (id: string | null) => {
-    if (!id) return '—';
-    return leads.find(l => l.id === id)?.name || '—';
-  };
+  const getLeadName = (id: string | null) => id ? (leads.find(l => l.id === id)?.name || '—') : '—';
   const getTypeLabel = (type: string | null) => TASK_TYPES.find(t => t.value === type)?.label || type || 'Outro';
   const getMemberName = (userId: string | null) => {
     if (!userId) return null;
     const m = orgMembers.find(m => m.user_id === userId);
     return m?.profiles?.full_name || m?.profiles?.email || null;
   };
-  const getStatusById = (statusId: string | null) => {
-    if (!statusId) return null;
-    return taskStatuses.find(s => s.id === statusId) || null;
-  };
+  const getStatusById = (statusId: string | null) => statusId ? (taskStatuses.find(s => s.id === statusId) || null) : null;
 
   const handleAdd = async (data: { title: string; leadId: string; dueDate: string; type: string; assignedTo: string; statusId: string }) => {
     if (!dataAccess) return;
@@ -247,27 +238,6 @@ export default function TarefasPage() {
     }
   };
 
-  const handleDuplicate = async (taskId: string) => {
-    if (!dataAccess) return;
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-    try {
-      await dataAccess.createTask({
-        title: `${task.title} (Cópia)`,
-        lead_id: task.lead_id,
-        due_date: task.due_date,
-        type: task.type,
-        assigned_to: task.assigned_to,
-        status_id: task.status_id,
-      });
-      toast.success("Tarefa duplicada!");
-      await fetchTasks();
-    } catch (err) {
-      console.error('[TarefasPage] Erro ao duplicar tarefa:', err);
-      toast.error("Erro ao duplicar tarefa");
-    }
-  };
-
   const handleToggle = async (task: TaskRow) => {
     if (!dataAccess) return;
     try {
@@ -296,8 +266,6 @@ export default function TarefasPage() {
       await dataAccess.updateTask(taskId, { assigned_to: userId });
       setTasks(prev => prev.map(t => t.id === taskId ? { ...t, assigned_to: userId } : t));
       toast.success(userId ? "Tarefa designada!" : "Designação removida");
-
-      // Create notification if assigning to someone
       if (userId && user?.id && userId !== user.id) {
         const task = tasks.find(t => t.id === taskId);
         if (task) {
@@ -321,7 +289,6 @@ export default function TarefasPage() {
     try {
       await dataAccess.updateTask(taskId, { status_id: statusId });
       setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status_id: statusId } : t));
-
       const task = tasks.find(t => t.id === taskId);
       const newStatus = taskStatuses.find(s => s.id === statusId);
       if (task?.assigned_to && user?.id && task.assigned_to !== user.id && newStatus) {
@@ -339,74 +306,22 @@ export default function TarefasPage() {
     }
   };
 
-  const handleDialogChange = (open: boolean) => {
-    setDialogOpen(open);
-    if (!open) setEditingTask(null);
-  };
-
-  // Status management handlers
-  const handleCreateStatus = async (data: { name: string; color: string; order_index: number }) => {
-    if (!dataAccess) return;
-    try {
-      await dataAccess.createTaskStatus(data);
-      await fetchTaskStatuses();
-    } catch (err) {
-      console.error('[TarefasPage] Erro ao criar status:', err);
-      toast.error("Erro ao criar status");
-    }
-  };
-
-  const handleUpdateStatus = async (id: string, data: { name: string; color: string }) => {
-    if (!dataAccess) return;
-    try {
-      await dataAccess.updateTaskStatus(id, data);
-      await fetchTaskStatuses();
-    } catch (err) {
-      console.error('[TarefasPage] Erro ao atualizar status:', err);
-      toast.error("Erro ao atualizar status");
-    }
-  };
-
-  const handleDeleteStatus = async (id: string) => {
-    if (!dataAccess) return;
-    try {
-      await dataAccess.deleteTaskStatus(id);
-      await fetchTaskStatuses();
-    } catch (err) {
-      console.error('[TarefasPage] Erro ao deletar status:', err);
-      toast.error("Erro ao deletar status");
-    }
-  };
-
-  const handleMarkNotificationRead = async (id: string) => {
-    await supabase.from('task_notifications').update({ read: true }).eq('id', id);
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  };
-
-  const handleMarkAllRead = async () => {
-    if (!user?.id) return;
-    await supabase.from('task_notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
-  const formatCreatedDate = (dateStr: string) => formatDateToBR(dateStr);
-
-  const TaskItem = ({ task }: { task: TaskRow }) => {
+  const renderTask = (task: TaskRow) => {
     const assignedName = getMemberName(task.assigned_to);
     const status = getStatusById(task.status_id);
 
     return (
-      <Card className={task.completed ? 'opacity-50' : ''}>
-        <CardContent className="py-3 px-4 flex items-center gap-3">
+      <Card key={task.id} className={`${task.completed ? 'opacity-50' : ''}`} variant="primary" padding="md">
+        <div className="flex items-center gap-3">
           <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task)} />
           <div className="flex-1 min-w-0">
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
-            <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <span className="text-xs text-neutral-500">{getLeadName(task.lead_id)}</span>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <Badge variant="secondary" className="text-xs">{getLeadName(task.lead_id)}</Badge>
               <Badge variant="secondary" className="text-xs">{getTypeLabel(task.type)}</Badge>
               {task.due_date && <span className="text-xs text-neutral-500">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
-                <Badge variant="secondary" className="text-xs gap-1">
+                <Badge variant="secondary" className="text-xs flex items-center gap-1">
                   <UserCircle className="h-3 w-3" />
                   {assignedName}
                 </Badge>
@@ -416,48 +331,40 @@ export default function TarefasPage() {
                   {status.name}
                 </Badge>
               )}
-              <span className="text-xs text-neutral-500 flex items-center gap-1">
-                <CalendarIcon className="h-3 w-3" />
-                {formatCreatedDate(task.created_at)}
-              </span>
             </div>
           </div>
 
-          {/* Status selector */}
           {taskStatuses.length > 0 && (
-            <Select value={task.status_id || 'none'} onValueChange={v => handleStatusChange(task.id, v === 'none' ? null : v)}>
-              <SelectTrigger className="w-32 h-8 text-xs">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Sem status</SelectItem>
+            <div className="w-32">
+              <Select 
+                value={task.status_id || ''} 
+                onChange={e => handleStatusChange(task.id, e.target.value === '' ? null : e.target.value)}
+                placeholder="Status"
+                className="h-8 text-xs"
+              >
+                <option value="">Sem status</option>
                 {taskStatuses.map(s => (
-                  <SelectItem key={s.id} value={s.id}>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: s.color }} />
-                      {s.name}
-                    </span>
-                  </SelectItem>
+                  <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
-              </SelectContent>
-            </Select>
+              </Select>
+            </div>
           )}
 
           <AssignPopover taskId={task.id} assignedTo={task.assigned_to} orgMembers={orgMembers} onAssign={handleAssign} />
           <TaskActions
             taskId={task.id}
             onEdit={handleEdit}
-            onDuplicate={handleDuplicate}
+            onComplete={() => handleToggle(task)}
             onDelete={handleDelete}
           />
-        </CardContent>
+        </div>
       </Card>
     );
   };
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <h1 className="text-4xl font-bold text-neutral-900">Tarefas</h1>
         <div className="space-y-3">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       </div>
@@ -465,7 +372,7 @@ export default function TarefasPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">Tarefas</h1>
         <div className="flex items-center gap-3">
@@ -474,23 +381,12 @@ export default function TarefasPage() {
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          <Button variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          <Button variant="secondary" size="md" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
           </Button>
-          <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
-            <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</></DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle className="font-display">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle></DialogHeader>
-              <TaskForm
-                leads={leads}
-                pipelineStages={pipelineStages}
-                orgMembers={orgMembers}
-                taskStatuses={taskStatuses}
-                onSave={editingTask ? handleSaveEdit : handleAdd}
-                initialData={editingTask}
-              />
-            </DialogContent>
-          </Dialog>
+          <Button variant="primary" size="md" onClick={() => { setEditingTask(null); setDialogOpen(true); }}>
+            <Plus className="h-4 w-4 mr-1" /> Nova Tarefa
+          </Button>
         </div>
       </div>
 
@@ -520,71 +416,96 @@ export default function TarefasPage() {
 
       {overdue.length > 0 && (
         <section>
-          <div className="flex items-center gap-3 mb-2"><AlertCircle className="h-4 w-4 text-destructive" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
-          <div className="space-y-3">{overdue.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><AlertCircle className="h-4 w-4 text-error-600" /><h2 className="text-2xl font-semibold text-neutral-900">Atrasadas ({overdue.length})</h2></div>
+          <div className="space-y-3">{overdue.map(t => renderTask(t))}</div>
         </section>
       )}
 
       <section>
-        <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
+        <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-primary-600" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
         <div className="space-y-3">
-          {todayTasks.length === 0 ? <p className="text-sm text-neutral-500">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
+          {todayTasks.length === 0 ? <p className="text-sm text-neutral-500">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => renderTask(t))}
         </div>
       </section>
 
       {upcoming.length > 0 && (
         <section>
           <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-neutral-500" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
-          <div className="space-y-3">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="space-y-3">{upcoming.map(t => renderTask(t))}</div>
         </section>
       )}
 
       {completed.length > 0 && (
         <section>
-          <div className="flex items-center gap-3 mb-2"><CheckCircle2 className="h-4 w-4 text-success" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
-          <div className="space-y-3">{completed.map(t => <TaskItem key={t.id} task={t} />)}</div>
+          <div className="flex items-center gap-3 mb-2"><CheckCircle2 className="h-4 w-4 text-success-600" /><h2 className="text-2xl font-semibold text-neutral-900">Concluídas ({completed.length})</h2></div>
+          <div className="space-y-3">{completed.map(t => renderTask(t))}</div>
         </section>
+      )}
+
+      {dialogOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-semibold">{editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}</h2>
+              <Button variant="ghost" onClick={() => handleDialogChange(false)}>✕</Button>
+            </div>
+            <TaskForm
+              leads={leads}
+              pipelineStages={pipelineStages}
+              orgMembers={orgMembers}
+              taskStatuses={taskStatuses}
+              onSave={editingTask ? handleSaveEdit : handleAdd}
+              initialData={editingTask}
+            />
+          </Card>
+        </div>
       )}
     </div>
   );
 }
 
-// ── Assign Popover ──
 function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
   taskId: string;
   assignedTo: string | null;
   orgMembers: OrgMember[];
   onAssign: (taskId: string, userId: string | null) => void;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
-          <UserCircle className="h-4 w-4" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-48 p-1" align="end">
-        <Button variant="secondary" size="sm"
-          onClick={() => onAssign(taskId, null)}
-          className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
-        >
-          Sem responsável
-        </Button>
-        {orgMembers.map(m => (
+    <div className="relative inline-block">
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="h-8 w-8 p-0" 
+        title="Designar responsável"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <UserCircle className="h-4 w-4" />
+      </Button>
+      {isOpen && (
+        <div className="absolute right-0 z-50 mt-2 w-48 p-1 bg-white border border-neutral-200 rounded-lg shadow-lg">
           <Button variant="secondary" size="sm"
-            key={m.user_id}
-            onClick={() => onAssign(taskId, m.user_id)}
-            className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
+            onClick={() => { onAssign(taskId, null); setIsOpen(false); }}
+            className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-neutral-100 transition ${!assignedTo ? 'bg-neutral-100 font-medium' : ''}`}
           >
-            {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+            Sem responsável
           </Button>
-        ))}
-      </PopoverContent>
-    </Popover>
+          {orgMembers.map(m => (
+            <Button variant="secondary" size="sm"
+              key={m.user_id}
+              onClick={() => { onAssign(taskId, m.user_id); setIsOpen(false); }}
+              className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-neutral-100 transition ${assignedTo === m.user_id ? 'bg-neutral-100 font-medium' : ''}`}
+            >
+              {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
-// ── Task Form ──
 function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, initialData }: {
   leads: any[];
   pipelineStages: any[];
@@ -616,10 +537,7 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label>Tipo</Label>
-          <Select value={form.type} onValueChange={v => set('type', v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{TASK_TYPES.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
-          </Select>
+          <Select value={form.type} onChange={e => set('type', e.target.value)} options={TASK_TYPES.map(t => ({ value: t.value, label: t.label }))} />
         </div>
         <div><Label>Data</Label><Input type="date" value={form.dueDate} onChange={e => set('dueDate', e.target.value)} /></div>
       </div>
@@ -627,29 +545,23 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label>Responsável</Label>
-          <Select value={form.assignedTo || 'none'} onValueChange={v => set('assignedTo', v === 'none' ? '' : v)}>
-            <SelectTrigger><SelectValue placeholder="Selecionar responsável" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Sem responsável</SelectItem>
-              {orgMembers.map(m => (
-                <SelectItem key={m.user_id} value={m.user_id}>
-                  {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-                </SelectItem>
-              ))}
-            </SelectContent>
+          <Select value={form.assignedTo || 'none'} onChange={e => set('assignedTo', e.target.value === 'none' ? '' : e.target.value)}>
+            <option value="none">Sem responsável</option>
+            {orgMembers.map(m => (
+              <option key={m.user_id} value={m.user_id}>
+                {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+              </option>
+            ))}
           </Select>
         </div>
         {taskStatuses.length > 0 && (
           <div>
             <Label>Status</Label>
-            <Select value={form.statusId || 'none'} onValueChange={v => set('statusId', v === 'none' ? '' : v)}>
-              <SelectTrigger><SelectValue placeholder="Selecionar status" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Sem status</SelectItem>
-                {taskStatuses.map(s => (
-                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                ))}
-              </SelectContent>
+            <Select value={form.statusId || 'none'} onChange={e => set('statusId', e.target.value === 'none' ? '' : e.target.value)}>
+              <option value="none">Sem status</option>
+              {taskStatuses.map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
             </Select>
           </div>
         )}
