@@ -1,6 +1,6 @@
-import { Badge, Button, Card, Checkbox, Select, Skeleton } from "@/components/ui/ds";
+import { Badge, Button, Card, Checkbox, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle, Phone, Trash2, Calendar, ShoppingBag, DollarSign, Plus } from 'lucide-react';
+import { Clock, MoreVertical, ExternalLink, Phone, Edit2, Calendar, ShoppingBag, DollarSign, Plus } from 'lucide-react';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
 import { useState } from 'react';
 
@@ -101,7 +101,7 @@ export default function ClientsTable({
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-20 w-full rounded-lg" />
+          <Skeleton key={i} className="h-24 w-full rounded-lg" />
         ))}
       </div>
     );
@@ -121,40 +121,13 @@ export default function ClientsTable({
 
   return (
     <div className="space-y-4">
-      {/* Header with Sort and Select All - mimicking LeadsPage style */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-neutral-100 rounded-lg">
-        <div className="flex items-center gap-3">
-          <Checkbox
-            checked={selectedIds.length === clients.length && clients.length > 0}
-            onCheckedChange={toggleSelectAll}
-          />
-          <span className="text-xs text-neutral-500 font-medium uppercase">Selecionar todos</span>
-        </div>
-        
-        <div className="flex items-center gap-4 flex-1 md:justify-end">
-          <span className="text-sm font-medium text-neutral-700 whitespace-nowrap">Ordenar por:</span>
-          <div className="flex gap-2">
-            <select
-              value={sortField}
-              onChange={(e) => toggleSort(e.target.value as SortField)}
-              className="px-3 py-1.5 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-w-[140px]"
-            >
-              <option value="name">🔤 Nome</option>
-              <option value="value">💰 Valor</option>
-              <option value="date">📅 Data Compra</option>
-              <option value="status">🏷️ Status</option>
-              <option value="lastInteraction">💬 Interação</option>
-            </select>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => toggleSort(sortField)}
-              className="h-9 px-3"
-            >
-              {sortDir === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-            </Button>
-          </div>
-        </div>
+      {/* Selection Summary like Leads Page */}
+      <div className="flex items-center gap-3 px-2">
+        <Checkbox
+          checked={selectedIds.length === clients.length && clients.length > 0}
+          onCheckedChange={toggleSelectAll}
+        />
+        <span className="text-xs text-neutral-500">Selecionar todos</span>
       </div>
 
       <div className="space-y-4">
@@ -175,7 +148,6 @@ export default function ClientsTable({
                 else navigate(`/clientes/${client.id}`);
               }}
             >
-              {/* Top bar like leads */}
               <div className={`h-1 w-full ${statusBarColors[status] || 'bg-neutral-200'}`} />
               
               <div className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -205,10 +177,9 @@ export default function ClientsTable({
                       </div>
                     </div>
                     
-                    {/* Information Grid requested by user: Telefone, produto, valor, data da compra, status, ações */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-3 text-xs text-neutral-500">
                       {client.phone && (
-                        <div className="flex items-center gap-2 text-xs text-neutral-500" onClick={e => e.stopPropagation()}>
+                        <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
                           <Phone className="h-3.5 w-3.5 text-success-600" />
                           <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="hover:underline text-success-700 font-medium">
                             {client.phone}
@@ -216,20 +187,20 @@ export default function ClientsTable({
                         </div>
                       )}
                       
-                      <div className="flex items-center gap-2 text-xs text-neutral-500">
+                      <div className="flex items-center gap-2">
                         <DollarSign className="h-3.5 w-3.5 text-neutral-400" />
                         <span className="font-semibold text-neutral-900">R$ {totalValue.toLocaleString('pt-BR')}</span>
                       </div>
                       
                       {lastSale && (
-                        <div className="flex items-center gap-2 text-xs text-neutral-500">
+                        <div className="flex items-center gap-2">
                           <Calendar className="h-3.5 w-3.5 text-neutral-400" />
                           <span>Compra: {formatDate(lastSale.date)}</span>
                         </div>
                       )}
                       
                       {lastInt && (
-                        <div className="flex items-center gap-2 text-xs text-neutral-500">
+                        <div className="flex items-center gap-2">
                           <Clock className="h-3.5 w-3.5 text-neutral-400" />
                           <span>Interação: {relativeDate(lastInt.date)}</span>
                         </div>
@@ -238,7 +209,6 @@ export default function ClientsTable({
                   </div>
                 </div>
                 
-                {/* Actions requested by user */}
                 <div className="flex items-center gap-1 w-full md:w-auto justify-end border-t md:border-0 pt-3 md:pt-0" onClick={e => e.stopPropagation()}>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate(`/clientes/${client.id}`)}>
                     <Edit2 className="h-4 w-4" />
@@ -255,7 +225,7 @@ export default function ClientsTable({
                           className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center gap-2 text-neutral-700" 
                           onClick={() => { navigate(`/clientes/${client.id}`); setOpenMenu(null); }}
                         >
-                          <ExternalLink className="h-3.5 w-3.5" /> Ver detalhes
+                          <ExternalLink className="h-3.5 w-3.5" /> Detalhes
                         </button>
                         <button 
                           className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center gap-2 text-neutral-700" 
@@ -273,20 +243,12 @@ export default function ClientsTable({
         })}
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-100">
-        <div className="flex items-center gap-3 text-sm text-neutral-500">
-          <span>{totalFiltered} clientes</span>
-          <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
-            <option value="10">10 por página</option>
-            <option value="25">25 por página</option>
-            <option value="50">50 por página</option>
-            <option value="100">100 por página</option>
-          </Select>
-        </div>
+      <div className="flex items-center justify-between gap-3 pt-4">
+        <span className="text-sm text-neutral-500">{totalFiltered} clientes</span>
         <div className="flex items-center gap-1">
           <Button variant="secondary" size="sm" className="h-8 px-3" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
           <div className="flex items-center px-4 h-8 text-sm font-medium text-neutral-900">
-            {page} de {totalPages}
+            {page} / {totalPages}
           </div>
           <Button variant="secondary" size="sm" className="h-8 px-3" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
