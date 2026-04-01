@@ -1,9 +1,9 @@
-import { Alert, Badge, Button, Card, Dialog, Input, Label, Select, Tabs, Textarea } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Dialog, Input, Label, Select, Tabs, TabsList, TabsTrigger, TabsContent, Textarea } from "@/components/ui/ds";
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader, History } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
@@ -209,19 +209,31 @@ export default function ClientDetailPage() {
       {/* Tabs */}
       <Tabs defaultValue="vendas" className="space-y-4">
         <div className="overflow-x-auto pb-2">
-          <div className="flex gap-2 border-b border-neutral-200 mb-4">
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><ShoppingCart className="h-4 w-4" /> Vendas</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><MessageSquare className="h-4 w-4" /> Interações</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><CheckSquare className="h-4 w-4" /> Tarefas</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Clock className="h-4 w-4" /> Agendamentos</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><StickyNote className="h-4 w-4" /> Notas</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Clock className="h-4 w-4" /> Histórico</button>
-          </div>
+          <TabsList className="gap-2 border-b border-neutral-200 mb-4">
+            <TabsTrigger value="vendas" className="flex items-center gap-2">
+              <ShoppingCart className="h-4 w-4" /> Vendas
+            </TabsTrigger>
+            <TabsTrigger value="interacoes" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" /> Interações
+            </TabsTrigger>
+            <TabsTrigger value="tarefas" className="flex items-center gap-2">
+              <CheckSquare className="h-4 w-4" /> Tarefas
+            </TabsTrigger>
+            <TabsTrigger value="agendamentos" className="flex items-center gap-2">
+              <Clock className="h-4 w-4" /> Agendamentos
+            </TabsTrigger>
+            <TabsTrigger value="notas" className="flex items-center gap-2">
+              <StickyNote className="h-4 w-4" /> Notas
+            </TabsTrigger>
+            <TabsTrigger value="historico" className="flex items-center gap-2">
+              <History className="h-4 w-4" /> Histórico
+            </TabsTrigger>
+          </TabsList>
         </div>
 
         <Card variant="elevated" padding="lg">
           {/* Vendas */}
-          <div>
+          <TabsContent value="vendas">
             {sales.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma venda registrada.</p>
@@ -260,10 +272,10 @@ export default function ClientDetailPage() {
                 ))}
               </div>
             )}
-          </div>
+          </TabsContent>
 
           {/* Interações */}
-          <div>
+          <TabsContent value="interacoes">
             {interactions.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma interação registrada.</p>
@@ -289,10 +301,10 @@ export default function ClientDetailPage() {
                 })}
               </div>
             )}
-          </div>
+          </TabsContent>
 
           {/* Tarefas */}
-          <div>
+          <TabsContent value="tarefas">
             {tasks.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma tarefa vinculada.</p>
@@ -313,10 +325,10 @@ export default function ClientDetailPage() {
                 ))}
               </div>
             )}
-          </div>
+          </TabsContent>
 
           {/* Notas */}
-          <div>
+          <TabsContent value="notas">
             <Textarea
               placeholder="Notas internas sobre este cliente..."
               value={notesValue}
@@ -324,17 +336,17 @@ export default function ClientDetailPage() {
               onBlur={handleNotesBlur}
               className="min-h-[200px] w-full p-4 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
             />
-          </div>
+          </TabsContent>
 
           {/* Agendamentos */}
-          <div>
+          <TabsContent value="agendamentos">
             <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
-          </div>
+          </TabsContent>
 
           {/* Histórico */}
-          <div>
+          <TabsContent value="historico">
             <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
-          </div>
+          </TabsContent>
         </Card>
       </Tabs>
 
