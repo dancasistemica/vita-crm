@@ -1,4 +1,4 @@
-import { Badge, Button, Sheet, Skeleton, Tabs } from "@/components/ui/ds";
+import { Badge, Button, Sheet, Skeleton, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from 'react';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
