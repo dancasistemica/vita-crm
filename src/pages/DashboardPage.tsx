@@ -197,65 +197,62 @@ export default function DashboardPage() {
   const sortedVisible = settings.filter(s => s.is_visible).sort((a, b) => a.position - b.position);
 
   return (
-    <DashboardLayout title="Dashboard">
-      <div className="space-y-6">
-        {/* Header content moved to layout or handled within DashboardLayout */}
-        <div className="flex items-center justify-between flex-wrap gap-4 px-1">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
-              📊 Dashboard
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-500 font-medium">
-              Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
-            </p>
-          </div>
-          {(canAccessSettings || isSuperadmin) && (
-            <div className="flex-shrink-0">
-              <DashboardCustomizer
-                settings={settings}
-                onToggleVisibility={toggleVisibility}
-                onReorder={reorder}
-              />
-            </div>
-          )}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between flex-wrap gap-4 px-1">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
+            📊 Dashboard
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-500 font-medium">
+            Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
+          </p>
         </div>
-
-        <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
-
-        {/* Render cards in order, grouping grid-eligible cards into a 2-col grid */}
-        {(() => {
-          const elements: React.ReactNode[] = [];
-          let gridBuffer: React.ReactNode[] = [];
-
-          const flushGrid = () => {
-            if (gridBuffer.length > 0) {
-              elements.push(
-                <div key={`grid-${elements.length}`} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {gridBuffer}
-                </div>
-              );
-              gridBuffer = [];
-            }
-          };
-
-          sortedVisible.forEach(s => {
-            const renderer = cardRenderers[s.card_id];
-            if (!renderer) return;
-            const content = renderer();
-            if (!content) return;
-
-            if (fullWidthCards.has(s.card_id)) {
-              flushGrid();
-              elements.push(<div key={s.card_id}>{content}</div>);
-            } else {
-              gridBuffer.push(<div key={s.card_id}>{content}</div>);
-            }
-          });
-
-          flushGrid();
-          return elements;
-        })()}
+        {(canAccessSettings || isSuperadmin) && (
+          <div className="flex-shrink-0">
+            <DashboardCustomizer
+              settings={settings}
+              onToggleVisibility={toggleVisibility}
+              onReorder={reorder}
+            />
+          </div>
+        )}
       </div>
-    </DashboardLayout>
+
+      <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
+
+      {/* Render cards in order, grouping grid-eligible cards into a 2-col grid */}
+      {(() => {
+        const elements: React.ReactNode[] = [];
+        let gridBuffer: React.ReactNode[] = [];
+
+        const flushGrid = () => {
+          if (gridBuffer.length > 0) {
+            elements.push(
+              <div key={`grid-${elements.length}`} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {gridBuffer}
+              </div>
+            );
+            gridBuffer = [];
+          }
+        };
+
+        sortedVisible.forEach(s => {
+          const renderer = cardRenderers[s.card_id];
+          if (!renderer) return;
+          const content = renderer();
+          if (!content) return;
+
+          if (fullWidthCards.has(s.card_id)) {
+            flushGrid();
+            elements.push(<div key={s.card_id}>{content}</div>);
+          } else {
+            gridBuffer.push(<div key={s.card_id}>{content}</div>);
+          }
+        });
+
+        flushGrid();
+        return elements;
+      })()}
+    </div>
   );
 }
