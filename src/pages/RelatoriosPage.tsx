@@ -41,7 +41,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesByMonth}>
-                <XAxis dataKey="month" /><YAxis /><div className="relative group"> `R$ ${v}`} />
+                <XAxis dataKey="month" /><YAxis /><Tooltip formatter={(v: any) => `R$ ${v.toLocaleString('pt-BR')}`} />
                 <Bar dataKey="value" fill="hsl(18,50%,58%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
