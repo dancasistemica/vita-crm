@@ -2,17 +2,20 @@ import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import { useCustomFields } from "@/hooks/useCustomFields";
 import { 
-  Button, 
-  Input, 
-  Select, 
   Badge, 
-  Textarea, 
+  Button, 
   Checkbox, 
-  Label 
+  Input, 
+  Label, 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue, 
+  Textarea 
 } from "@/components/ui/ds";
 import { X } from "lucide-react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
-import { Badge, Button, Checkbox, Input, Label, Select, Textarea } from "@/components/ui/ds";
 
 interface LeadFormProps {
   lead: LeadView | null;
