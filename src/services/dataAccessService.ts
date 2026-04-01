@@ -373,11 +373,10 @@ export class DataAccessService {
 
 
   async getPipelineStages() {
-    const { data, error } = await supabase
-      .from('pipeline_stages')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('sort_order');
+    let query = supabase.from('pipeline_stages').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('sort_order');
     if (error) { console.error('[DataAccessService] getPipelineStages error:', error); throw error; }
     return data || [];
   }
