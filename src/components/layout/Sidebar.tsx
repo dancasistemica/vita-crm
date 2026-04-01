@@ -254,7 +254,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       {/* Perfil do Usuário */}
       <div className="p-4 sm:p-6 border-t border-neutral-200">
         {!loading && userProfile && (
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold overflow-hidden shrink-0">
               {userProfile.avatar_url ? (
                 <img src={userProfile.avatar_url} alt={userProfile.full_name} className="w-full h-full object-cover" />
@@ -270,6 +270,13 @@ export function Sidebar({ onClose }: SidebarProps) {
                 {userProfile.email}
               </p>
             </div>
+            <button
+              onClick={handleLogout}
+              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors shrink-0"
+              aria-label="Sair"
+            >
+              <LogOut className="w-5 h-5 text-neutral-600" />
+            </button>
           </div>
         )}
         <p className="text-xs text-neutral-500 text-center">
