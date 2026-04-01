@@ -198,29 +198,24 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
-        <table className="w-full border-collapse">
-          <table className="w-full border-collapse">
-            <table className="w-full border-collapse">
+        <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
               <table className="w-full border-collapse">Nome</th>
-              <table className="w-full border-collapse">Email</th>
-              <table className="w-full border-collapse">Plano Atual</th>
-              <table className="w-full border-collapse">Alterar Plano</th>
-              <table className="w-full border-collapse">Usuários</th>
-              <table className="w-full border-collapse">Status</th>
-              <table className="w-full border-collapse">Criada em</th>
-              <table className="w-full border-collapse">Ações</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Email</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Plano Atual</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Alterar Plano</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Usuários</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Status</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criada em</th>
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
             </tr>
           </thead>
           <table className="w-full border-collapse">
             {filteredOrgs.map((org) => (
               <table className="w-full border-collapse">
                 <table className="w-full border-collapse">{org.name}</td>
-                <table className="w-full border-collapse">{org.contact_email || '—'}</td>
-                <table className="w-full border-collapse">
-                  <Badge variant="secondary">{org.plan}</Badge>
-                </td>
-                <table className="w-full border-collapse">
-                  <Select
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{org.contact_email || '—'}</td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant="secondary">{org.plan}</Badge></td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Select
                     value={org.plan_id || 'none'}
                     onValueChange={(v) => handlePlanChange(org.id, v)}
                   >
@@ -233,24 +228,16 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                         <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
                     
-                  </Select>
-                </td>
-                <table className="w-full border-collapse">
-                  <div className="flex items-center gap-1">
+                  </Select></td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
                     {org.organization_members?.length || 0}
-                  </div>
-                </td>
-                <table className="w-full border-collapse">
-                  <Badge variant={org.active ? 'primary' : 'error'}>
+                  </div></td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
-                  </Badge>
-                </td>
-                <table className="w-full border-collapse">
-                  {new Date(org.created_at).toLocaleDateString('pt-BR')}
-                </td>
-                <table className="w-full border-collapse">
-                  <div className="flex items-center gap-1">
+                  </Badge></td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(org.created_at).toLocaleDateString('pt-BR')}</td>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -263,8 +250,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
                     </Button>
-                  </div>
-                </td>
+                  </div></td>
               </tr>
             ))}
           </tbody>

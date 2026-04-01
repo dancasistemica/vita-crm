@@ -342,35 +342,26 @@ export default function UsersTab() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <table className="w-full border-collapse">
-                  <table className="w-full border-collapse">
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
                     <table className="w-full border-collapse">Nome</th>
-                    <table className="w-full border-collapse">Email</th>
-                    <table className="w-full border-collapse">Telefone</th>
-                    <table className="w-full border-collapse">Função</th>
-                    <table className="w-full border-collapse">Criado em</th>
-                    <table className="w-full border-collapse">Ações</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Email</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Telefone</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Função</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criado em</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
                   </tr>
                 </thead>
                 <table className="w-full border-collapse">
                   {paginated.map((u) => (
                     <table className="w-full border-collapse">
                       <table className="w-full border-collapse">{u.full_name}</td>
-                      <table className="w-full border-collapse">{u.email}</td>
-                      <table className="w-full border-collapse">
-                        {u.phone || "—"}
-                      </td>
-                      <table className="w-full border-collapse">
-                        <Badge variant={roleBadgeVariant(u.role)}>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.email}</td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.phone || "—"}</td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant={roleBadgeVariant(u.role)}>
                           {roleLabels[u.role] || u.role}
-                        </Badge>
-                      </td>
-                      <table className="w-full border-collapse">
-                        {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                      </td>
-                      <table className="w-full border-collapse">
-                        <div className="flex items-center justify-end gap-1">
+                        </Badge></td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center justify-end gap-1">
                           <Button variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -397,8 +388,7 @@ export default function UsersTab() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div>
-                      </td>
+                        </div></td>
                     </tr>
                   ))}
                 </tbody>

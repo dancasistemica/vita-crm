@@ -203,15 +203,13 @@ export default function ClientsTable({
   // Desktop table view
   const desktopView = (
     <div className="hidden md:block rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm">
-      <table className="w-full border-collapse">
-        <thead className="bg-neutral-50 border-b border-neutral-200">
+      <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><thead className="bg-neutral-50 border-b border-neutral-200">
           <tr>
             <th className="px-4 py-3 text-left w-10">
               <Checkbox
                 checked={selectedIds.length === clients.length && clients.length > 0}
                 onCheckedChange={toggleSelectAll}
-              />
-            </th>
+              /></th>
             <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('name')}>
               <div className="flex items-center">Nome <SortIcon field="name" current={sortField} dir={sortDir} /></div>
             </th>

@@ -113,7 +113,7 @@ export function GlobalSearch() {
           />
         </div>
       
-      <PopoverContent
+      <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg"
         align="start"
         className="w-[--radix-popover-trigger-width] max-w-[90vw] p-0"
       >

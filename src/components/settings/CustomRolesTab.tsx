@@ -175,13 +175,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <table className="w-full border-collapse">
-                  <table className="w-full border-collapse">
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
                     <table className="w-full border-collapse">Nome</th>
-                    <table className="w-full border-collapse">Descrição</th>
-                    <table className="w-full border-collapse">Criado em</th>
-                    <table className="w-full border-collapse">Ações</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Descrição</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criado em</th>
+                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
                   </tr>
                 </thead>
                 <table className="w-full border-collapse">
@@ -191,14 +189,10 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                         <div className="flex items-center gap-3">
                           {r.name}
                           {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
-                        </div>
-                      </td>
-                      <table className="w-full border-collapse">{r.description || '—'}</td>
-                      <table className="w-full border-collapse">
-                        {new Date(r.created_at).toLocaleDateString('pt-BR')}
-                      </td>
-                      <table className="w-full border-collapse">
-                        <div className="flex items-center justify-end gap-1">
+                        </div></td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{r.description || '—'}</td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
+                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center justify-end gap-1">
                           <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -207,8 +201,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div>
-                      </td>
+                        </div></td>
                     </tr>
                   ))}
                 </tbody>

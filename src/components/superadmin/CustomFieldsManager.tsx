@@ -491,33 +491,25 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <table className="w-full border-collapse">
-              <table className="w-full border-collapse">
-                <table className="w-full border-collapse">
+            <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
                   <table className="w-full border-collapse">Label</th>
-                  <table className="w-full border-collapse">Nome interno</th>
-                  <table className="w-full border-collapse">Tipo</th>
-                  <table className="w-full border-collapse">Orgs</th>
-                  <table className="w-full border-collapse">Ações</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Nome interno</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Tipo</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Orgs</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
                 </tr>
               </thead>
-              <table className="w-full border-collapse">
-                {filteredGlobalFields.map((field) => (
+              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">{filteredGlobalFields.map((field) => (
                   <table className="w-full border-collapse">
                     <table className="w-full border-collapse">{field.field_label}</td>
-                    <table className="w-full border-collapse">{field.field_name}</td>
-                    <table className="w-full border-collapse">
-                      <Badge variant="secondary" className="text-xs">
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{field.field_name}</td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge>
-                    </td>
-                    <table className="w-full border-collapse">
-                      <Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
+                      </Badge></td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
                         {field.org_count}/{totalOrgs}
-                      </Badge>
-                    </td>
-                    <table className="w-full border-collapse">
-                      <div className="flex gap-1">
+                      </Badge></td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -538,8 +530,7 @@ export function CustomFieldsManager() {
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
-                    </td>
+                      </div></td>
                   </tr>
                 ))}
               </tbody>
@@ -560,16 +551,15 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <table className="w-full border-collapse">
-              <table className="w-full border-collapse">
+            <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
                 <table className="w-full border-collapse">
                   <table className="w-full border-collapse">Op</th>
-                  <table className="w-full border-collapse">Label</th>
-                  <table className="w-full border-collapse">Nome interno</th>
-                  <table className="w-full border-collapse">Tipo</th>
-                  <table className="w-full border-collapse">Obrigatório</th>
-                  <table className="w-full border-collapse">Status</th>
-                  <table className="w-full border-collapse">Ações</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Label</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Nome interno</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Tipo</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Obrigatório</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Status</th>
+                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
                 </tr>
               </thead>
               <table className="w-full border-collapse">
@@ -583,33 +573,24 @@ export function CustomFieldsManager() {
                     className={dragIndex === index ? 'opacity-50' : ''}
                   >
                     <table className="w-full border-collapse">
-                      <GripVertical className="h-4 w-4 text-neutral-500" />
-                    </td>
-                    <table className="w-full border-collapse">{field.field_label}</td>
-                    <table className="w-full border-collapse">{field.field_name}</td>
-                    <table className="w-full border-collapse">
-                      <Badge variant="secondary" className="text-xs">
+                      <GripVertical className="h-4 w-4 text-neutral-500" /></td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{field.field_label}</td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{field.field_name}</td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge>
-                    </td>
-                    <table className="w-full border-collapse">
-                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}
-                    </td>
-                    <table className="w-full border-collapse">
-                      <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
+                      </Badge></td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}</td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
                         {field.is_active ? 'Ativo' : 'Inativo'}
-                      </Badge>
-                    </td>
-                    <table className="w-full border-collapse">
-                      <div className="flex gap-1">
+                      </Badge></td>
+                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => setDeleteFieldId(field.id)} className="h-8 w-8 p-0 text-error-600">
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
-                    </td>
+                      </div></td>
                   </tr>
                 ))}
               </tbody>
