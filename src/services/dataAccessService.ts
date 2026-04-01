@@ -23,12 +23,16 @@ export class DataAccessService {
     console.log('[DataAccessService] Inicializado para org:', this.orgId, 'consolidado:', this.isConsolidated);
   }
 
+  // ── HELPER ──────────────────────────────────────────
+  private applyOrgFilter(query: any) {
+    if (this.isConsolidated) return query;
+    return query.eq('organization_id', this.orgId);
+  }
+
   // ── LEADS ──────────────────────────────────────────────
   async getLeads(filters?: { search?: string; interestLevel?: string; pipelineStage?: string }) {
-    let query = supabase
-      .from('leads')
-      .select('*')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('leads').select('*');
+    query = this.applyOrgFilter(query);
 
     if (filters?.search) {
       query = query.or(`name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
