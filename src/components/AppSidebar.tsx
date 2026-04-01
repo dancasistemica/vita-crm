@@ -109,10 +109,14 @@ export function AppSidebar() {
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-neutral-900 truncate">
-                  {profileName || "Carregando..."}
-                </p>
+              <div className="min-w-0 flex-1">
+                {profileName ? (
+                  <p className="text-sm font-semibold text-neutral-900 truncate">
+                    {profileName}
+                  </p>
+                ) : (
+                  <Skeleton className="h-4 w-24" />
+                )}
               </div>
             </div>
             <Separator className="mt-3" />
