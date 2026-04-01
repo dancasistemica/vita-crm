@@ -1,4 +1,4 @@
-import { Badge, Button, Checkbox, Collapsible, Input, Label, Slider } from "@/components/ui/ds";
+import { Badge, Button, Checkbox, Input, Label, Slider } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';

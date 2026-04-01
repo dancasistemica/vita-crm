@@ -1,4 +1,4 @@
-import { Button, Collapsible, Input, Label, Select } from "@/components/ui/ds";
+import { Button, Input, Label, Select } from "@/components/ui/ds";
 import { useState } from "react";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
