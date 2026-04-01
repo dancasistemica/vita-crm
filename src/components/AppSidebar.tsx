@@ -133,7 +133,7 @@ export function AppSidebar() {
                       to={item.url}
                       end={item.url === "/"}
                       className={cn(
-                        "hover:bg-primary-50 transition-colors duration-150 rounded-lg",
+                        "flex items-center w-full px-3 py-2 hover:bg-primary-50 transition-colors duration-150 rounded-lg",
                         location.pathname === item.url ? 'bg-primary-50 text-primary-700 font-semibold' : ''
                       )}
                     >
