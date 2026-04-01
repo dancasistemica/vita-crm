@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, Badge, Button, Dialog, Input, Label, Select, Switch, Table, ToggleGroup } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Select, Switch, Table, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -104,7 +104,6 @@ export function CustomFieldsManager() {
   const fetchFields = async () => {
     if (!selectedOrgId) return;
     setLoading(true);
-    console.log('[CustomFieldsManager] Carregando campos da organização:', selectedOrgId);
     const { data, error } = await supabase
       .from('custom_fields')
       .select('*')
@@ -121,7 +120,6 @@ export function CustomFieldsManager() {
 
   const fetchGlobalFields = async () => {
     setLoading(true);
-    console.log('[CustomFieldsManager] Escopo selecionado: all_organizations');
     const { data, error } = await supabase
       .from('custom_fields')
       .select('field_name, field_label, field_type, field_options, is_required, is_active, display_order, organization_id');
@@ -227,8 +225,6 @@ export function CustomFieldsManager() {
 
     if (scope === 'all') {
       if (editingGlobalField) {
-        // Update across all orgs
-        console.log('[CustomFieldsManager] Editando campo global:', fieldName);
         const { error } = await supabase
           .from('custom_fields')
           .update({
@@ -247,8 +243,6 @@ export function CustomFieldsManager() {
           toast.success('Campo atualizado em todas as organizações');
         }
       } else {
-        // Create in all orgs
-        console.log('[CustomFieldsManager] Criando campo global:', fieldName, 'em', organizations.length, 'orgs');
         const maxOrder = globalFields.length > 0 ? Math.max(...globalFields.map(f => f.display_order)) + 1 : 0;
         const inserts = organizations.map(org => ({
           organization_id: org.id,
@@ -291,7 +285,6 @@ export function CustomFieldsManager() {
           toast.error('Erro ao atualizar campo');
           console.error(error);
         } else {
-          console.log('[CustomFieldsManager] Campo salvo:', fieldName);
           toast.success('Campo atualizado');
         }
       } else {
@@ -303,7 +296,6 @@ export function CustomFieldsManager() {
           toast.error('Erro ao criar campo');
           console.error(error);
         } else {
-          console.log('[CustomFieldsManager] Campo salvo:', fieldName);
           toast.success('Campo criado');
         }
       }
@@ -321,7 +313,6 @@ export function CustomFieldsManager() {
     if (error) {
       toast.error('Erro ao remover campo');
     } else {
-      console.log('[CustomFieldsManager] Campo removido:', deleteFieldId);
       toast.success('Campo removido');
       fetchFields();
     }
@@ -330,7 +321,6 @@ export function CustomFieldsManager() {
 
   const handleDeleteGlobal = async () => {
     if (!deleteGlobalFieldName) return;
-    console.log('[CustomFieldsManager] Excluindo campo global:', deleteGlobalFieldName);
     const { error } = await supabase
       .from('custom_fields')
       .delete()
@@ -416,27 +406,27 @@ export function CustomFieldsManager() {
       {/* Scope toggle */}
       <div className="flex flex-col gap-3">
         <div>
-          <Label className="mb-1.5 block">Escopo</Label>
+          <Label className="mb-1.5 block font-medium">Escopo de Gerenciamento</Label>
           <ToggleGroup
             type="single"
             value={scope}
             onValueChange={(val) => { if (val) setScope(val as 'specific' | 'all'); }}
-            className="justify-start"
+            className="justify-start border rounded-md p-1 w-fit bg-neutral-50"
           >
-            <ToggleGroupItem value="specific" className="text-xs sm:text-sm px-3 min-h-[44px]">
+            <ToggleGroupItem value="specific" className="text-xs sm:text-sm px-4 py-2 rounded-md data-[state=on]:bg-white data-[state=on]:shadow-sm">
               Organização específica
             </ToggleGroupItem>
-            <ToggleGroupItem value="all" className="text-xs sm:text-sm px-3 min-h-[44px] gap-1.5">
+            <ToggleGroupItem value="all" className="text-xs sm:text-sm px-4 py-2 rounded-md gap-1.5 data-[state=on]:bg-white data-[state=on]:shadow-sm">
               <Globe className="h-3.5 w-3.5" /> Todas as organizações
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
 
         {isGlobalMode && (
-          <div className="flex items-start gap-3 rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 p-3">
-            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
-            <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300">
-              Alterações afetarão <strong>TODAS as {totalOrgs} organizações</strong>
+          <div className="flex items-start gap-3 rounded-md border border-amber-300 bg-amber-50 p-4">
+            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+            <p className="text-sm text-amber-800">
+              <strong>Modo Global:</strong> Alterações afetarão <strong>TODAS as {totalOrgs} organizações</strong>. Tenha cuidado ao excluir ou alterar nomes de campos.
             </p>
           </div>
         )}
@@ -445,16 +435,12 @@ export function CustomFieldsManager() {
         {!isGlobalMode && (
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 bg-white rounded-lg p-4 border border-neutral-200">
-              <Label>Organização</Label>
+              <Label className="mb-2 block">Selecione a Organização</Label>
               <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                
-                  
-                
-                
-                  {organizations.map(org => (
-                    <option key={org.id} value={org.id}>{org.name}</option>
-                  ))}
-                
+                <option value="">Selecione...</option>
+                {organizations.map(org => (
+                  <option key={org.id} value={org.id}>{org.name}</option>
+                ))}
               </Select>
             </div>
           </div>
@@ -462,206 +448,212 @@ export function CustomFieldsManager() {
 
         {/* Search + Add button */}
         {(isGlobalMode || selectedOrgId) && (
-          <div className="flex items-end gap-3">
-            <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
+          <div className="flex items-center justify-between gap-3 mt-2">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
               <Input
                 placeholder="Buscar campos..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="pl-9"
+                className="pl-10"
               />
             </div>
-            <Button onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
+            <Button onClick={openCreateModal} size="sm" className="gap-2">
               <Plus className="h-4 w-4" /> Adicionar Campo
             </Button>
           </div>
         )}
       </div>
 
-      {/* GLOBAL mode table */}
-      {isGlobalMode && (
-        loading ? (
-          <div className="flex justify-center py-8">
-            <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          </div>
-        ) : filteredGlobalFields.length === 0 ? (
-          <div className="text-center py-8 text-neutral-500 text-sm">
-            {globalFields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
-          </div>
-        ) : (
-          <div className="rounded-md border overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b border-neutral-100">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Label</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
-                  {/* ... resto da tabela ... */}
-                </tr>
-              </thead>
-            </table>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Orgs</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-                </tr>
-              </thead>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">{filteredGlobalFields.map((field) => (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">{field.field_label}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_name}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary" className="text-xs">
-                        {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
-                        {field.org_count}/{totalOrgs}
-                      </Badge></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0">
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleApplyToAll(field)}
-                          className="h-8 w-8 p-0 text-primary-600"
-                          title="Aplicar a todas as organizações"
-                        >
-                          <Globe className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => { setDeleteGlobalFieldName(field.field_name); setDeleteGlobalFieldLabel(field.field_label); }}
-                          className="h-8 w-8 p-0 text-error-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )
-      )}
-
-      {/* SPECIFIC org mode table */}
-      {!isGlobalMode && selectedOrgId && (
-        loading ? (
-          <div className="flex justify-center py-8">
-            <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          </div>
-        ) : filteredFields.length === 0 ? (
-          <div className="text-center py-8 text-neutral-500 text-sm">
-            {fields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
-          </div>
-        ) : (
-          <div className="rounded-md border overflow-x-auto">
-            <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">Op</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Label</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Obrigatório</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-                </tr>
-              </thead>
+      {/* Tables Content */}
+      <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden shadow-sm">
+        {isGlobalMode ? (
+          loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : filteredGlobalFields.length === 0 ? (
+            <div className="text-center py-12 text-neutral-500 text-sm">
+              {globalFields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
               <table className="w-full border-collapse">
-                {filteredFields.map((field, index) => (
-                  <tr className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
-                    key={field.id}
-                    draggable
-                    onDragStart={() => handleDragStart(index)}
-                    onDragOver={e => handleDragOver(e, index)}
-                    onDragEnd={handleDragEnd}
-                    className={dragIndex === index ? 'opacity-50' : ''}
-                  >
-                    <table className="w-full border-collapse">
-                      <GripVertical className="h-4 w-4 text-neutral-500" /></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_label}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_name}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary" className="text-xs">
-                        {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
-                        {field.is_active ? 'Ativo' : 'Inativo'}
-                      </Badge></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0">
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => setDeleteFieldId(field.id)} className="h-8 w-8 p-0 text-error-600">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div></td>
+                <thead>
+                  <tr className="bg-neutral-50 border-b border-neutral-200">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Label</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Nome interno</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tipo</th>
+                    <th className="px-6 py-4 text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider">Organizações</th>
+                    <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )
-      )}
+                </thead>
+                <tbody className="divide-y divide-neutral-100">
+                  {filteredGlobalFields.map((field) => (
+                    <tr key={field.field_name} className="hover:bg-neutral-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-neutral-900">{field.field_label}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-500">{field.field_name}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-500">
+                        <Badge variant="secondary" className="capitalize">
+                          {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-center text-sm text-neutral-500">
+                        <Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="rounded-full">
+                          {field.org_count}/{totalOrgs}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0" title="Editar">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => handleApplyToAll(field)} className="h-8 w-8 p-0 text-primary" title="Aplicar a todas">
+                            <Globe className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => { setDeleteGlobalFieldName(field.field_name); setDeleteGlobalFieldLabel(field.field_label); }} className="h-8 w-8 p-0 text-destructive" title="Excluir">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        ) : (
+          selectedOrgId && (
+            loading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : filteredFields.length === 0 ? (
+              <div className="text-center py-12 text-neutral-500 text-sm">
+                {fields.length === 0 ? 'Nenhum campo customizado criado para esta organização.' : 'Nenhum campo encontrado.'}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-4 py-4 w-10"></th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Label</th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Nome interno</th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tipo</th>
+                      <th className="px-6 py-4 text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider">Obrigatório</th>
+                      <th className="px-6 py-4 text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {filteredFields.map((field, index) => (
+                      <tr 
+                        key={field.id}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={e => handleDragOver(e, index)}
+                        onDragEnd={handleDragEnd}
+                        className={cn("hover:bg-neutral-50 transition-colors", dragIndex === index && "opacity-50")}
+                      >
+                        <td className="px-4 py-4 cursor-grab active:cursor-grabbing">
+                          <GripVertical className="h-4 w-4 text-neutral-300" />
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium text-neutral-900">{field.field_label}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-500">{field.field_name}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-500">
+                          <Badge variant="secondary" className="capitalize">
+                            {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {field.is_required ? <Badge variant="primary" className="text-[10px]">Sim</Badge> : <span className="text-xs text-neutral-400">Não</span>}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-[10px]">
+                            {field.is_active ? 'Ativo' : 'Inativo'}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0" title="Editar">
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => setDeleteFieldId(field.id)} className="h-8 w-8 p-0 text-destructive" title="Excluir">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          )
+        )}
+      </div>
 
       {/* Field Editor Modal */}
-      <Dialog isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo'}>
-        <div className="space-y-4 py-4">
-          <div>
-            <Label htmlFor="label">Rótulo do Campo (Label)</Label>
-            <Input id="label" value={fieldLabel} onChange={e => handleLabelChange(e.target.value)} placeholder="Ex: Tamanho da Camiseta" />
-          </div>
-          <div>
-            <Label htmlFor="name">Nome do Campo (Internal Name)</Label>
-            <Input id="name" value={fieldName} onChange={e => setFieldName(e.target.value)} disabled={!!editingField || !!editingGlobalField} placeholder="Ex: tamanho_camiseta" />
-            <p className="text-[10px] text-neutral-500 mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
-          </div>
-          <div>
-            <Label htmlFor="type">Tipo de Campo</Label>
-            <Select value={fieldType} onValueChange={setFieldType}>
-              
-                
-              
-              
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            <div className="space-y-1">
+              <Label htmlFor="label">Rótulo do Campo (Label)</Label>
+              <Input id="label" value={fieldLabel} onChange={e => handleLabelChange(e.target.value)} placeholder="Ex: Tamanho da Camiseta" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="name">Nome do Campo (Internal Name)</Label>
+              <Input id="name" value={fieldName} onChange={e => setFieldName(e.target.value)} disabled={!!editingField || !!editingGlobalField} placeholder="Ex: tamanho_camiseta" />
+              <p className="text-[10px] text-neutral-400 uppercase font-medium">Usado internamente. Não pode ser alterado após a criação.</p>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="type">Tipo de Campo</Label>
+              <Select value={fieldType} onValueChange={setFieldType}>
                 {FIELD_TYPES.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
-              
-            </Select>
-          </div>
+              </Select>
+            </div>
 
-          {fieldType === 'select' && (
-            <div className="space-y-3 p-3 border rounded-md bg-neutral-50">
-              <Label>Opções da Seleção</Label>
-              <div className="flex gap-2">
-                <Input value={optionInput} onChange={e => setOptionInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addOption()} placeholder="Nova opção..." />
-                <Button variant="secondary" onClick={addOption} size="sm">Adicionar</Button>
+            {fieldType === 'select' && (
+              <div className="space-y-3 p-4 border rounded-lg bg-neutral-50">
+                <Label className="text-sm font-semibold">Opções da Seleção</Label>
+                <div className="flex gap-2">
+                  <Input value={optionInput} onChange={e => setOptionInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addOption()} placeholder="Nova opção..." />
+                  <Button variant="secondary" onClick={addOption} size="sm">Adicionar</Button>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {fieldOptions.map(opt => (
+                    <Badge key={opt} variant="secondary" className="gap-2 py-1 px-3">
+                      {opt}
+                      <X className="h-3 w-3 cursor-pointer hover:text-destructive" onClick={() => removeOption(opt)} />
+                    </Badge>
+                  ))}
+                  {fieldOptions.length === 0 && <p className="text-xs text-neutral-400">Nenhuma opção adicionada.</p>}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {fieldOptions.map(opt => (
-                  <Badge key={opt} variant="secondary" className="gap-1.5 py-1 px-2 text-sm">
-                    {opt}
-                    <X className="h-3 w-3 cursor-pointer hover:text-error-600" onClick={() => removeOption(opt)} />
-                  </Badge>
-                ))}
-                {fieldOptions.length === 0 && <p className="text-xs text-neutral-500">Nenhuma opção adicionada.</p>}
-              </div>
-            </div>
-          )}
+            )}
 
-          <div className="flex flex-col gap-3 pt-2">
-            <div className="flex items-center gap-2">
-              <Switch checked={isRequired} onCheckedChange={setIsRequired} id="required" />
-              <Label htmlFor="required" className="cursor-pointer">Campo obrigatório</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch checked={isActive} onCheckedChange={setIsActive} id="active" />
-              <Label htmlFor="active" className="cursor-pointer">Campo ativo</Label>
+            <div className="flex flex-col gap-4 pt-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="required" className="cursor-pointer">Campo obrigatório</Label>
+                <Switch checked={isRequired} onCheckedChange={setIsRequired} id="required" />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="active" className="cursor-pointer">Campo ativo</Label>
+                <Switch checked={isActive} onCheckedChange={setIsActive} id="active" />
+              </div>
             </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar Campo'}</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar Campo'}</Button>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
 
       {/* Delete confirmation */}
@@ -670,12 +662,12 @@ export function CustomFieldsManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir campo customizado?</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este campo? Todos os dados salvos neste campo em todos os leads desta organização serão removidos.
+              Tem certeza que deseja excluir este campo? Todos os dados vinculados a este campo em leads desta organização serão perdidos permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button variant="error" onClick={handleDelete}>Excluir</Button>
+            <Button variant="destructive" onClick={handleDelete}>Excluir</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -684,18 +676,17 @@ export function CustomFieldsManager() {
       <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => !open && setDeleteGlobalFieldName(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-error-600 flex items-center gap-2">
+            <AlertDialogTitle className="text-destructive flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" /> EXCLUIR CAMPO GLOBAL
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              Você está prestes a excluir o campo <strong>"{deleteGlobalFieldLabel}"</strong> de <strong>TODAS as organizações</strong> ({totalOrgs}).
-              <br /><br />
-              <span className="text-error-600 font-bold uppercase">ESTA AÇÃO É IRREVERSÍVEL E APAGARÁ DADOS DE TODOS OS LEADS DO SISTEMA.</span>
+            <AlertDialogDescription className="space-y-3">
+              <p>Você está prestes a excluir o campo <strong>"{deleteGlobalFieldLabel}"</strong> de <strong>TODAS as organizações</strong> ({totalOrgs}).</p>
+              <p className="bg-destructive/10 text-destructive p-3 rounded-md font-bold uppercase text-xs">ESTA AÇÃO É IRREVERSÍVEL E APAGARÁ DADOS DE TODOS OS LEADS DO SISTEMA.</p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button variant="error" onClick={handleDeleteGlobal}>CONFIRMAR EXCLUSÃO GLOBAL</Button>
+            <Button variant="destructive" onClick={handleDeleteGlobal}>CONFIRMAR EXCLUSÃO GLOBAL</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
