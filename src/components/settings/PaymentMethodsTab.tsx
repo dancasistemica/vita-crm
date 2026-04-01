@@ -28,7 +28,7 @@ export default function PaymentMethodsTab() {
       const { data, error } = await supabase
         .from('payment_methods')
         .select('*')
-        .order('order_index');
+        .order('sort_order');
 
       if (error) throw error;
       setPaymentMethods(data || []);
