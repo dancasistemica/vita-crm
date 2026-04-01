@@ -6,6 +6,7 @@ import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, P
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
+import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
 import BulkEditModal from "@/components/bulk/BulkEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
@@ -361,11 +362,205 @@ export default function LeadsPage() {
         />
 
         {/* ... existing filter code ... */}
-// ... keep existing code
+        <div className="flex flex-wrap items-center gap-2 pt-1" ref={filterRef}>
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openOrigin;
+                setOpenOrigin(next);
+                if (next) { setOpenInterest(false); setOpenStage(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedOrigins.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Origem {selectedOrigins.length > 0 && `(${selectedOrigins.length})`}
+            </Button>
+            {openOrigin && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Origem"
+                  options={origins.map(o => ({ value: o, label: o }))}
+                  selected={selectedOrigins}
+                  onChange={setSelectedOrigins}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openInterest;
+                setOpenInterest(next);
+                if (next) { setOpenOrigin(false); setOpenStage(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedInterests.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Interesse {selectedInterests.length > 0 && `(${selectedInterests.length})`}
+            </Button>
+            {openInterest && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Interesse"
+                  options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+                  selected={selectedInterests}
+                  onChange={setSelectedInterests}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openStage;
+                setOpenStage(next);
+                if (next) { setOpenOrigin(false); setOpenInterest(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedStages.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Etapa {selectedStages.length > 0 && `(${selectedStages.length})`}
+            </Button>
+            {openStage && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Etapa"
+                  options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+                  selected={selectedStages}
+                  onChange={setSelectedStages}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openTags;
+                setOpenTags(next);
+                if (next) { setOpenOrigin(false); setOpenInterest(false); setOpenStage(false); }
+              }}
+              className={`h-8 border-dashed ${selectedTags.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
+            </Button>
+            {openTags && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Tags"
+                  options={tags.map(t => ({ value: t.name, label: t.name }))}
+                  selected={selectedTags}
+                  onChange={setSelectedTags}
+                />
+              </div>
+            )}
+          </div>
+
+          {activeFiltersCount > 0 && (
+            <Button variant="secondary" size="sm" onClick={resetFilters} className="h-8 text-neutral-500 hover:text-neutral-900">
+              Limpar Filtros
+            </Button>
+          )}
+        </div>
+
       </div>
 
       {/* ... existing table code ... */}
-// ... keep existing code
+      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-neutral-100 bg-neutral-50/50">
+                <th className="px-6 py-4">
+                  <Checkbox checked={selectedIds.length === paginated.length && paginated.length > 0} onCheckedChange={toggleSelectAll} />
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-100">
+              {paginated.map((lead) => (
+                <tr key={lead.id} className="group hover:bg-neutral-50/50 transition-colors">
+                  <td className="px-6 py-4">
+                    <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <button onClick={() => setDetailLead(lead)} className="text-sm font-bold text-neutral-900 hover:text-primary-600 transition-colors text-left">
+                        {lead.name}
+                      </button>
+                      <span className="text-[10px] text-neutral-400 font-medium">Cadastrado em {new Date(lead.entryDate).toLocaleDateString()}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Badge variant="secondary" className="font-medium">{getStageName(lead.pipelineStage)}</Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
+                        <span className={interestColors[lead.interestLevel]?.split(' ')[1]}>{getInterestLabel(lead.interestLevel)}</span>
+                        <span className="text-neutral-400">
+                          {lead.interestLevel === 'frio' ? '30%' : lead.interestLevel === 'morno' ? '60%' : '90%'}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-24 bg-neutral-100 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 ${interestBarColors[lead.interestLevel] || 'bg-neutral-300'}`} 
+                          style={{ width: lead.interestLevel === 'frio' ? '30%' : lead.interestLevel === 'morno' ? '60%' : '90%' }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {lead.phone && (
+                        <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-neutral-100 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
+                          <Phone className="w-4 h-4" />
+                        </a>
+                      )}
+                      {lead.instagram && (
+                        <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-neutral-100 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition-colors">
+                          <Instagram className="w-4 h-4" />
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                      {lead.tags?.slice(0, 2).map((tag, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-[10px] py-0 h-5 border-neutral-200">{tag}</Badge>
+                      ))}
+                      {lead.tags?.length > 2 && <span className="text-[10px] text-neutral-400 font-medium">+{lead.tags.length - 2}</span>}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button variant="secondary" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
+                        <Edit className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="secondary" size="sm" className="h-8 w-8 p-0 text-error-600 hover:bg-error-50" onClick={() => handleDeleteClick(lead)}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
 
       {filtered.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
