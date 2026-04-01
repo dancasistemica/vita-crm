@@ -85,26 +85,8 @@ export default function ClientesPage() {
         </Alert>
       )}
 
-      <Card variant="primary" padding="md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <Input
-              placeholder="Buscar por nome, email ou telefone..."
-              icon={<Search className="w-4 h-4" />}
-              value={hook.filters.search || ''}
-              onChange={(e) => hook.updateFilter('search', e.target.value)}
-            />
-          </div>
-          <Button 
-            variant={showFilters ? 'primary' : 'secondary'} 
-            size="md" 
-            icon={<Filter className="w-4 h-4" />}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            {showFilters ? 'Ocultar Filtros' : 'Filtros Avançados'}
-          </Button>
-        </div>
-      </Card>
+      {/* ... existing card and filter code ... */}
+// ... keep existing code
 
       <RecordCounter
         totalCount={hook.totalCount}
@@ -113,31 +95,8 @@ export default function ClientesPage() {
         onPerPageChange={hook.setPerPage}
       />
 
-      <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-neutral-100 rounded-lg">
-        <span className="text-sm font-medium text-neutral-700">Ordenar por:</span>
-        <div className="flex-1 flex gap-3">
-          <div className="flex-1">
-            <select
-              value={hook.sortField}
-              onChange={(e) => hook.toggleSort(e.target.value as SortField)}
-              className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="name">🔤 Nome</option>
-              <option value="value">💰 Valor</option>
-              <option value="date">📅 Data Compra</option>
-              <option value="status">🏷️ Status</option>
-              <option value="lastInteraction">💬 Interação</option>
-            </select>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => hook.toggleSort(hook.sortField)}
-          >
-            {hook.sortDir === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-          </Button>
-        </div>
-      </div>
+      {/* ... existing sorting code ... */}
+// ... keep existing code
 
       <div className="space-y-4">
         <ClientsTable
