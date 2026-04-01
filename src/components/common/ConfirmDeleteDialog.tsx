@@ -13,11 +13,14 @@ import { Loader2 } from "lucide-react";
 
 interface ConfirmDeleteDialogProps {
   isOpen: boolean;
-  itemName: string;
-  itemType: string;
+  itemName?: string;
+  itemType?: string;
   onConfirm: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
+  onClose?: () => void;
   isLoading?: boolean;
+  title?: string;
+  description?: string;
 }
 
 export default function ConfirmDeleteDialog({
@@ -26,27 +29,41 @@ export default function ConfirmDeleteDialog({
   itemType,
   onConfirm,
   onCancel,
+  onClose,
   isLoading = false,
+  title,
+  description,
 }: ConfirmDeleteDialogProps) {
+  const handleCancel = () => {
+    if (onCancel) onCancel();
+    if (onClose) onClose();
+  };
+
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
+    <AlertDialog open={isOpen} onOpenChange={(open) => !open && handleCancel()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir {itemType}?</AlertDialogTitle>
+          <AlertDialogTitle>{title || `Excluir ${itemType}?`}</AlertDialogTitle>
           <AlertDialogDescription>
-            Tem certeza que deseja excluir <strong>"{itemName}"</strong>?
-            <br />
-            ⚠️ Esta ação <strong>não pode ser desfeita</strong>.
+            {description ? (
+              description
+            ) : (
+              <>
+                Tem certeza que deseja excluir <strong>"{itemName}"</strong>?
+                <br />
+                ⚠️ Esta ação <strong>não pode ser desfeita</strong>.
+              </>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading} onClick={onCancel}>
+          <AlertDialogCancel disabled={isLoading} onClick={handleCancel}>
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={isLoading}
             onClick={onConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="bg-error hover:bg-error/90 text-white"
           >
             {isLoading ? (
               <>
