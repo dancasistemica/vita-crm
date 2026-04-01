@@ -261,7 +261,7 @@ export const TagsManagement = () => {
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                </Button>
+                </>
               )}
             </div>
           ))

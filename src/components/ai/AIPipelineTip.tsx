@@ -57,7 +57,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
                 </Button>
               </div>
               <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA</p>
-            </Button>
+            </>
           ) : null}
         </div>
       </PopoverContent>

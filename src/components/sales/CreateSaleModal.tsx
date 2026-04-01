@@ -309,7 +309,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                       value={formData.first_payment_date}
                       onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
                     />
-                  </Button>
+                  </>
                 ) : (
                   <>
                     <Input
