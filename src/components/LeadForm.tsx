@@ -53,7 +53,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input label="Nome *" value={form.name || ''} onChange={e => set('name', e.target.value)} />
         <Input label="Telefone / WhatsApp" value={form.phone || ''} onChange={e => set('phone', e.target.value)} placeholder="5511999999999" />
         <Input label="Email" type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} />
