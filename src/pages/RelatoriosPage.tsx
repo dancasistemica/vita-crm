@@ -29,8 +29,8 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={leadsByMonth}>
-                <XAxis dataKey="month" /><YAxis allowDecimals={false} /><div className="relative group">
-                <Line type="monotone" dataKey="value" stroke="hsl(350,35%,55%)" strokeWidth={2} />
+                <XAxis dataKey="month" /><YAxis allowDecimals={false} /><Tooltip />
+<Line type="monotone" dataKey="value" stroke="hsl(350,35%,55%)" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -56,8 +56,8 @@ export default function RelatoriosPage() {
                 <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                   {leadsByOrigin.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <div className="relative group">
-              </PieChart>
+                <Tooltip />
+</PieChart>
             </ResponsiveContainer>
           </div>
         </Card>
@@ -79,8 +79,8 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={conversionByStage}>
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><div className="relative group">
-                <Bar dataKey="value" fill="hsl(350,35%,55%)" radius={[6, 6, 0, 0]} />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><Tooltip />
+<Bar dataKey="value" fill="hsl(350,35%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

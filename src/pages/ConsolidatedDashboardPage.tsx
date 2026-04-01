@@ -120,8 +120,8 @@ export default function ConsolidatedDashboardPage() {
               <BarChart data={leadsByStage}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
                 <YAxis allowDecimals={false} />
-                <div className="relative group">
-                <Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
+                <Tooltip />
+<Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -135,8 +135,8 @@ export default function ConsolidatedDashboardPage() {
                 <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                   {(consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <div className="relative group">
-              </PieChart>
+                <Tooltip />
+</PieChart>
             </ResponsiveContainer>
           </div>
         </Card>

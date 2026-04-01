@@ -108,8 +108,8 @@ export default function DashboardPage() {
             <BarChart data={leadsByStage}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
               <YAxis allowDecimals={false} />
-              <div className="relative group">
-              <Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
+              <Tooltip />
+<Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -124,8 +124,8 @@ export default function DashboardPage() {
               <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                 {leadsByOrigin.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <div className="relative group">
-            </PieChart>
+              <Tooltip />
+</PieChart>
           </ResponsiveContainer>
         </div>
       </Card>
