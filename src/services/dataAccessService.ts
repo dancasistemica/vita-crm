@@ -431,10 +431,10 @@ export class DataAccessService {
   }
 
   async getInterestLevels() {
-    const { data, error } = await supabase
-      .from('interest_levels')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('interest_levels').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getInterestLevels error:', error); throw error; }
