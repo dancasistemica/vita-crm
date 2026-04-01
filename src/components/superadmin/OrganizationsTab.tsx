@@ -257,7 +257,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
-                    <Button variant={org.active ? 'destructive' : 'default'}
+                    <Button variant={org.active ? 'error' : 'primary'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >
