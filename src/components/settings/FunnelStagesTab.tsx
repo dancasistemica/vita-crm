@@ -16,11 +16,11 @@ export default function FunnelStagesTab() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Etapas do Funil</CardTitle>
-        <CardDescription>Configure as etapas do seu processo de vendas</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">Etapas do Funil</h2>
+        <p className="text-sm text-neutral-500 mb-4">Configure as etapas do seu processo de vendas</p>
+      </div>
+      <div>
         {sorted.map((s, i) => (
           <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 border border-neutral-100">
             <GripVertical className="h-4 w-4 text-neutral-400" />
@@ -61,7 +61,7 @@ export default function FunnelStagesTab() {
             <Plus className="h-4 w-4 mr-1" />Adicionar
           </Button>
         </div>
-      </CardContent>
+      </div>
 
       <ConfirmDeleteDialog
         isOpen={deleteConfirm.isOpen}

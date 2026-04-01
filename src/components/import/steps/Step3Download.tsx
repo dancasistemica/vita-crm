@@ -25,7 +25,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="border-primary/30 bg-primary/5 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadXLSX}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
+          <div>
             <FileSpreadsheet className="h-8 w-8 text-primary mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">XLSX</p>
@@ -35,11 +35,11 @@ export default function Step3Download({ onNext, onBack }: Props) {
             <Button size="sm" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar XLSX
             </Button>
-          </CardContent>
+          </div>
         </Card>
 
         <Card className="border-border/50 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadCSV}>
-          <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
+          <div>
             <FileText className="h-8 w-8 text-neutral-500 mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">CSV</p>
@@ -48,7 +48,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
             <Button size="sm" variant="secondary" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar CSV
             </Button>
-          </CardContent>
+          </div>
         </Card>
       </div>
 

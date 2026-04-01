@@ -112,14 +112,14 @@ export default function ProdutosPage() {
               onDragEnd={handleDragEnd}
               className={dragIndex === index ? "opacity-60" : undefined}
             >
-              <CardHeader className="pb-2">
+              <div className="mb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex gap-3">
                     <div className="pt-1 text-neutral-400 cursor-grab">
                       <GripVertical className="h-4 w-4" />
                     </div>
                     <div>
-                    <CardTitle className="text-lg">{product.name}</CardTitle>
+                    <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>
                     <div className="flex flex-wrap items-center gap-3 mt-1">
                       {product.type && <Badge variant="secondary">{product.type}</Badge>}
                       {product.createdAt && (
@@ -139,8 +139,8 @@ export default function ProdutosPage() {
                     </Button>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
+              </div>
+              <div>
                 {product.description && (
                   <div>
                     <div className="text-xs uppercase text-neutral-500 font-semibold mb-1">Descrição</div>
@@ -178,7 +178,7 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                 )}
-              </CardContent>
+              </div>
             </Card>
           ))}
         </div>

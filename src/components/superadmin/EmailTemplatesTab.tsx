@@ -15,16 +15,16 @@ export function EmailTemplatesTab() {
 
   return (
     <Card>
-      <CardHeader>
+      <div className="mb-4">
         <div className="flex items-center gap-3">
           <Mail className="h-5 w-5 text-primary" />
-          <CardTitle className="text-lg">Email Templates</CardTitle>
+          <h2 className="text-2xl font-semibold mb-2">Email Templates</h2>
         </div>
         <p className="text-sm text-neutral-500">
           Customize os templates de email enviados pelo sistema.
         </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      </div>
+      <div>
         <div className="max-w-xs">
           <Select value={selectedType} onValueChange={(v) => setSelectedType(v as TemplateType)}>
             <SelectTrigger className="min-h-[44px]">
@@ -39,7 +39,7 @@ export function EmailTemplatesTab() {
         </div>
 
         <EmailTemplateEditor key={selectedType} templateType={selectedType} />
-      </CardContent>
+      </div>
     </Card>
   );
 }

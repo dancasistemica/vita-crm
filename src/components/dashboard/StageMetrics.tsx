@@ -19,7 +19,7 @@ export default function StageMetrics({ metrics }: StageMetricsProps) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {metrics.map((metric, i) => (
         <Card key={i} className={`shadow-card border-l-4 ${BORDER_COLORS[i % BORDER_COLORS.length]} border-border/60`}>
-          <CardContent className="pt-4 pb-3">
+          <div>
             <h3 className="text-lg font-semibold text-neutral-700">{metric.name}</h3>
             <div className="space-y-1.5">
               <div>
@@ -35,7 +35,7 @@ export default function StageMetrics({ metrics }: StageMetricsProps) {
                 </span>
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
       ))}
     </div>

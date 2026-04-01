@@ -76,7 +76,7 @@ export const BotconversaSettings = ({
 
         <Alert variant="error">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
+          <p className="text-sm">
             <p className="font-semibold mb-2">Erro ao carregar configurações:</p>
             <p className="text-sm font-mono bg-destructive/10 p-2 rounded mb-2">
               {error}
@@ -84,7 +84,7 @@ export const BotconversaSettings = ({
             <p className="text-xs text-neutral-500 mb-3">
               Abra o console (F12) e procure por logs [BotconversaConfig] para mais detalhes.
             </p>
-          </AlertDescription>
+          </p>
         </Alert>
 
         <Button onClick={() => window.location.reload()}>

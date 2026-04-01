@@ -298,16 +298,16 @@ export default function UsersTab() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-lg flex items-center gap-3">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">
           <Users className="h-5 w-5" />
           Usuários da Organização
-        </CardTitle>
+        </h2>
         <Button size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
         </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </div>
+      <div>
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -568,7 +568,7 @@ export default function UsersTab() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </CardContent>
+      </div>
     </Card>
   );
 }

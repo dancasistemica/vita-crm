@@ -35,14 +35,14 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
 
   return (
     <Card className="border-purple-200 dark:border-purple-800/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center gap-3">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">
           <Sparkles className="h-4 w-4 text-purple-500" />
           <span>Insight IA</span>
           <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h2>
+      </div>
+      <div>
         {loading ? (
           <div className="space-y-3">
             <Skeleton className="h-4 w-full" />
@@ -65,7 +65,7 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
         ) : (
           <p className="text-sm text-neutral-500">Nenhum insight disponível.</p>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

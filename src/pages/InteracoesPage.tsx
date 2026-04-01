@@ -54,7 +54,7 @@ export default function InteracoesPage() {
         {sorted.length === 0 && <p className="text-neutral-500 text-center py-8">Nenhuma interação registrada.</p>}
         {sorted.map(interaction => (
           <Card key={interaction.id}>
-            <CardContent className="py-3 px-4 flex items-start gap-3">
+            <div>
               <MessageCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <div className="flex items-center gap-3 flex-wrap">
@@ -64,7 +64,7 @@ export default function InteracoesPage() {
                 </div>
                 <p className="text-sm text-neutral-500 mt-1">{interaction.note}</p>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>

@@ -63,17 +63,17 @@ export default function TaskStatusManager({
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <div className="mb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-3">
+          <h2 className="text-2xl font-semibold mb-2">
             <Settings className="h-4 w-4" /> Gerenciar Status
-          </CardTitle>
+          </h2>
           <Button size="sm" variant="secondary" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </Button>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </div>
+      <div>
         {showForm && (
           <div className="flex items-end gap-3 p-3 rounded-lg border bg-muted/30">
             <div className="flex-1">
@@ -108,7 +108,7 @@ export default function TaskStatusManager({
             </div>
           </div>
         ))}
-      </CardContent>
+      </div>
     </Card>
   );
 }

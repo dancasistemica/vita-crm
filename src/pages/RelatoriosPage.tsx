@@ -25,32 +25,32 @@ export default function RelatoriosPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader><CardTitle className="text-base font-display">Leads por Mês</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Mês</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={leadsByMonth}>
                 <XAxis dataKey="month" /><YAxis allowDecimals={false} /><Tooltip />
                 <Line type="monotone" dataKey="value" stroke="hsl(350,35%,55%)" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base font-display">Vendas por Mês (R$)</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Vendas por Mês (R$)</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesByMonth}>
                 <XAxis dataKey="month" /><YAxis /><Tooltip formatter={(v: number) => `R$ ${v}`} />
                 <Bar dataKey="value" fill="hsl(18,50%,58%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base font-display">Leads por Origem</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Origem</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
@@ -59,31 +59,31 @@ export default function RelatoriosPage() {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base font-display">Receita por Produto</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByProduct} layout="vertical">
                 <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><Tooltip formatter={(v: number) => `R$ ${v}`} />
                 <Bar dataKey="value" fill="hsl(152,55%,45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle className="text-base font-display">Funil de Conversão</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Funil de Conversão</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={conversionByStage}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><Tooltip />
                 <Bar dataKey="value" fill="hsl(350,35%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

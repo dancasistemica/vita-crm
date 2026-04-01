@@ -60,9 +60,9 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
             <Card key={i} className="shadow-card border-border/60">
-              <CardContent className="pt-5 pb-4">
+              <div>
                 <Skeleton className="h-16 w-full" />
-              </CardContent>
+              </div>
             </Card>
           ))}
         </div>
@@ -76,7 +76,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
           <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
-            <CardContent className="pt-5 pb-4">
+            <div>
               <div className="flex items-center gap-3.5">
                 <div className={`p-2.5 rounded-xl ${m.color}`}>
                   <m.icon className="h-5 w-5" />
@@ -87,7 +87,7 @@ export default function DashboardPage() {
                   {'subtitle' in m && m.subtitle && <p className="text-xs text-neutral-500">{m.subtitle}</p>}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
@@ -102,8 +102,8 @@ export default function DashboardPage() {
     ) : null,
     leads_por_estagio: () => (
       <Card className="shadow-card border-border/60">
-        <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Etapa do Funil</CardTitle></CardHeader>
-        <CardContent className="h-64">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Etapa do Funil</h2></div>
+        <div>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={leadsByStage}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
@@ -112,13 +112,13 @@ export default function DashboardPage() {
               <Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
     ),
     leads_por_origem: () => (
       <Card className="shadow-card border-border/60">
-        <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Origem</CardTitle></CardHeader>
-        <CardContent className="h-64">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Origem</h2></div>
+        <div>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
@@ -127,13 +127,13 @@ export default function DashboardPage() {
               <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
             </PieChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
     ),
     receita_por_produto: () => revenueByProduct.length > 0 ? (
       <Card className="shadow-card border-border/60">
-        <CardHeader className="pb-2"><CardTitle className="text-base font-display">Receita por Produto</CardTitle></CardHeader>
-        <CardContent className="h-64">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
+        <div>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={revenueByProduct}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
@@ -142,13 +142,13 @@ export default function DashboardPage() {
               <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
     ) : null,
     top_produtos: () => topProducts.length > 0 ? (
       <Card className="shadow-card border-border/60">
-        <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top 5 Produtos</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🏆 Top 5 Produtos</h2></div>
+        <div>
           <div className="space-y-3">
             {topProducts.map((product, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
@@ -163,13 +163,13 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </CardContent>
+        </div>
       </Card>
     ) : null,
     vendas_recentes: () => salesByDay.length > 0 ? (
       <Card className="shadow-card border-border/60">
-        <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📈 Vendas Recentes ({dateRange.label})</h2></div>
+        <div>
           <div className="space-y-3">
             {salesByDay.slice(-7).map((day) => (
               <div key={day.day} className="flex items-center gap-3">
@@ -181,7 +181,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </CardContent>
+        </div>
       </Card>
     ) : null,
     resumo_ia: () => <AIWeeklySummary />,

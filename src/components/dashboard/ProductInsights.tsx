@@ -35,13 +35,13 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       {/* TIER 1: TOP 5 PRODUTOS */}
       {insights.topProducts.length > 0 && (
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display flex items-center gap-3">
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold mb-2">
               <Target className="h-5 w-5 text-primary" />
               Top 5 Produtos por Receita
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
+          </div>
+          <div>
             <div className="h-64 mb-4">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={insights.topProducts}>
@@ -68,17 +68,17 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
       )}
 
       {/* TIER 2: TAXA DE CONVERSÃO (ISOLADA) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-card border-border/60 bg-gradient-to-br from-success/5 to-success/10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display">📊 Taxa de Conversão</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold mb-2">📊 Taxa de Conversão</h2>
+          </div>
+          <div>
             <p className="text-5xl font-bold text-success mb-2">
               {insights.conversionBenchmark.overallRate.toFixed(1)}%
             </p>
@@ -88,14 +88,14 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                 : 'Nenhum lead neste período'
               }
             </p>
-          </CardContent>
+          </div>
         </Card>
 
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display">📈 Conversão por Etapa</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold mb-2">📈 Conversão por Etapa</h2>
+          </div>
+          <div>
             <div className="space-y-3">
               {insights.conversionBenchmark.byStage.map((stage) => (
                 <div key={stage.stage} className={`p-3 rounded-lg ${stage.isBottleneck ? 'bg-destructive/10 border border-destructive/20' : 'bg-muted/50'}`}>
@@ -120,20 +120,20 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       {/* TIER 3: ANÁLISE DO FUNIL */}
       {insights.funnelAnalysis.byStage.length > 0 && (
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-display flex items-center gap-3">
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold mb-2">
               <Zap className="h-5 w-5 text-warning" />
               Análise do Funil de Vendas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
+          </div>
+          <div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -227,49 +227,49 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                   ))}
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
       )}
 
       {/* TIER 4: PADRÕES DE USO */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="shadow-card border-border/60 border-l-4 border-l-info">
-          <CardContent className="pt-5 pb-4">
+          <div>
             <p className="text-xs text-neutral-500 mb-1">📅 Leads por Dia</p>
             <p className="text-2xl font-bold text-info">{Number(insights.usagePatterns.leadsPerDay).toFixed(1)}</p>
             <p className="text-xs text-neutral-500 mt-1">Média do período</p>
-          </CardContent>
+          </div>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-success">
-          <CardContent className="pt-5 pb-4">
+          <div>
             <p className="text-xs text-neutral-500 mb-1">✅ Conversões/Dia</p>
             <p className="text-2xl font-bold text-success">{Number(insights.usagePatterns.conversionPerDay).toFixed(1)}</p>
             <p className="text-xs text-neutral-500 mt-1">Média do período</p>
-          </CardContent>
+          </div>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-primary">
-          <CardContent className="pt-5 pb-4">
+          <div>
             <p className="text-xs text-neutral-500 mb-1">⏱️ Tempo Médio</p>
             <p className="text-2xl font-bold text-primary">{Number(insights.usagePatterns.avgTimeToConvert).toFixed(1)}d</p>
             <p className="text-xs text-neutral-500 mt-1">Lead → Conversão</p>
-          </CardContent>
+          </div>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-warning">
-          <CardContent className="pt-5 pb-4">
+          <div>
             <p className="text-xs text-neutral-500 mb-1">📊 Sazonalidade</p>
             <p className="text-2xl font-bold text-warning">
               {insights.usagePatterns.seasonality === 'high' ? '🔥 Alta' : insights.usagePatterns.seasonality === 'medium' ? '🔶 Média' : '🔵 Baixa'}
             </p>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       {/* INSIGHTS FINAIS */}
       <Card className="shadow-card border-border/60 bg-gradient-to-r from-primary/5 to-accent/5">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-display">🎯 Insights Estratégicos</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">🎯 Insights Estratégicos</h2>
+        </div>
+        <div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {insights.topProducts[0] && (
               <div>
@@ -299,7 +299,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
               </p>
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

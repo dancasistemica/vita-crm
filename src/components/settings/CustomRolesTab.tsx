@@ -141,10 +141,10 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   if (!canAccessSettings) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-neutral-500 gap-3">
+        <div>
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
-        </CardContent>
+        </div>
       </Card>
     );
   }
@@ -152,16 +152,16 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg flex items-center gap-3">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Shield className="h-5 w-5" />
             Roles Customizáveis
-          </CardTitle>
+          </h2>
           <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4 mr-1" /> Nova Role
           </Button>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div>
           <p className="text-sm text-neutral-500 mb-4">
             Crie roles personalizadas para sua organização. Após criar, configure as permissões na aba <strong>Permissões</strong>.
           </p>
@@ -215,7 +215,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               </Table>
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* Create/Edit Dialog */}

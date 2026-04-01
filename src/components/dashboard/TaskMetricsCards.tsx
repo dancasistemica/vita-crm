@@ -111,7 +111,7 @@ export default function TaskMetricsCards() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[1, 2].map(i => (
           <Card key={i} className="shadow-card border-border/60">
-            <CardContent className="pt-5 pb-4"><Skeleton className="h-32 w-full" /></CardContent>
+            <div><Skeleton className="h-32 w-full" /></div>
           </Card>
         ))}
       </div>
@@ -122,7 +122,7 @@ export default function TaskMetricsCards() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Overdue */}
       <Card className="shadow-card border-border/60 border-l-4 border-l-destructive">
-        <CardContent className="pt-5 pb-4 space-y-3">
+        <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-destructive/10 text-destructive">
               <AlertCircle className="h-5 w-5" />
@@ -149,12 +149,12 @@ export default function TaskMetricsCards() {
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* Pending */}
       <Card className="shadow-card border-border/60 border-l-4 border-l-warning">
-        <CardContent className="pt-5 pb-4 space-y-3">
+        <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-warning/10 text-warning">
               <Clock className="h-5 w-5" />
@@ -181,7 +181,7 @@ export default function TaskMetricsCards() {
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

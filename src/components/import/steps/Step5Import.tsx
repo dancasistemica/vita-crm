@@ -206,8 +206,8 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       {state.error && (
         <Alert variant="error">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Erro na Importação</AlertTitle>
-          <AlertDescription>
+          <h3 className="text-lg font-semibold mb-1">Erro na Importação</h3>
+          <p className="text-sm">
             {state.error}
             {state.invalidRows && (
               <div className="mt-2 text-sm">
@@ -221,7 +221,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
                 </ul>
               </div>
             )}
-          </AlertDescription>
+          </p>
         </Alert>
       )}
 

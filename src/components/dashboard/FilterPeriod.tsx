@@ -57,7 +57,7 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
 
   return (
     <Card className="shadow-card border-border/60">
-      <CardContent className="pt-4 pb-4">
+      <div>
         <div className="flex flex-wrap items-center gap-3">
           <CalendarDays className="h-4 w-4 text-neutral-500" />
           <span className="text-sm font-medium text-neutral-500 mr-1">Período:</span>
@@ -97,7 +97,7 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
             </Button>
           </div>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

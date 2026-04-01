@@ -101,9 +101,9 @@ export function PlansTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {plans.map((plan) => (
           <Card key={plan.id}>
-            <CardHeader className="pb-3">
+            <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{plan.name}</CardTitle>
+                <h2 className="text-2xl font-semibold mb-2">{plan.name}</h2>
                 <Badge variant="secondary">
                   {plan.period === 'monthly' ? 'Mensal' : 'Anual'}
                 </Badge>
@@ -111,8 +111,8 @@ export function PlansTab() {
               {plan.description && (
                 <p className="text-sm text-neutral-500">{plan.description}</p>
               )}
-            </CardHeader>
-            <CardContent className="space-y-4">
+            </div>
+            <div>
               <div className="text-2xl font-bold text-primary">
                 R$ {Number(plan.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 <span className="text-sm font-normal text-neutral-500">
@@ -138,7 +138,7 @@ export function PlansTab() {
               <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </Button>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>

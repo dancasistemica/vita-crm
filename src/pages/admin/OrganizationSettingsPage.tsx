@@ -288,11 +288,11 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Botconversa Configuration</CardTitle>
-        <CardDescription>Salve a chave API e ative a automação de envios</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">Botconversa Configuration</h2>
+        <p className="text-sm text-neutral-500 mb-4">Salve a chave API e ative a automação de envios</p>
+      </div>
+      <div>
         <div className="space-y-3">
           <Label htmlFor="botconversa-api-key">Chave API do Botconversa</Label>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -353,7 +353,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 : '⚠️ Nenhuma chave configurada'}
           </Badge>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
@@ -465,11 +465,11 @@ export default function OrganizationSettingsPage() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Cron Job Configuration</CardTitle>
-          <CardDescription>Gerencie o token e status do cron de mensagens agendadas</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Cron Job Configuration</h2>
+          <p className="text-sm text-neutral-500 mb-4">Gerencie o token e status do cron de mensagens agendadas</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Cron Secret Token</Label>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -526,7 +526,7 @@ export default function OrganizationSettingsPage() {
               </div>
             </div>
           </div>
-        </CardContent>
+        </div>
 
         <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
           <AlertDialogContent>

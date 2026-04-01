@@ -139,41 +139,41 @@ export default function DebugMultiTenantPage() {
 
       {/* User Info */}
       <Card>
-        <CardHeader><CardTitle>👤 Informações do Usuário</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">👤 Informações do Usuário</h2></div>
+        <div>
           <pre className="text-xs bg-muted p-3 rounded overflow-auto">
             {JSON.stringify(debugInfo?.user, null, 2)}
           </pre>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Organization Info */}
       <Card>
-        <CardHeader><CardTitle>🏢 Organização</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🏢 Organização</h2></div>
+        <div>
           <pre className="text-xs bg-muted p-3 rounded overflow-auto">
             {JSON.stringify(debugInfo?.organization, null, 2)}
           </pre>
           {!organizationId && (
             <p className="text-destructive font-semibold mt-2">⚠️ organization_id não definido!</p>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* RLS Status */}
       <Card>
-        <CardHeader><CardTitle>🔐 Status RLS</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🔐 Status RLS</h2></div>
+        <div>
           <Badge variant={debugInfo?.rls_status?.isolation_working ? 'default' : 'error'} className="text-sm">
             {debugInfo?.rls_status?.message}
           </Badge>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Data Isolation */}
       <Card>
-        <CardHeader><CardTitle>📊 Isolamento de Dados</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📊 Isolamento de Dados</h2></div>
+        <div>
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-muted rounded p-4 text-center">
               <p className="text-sm text-neutral-500">Leads Visíveis (total)</p>
@@ -194,13 +194,13 @@ export default function DebugMultiTenantPage() {
               ))}
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Tables Check */}
       <Card>
-        <CardHeader><CardTitle>📋 Verificação por Tabela</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📋 Verificação por Tabela</h2></div>
+        <div>
           <div className="space-y-3">
             {debugInfo?.tables_checked && Object.entries(debugInfo.tables_checked).map(([table, info]) => (
               <div key={table} className="flex items-center justify-between bg-muted rounded p-3">
@@ -214,7 +214,7 @@ export default function DebugMultiTenantPage() {
               </div>
             ))}
           </div>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

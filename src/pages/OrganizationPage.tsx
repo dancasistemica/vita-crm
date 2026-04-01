@@ -188,11 +188,11 @@ export default function OrganizationPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Informações Gerais</CardTitle>
-          <CardDescription>Nome, contato e documentação</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Informações Gerais</h2>
+          <p className="text-sm text-neutral-500 mb-4">Nome, contato e documentação</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Nome da Empresa *</Label>
             <Input
@@ -253,17 +253,17 @@ export default function OrganizationPage() {
               placeholder="https://www.empresa.com"
             />
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-3">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <MapPin className="h-5 w-5" /> Endereço
-          </CardTitle>
-          <CardDescription>Preencha o CEP para busca automática</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Preencha o CEP para busca automática</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>CEP</Label>
             <div className="flex items-center gap-3">
@@ -319,7 +319,7 @@ export default function OrganizationPage() {
               <Input value={formData.estado} disabled className="bg-muted" />
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">

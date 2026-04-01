@@ -121,10 +121,10 @@ export default function CustomizePage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Logo Section */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3"><Image className="h-5 w-5" /> Logomarca</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2"><Image className="h-5 w-5" /> Logomarca</h2>
+            </div>
+            <div>
               <div>
                 <Label>Logo principal</Label>
                 <p className="text-xs text-neutral-500 mb-2">PNG, SVG ou WebP, fundo transparente recomendado (máx. 2MB)</p>
@@ -248,14 +248,14 @@ export default function CustomizePage() {
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Colors Section */}
           <Card>
-            <CardHeader>
+            <div className="mb-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
+                <h2 className="text-2xl font-semibold mb-2"><Palette className="h-5 w-5" /> Cores</h2>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
@@ -297,8 +297,8 @@ export default function CustomizePage() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            </div>
+            <div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <ColorPicker label="Cor Primária" description="Botões e elementos de destaque"
                   value={brand.primary_color} onChange={v => handleColorChange('primary_color', v)} />
@@ -339,15 +339,15 @@ export default function CustomizePage() {
                   ℹ️ As demais cores do sistema (hover, tipografia, layout, feedback) seguem o padrão global definido nas Configurações do Sistema pelo SuperAdmin.
                 </p>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Typography Section */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3"><Type className="h-5 w-5" /> Tipografia</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2"><Type className="h-5 w-5" /> Tipografia</h2>
+            </div>
+            <div>
               <Label>Fonte do CRM</Label>
               <Select value={brand.font_family} onValueChange={v => updateLocalBrand({ font_family: v })}>
                 <SelectTrigger className="w-full max-w-xs mt-1">
@@ -359,7 +359,7 @@ export default function CustomizePage() {
                   ))}
                 </SelectContent>
               </Select>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
@@ -397,7 +397,7 @@ export default function CustomizePage() {
 
           {/* Lead card preview */}
           <Card>
-            <CardContent className="p-4 space-y-3">
+            <div>
               <p className="text-xs text-neutral-500">Card de lead</p>
               <div className="p-3 rounded-lg border bg-card">
                 <div className="flex items-center justify-between mb-2">
@@ -407,12 +407,12 @@ export default function CustomizePage() {
                 </div>
                 <p className="text-xs text-neutral-500">Interessada em dança terapêutica</p>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* preview */}
           <Card>
-            <CardContent className="p-4 space-y-3">
+            <div>
               <p className="text-xs text-neutral-500">Botão primário</p>
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
@@ -424,7 +424,7 @@ export default function CustomizePage() {
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: brand.secondary_color }}>Tag 2</span>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>

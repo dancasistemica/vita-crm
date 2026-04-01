@@ -143,7 +143,7 @@ export const ScheduleMessageDialog = ({
           {error && (
             <Alert variant="error">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <p className="text-sm">{error}</p>
             </Alert>
           )}
 

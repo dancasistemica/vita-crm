@@ -51,14 +51,14 @@ export default function AIContextTab() {
     <div className="space-y-6">
       {/* Descrição do Negócio */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Brain className="h-5 w-5 text-primary" />
             Descrição do Negócio
-          </CardTitle>
-          <CardDescription>Descreva brevemente o que sua organização faz para a IA personalizar sugestões.</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Descreva brevemente o que sua organização faz para a IA personalizar sugestões.</p>
+        </div>
+        <div>
           <Textarea
             placeholder="Ex: Agência de marketing digital especializada em e-commerce"
             maxLength={500}
@@ -67,19 +67,19 @@ export default function AIContextTab() {
             className="min-h-[100px]"
           />
           <p className="text-xs text-neutral-500 mt-1">{form.ai_context.length}/500 caracteres</p>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Serviços */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Briefcase className="h-5 w-5 text-primary" />
             Serviços
-          </CardTitle>
-          <CardDescription>Defina os serviços que sua organização oferece e os que NÃO oferece.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Defina os serviços que sua organização oferece e os que NÃO oferece.</p>
+        </div>
+        <div>
           {/* Serviços Oferecidos */}
           <div className="space-y-3">
             <Label>Serviços Oferecidos</Label>
@@ -138,18 +138,18 @@ export default function AIContextTab() {
               ))}
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Público-Alvo e Modelo */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Target className="h-5 w-5 text-primary" />
             Público e Modelo de Negócio
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Público-Alvo</Label>
             <Textarea
@@ -169,19 +169,19 @@ export default function AIContextTab() {
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Instruções Customizadas */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Sparkles className="h-5 w-5 text-primary" />
             Instruções Customizadas para IA
-          </CardTitle>
-          <CardDescription>Adicione instruções específicas que a IA deve seguir ao gerar sugestões.</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Adicione instruções específicas que a IA deve seguir ao gerar sugestões.</p>
+        </div>
+        <div>
           <Textarea
             placeholder="Ex: Sempre sugira soluções escaláveis. Foque em ROI. Use tom informal."
             maxLength={1000}
@@ -193,24 +193,24 @@ export default function AIContextTab() {
             className="min-h-[100px]"
           />
           <p className="text-xs text-neutral-500 mt-1">{customInstructions.length}/1000 caracteres</p>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Preview */}
       <Card>
-        <CardHeader className="cursor-pointer" onClick={() => setShowPreview(!showPreview)}>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4"> setShowPreview(!showPreview)}>
+          <h2 className="text-2xl font-semibold mb-2">
             <Eye className="h-5 w-5 text-primary" />
             Preview do Contexto
             <span className="text-xs text-neutral-500">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>
-          </CardTitle>
-        </CardHeader>
+          </h2>
+        </div>
         {showPreview && (
-          <CardContent>
+          <div>
             <pre className="whitespace-pre-wrap text-xs bg-muted p-4 rounded-md max-h-60 overflow-auto">
               {getFormattedContext() || 'Preencha os campos acima para visualizar o contexto.'}
             </pre>
-          </CardContent>
+          </div>
         )}
       </Card>
 

@@ -179,12 +179,12 @@ export function SystemSettings() {
         <div className="lg:col-span-2 space-y-6">
           {/* Identity */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Image className="h-5 w-5" /> Identidade do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h2>
+            </div>
+            <div>
               <div>
                 <Label>Nome do Sistema</Label>
                 <Input
@@ -313,17 +313,17 @@ export function SystemSettings() {
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Basic Colors */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Palette className="h-5 w-5" /> Cores Padrão do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <SystemColorPicker label="Cor Primária" description="Botões e elementos de destaque"
                   value={settings.primary_color} onChange={v => updateSetting('primary_color', v)} />
@@ -337,17 +337,17 @@ export function SystemSettings() {
                     updateSetting('sidebar_bg_color', v);
                   }} />
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Advanced Colors */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Palette className="h-5 w-5" /> Cores Avançadas do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-3 mb-4">
                 <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                 <p className="text-xs text-amber-800 dark:text-amber-300">
@@ -444,17 +444,17 @@ export function SystemSettings() {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Typography */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Type className="h-5 w-5" /> Tipografia Padrão
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <Label>Fonte do Sistema</Label>
               <Select value={settings.font_family} onValueChange={v => updateSetting('font_family', v)}>
                 <SelectTrigger className="w-full max-w-xs mt-1">
@@ -466,7 +466,7 @@ export function SystemSettings() {
                   ))}
                 </SelectContent>
               </Select>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
@@ -501,7 +501,7 @@ export function SystemSettings() {
           </Card>
 
           <Card>
-            <CardContent className="p-4 space-y-3">
+            <div>
               <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
@@ -519,7 +519,7 @@ export function SystemSettings() {
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_error }}>✕ Erro</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_info }}>ℹ Info</span>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>

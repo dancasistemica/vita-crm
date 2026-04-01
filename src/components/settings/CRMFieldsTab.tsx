@@ -524,8 +524,8 @@ export default function CRMFieldsTab() {
 
   const renderOriginSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">🌐 Origem do Lead</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🌐 Origem do Lead</h2></div>
+      <div>
         {renderDraggableList(
           origins,
           originsLoading,
@@ -560,14 +560,14 @@ export default function CRMFieldsTab() {
             Adicionar
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 
   const renderInterestLevelSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">⭐ Nível de Interesse</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">⭐ Nível de Interesse</h2></div>
+      <div>
         {renderDraggableList(
           levels,
           levelsLoading,
@@ -605,14 +605,14 @@ export default function CRMFieldsTab() {
             {levelsSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 
   const renderFunnelStagesSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">📈 Etapas do Funil de Vendas</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📈 Etapas do Funil de Vendas</h2></div>
+      <div>
         {renderDraggableList(
           stages,
           stagesLoading,
@@ -647,7 +647,7 @@ export default function CRMFieldsTab() {
             Adicionar
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 

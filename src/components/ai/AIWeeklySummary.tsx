@@ -48,21 +48,21 @@ Gere o resumo semanal.`;
 
   return (
     <Card className="border-purple-200 dark:border-purple-800/50 shadow-card">
-      <CardHeader className="pb-2">
+      <div className="mb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-display flex items-center gap-3">
+          <h2 className="text-2xl font-semibold mb-2">
             <Sparkles className="h-5 w-5 text-purple-500" />
             Resumo da Semana IA
             <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
-          </CardTitle>
+          </h2>
           {hasLoaded && (
             <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
               <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
             </Button>
           )}
         </div>
-      </CardHeader>
-      <CardContent>
+      </div>
+      <div>
         {!hasLoaded && !loading ? (
           <div className="text-center py-4">
             <p className="text-sm text-neutral-500 mb-3">Clique para gerar o resumo inteligente da semana</p>
@@ -86,7 +86,7 @@ Gere o resumo semanal.`;
             <p className="text-[10px] text-neutral-500 pt-1">Sugestão gerada por IA — revise antes de agir</p>
           </div>
         ) : null}
-      </CardContent>
+      </div>
     </Card>
   );
 }

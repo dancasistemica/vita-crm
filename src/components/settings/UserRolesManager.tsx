@@ -231,11 +231,11 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   if (!isAdmin) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-neutral-500 gap-3">
+        <div>
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
           <p className="text-sm">Apenas administradores têm acesso a esta seção.</p>
-        </CardContent>
+        </div>
       </Card>
     );
   }
@@ -264,14 +264,14 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                   const allEnabled = mod.permissions.every(p => permissions[p.key]);
                   return (
                     <Card key={mod.label}>
-                      <CardHeader className="pb-3">
+                      <div className="mb-4">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-sm flex items-center gap-3">
+                          <h2 className="text-2xl font-semibold mb-2">
                             <span>{mod.icon}</span> {mod.label}
                             <Badge variant="secondary" className="ml-1 text-xs">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
-                          </CardTitle>
+                          </h2>
                           <div className="flex items-center gap-3">
                             <span className="text-xs text-neutral-500">Tudo</span>
                             <Switch
@@ -280,8 +280,8 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                             />
                           </div>
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3.5">
+                      </div>
+                      <div>
                         {mod.permissions.map(perm => (
                           <label key={perm.key} className="flex items-center gap-3.5 cursor-pointer text-sm">
                             <Checkbox
@@ -291,7 +291,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                             <span className="text-foreground">{perm.label}</span>
                           </label>
                         ))}
-                      </CardContent>
+                      </div>
                     </Card>
                   );
                 })}

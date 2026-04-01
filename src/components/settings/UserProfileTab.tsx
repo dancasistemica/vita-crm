@@ -180,11 +180,11 @@ export default function UserProfileTab() {
     <div className="space-y-6 max-w-2xl">
       {/* Avatar */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Foto de Perfil</CardTitle>
-          <CardDescription>JPG, PNG ou WebP — máx 2MB</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center gap-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Foto de Perfil</h2>
+          <p className="text-sm text-neutral-500 mb-4">JPG, PNG ou WebP — máx 2MB</p>
+        </div>
+        <div>
           <div
             className={`relative group cursor-pointer rounded-full ${isDragging ? 'ring-4 ring-primary ring-offset-2' : ''}`}
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
@@ -215,15 +215,15 @@ export default function UserProfileTab() {
           </div>
           {previewUrl && <p className="text-xs text-neutral-500">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
           {uploading && <Progress value={uploadProgress} className="w-48 h-2" />}
-        </CardContent>
+        </div>
       </Card>
 
       {/* Dados pessoais */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Dados Pessoais</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Dados Pessoais</h2>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Nome Completo *</Label>
             <Input value={formData.full_name} onChange={e => setFormData(p => ({ ...p, full_name: e.target.value }))} />
@@ -244,16 +244,16 @@ export default function UserProfileTab() {
             <Label>Função Atual</Label>
             <Badge variant="secondary" className="text-sm">{roleLabels[role || 'member'] || role}</Badge>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Endereço */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-3"><MapPin className="h-5 w-5" /> Endereço</CardTitle>
-          <CardDescription>Preencha o CEP para busca automática</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2"><MapPin className="h-5 w-5" /> Endereço</h2>
+          <p className="text-sm text-neutral-500 mb-4">Preencha o CEP para busca automática</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>CEP</Label>
             <div className="flex items-center gap-3">
@@ -267,7 +267,7 @@ export default function UserProfileTab() {
             <div className="space-y-3"><Label>Cidade</Label><Input value={formData.city} disabled className="bg-muted" /></div>
             <div className="space-y-3"><Label>Estado</Label><Input value={formData.state} disabled className="bg-muted" /></div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
