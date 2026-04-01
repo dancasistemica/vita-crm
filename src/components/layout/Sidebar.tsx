@@ -7,10 +7,10 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Clientes', path: '/clientes' },
   { icon: TrendingUp, label: 'Leads', path: '/leads' },
-  { icon: Settings, label: 'Configurações', path: '/settings' },
+  { icon: Settings, label: 'Configurações', path: '/configuracoes' },
 ];
 
 export function Sidebar({ onClose }: SidebarProps) {
