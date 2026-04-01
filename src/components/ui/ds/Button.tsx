@@ -9,10 +9,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantStyles = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 disabled:bg-primary-400',
-  secondary: 'bg-neutral-200 text-neutral-900 hover:bg-neutral-300 active:bg-neutral-400 disabled:bg-neutral-100',
-  success: 'bg-success-600 text-white hover:bg-success-700 active:bg-success-800 disabled:bg-success-400',
-  error: 'bg-error-600 text-white hover:bg-error-700 active:bg-error-800 disabled:bg-error-400',
+  primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 disabled:bg-primary-400 shadow-sm',
+  secondary: 'bg-neutral-100 text-neutral-900 border border-neutral-200 hover:bg-neutral-200 active:bg-neutral-300 disabled:bg-neutral-50 shadow-sm',
+  success: 'bg-success-600 text-white hover:bg-success-700 active:bg-success-800 disabled:bg-success-400 shadow-sm',
+  error: 'bg-error-600 text-white hover:bg-error-700 active:bg-error-800 disabled:bg-error-400 shadow-sm',
   ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 active:bg-primary-100 disabled:text-neutral-400',
 };
 
