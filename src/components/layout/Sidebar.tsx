@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SidebarProps {
@@ -10,6 +10,13 @@ interface SidebarProps {
 interface Organization {
   id: string;
   name: string;
+}
+
+interface UserProfile {
+  id: string;
+  email: string;
+  full_name?: string;
+  avatar_url?: string;
 }
 
 const menuItems = [
@@ -26,14 +33,42 @@ export function Sidebar({ onClose }: SidebarProps) {
   const [selectedOrg, setSelectedOrg] = useState<string>('');
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showOrgDropdown, setShowOrgDropdown] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkSuperAdminAndLoadOrgs = async () => {
+    const loadUserAndOrgs = async () => {
       try {
-        console.log('[Sidebar] Verificando SuperAdmin...');
+        console.log('[Sidebar] Carregando perfil do usuário e organizações...');
 
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+          console.error('[Sidebar] Usuário não autenticado');
+          return;
+        }
+
+        // Carregar perfil do usuário do banco
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id, full_name, avatar_url')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (profile) {
+          setUserProfile({
+            id: profile.id,
+            email: user.email || '',
+            full_name: profile.full_name,
+            avatar_url: profile.avatar_url,
+          });
+        } else {
+          // Fallback para dados do auth
+          setUserProfile({
+            id: user.id,
+            email: user.email || '',
+            full_name: user.user_metadata?.full_name,
+          });
+        }
 
         // Verificar se é SuperAdmin
         const { data: superAdminData } = await supabase
@@ -62,7 +97,7 @@ export function Sidebar({ onClose }: SidebarProps) {
             }
           }
         } else {
-          // Carregar organização do usuário normal
+          // Carregar organização do usuário normal via organization_members
           console.log('[Sidebar] Carregando organização do usuário...');
           const { data: memberData } = await supabase
             .from('organization_members')
@@ -84,11 +119,13 @@ export function Sidebar({ onClose }: SidebarProps) {
           }
         }
       } catch (err) {
-        console.error('[Sidebar] Erro ao verificar SuperAdmin:', err);
+        console.error('[Sidebar] Erro ao carregar dados:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    checkSuperAdminAndLoadOrgs();
+    loadUserAndOrgs();
   }, []);
 
   const handleNavigate = (path: string) => {
@@ -100,16 +137,28 @@ export function Sidebar({ onClose }: SidebarProps) {
     console.log('[Sidebar] Mudando organização para:', orgId);
     setSelectedOrg(orgId);
     setShowOrgDropdown(false);
-    // Aqui você pode adicionar lógica para mudar contexto da organização
-    // navigate(`/dashboard?org=${orgId}`);
+  };
+
+  const handleLogout = async () => {
+    console.log('[Sidebar] Fazendo logout...');
+    await supabase.auth.signOut();
+    navigate('/login');
   };
 
   const selectedOrgName = organizations.find(org => org.id === selectedOrg)?.name || 'Selecionar Organização';
+  const userInitials = userProfile?.full_name
+    ? userProfile.full_name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : userProfile?.email?.charAt(0).toUpperCase() || 'U';
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 sm:p-6 border-b border-neutral-200 lg:hidden">
+      {/* Header Mobile Only */}
+      <div className="flex items-center justify-between p-4 border-b border-neutral-200 lg:hidden">
         <h2 className="text-lg font-bold text-neutral-900">Menu</h2>
         <button
           onClick={onClose}
@@ -122,7 +171,12 @@ export function Sidebar({ onClose }: SidebarProps) {
 
       {/* Logo/Brand - Desktop Only */}
       <div className="hidden lg:flex items-center justify-center p-6 border-b border-neutral-200">
-        <h1 className="text-xl font-bold text-primary-600">Dança Sistêmica</h1>
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-base">DS</span>
+          </div>
+          <span className="text-xl font-bold text-neutral-900">Dança Sistêmica</span>
+        </div>
       </div>
 
       {/* Select Organizações - SuperAdmin Only */}
@@ -197,9 +251,28 @@ export function Sidebar({ onClose }: SidebarProps) {
         </ul>
       </nav>
 
-      {/* Footer */}
+      {/* Perfil do Usuário */}
       <div className="p-4 sm:p-6 border-t border-neutral-200">
-        <p className="text-xs sm:text-sm text-neutral-500 text-center">
+        {!loading && userProfile && (
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold overflow-hidden shrink-0">
+              {userProfile.avatar_url ? (
+                <img src={userProfile.avatar_url} alt={userProfile.full_name} className="w-full h-full object-cover" />
+              ) : (
+                userInitials
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-neutral-900 truncate">
+                {userProfile.full_name || 'Usuário'}
+              </p>
+              <p className="text-xs text-neutral-500 truncate">
+                {userProfile.email}
+              </p>
+            </div>
+          </div>
+        )}
+        <p className="text-xs text-neutral-500 text-center">
           © 2026 Dança Sistêmica
         </p>
       </div>
