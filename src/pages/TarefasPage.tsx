@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
-import TaskActions from "@/components/tasks/TaskActions";
+import { TaskActions } from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
