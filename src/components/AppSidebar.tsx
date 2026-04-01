@@ -128,7 +128,16 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild active={location.pathname === item.url}>
+                  <SidebarMenuButton 
+                    asChild 
+                    active={location.pathname === item.url}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) {
+                        // @ts-ignore
+                        setOpen(false);
+                      }
+                    }}
+                  >
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
