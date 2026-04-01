@@ -1,4 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+
+interface TabsContextType {
+  activeTab: string;
+  setActiveTab: (value: string) => void;
+}
+
+const TabsContext = createContext<TabsContextType | undefined>(undefined);
 
 interface TabsProps {
   defaultValue?: string;
@@ -21,42 +28,45 @@ export const Tabs = ({ defaultValue, value, onValueChange, children, className =
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<any>, { activeTab, setActiveTab: handleTabChange });
-        }
-        return child;
-      })}
-    </div>
+    <TabsContext.Provider value={{ activeTab, setActiveTab: handleTabChange }}>
+      <div className={`space-y-4 ${className}`}>
+        {children}
+      </div>
+    </TabsContext.Provider>
   );
 };
 
-export const TabsList = ({ children, activeTab, setActiveTab, className = '' }: any) => (
+export const TabsList = ({ children, className = '' }: any) => (
   <div className={`flex border-b border-neutral-200 ${className}`}>
-    {React.Children.map(children, child => {
-      if (React.isValidElement(child)) {
-        return React.cloneElement(child as React.ReactElement<any>, { activeTab, setActiveTab });
-      }
-      return child;
-    })}
+    {children}
   </div>
 );
 
-export const TabsTrigger = ({ value, children, activeTab, setActiveTab, className = '' }: any) => (
-  <button
-    onClick={() => setActiveTab(value)}
-    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 -mb-px ${
-      activeTab === value
-        ? 'border-primary-500 text-primary-600'
-        : 'border-transparent text-neutral-500 hover:text-neutral-700'
-    } ${className}`}
-  >
-    {children}
-  </button>
-);
+export const TabsTrigger = ({ value, children, className = '' }: any) => {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error('TabsTrigger must be used within a Tabs component');
+  
+  const { activeTab, setActiveTab } = context;
+  const isActive = activeTab === value;
 
-export const TabsContent = ({ value, children, activeTab, className = '' }: any) => {
-  if (activeTab !== value) return null;
+  return (
+    <button
+      onClick={() => setActiveTab(value)}
+      className={`px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 -mb-px ${
+        isActive
+          ? 'border-primary-500 text-primary-600'
+          : 'border-transparent text-neutral-500 hover:text-neutral-700'
+      } ${className}`}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const TabsContent = ({ value, children, className = '' }: any) => {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error('TabsContent must be used within a Tabs component');
+  
+  if (context.activeTab !== value) return null;
   return <div className={`py-4 ${className}`}>{children}</div>;
 };
