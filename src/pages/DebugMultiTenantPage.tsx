@@ -188,7 +188,7 @@ export default function DebugMultiTenantPage() {
             <p className="text-sm font-medium text-muted-foreground">Org IDs nos dados visíveis:</p>
             <div className="flex flex-wrap gap-1 mt-1">
               {debugInfo?.data_isolation?.unique_org_ids.map(id => (
-                <Badge key={id} variant={id === organizationId ? 'default' : 'destructive'} className="text-xs">
+                <Badge key={id} variant={id === organizationId ? 'default' : 'error'} className="text-xs">
                   {id === organizationId ? '✅ ' : '❌ '}{id.slice(0, 8)}...
                 </Badge>
               ))}
