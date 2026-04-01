@@ -227,7 +227,7 @@ export function SystemSettings() {
                   )}
                 </div>
                 {settings.logo_url && (
-                  < variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
+                  <Button variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
                   </>
                 )}
@@ -503,7 +503,7 @@ export function SystemSettings() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
-              < variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
               </>
@@ -526,7 +526,7 @@ export function SystemSettings() {
 
       {/* Save button */}
       <div className="flex justify-end">
-        < onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
+        <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
           <Save className="h-4 w-4" />
           {saving ? 'Salvando...' : 'Salvar Configurações do Sistema'}
         </>

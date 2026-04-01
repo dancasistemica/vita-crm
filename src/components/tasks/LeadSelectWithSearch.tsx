@@ -118,7 +118,7 @@ export default function LeadSelectWithSearch({
   return (
     <div ref={containerRef} className="relative w-full" onKeyDown={handleKeyDown}>
       {/* Trigger */}
-      < variant="secondary" size="sm"
+      <Button variant="secondary" size="sm"
         type="button"
         disabled={disabled}
         onClick={() => setOpen(o => !o)}
@@ -165,7 +165,7 @@ export default function LeadSelectWithSearch({
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
             {query && (
-              < variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+              <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
               </>
             )}
@@ -184,7 +184,7 @@ export default function LeadSelectWithSearch({
                 </p>
               ) : (
                 filtered.map((lead, idx) => (
-                  < variant="secondary" size="sm"
+                  <Button variant="secondary" size="sm"
                     key={lead.id}
                     type="button"
                     role="option"

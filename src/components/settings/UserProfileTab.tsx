@@ -204,11 +204,11 @@ export default function UserProfileTab() {
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
           </div>
           <div className="flex gap-3">
-            < variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
             </>
             {(displayAvatar) && (
-              < variant="secondary" size="sm" onClick={handleRemovePhoto}>
+              <Button variant="secondary" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
               </>
             )}
@@ -270,7 +270,7 @@ export default function UserProfileTab() {
         </CardContent>
       </Card>
 
-      < onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
+      <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
       </>
     </div>

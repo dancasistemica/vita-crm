@@ -47,10 +47,10 @@ export const AlertDialog = ({
             {description}
           </div>
           <div className="flex gap-3 pt-4 border-t border-neutral-100">
-            < variant="secondary" onClick={handleClose} disabled={isLoading} className="flex-1">
+            <Button variant="secondary" onClick={handleClose} disabled={isLoading} className="flex-1">
               {cancelText}
             </>
-            < variant={variant} onClick={onConfirm} isLoading={isLoading} className="flex-1">
+            <Button variant={variant} onClick={onConfirm} isLoading={isLoading} className="flex-1">
               {confirmText}
             </>
           </div>

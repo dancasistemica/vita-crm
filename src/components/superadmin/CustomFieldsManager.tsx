@@ -472,7 +472,7 @@ export function CustomFieldsManager() {
                 className="pl-9"
               />
             </div>
-            < onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
+            <Button onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
               <Plus className="h-4 w-4" /> Adicionar Campo
             </>
           </div>
@@ -516,8 +516,7 @@ export function CustomFieldsManager() {
                         {field.org_count} de {totalOrgs}
                       </Badge>
                       {field.org_count < totalOrgs && (
-                        <
-                          variant="ghost"
+                        <Button variant="ghost"
                           size="sm"
                           className="text-xs px-1 h-auto"
                           onClick={() => handleApplyToAll(field)}
@@ -528,11 +527,10 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
                         </>
-                        <
-                          variant="ghost"
+                        <Button variant="ghost"
                           size="sm"
                           className="h-7 w-7 text-destructive"
                           onClick={() => {
@@ -606,10 +604,10 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
                         </>
-                        < variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
                           <Trash2 className="h-3.5 w-3.5" />
                         </>
                       </div>
@@ -664,7 +662,7 @@ export function CustomFieldsManager() {
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  < type="button" variant="secondary" size="sm" onClick={addOption}>+</>
+                  <Button type="button" variant="secondary" size="sm" onClick={addOption}>+</>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
@@ -687,8 +685,8 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            < variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
-            < onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
+            <Button variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
+            <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
             </>
           </DialogFooter>

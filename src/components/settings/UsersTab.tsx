@@ -308,7 +308,7 @@ export default function UsersTab() {
           <Users className="h-5 w-5" />
           Usuários da Organização
         </CardTitle>
-        < size="sm" onClick={openCreate}>
+        <Button size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
         </>
       </CardHeader>
@@ -376,8 +376,7 @@ export default function UsersTab() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <
-                            variant="ghost"
+                          <Button variant="ghost"
                             size="sm"
                             className="h-8 w-8"
                             title="Editar"
@@ -385,8 +384,7 @@ export default function UsersTab() {
                           >
                             <Edit className="h-4 w-4" />
                           </>
-                          <
-                            variant="ghost"
+                          <Button variant="ghost"
                             size="sm"
                             className="h-8 w-8"
                             title="Resetar senha"
@@ -395,8 +393,7 @@ export default function UsersTab() {
                             <RotateCcw className="h-4 w-4" />
                           </>
                           {u.role !== "owner" && (
-                            <
-                              variant="ghost"
+                            <Button variant="ghost"
                               size="sm"
                               className="h-8 w-8 text-destructive"
                               title="Remover"
@@ -420,16 +417,14 @@ export default function UsersTab() {
                   {filtered.length} usuário(s) · Página {page} de {totalPages}
                 </span>
                 <div className="flex gap-1">
-                  <
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
                   >
                     Anterior
                   </>
-                  <
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
@@ -476,8 +471,7 @@ export default function UsersTab() {
                   <Label>Organização *</Label>
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
-                      <
-                        variant="secondary"
+                      <Button variant="secondary"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
                         className="w-full justify-between font-normal"
@@ -552,8 +546,8 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              < variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</>
-              < onClick={handleSave} disabled={saving}>
+              <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</>
+              <Button onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}
               </>

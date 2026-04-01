@@ -149,7 +149,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 : `${orgs.length} organização(ões) cadastrada(s)`}
             </span>
           </div>
-          < onClick={() => setCreateOpen(true)} className="gap-3">
+          <Button onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
           </>
         </div>
@@ -187,7 +187,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             </SelectContent>
           </Select>
           {hasActiveFilters && (
-            < variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
               <X className="h-4 w-4" /> Limpar
             </>
           )}
@@ -251,14 +251,13 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    < variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
+                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
                     </>
-                    < variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </>
-                    <
-                      variant={org.active ? 'destructive' : 'default'}
+                    <Button variant={org.active ? 'destructive' : 'default'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >

@@ -296,7 +296,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
             {form.logo_url && (
               <div className="mt-2 flex items-center gap-3">
                 <img src={form.logo_url} alt="Logo" className="h-8 max-w-[120px] object-contain" />
-                < variant="ghost" size="sm" onClick={() => updateField('logo_url', null)}>Remover</>
+                <Button variant="ghost" size="sm" onClick={() => updateField('logo_url', null)}>Remover</>
               </div>
             )}
           </div>
@@ -361,12 +361,12 @@ export default function EmailTemplateEditor({ templateType }: Props) {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 pt-2">
-          < onClick={handleSave} disabled={saving} className="min-h-[44px] gap-3">
+          <Button onClick={handleSave} disabled={saving} className="min-h-[44px] gap-3">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Salvar Template
           </>
           {isCustom && (
-            < variant="secondary" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
+            <Button variant="secondary" onClick={handleRestore} disabled={saving} className="min-h-[44px] gap-3">
               <RotateCcw className="h-4 w-4" />
               Restaurar Padrão
             </>

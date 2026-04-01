@@ -93,7 +93,7 @@ export function PlansTab() {
         onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex justify-end">
-        < onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano
         </>
       </div>
@@ -135,7 +135,7 @@ export function PlansTab() {
                 </div>
               </div>
 
-              < variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
+              <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </>
             </CardContent>
@@ -191,8 +191,8 @@ export function PlansTab() {
             </div>
           </div>
           <DialogFooter>
-            < variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
-            < onClick={handleCreate}>Criar Plano</>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
+            <Button onClick={handleCreate}>Criar Plano</>
           </DialogFooter>
         </DialogContent>
       </Dialog>

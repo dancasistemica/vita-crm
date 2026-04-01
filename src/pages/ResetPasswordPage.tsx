@@ -102,7 +102,7 @@ export default function ResetPasswordPage() {
             <CardDescription>Este link de recuperação é inválido ou expirou.</CardDescription>
           </CardHeader>
           <CardContent>
-            < onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
+            <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
             </>
           </CardContent>
@@ -141,7 +141,7 @@ export default function ResetPasswordPage() {
               className="min-h-[44px]"
             />
           </div>
-          < onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
+          <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
             {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
           </>
         </CardContent>

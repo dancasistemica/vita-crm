@@ -30,8 +30,7 @@ export default function TaskActions({
         onCancel={() => setShowConfirm(false)}
       />
 
-      <
-        variant="ghost"
+      <Button variant="ghost"
         size="sm"
         onClick={() => onEdit(taskId)}
         title="Editar tarefa"
@@ -40,8 +39,7 @@ export default function TaskActions({
         <Edit2 className="h-4 w-4" />
       </>
 
-      <
-        variant="ghost"
+      <Button variant="ghost"
         size="sm"
         onClick={() => onDuplicate(taskId)}
         title="Duplicar tarefa"
@@ -50,8 +48,7 @@ export default function TaskActions({
         <Copy className="h-4 w-4" />
       </>
 
-      <
-        variant="ghost"
+      <Button variant="ghost"
         size="sm"
         onClick={() => setShowConfirm(true)}
         title="Remover tarefa"

@@ -135,7 +135,7 @@ export default function SuperadminDashboard() {
           </div>
         </Card>
         <Card interactive variant="elevated" padding="md">
-          < variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
+          <Button variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
             Nova Org
           </>
         </Card>

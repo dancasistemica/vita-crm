@@ -479,7 +479,7 @@ export default function TarefasPage() {
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          < variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          <Button variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
           </>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -564,19 +564,19 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        < variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
           <UserCircle className="h-4 w-4" />
         </>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
-        < variant="secondary" size="sm"
+        <Button variant="secondary" size="sm"
           onClick={() => onAssign(taskId, null)}
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
         </>
         {orgMembers.map(m => (
-          < variant="secondary" size="sm"
+          <Button variant="secondary" size="sm"
             key={m.user_id}
             onClick={() => onAssign(taskId, m.user_id)}
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
@@ -664,7 +664,7 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
         <AIFollowUpGenerator lead={selectedLead} stageName={stageName} />
       )}
 
-      < className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
         {initialData ? 'Salvar Alterações' : 'Salvar'}
       </>
     </div>

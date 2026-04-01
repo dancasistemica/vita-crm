@@ -302,7 +302,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
       </Tabs>
 
       <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t">
-        < onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
+        <Button onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
           <Save className="h-4 w-4 mr-2" />
           {saving ? 'Salvando...' : 'Salvar Permissões'}
         </>

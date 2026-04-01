@@ -199,7 +199,7 @@ export default function LoginPage() {
                 icon={<Lock className="h-4 w-4" />}
                 required
               />
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={loading}
@@ -221,8 +221,7 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <
-              type="submit"
+            <Button type="submit"
               disabled={!isFormValid || loading}
               fullWidth
               loading={loading}
@@ -233,8 +232,7 @@ export default function LoginPage() {
 
           {/* Secondary links */}
           <div className="mt-4 space-y-3 text-center">
-            <
-              variant="ghost"
+            <Button variant="ghost"
               fullWidth
               size="sm"
               onClick={() => navigate('/auth')}
@@ -243,7 +241,7 @@ export default function LoginPage() {
             </>
             <p className="text-sm text-neutral-600">
               Não tem conta?{' '}
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 onClick={() => navigate('/auth')}
                 className="text-primary-600 hover:underline font-medium"
               >

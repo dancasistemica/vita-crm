@@ -330,7 +330,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       placeholder="Mínimo 8 caracteres"
                       className="pr-10"
                     />
-                    < variant="secondary" size="sm"
+                    <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
@@ -338,7 +338,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </>
                   </div>
-                  < type="button" variant="secondary" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                  <Button type="button" variant="secondary" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
                   </>
                 </div>
@@ -364,8 +364,8 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         )}
 
         <DialogFooter>
-          < variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</>
-          < onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</>
+          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
           </>

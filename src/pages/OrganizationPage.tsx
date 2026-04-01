@@ -322,7 +322,7 @@ export default function OrganizationPage() {
         </CardContent>
       </Card>
 
-      < onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
+      <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
       </>
     </div>

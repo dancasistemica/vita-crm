@@ -297,7 +297,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
               disabled={botconversaLoading}
             />
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              < onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
+              <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
                 {botconversaSaving ? (
                   <span className="inline-flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -308,8 +308,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 )}
               </>
               {/* TESTE: Botão SEM condição */}
-              <
-                onClick={handleActivateAutomation}
+              <Button onClick={handleActivateAutomation}
                 className="bg-green-600 hover:bg-green-700 w-full mt-4"
                 data-testid="activate-automation-button"
               >
@@ -471,11 +470,10 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                < variant="secondary" onClick={handleCopy} disabled={!token || loading}>
+                <Button variant="secondary" onClick={handleCopy} disabled={!token || loading}>
                   Copy
                 </>
-                <
-                  variant="error"
+                <Button variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
