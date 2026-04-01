@@ -2,9 +2,11 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 
+export type SearchResultType = 'lead' | 'client' | 'task' | 'sale' | 'product';
+
 export interface SearchResult {
   id: string;
-  type: 'lead' | 'client' | 'task' | 'sale' | 'product';
+  type: SearchResultType;
   title: string;
   description?: string;
   email?: string;
@@ -26,6 +28,7 @@ interface SearchResults {
 
 export function useGlobalSearch() {
   const { organizationId } = useOrganization();
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResults>({
     leads: [],
     clientes: [],
@@ -37,8 +40,20 @@ export function useGlobalSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const search = useCallback(async (query: string) => {
-    if (!query.trim() || !organizationId) {
+  const clearResults = useCallback(() => {
+    setResults({
+      leads: [],
+      clientes: [],
+      tarefas: [],
+      vendas: [],
+      produtos: [],
+      total: 0,
+    });
+    setQuery('');
+  }, []);
+
+  const search = useCallback(async (searchTerm: string) => {
+    if (!searchTerm.trim() || !organizationId) {
       setResults({
         leads: [],
         clientes: [],
@@ -50,54 +65,48 @@ export function useGlobalSearch() {
       return;
     }
 
+    setQuery(searchTerm);
     setLoading(true);
     setError(null);
 
     try {
-      console.log('[useGlobalSearch] Buscando:', query);
+      console.log('[useGlobalSearch] Buscando:', searchTerm);
 
-      const searchTerm = `%${query}%`;
+      const ilikeTerm = `%${searchTerm}%`;
 
       // Parallelized search across tables
       const [leadsRes, clientsRes, tasksRes, salesRes, productsRes] = await Promise.all([
         supabase
           .from('leads')
-          .select('id, name, email, phone, pipeline_stage, created_at')
+          .select('id, name, email, phone, pipeline_stage')
           .eq('organization_id', organizationId)
-          .or(`name.ilike.${searchTerm},email.ilike.${searchTerm},phone.ilike.${searchTerm}`)
+          .or(`name.ilike.${ilikeTerm},email.ilike.${ilikeTerm},phone.ilike.${ilikeTerm}`)
           .limit(10),
         supabase
           .from('clients')
-          .select('id, name, email, phone, created_at')
+          .select('id, name, email, phone')
           .eq('organization_id', organizationId)
-          .or(`name.ilike.${searchTerm},email.ilike.${searchTerm},phone.ilike.${searchTerm}`)
+          .or(`name.ilike.${ilikeTerm},email.ilike.${ilikeTerm},phone.ilike.${ilikeTerm}`)
           .limit(10),
         supabase
           .from('tasks')
-          .select('id, title, description, status, due_date')
+          .select('id, title, due_date')
           .eq('organization_id', organizationId)
-          .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
+          .ilike('title', ilikeTerm)
           .limit(10),
         supabase
           .from('sales')
-          .select('id, title, client_id, value, status, created_at')
+          .select('id, notes, value, status')
           .eq('organization_id', organizationId)
-          .or(`title.ilike.${searchTerm}`)
+          .or(`notes.ilike.${ilikeTerm},status.ilike.${ilikeTerm}`)
           .limit(10),
         supabase
           .from('products')
-          .select('id, name, description, price, type')
+          .select('id, name, description, type')
           .eq('organization_id', organizationId)
-          .or(`name.ilike.${searchTerm},description.ilike.${searchTerm}`)
+          .or(`name.ilike.${ilikeTerm},description.ilike.${ilikeTerm}`)
           .limit(10),
       ]);
-
-      // Handle Errors
-      if (leadsRes.error) console.error('[useGlobalSearch] Erro em leads:', leadsRes.error);
-      if (clientsRes.error) console.error('[useGlobalSearch] Erro em clientes:', clientsRes.error);
-      if (tasksRes.error) console.error('[useGlobalSearch] Erro em tarefas:', tasksRes.error);
-      if (salesRes.error) console.error('[useGlobalSearch] Erro em vendas:', salesRes.error);
-      if (productsRes.error) console.error('[useGlobalSearch] Erro em produtos:', productsRes.error);
 
       // Transform leads
       const leadsResults: SearchResult[] = (leadsRes.data || []).map(lead => ({
@@ -107,7 +116,7 @@ export function useGlobalSearch() {
         email: lead.email || undefined,
         phone: lead.phone || undefined,
         status: lead.pipeline_stage || undefined,
-        path: `/leads`, // Navigating to leads page with potential filtering
+        path: `/leads`,
       }));
 
       // Transform clients
@@ -125,8 +134,6 @@ export function useGlobalSearch() {
         id: task.id,
         type: 'task',
         title: task.title,
-        description: task.description || undefined,
-        status: task.status || undefined,
         date: task.due_date || undefined,
         path: `/tarefas`,
       }));
@@ -135,8 +142,8 @@ export function useGlobalSearch() {
       const vendasResults: SearchResult[] = (salesRes.data || []).map(sale => ({
         id: sale.id,
         type: 'sale',
-        title: sale.title || 'Venda sem título',
-        value: sale.value || undefined,
+        title: sale.notes || 'Venda',
+        value: Number(sale.value) || undefined,
         status: sale.status || undefined,
         path: `/vendas`,
       }));
@@ -147,7 +154,6 @@ export function useGlobalSearch() {
         type: 'product',
         title: product.name,
         description: product.description || undefined,
-        value: product.price || undefined,
         status: product.type || undefined,
         path: `/produtos`,
       }));
@@ -177,5 +183,5 @@ export function useGlobalSearch() {
     }
   }, [organizationId]);
 
-  return { results, loading, error, search };
+  return { query, setQuery, results, loading, error, search, clearResults };
 }
