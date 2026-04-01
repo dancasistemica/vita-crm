@@ -389,7 +389,7 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="text-sm font-medium text-neutral-900">{u.full_name}</div>
-                        {u.is_owner && <Badge variant="destructive" className="ml-2 text-[10px]">Dono</Badge>}
+                        {u.is_owner && <Badge variant="error" className="ml-2 text-[10px]">Dono</Badge>}
                       </div>
                       <div className="text-xs text-neutral-500">{u.phone || "—"}</div>
                     </td>
