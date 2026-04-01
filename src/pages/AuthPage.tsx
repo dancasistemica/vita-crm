@@ -1,6 +1,6 @@
-import { Button, Card, Input, Tabs } from "@/components/ui/ds";
+import { Button, Card, Input } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,20 +14,10 @@ const loginSchema = z.object({
   password: z.string().min(6, 'Mínimo 6 caracteres').max(100),
 });
 
-const signupSchema = z.object({
-  fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),
-  email: z.string().trim().email('Email inválido').max(255),
-  password: z.string().min(6, 'Mínimo 6 caracteres').max(100),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'As senhas não coincidem',
-  path: ['confirmPassword'],
-});
-
 type LoginForm = z.infer<typeof loginSchema>;
-type SignupForm = z.infer<typeof signupSchema>;
 
 export default function AuthPage() {
+
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
