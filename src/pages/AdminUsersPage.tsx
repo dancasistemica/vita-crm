@@ -536,7 +536,7 @@ export default function AdminUsersPage() {
           <Button variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleEditSave} isLoading={saving} className="flex-1">
+          <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
             Salvar Alterações
           </Button>
         </div>
