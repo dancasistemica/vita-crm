@@ -2,11 +2,11 @@ import React from 'react';
 import { Menu, X, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/ds';
+import { Button, SidebarTrigger } from '@/components/ui/ds';
 
 interface HeaderProps {
   title?: string;
-  onOpenSidebar: () => void;
+  onOpenSidebar?: () => void;
   sidebarOpen?: boolean;
 }
 
@@ -24,17 +24,23 @@ export function Header({ title, onOpenSidebar, sidebarOpen }: HeaderProps) {
         {/* Logo + Hamburger - Mobile */}
         <div className="flex items-center gap-4">
           {/* Hamburger Menu - Mobile Only */}
-          <button
-            onClick={onOpenSidebar}
-            className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="Menu"
-          >
-            {sidebarOpen ? (
-              <X className="w-5 h-5 sm:w-6 sm:h-6 text-neutral-600" />
-            ) : (
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-neutral-600" />
-            )}
-          </button>
+          {onOpenSidebar ? (
+            <button
+              onClick={onOpenSidebar}
+              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Menu"
+            >
+              {sidebarOpen ? (
+                <X className="w-5 h-5 sm:w-6 sm:h-6 text-neutral-600" />
+              ) : (
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-neutral-600" />
+              )}
+            </button>
+          ) : (
+            <div className="lg:hidden">
+              <SidebarTrigger />
+            </div>
+          )}
 
           {/* Logo - Mobile Only */}
           <div className="lg:hidden flex items-center gap-2">
