@@ -6,7 +6,7 @@ interface SearchResultsProps {
   results: SearchResult[];
   loading: boolean;
   query: string;
-  onSelect: (result: GlobalSearchResult) => void;
+  onSelect: (result: SearchResult) => void;
 }
 
 const typeLabels: Record<GlobalSearchResultType, string> = {
