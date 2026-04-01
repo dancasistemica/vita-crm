@@ -442,10 +442,10 @@ export class DataAccessService {
   }
 
   async getLeadOrigins() {
-    const { data, error } = await supabase
-      .from('lead_origins')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('lead_origins').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getLeadOrigins error:', error); throw error; }
