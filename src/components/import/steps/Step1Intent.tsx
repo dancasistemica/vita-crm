@@ -1,4 +1,4 @@
-import { Button, Card, CardContent } from "@/components/ui/ds";
+import { Button, Card } from "@/components/ui/ds";
 import { Clock, RefreshCw, Shield } from 'lucide-react';
 
 interface Props {

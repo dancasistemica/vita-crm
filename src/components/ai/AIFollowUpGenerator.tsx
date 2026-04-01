@@ -1,4 +1,4 @@
-import { Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
+import { Button, Label, Select, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';

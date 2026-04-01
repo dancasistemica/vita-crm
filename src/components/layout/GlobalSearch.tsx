@@ -1,4 +1,4 @@
-import { Input, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Input, Popover } from "@/components/ui/ds";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";

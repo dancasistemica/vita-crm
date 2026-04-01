@@ -1,4 +1,4 @@
-import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
+import { Badge, Button, Select } from "@/components/ui/ds";
 import { useState, useCallback } from 'react';
 import { Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
 import { toast } from 'sonner';

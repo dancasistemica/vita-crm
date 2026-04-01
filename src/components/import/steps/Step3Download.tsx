@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent } from "@/components/ui/ds";
+import { Badge, Button, Card } from "@/components/ui/ds";
 import { FileSpreadsheet, FileText, Download } from 'lucide-react';
 import { downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';
 import { toast } from 'sonner';

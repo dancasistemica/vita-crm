@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle, Badge, Button, Progress, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
+import { Alert, Badge, Button, Progress, Select } from "@/components/ui/ds";
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';

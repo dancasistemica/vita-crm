@@ -1,4 +1,4 @@
-import { Badge, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label } from "@/components/ui/ds";
+import { Badge, Button, Checkbox, Dialog, Label } from "@/components/ui/ds";
 import { useState } from 'react';
 import { FileDown, FileSpreadsheet, FileText } from 'lucide-react';
 import { toast } from 'sonner';

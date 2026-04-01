@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from "@/components/ui/ds";
+import { Button, Card, Input } from "@/components/ui/ds";
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { PipelineStage } from "@/types/crm";

@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardContent, Skeleton } from "@/components/ui/ds";
+import { Alert, Button, Card, Skeleton } from "@/components/ui/ds";
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';

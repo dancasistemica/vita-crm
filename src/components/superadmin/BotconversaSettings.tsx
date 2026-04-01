@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, Button, Input, Label } from "@/components/ui/ds";
+import { Alert, Button, Input, Label } from "@/components/ui/ds";
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';

@@ -1,4 +1,4 @@
-import { Badge, Button, Checkbox, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/ds";
+import { Badge, Button, Checkbox, DropdownMenu, Select, Skeleton, Table, Tooltip } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';

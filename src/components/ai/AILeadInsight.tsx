@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
+import { Button, Card, Skeleton } from "@/components/ui/ds";
 import { useEffect } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { RefreshCw, Sparkles } from 'lucide-react';

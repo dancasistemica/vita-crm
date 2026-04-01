@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
+import { Button, Card, Skeleton } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { useCRMStore } from '@/store/crmStore';

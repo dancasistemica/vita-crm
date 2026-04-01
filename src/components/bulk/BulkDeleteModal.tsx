@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/ds";
+import { Alert, Button, Checkbox, Dialog } from "@/components/ui/ds";
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';

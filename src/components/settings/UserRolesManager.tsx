@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Badge, Button, Card, Checkbox, ScrollArea, ScrollBar, Switch, Tabs } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';

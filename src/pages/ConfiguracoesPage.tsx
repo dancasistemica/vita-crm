@@ -1,4 +1,4 @@
-import { Alert, Badge, Card, ScrollArea, ScrollBar, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Alert, Badge, Card, ScrollArea, ScrollBar, Tabs } from "@/components/ui/ds";
 import { useState } from "react";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";

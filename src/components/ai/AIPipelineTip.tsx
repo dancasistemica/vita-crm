@@ -1,4 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
+import { Button, Popover } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, RefreshCw, Plus } from 'lucide-react';

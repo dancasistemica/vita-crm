@@ -1,4 +1,4 @@
-import { Button, Calendar, Card, CardContent, Input, Label } from "@/components/ui/ds";
+import { Button, Calendar, Card, Input, Label } from "@/components/ui/ds";
 import { useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 

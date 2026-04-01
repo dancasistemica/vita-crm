@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@/components/ui/ds";
+import { Badge, Button, Card, Input } from "@/components/ui/ds";
 import { useState } from "react";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { Plus, Edit, Trash2 } from "lucide-react";

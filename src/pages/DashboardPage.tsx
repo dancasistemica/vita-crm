@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
+import { Card, Skeleton } from "@/components/ui/ds";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, DollarSign, TrendingUp, Target } from "lucide-react";

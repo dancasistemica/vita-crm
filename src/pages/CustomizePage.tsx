@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogTrigger, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
 import { useState, useRef, useCallback } from 'react';
 import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
 import { useOrganization } from '@/contexts/OrganizationContext';

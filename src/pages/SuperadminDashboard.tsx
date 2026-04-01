@@ -1,4 +1,4 @@
-import { Alert, Badge, Button, Card, Select, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Select, Tabs } from "@/components/ui/ds";
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';

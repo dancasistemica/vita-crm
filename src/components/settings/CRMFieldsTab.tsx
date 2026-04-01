@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input } from "@/components/ui/ds";
+import { Button, Card, Input } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { TagsManagement } from "@/components/settings/TagsManagement";

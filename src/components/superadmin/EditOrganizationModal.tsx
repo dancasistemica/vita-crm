@@ -1,4 +1,4 @@
-import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
+import { Button, Checkbox, Dialog, Input, Label, Select, Separator, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';

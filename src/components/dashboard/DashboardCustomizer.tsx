@@ -1,4 +1,4 @@
-import { Badge, Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, Switch } from "@/components/ui/ds";
+import { Badge, Button, Sheet, Switch } from "@/components/ui/ds";
 import { useState } from 'react';
 import {
   DndContext,

@@ -1,4 +1,4 @@
-import { Badge, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ScrollArea, ScrollBar } from "@/components/ui/ds";
+import { Badge, Card, ScrollArea, ScrollBar } from "@/components/ui/ds";
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";

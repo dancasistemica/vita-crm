@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Switch } from "@/components/ui/ds";
+import { Button, Card, Input, Switch } from "@/components/ui/ds";
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Edit, Trash2, GripVertical, Check, X } from 'lucide-react';

@@ -1,4 +1,4 @@
-import { Button, Card, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Button, Card, Input, Tabs } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Progress } from "@/components/ui/ds";
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, Input, Label, Progress } from "@/components/ui/ds";
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserRole } from '@/hooks/useUserRole';

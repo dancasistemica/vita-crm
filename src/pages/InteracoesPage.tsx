@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
+import { Badge, Button, Card, Dialog, Input, Label, Select, Textarea } from "@/components/ui/ds";
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { Plus, MessageCircle } from "lucide-react";

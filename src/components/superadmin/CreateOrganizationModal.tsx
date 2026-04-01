@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
+import { Badge, Button, Card, Dialog, Input, Label, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { createOrganization } from '@/services/organizationService';

@@ -1,4 +1,4 @@
-import { Alert, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/ds";
+import { Alert, Card } from "@/components/ui/ds";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Target, AlertCircle, Zap } from "lucide-react";
 

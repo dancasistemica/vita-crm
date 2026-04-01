@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Textarea } from "@/components/ui/ds";
+import { Badge, Button, Card, Dialog, Input, Label, Textarea } from "@/components/ui/ds";
 import { type DragEvent, useEffect, useState } from "react";
 import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
 import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";

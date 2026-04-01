@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
+import { Badge, Button, Card, Input, Label, Select, Separator, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
 import { Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
