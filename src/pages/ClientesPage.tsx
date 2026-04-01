@@ -4,6 +4,8 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Search, Filter, FileDown, Pencil, Trash2 } from 'lucide-react';
 import { useClientsFilter, SortField } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
+import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
+import { FilterChip } from '@/components/clients/FilterChip';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 import ExportModal from '@/components/export/ExportModal';
