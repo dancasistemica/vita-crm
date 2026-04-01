@@ -138,89 +138,53 @@ export default function AuthPage() {
             </div>
           </Card>
         ) : (
-          <Card padding="none" className="overflow-hidden">
-            <Tabs defaultValue="login">
-              <div className="p-6 pb-3 border-b border-neutral-100">
-                <div className="flex gap-2 border-b border-neutral-200 mb-4">
-                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Entrar</button>
-                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Criar Conta</button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div>
-                  <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      error={loginForm.formState.errors.email?.message}
-                      required
-                      {...loginForm.register('email')}
-                    />
-                    <Input
-                      label="Senha"
-                      type="password"
-                      placeholder="••••••"
-                      error={loginForm.formState.errors.password?.message}
-                      required
-                      {...loginForm.register('password')}
-                    />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
-                      {isSubmitting ? 'Entrando...' : 'Entrar'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      fullWidth
-                      className="text-sm"
-                      onClick={() => setShowForgotPassword(true)}
-                    >
-                      Esqueci minha senha
-                    </Button>
-                  </form>
-                </div>
+          <Card padding="lg" className="overflow-hidden">
+            <div className="space-y-6">
+              <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+                <Input
+                  label="Email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  error={loginForm.formState.errors.email?.message}
+                  required
+                  {...loginForm.register('email')}
+                />
+                <Input
+                  label="Senha"
+                  type="password"
+                  placeholder="••••••"
+                  error={loginForm.formState.errors.password?.message}
+                  required
+                  {...loginForm.register('password')}
+                />
+                <Button type="submit" disabled={isSubmitting} fullWidth>
+                  {isSubmitting ? 'Entrando...' : 'Entrar'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  fullWidth
+                  className="text-sm"
+                  onClick={() => setShowForgotPassword(true)}
+                >
+                  Esqueci minha senha
+                </Button>
+              </form>
 
-                <div>
-                  <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
-                    <Input
-                      label="Nome completo"
-                      placeholder="Seu nome"
-                      error={signupForm.formState.errors.fullName?.message}
-                      required
-                      {...signupForm.register('fullName')}
-                    />
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      error={signupForm.formState.errors.email?.message}
-                      required
-                      {...signupForm.register('email')}
-                    />
-                    <Input
-                      label="Senha"
-                      type="password"
-                      placeholder="Mínimo 6 caracteres"
-                      error={signupForm.formState.errors.password?.message}
-                      required
-                      {...signupForm.register('password')}
-                    />
-                    <Input
-                      label="Confirmar senha"
-                      type="password"
-                      placeholder="Repita a senha"
-                      error={signupForm.formState.errors.confirmPassword?.message}
-                      required
-                      {...signupForm.register('confirmPassword')}
-                    />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
-                      {isSubmitting ? 'Criando conta...' : 'Criar conta'}
-                    </Button>
-                  </form>
-                </div>
+              <div className="text-center pt-4 border-t border-neutral-100">
+                <p className="text-sm text-neutral-600">
+                  Ainda não tem uma conta?{' '}
+                  <Link
+                    to="/signup"
+                    className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+                  >
+                    Criar conta
+                  </Link>
+                </p>
               </div>
-            </Tabs>
+            </div>
           </Card>
+
         )}
       </div>
     </div>
