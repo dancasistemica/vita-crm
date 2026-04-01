@@ -28,6 +28,8 @@ export default function CRMLayout() {
   const { currentOrganization } = useOrganizationSwitch();
   const { searchQuery, setSearchQuery, results, loading } = useSearch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isDashboard = location.pathname === "/";
   const organizationName = currentOrganization?.name || brand.org_display_name || "CRM";
 
   return (
