@@ -34,7 +34,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         {/* Header */}
         <Header
           title={title}
+          onOpenSidebar={() => setSidebarOpen(true)}
         />
+
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto">
