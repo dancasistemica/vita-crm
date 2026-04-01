@@ -172,12 +172,14 @@ export default function DashboardPage() {
         <div>
           <div className="space-y-3">
             {salesByDay.slice(-7).map((day) => (
-              <div key={day.day} className="flex items-center gap-3">
-                <span className="text-sm text-neutral-500 w-24">{day.day}</span>
-                <div className="flex-1 bg-muted rounded-full h-2">
+              <div key={day.day} className="flex items-center gap-2 sm:gap-3 flex-nowrap overflow-hidden">
+                <span className="text-xs sm:text-sm text-neutral-500 min-w-[60px] sm:w-24 shrink-0">{day.day}</span>
+                <div className="flex-1 bg-muted rounded-full h-2 min-w-0">
                   <div className="bg-primary h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
                 </div>
-                <span className="text-sm font-semibold text-foreground w-32 text-right">R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span className="text-xs sm:text-sm font-semibold text-foreground min-w-[80px] sm:w-32 text-right shrink-0">
+                  R$ {day.value.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}
+                </span>
               </div>
             ))}
           </div>

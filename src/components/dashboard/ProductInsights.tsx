@@ -232,7 +232,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       )}
 
       {/* TIER 4: PADRÕES DE USO */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="shadow-card border-border/60 border-l-4 border-l-info">
           <div>
             <p className="text-xs text-neutral-500 mb-1">📅 Leads por Dia</p>
