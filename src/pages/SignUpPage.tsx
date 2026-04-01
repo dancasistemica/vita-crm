@@ -1,147 +1,127 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Card, Input } from "@/components/ui/ds";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
+import { ArrowLeft } from 'lucide-react';
+
+const signupSchema = z.object({
+  fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),
+  email: z.string().trim().email('Email inválido').max(255),
+  password: z.string().min(6, 'Mínimo 6 caracteres').max(100),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'As senhas não coincidem',
+  path: ['confirmPassword'],
+});
+
+type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  const signupForm = useForm<SignupForm>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
+  });
 
+  const handleSignup = async (data: SignupForm) => {
+    setIsSubmitting(true);
     try {
-      console.log('[SignUpPage] Criando conta com:', email);
-
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: { full_name: data.fullName },
+          emailRedirectTo: window.location.origin,
+        },
       });
+      if (error) throw error;
 
-      if (signUpError) {
-        console.error('[SignUpPage] Erro de cadastro:', signUpError);
-        setError(signUpError.message || 'Erro ao criar conta');
+      toast.success('Conta criada! Verifique seu email para confirmar o cadastro.');
+      signupForm.reset();
+      navigate('/login');
+    } catch (error: any) {
+      console.error('[SignUpPage] Signup error:', error);
+      if (error.message?.includes('already registered')) {
+        toast.error('Este email já está cadastrado');
       } else {
-        console.log('[SignUpPage] Conta criada com sucesso');
-        setError('');
-        alert('Verifique seu email para confirmar a conta');
-        navigate('/login');
+        toast.error(error.message || 'Erro ao criar conta');
       }
-    } catch (err) {
-      console.error('[SignUpPage] Erro inesperado:', err);
-      setError('Erro ao criar conta. Tente novamente.');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <Card variant="elevated" padding="lg" className="w-full max-w-md">
-        {/* Voltar */}
-        <button
-          onClick={() => navigate('/login')}
-          className="flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar para login
-        </button>
-
-        {/* Logo e Branding */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-neutral-900 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
+      <div className="w-full max-w-md">
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <Link to="/login" className="self-start flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 mb-2 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Voltar para login
+          </Link>
+          <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
+            💃
+          </div>
+          <h1 className="text-4xl font-bold text-neutral-900">
             Criar Conta
           </h1>
-          <p className="text-sm text-neutral-600">
-            Comece a gerenciar seus leads com a Dança Sistêmica
-          </p>
+          <p className="text-sm text-neutral-600">Junte-se ao Dança Sistêmica</p>
         </div>
 
-        {/* Formulário */}
-        <form onSubmit={handleSignUp} className="space-y-4">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
-              Email *
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="seu@email.com"
+        <Card padding="lg">
+          <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
+            <Input
+              label="Nome completo"
+              placeholder="Seu nome"
+              error={signupForm.formState.errors.fullName?.message}
               required
-              disabled={loading}
-              className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors disabled:bg-neutral-100"
+              {...signupForm.register('fullName')}
             />
+            <Input
+              label="Email"
+              type="email"
+              placeholder="seu@email.com"
+              error={signupForm.formState.errors.email?.message}
+              required
+              {...signupForm.register('email')}
+            />
+            <Input
+              label="Senha"
+              type="password"
+              placeholder="Mínimo 6 caracteres"
+              error={signupForm.formState.errors.password?.message}
+              required
+              {...signupForm.register('password')}
+            />
+            <Input
+              label="Confirmar senha"
+              type="password"
+              placeholder="Repita a senha"
+              error={signupForm.formState.errors.confirmPassword?.message}
+              required
+              {...signupForm.register('confirmPassword')}
+            />
+            <Button type="submit" disabled={isSubmitting} fullWidth>
+              {isSubmitting ? 'Criando conta...' : 'Criar conta'}
+            </Button>
+          </form>
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-neutral-600">
+              Já tem uma conta?{' '}
+              <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
+                Fazer login
+              </Link>
+            </p>
           </div>
-
-          {/* Senha */}
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
-              Senha *
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                disabled={loading}
-                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors disabled:bg-neutral-100 pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Mensagem de Erro */}
-          {error && (
-            <div className="p-3 bg-error-50 border border-error-200 rounded-lg">
-              <p className="text-sm text-error-600">{error}</p>
-            </div>
-          )}
-
-          {/* Botão de Ação */}
-          <Button
-            variant="primary"
-            className="w-full"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? 'Processando...' : 'Criar Conta'}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-neutral-600">
-            Já tem uma conta?{' '}
-            <button
-              onClick={() => navigate('/login')}
-              className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
-            >
-              Fazer login
-            </button>
-          </p>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
