@@ -1,12 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Separator } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,6 +6,7 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
 import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
+import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -337,17 +330,17 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       placeholder="Mínimo 8 caracteres"
                       className="pr-10"
                     />
-                    < variant="secondary" size="sm"
+                    <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </>
+                    </Button>
                   </div>
-                  < type="button" variant="neutral" onClick={handleGeneratePassword} className="gap-1 shrink-0">
+                  <Button type="button" variant="secondary" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
-                  </>
+                  </Button>
                 </div>
 
                 {passwordStrength && (
@@ -371,11 +364,11 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         )}
 
         <DialogFooter>
-          < variant="neutral" onClick={() => onOpenChange(false)}>Cancelar</>
-          < onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
-          </>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

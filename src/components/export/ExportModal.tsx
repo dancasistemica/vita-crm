@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import { FileDown, FileSpreadsheet, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { exportToCSV, exportToPDF, type ExportColumn } from '@/services/exportService';
+import { Badge, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label } from "@/components/ui/ds";
 
 const LEAD_COLUMNS: ExportColumn[] = [
   { value: 'name', label: 'Nome' },

@@ -2,9 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Lead } from "@/types/crm";
 import { cn } from "@/lib/utils";
 import { Search, X, ChevronDown } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/ds";
-import { Skeleton } from "@/components/ui/ds";
-import { ScrollArea } from "@/components/ui/ds";
+import { Avatar, AvatarFallback, Button, ScrollArea, Skeleton } from "@/components/ui/ds";
 
 interface LeadSelectWithSearchProps {
   value: string;
@@ -120,7 +118,7 @@ export default function LeadSelectWithSearch({
   return (
     <div ref={containerRef} className="relative w-full" onKeyDown={handleKeyDown}>
       {/* Trigger */}
-      < variant="secondary" size="sm"
+      <Button variant="secondary" size="sm"
         type="button"
         disabled={disabled}
         onClick={() => setOpen(o => !o)}
@@ -151,7 +149,7 @@ export default function LeadSelectWithSearch({
           <span className="text-muted-foreground">{placeholder}</span>
         )}
         <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-      </>
+      </Button>
 
       {/* Dropdown */}
       {open && (
@@ -167,9 +165,9 @@ export default function LeadSelectWithSearch({
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
             {query && (
-              < variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+              <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
-              </>
+              </Button>
             )}
           </div>
 
@@ -186,7 +184,7 @@ export default function LeadSelectWithSearch({
                 </p>
               ) : (
                 filtered.map((lead, idx) => (
-                  < variant="secondary" size="sm"
+                  <Button variant="secondary" size="sm"
                     key={lead.id}
                     type="button"
                     role="option"
@@ -217,7 +215,7 @@ export default function LeadSelectWithSearch({
                         )}
                       </div>
                     </div>
-                  </>
+                  </Button>
                 ))
               )}
             </div>

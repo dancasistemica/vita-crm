@@ -1,14 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
+import { Badge, Button, Checkbox, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/ds";
 
 interface ClientLead {
   id: string;
@@ -187,9 +180,9 @@ export default function ClientsTable({
             </div>
             <div className="flex flex-wrap gap-1 mb-2">
               {clientSales.slice(0, 2).map(s => (
-                <Badge key={s.id} variant="neutral" className="text-[10px]">{getProductName(s.productId)}</Badge>
+                <Badge key={s.id} variant="secondary" className="text-[10px]">{getProductName(s.productId)}</Badge>
               ))}
-              {clientSales.length > 2 && <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>}
+              {clientSales.length > 2 && <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
@@ -280,12 +273,12 @@ export default function ClientsTable({
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {clientSales.slice(0, 2).map(s => (
-                      <Badge key={s.id} variant="neutral" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
+                      <Badge key={s.id} variant="secondary" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
                     ))}
                     {clientSales.length > 2 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>
+                          <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>
                         </TooltipTrigger>
                         <TooltipContent>
                           {clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}

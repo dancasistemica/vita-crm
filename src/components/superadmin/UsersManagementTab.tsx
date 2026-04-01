@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
 import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
 import { Plus, Trash2, ShieldCheck } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface SuperadminUser {
   id: string;
@@ -89,9 +85,9 @@ export function UsersManagementTab() {
           <ShieldCheck className="h-4 w-4" />
           <span>{users.length} superadmin(s)</span>
         </div>
-        < onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Adicionar Superadmin
-        </>
+        </Button>
       </div>
 
       <Table>
@@ -112,9 +108,9 @@ export function UsersManagementTab() {
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
-                < variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
+                <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
-                </>
+                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -141,10 +137,10 @@ export function UsersManagementTab() {
             </div>
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => setOpen(false)}>Cancelar</>
-            < onClick={handleAdd} disabled={submitting}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button onClick={handleAdd} disabled={submitting}>
               {submitting ? 'Adicionando...' : 'Adicionar'}
-            </>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

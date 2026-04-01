@@ -1,12 +1,8 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLeadsData } from '@/hooks/useLeadsData';
+import { Alert, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 type EditableType = 'leads' | 'clients';
 

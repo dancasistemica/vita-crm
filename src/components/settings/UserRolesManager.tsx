@@ -2,15 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { Lock, Save } from 'lucide-react';
-import { ScrollArea, ScrollBar } from '@/components/ui/ds';
 import { toast } from 'sonner';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface PermissionModule {
   label: string;
@@ -274,7 +268,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-sm flex items-center gap-3">
                             <span>{mod.icon}</span> {mod.label}
-                            <Badge variant="neutral" className="ml-1 text-xs">
+                            <Badge variant="secondary" className="ml-1 text-xs">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
                           </CardTitle>
@@ -308,10 +302,10 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
       </Tabs>
 
       <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t">
-        < onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
+        <Button onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
           <Save className="h-4 w-4 mr-2" />
           {saving ? 'Salvando...' : 'Salvar Permissões'}
-        </>
+        </Button>
       </div>
     </div>
   );

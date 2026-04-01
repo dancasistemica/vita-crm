@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { Alert, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/ds";
 
 type DeletableType = 'leads' | 'clients';
 

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useImportModal } from '@/hooks/useImportModal';
-import { } from '@/components/ui/ds';
 import { ArrowLeft } from 'lucide-react';
 import Step1Intent from '@/components/import/steps/Step1Intent';
 import Step2Explanation from '@/components/import/steps/Step2Explanation';
@@ -9,6 +8,7 @@ import Step3Download from '@/components/import/steps/Step3Download';
 import Step4Upload from '@/components/import/steps/Step4Upload';
 import Step5Import from '@/components/import/steps/Step5Import';
 import Step6Results from '@/components/import/steps/Step6Results';
+import { Button } from "@/components/ui/ds";
 
 const STEP_LABELS = ['Intenção', 'Explicação', 'Download', 'Upload', 'Importação', 'Resultado'];
 
@@ -30,9 +30,9 @@ export default function ImportLeadsWizard() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-3">
-        < variant="ghost" size="sm" onClick={handleClose}>
+        <Button variant="ghost" size="sm" onClick={handleClose}>
           <ArrowLeft className="h-4 w-4" />
-        </>
+        </Button>
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-neutral-900">📥 Importar Leads</h1>
         </div>

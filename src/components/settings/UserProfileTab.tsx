@@ -5,14 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCPF, validateCPF } from '@/services/cpfValidator';
 import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Progress } from '@/components/ui/ds';
 import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Progress } from "@/components/ui/ds";
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -210,13 +204,13 @@ export default function UserProfileTab() {
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
           </div>
           <div className="flex gap-3">
-            < variant="neutral" size="sm" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
-            </>
+            </Button>
             {(displayAvatar) && (
-              < variant="neutral" size="sm" onClick={handleRemovePhoto}>
+              <Button variant="secondary" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
-              </>
+              </Button>
             )}
           </div>
           {previewUrl && <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
@@ -248,7 +242,7 @@ export default function UserProfileTab() {
           </div>
           <div className="space-y-3">
             <Label>Função Atual</Label>
-            <Badge variant="neutral" className="text-sm">{roleLabels[role || 'member'] || role}</Badge>
+            <Badge variant="secondary" className="text-sm">{roleLabels[role || 'member'] || role}</Badge>
           </div>
         </CardContent>
       </Card>
@@ -276,9 +270,9 @@ export default function UserProfileTab() {
         </CardContent>
       </Card>
 
-      < onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
+      <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </>
+      </Button>
     </div>
   );
 }

@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
 import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/ds';
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
 
 interface CustomField {
   id: string;
@@ -481,9 +472,9 @@ export function CustomFieldsManager() {
                 className="pl-9"
               />
             </div>
-            < onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
+            <Button onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
               <Plus className="h-4 w-4" /> Adicionar Campo
-            </>
+            </Button>
           </div>
         )}
       </div>
@@ -516,7 +507,7 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
@@ -525,23 +516,21 @@ export function CustomFieldsManager() {
                         {field.org_count} de {totalOrgs}
                       </Badge>
                       {field.org_count < totalOrgs && (
-                        <
-                          variant="ghost"
+                        <Button variant="ghost"
                           size="sm"
                           className="text-xs px-1 h-auto"
                           onClick={() => handleApplyToAll(field)}
                         >
                           Aplicar para todas
-                        </>
+                        </Button>
                       )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </>
-                        <
-                          variant="ghost"
+                        </Button>
+                        <Button variant="ghost"
                           size="sm"
                           className="h-7 w-7 text-destructive"
                           onClick={() => {
@@ -550,7 +539,7 @@ export function CustomFieldsManager() {
                           }}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -601,12 +590,12 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {field.is_required ? <Badge variant="default" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
+                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
                     </TableCell>
                     <TableCell>
                       <Badge variant={field.is_active ? 'default' : 'secondary'} className="text-xs">
@@ -615,12 +604,12 @@ export function CustomFieldsManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        < variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
+                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </>
-                        < variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
                           <Trash2 className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -638,7 +627,7 @@ export function CustomFieldsManager() {
             <DialogTitle>
               {editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo Customizado'}
               {isGlobalMode && (
-                <Badge variant="neutral" className="ml-2 text-xs">Global</Badge>
+                <Badge variant="secondary" className="ml-2 text-xs">Global</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -673,11 +662,11 @@ export function CustomFieldsManager() {
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  < type="button" variant="neutral" size="sm" onClick={addOption}>+</>
+                  <Button type="button" variant="secondary" size="sm" onClick={addOption}>+</Button>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
-                    <Badge key={opt} variant="neutral" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
+                    <Badge key={opt} variant="secondary" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
                       {opt} <X className="h-3 w-3" />
                     </Badge>
                   ))}
@@ -696,10 +685,10 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
-            < onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
+            <Button variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
+            <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
-            </>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

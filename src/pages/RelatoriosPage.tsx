@@ -1,6 +1,6 @@
 import { useCRMStore } from "@/store/crmStore";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Tooltip } from "@/components/ui/ds";
 
 const COLORS = ['hsl(350,35%,55%)', 'hsl(18,50%,58%)', 'hsl(38,92%,50%)', 'hsl(152,55%,45%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)'];
 

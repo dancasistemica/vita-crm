@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Select } from "@/components/ui/ds/Select";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Textarea } from "@/components/ui/ds";
-import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
 import { toast } from "sonner";
 import AIResponseSuggestion from "@/components/ai/AIResponseSuggestion";
+import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 export default function InteracoesPage() {
   const { leads, interactions, addInteraction } = useCRMStore();
@@ -66,7 +59,7 @@ export default function InteracoesPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-medium text-sm">{getLeadName(interaction.leadId)}</span>
-                  <Badge variant="neutral" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
+                  <Badge variant="secondary" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
                   <span className="text-xs text-muted-foreground">{interaction.date}</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">{interaction.note}</p>
@@ -119,7 +112,7 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
         />
       )}
 
-      < className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</Button>
     </div>
   );
 }

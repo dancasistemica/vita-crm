@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { } from "@/components/ui/ds/";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
 import { toast } from "sonner";
+import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 interface TaskStatus {
   id: string;
@@ -71,9 +68,9 @@ export default function TaskStatusManager({
           <CardTitle className="text-base font-semibold flex items-center gap-3">
             <Settings className="h-4 w-4" /> Gerenciar Status
           </CardTitle>
-          < size="sm" variant="neutral" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
+          <Button size="sm" variant="secondary" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          </>
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -87,9 +84,9 @@ export default function TaskStatusManager({
               <Label className="text-xs">Cor</Label>
               <input type="color" value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} className="h-9 w-12 rounded border cursor-pointer" />
             </div>
-            < size="sm" onClick={handleSubmit} disabled={!form.name.trim()}>
+            <Button size="sm" onClick={handleSubmit} disabled={!form.name.trim()}>
               {editingId ? "Salvar" : "Criar"}
-            </>
+            </Button>
           </div>
         )}
         {statuses.length === 0 && !showForm && (
@@ -102,12 +99,12 @@ export default function TaskStatusManager({
               <span className="text-sm font-medium">{s.name}</span>
             </div>
             <div className="flex gap-1">
-              < variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleEdit(s)}>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleEdit(s)}>
                 <Edit2 className="h-3 w-3" />
-              </>
-              < variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => handleDelete(s)}>
+              </Button>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => handleDelete(s)}>
                 <Trash2 className="h-3 w-3" />
-              </>
+              </Button>
             </div>
           </div>
         ))}

@@ -1,14 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Slider } from '@/components/ui/ds';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/ds';
 import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 interface SystemSettingsMap {
   system_name: string;
@@ -233,9 +227,9 @@ export function SystemSettings() {
                   )}
                 </div>
                 {settings.logo_url && (
-                  < variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
+                  <Button variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </>
+                  </Button>
                 )}
                 {settings.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -509,10 +503,10 @@ export function SystemSettings() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
-              < variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
-              </>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: settings.accent_color }}>Tag 1</span>
@@ -532,10 +526,10 @@ export function SystemSettings() {
 
       {/* Save button */}
       <div className="flex justify-end">
-        < onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
+        <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
           <Save className="h-4 w-4" />
           {saving ? 'Salvando...' : 'Salvar Configurações do Sistema'}
-        </>
+        </Button>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Input, Select, Badge, Alert, Card, Button } from '@/components/ui/ds';
+import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 interface CreateSaleModalProps {
   isOpen: boolean;
@@ -273,7 +273,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                   }}
                 />
                 {formData.stage_value > 0 && (
-                  <Card variant="default" padding="md" className="bg-primary-50 border-primary-100">
+                  <Card variant="primary" padding="md" className="bg-primary-50 border-primary-100">
                     <p className="text-sm text-primary-700 font-semibold text-center">
                       Valor Previsto: R$ {formData.stage_value.toFixed(2)}
                     </p>

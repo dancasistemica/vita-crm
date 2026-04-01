@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { Card } from '@/components/ui/ds';
+import { Card } from "@/components/ui/ds";
 
 interface QuickAccessCardProps {
   icon: LucideIcon;

@@ -4,11 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/ds/';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Select } from '@/components/ui/ds/Select';
-import { Badge } from '@/components/ui/ds/Badge';
+import { Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 interface CreateSubscriptionModalProps {
   isOpen: boolean;
@@ -223,7 +219,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 1 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">1</Badge>
+                  <Badge variant="primary" size="md">1</Badge>
                   Selecione o Cliente/Lead
                 </h3>
                 {loadingData ? (
@@ -267,7 +263,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 2 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">2</Badge>
+                  <Badge variant="primary" size="md">2</Badge>
                   Selecione o Produto
                 </h3>
                 {loadingData ? (
@@ -289,7 +285,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 3 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">3</Badge>
+                  <Badge variant="primary" size="md">3</Badge>
                   Selecione a Etapa (Valor Mensal)
                 </h3>
                 {productSalesStages.filter(s => s.product_id === formData.product_id).length === 0 ? (
@@ -315,7 +311,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 4 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">4</Badge>
+                  <Badge variant="primary" size="md">4</Badge>
                   Forma de Pagamento
                 </h3>
                 {activePaymentMethods.length === 0 ? (
@@ -335,7 +331,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 5 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">5</Badge>
+                  <Badge variant="primary" size="md">5</Badge>
                   Datas da Mensalidade
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -362,7 +358,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 6 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">6</Badge>
+                  <Badge variant="primary" size="md">6</Badge>
                   Data Final (Opcional)
                 </h3>
                 <p className="text-sm text-neutral-500">
@@ -380,10 +376,10 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 7 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">7</Badge>
+                  <Badge variant="primary" size="md">7</Badge>
                   Configuração de Pagamento
                 </h3>
-                <Card padding="md" variant="default" className="flex items-center justify-between">
+                <Card padding="md" variant="primary" className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-neutral-900">Baixa Automática</p>
                     <p className="text-xs text-neutral-500">Marcar mensalidade como paga automaticamente no vencimento</p>
@@ -402,7 +398,7 @@ export const CreateSubscriptionModal = ({ isOpen, onClose, onSuccess }: CreateSu
             {currentPhase === 8 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-700">
-                  <Badge variant="default" size="md">8</Badge>
+                  <Badge variant="primary" size="md">8</Badge>
                   Notas Adicionais
                 </h3>
                 <textarea

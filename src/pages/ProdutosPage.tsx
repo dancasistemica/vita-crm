@@ -1,8 +1,8 @@
 import { type DragEvent, useEffect, useState } from "react";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Textarea, Badge } from "@/components/ui/ds";
 import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
 import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
 import { useOrganization } from "@/contexts/OrganizationContext";
+import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Textarea } from "@/components/ui/ds";
 
 export default function ProdutosPage() {
   const { organizationId } = useOrganization();

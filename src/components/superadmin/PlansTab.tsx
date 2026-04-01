@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
 import { Plus, Trash2, Users, FileText, Link } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 interface Plan {
   id: string;
@@ -100,9 +93,9 @@ export function PlansTab() {
         onCancel={() => setDeleteConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex justify-end">
-        < onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano
-        </>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -111,7 +104,7 @@ export function PlansTab() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{plan.name}</CardTitle>
-                <Badge variant="neutral">
+                <Badge variant="secondary">
                   {plan.period === 'monthly' ? 'Mensal' : 'Anual'}
                 </Badge>
               </div>
@@ -142,9 +135,9 @@ export function PlansTab() {
                 </div>
               </div>
 
-              < variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
+              <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
-              </>
+              </Button>
             </CardContent>
           </Card>
         ))}
@@ -198,8 +191,8 @@ export function PlansTab() {
             </div>
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => setOpen(false)}>Cancelar</>
-            < onClick={handleCreate}>Criar Plano</>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCreate}>Criar Plano</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

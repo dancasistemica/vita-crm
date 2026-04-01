@@ -3,11 +3,6 @@ import { Loader2 } from 'lucide-react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/ds';
 import { toast } from 'sonner';
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 const CRON_URL = 'https://yelawymcltqewpkwsxxb.supabase.co/functions/v1/send-scheduled-messages';
 const CRON_SCHEDULE_MINUTES = 5;
@@ -301,7 +297,7 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
               disabled={botconversaLoading}
             />
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              < onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
+              <Button onClick={handleSaveBotconversaKey} disabled={botconversaSaving || botconversaLoading}>
                 {botconversaSaving ? (
                   <span className="inline-flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -310,15 +306,14 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 ) : (
                   'Salvar'
                 )}
-              </>
+              </Button>
               {/* TESTE: Botão SEM condição */}
-              <
-                onClick={handleActivateAutomation}
+              <Button onClick={handleActivateAutomation}
                 className="bg-green-600 hover:bg-green-700 w-full mt-4"
                 data-testid="activate-automation-button"
               >
                 Ativar Automação (TESTE)
-              </>
+              </Button>
               {!showActivate && (
                 <div className="text-sm text-amber-600 p-3 bg-amber-50 rounded border border-amber-200">
                   ⚠️ Debug: showActivate = {String(showActivate)}
@@ -475,16 +470,15 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                < variant="neutral" onClick={handleCopy} disabled={!token || loading}>
+                <Button variant="secondary" onClick={handleCopy} disabled={!token || loading}>
                   Copy
-                </>
-                <
-                  variant="error"
+                </Button>
+                <Button variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
                   {regenerating ? 'Regenerating...' : 'Regenerate'}
-                </>
+                </Button>
               </div>
             </div>
           </div>

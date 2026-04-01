@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import { Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
-import { Separator } from '@/components/ui/ds';
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 const BUSINESS_MODELS = ['B2B', 'B2C', 'B2B2C', 'Marketplace', 'SaaS', 'Agência', 'Consultoria', 'Outro'];
 
@@ -103,7 +96,7 @@ export default function AIContextTab() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
-                <Badge key={s} variant="neutral" className="gap-1">
+                <Badge key={s} variant="secondary" className="gap-1">
                   {s}
                   <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
@@ -112,7 +105,7 @@ export default function AIContextTab() {
             {services.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTED_SERVICES.map(s => (
-                  <Badge key={s} variant="neutral" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
+                  <Badge key={s} variant="secondary" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
                     + {s}
                   </Badge>
                 ))}

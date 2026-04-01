@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
-import { Button, Card, Input, Select, Badge, Alert } from '@/components/ui/ds';
 import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import EditSaleModal from '@/components/sales/EditSaleModal';
+import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 export function VendasPage() {
   const { organization } = useOrganization();
@@ -110,7 +110,7 @@ export function VendasPage() {
       )}
 
       {/* FILTER BAR */}
-      <Card variant="default" padding="md">
+      <Card variant="primary" padding="md">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Input
             placeholder="Buscar por cliente ou etapa..."

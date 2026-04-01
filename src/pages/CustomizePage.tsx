@@ -2,15 +2,9 @@ import { useState, useRef, useCallback } from 'react';
 import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Slider } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 const PALETTES = [
   { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
@@ -113,12 +107,12 @@ export default function CustomizePage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">🎨 Personalizar</h1>
         <div className="flex gap-3">
-          < variant="neutral" onClick={handleReset} disabled={saving}>
+          <Button variant="secondary" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
-          </>
-          < onClick={handleSave} disabled={saving}>
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
             <Save className="h-4 w-4 mr-1" /> {saving ? 'Salvando...' : 'Salvar'}
-          </>
+          </Button>
         </div>
       </div>
 
@@ -162,9 +156,9 @@ export default function CustomizePage() {
                   )}
                 </div>
                 {brand.logo_url && (
-                  < variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
+                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </>
+                  </Button>
                 )}
                 {brand.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -264,9 +258,9 @@ export default function CustomizePage() {
                 <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    < variant="neutral" size="sm" className="min-h-[44px] gap-3">
+                    <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
                       <Globe className="h-4 w-4" /> Usar Cores Globais
-                    </>
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -326,7 +320,7 @@ export default function CustomizePage() {
                 <Label className="text-sm font-medium mb-2 block">Paletas prontas</Label>
                 <div className="flex flex-wrap gap-3">
                   {PALETTES.map(p => (
-                    < variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
+                    <Button variant="secondary" size="sm" key={p.name} onClick={() => handlePalette(p)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg border hover:border-primary transition-colors bg-card">
                       <div className="flex gap-1">
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.primary }} />
@@ -334,7 +328,7 @@ export default function CustomizePage() {
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.accent }} />
                       </div>
                       <span className="text-xs font-medium">{p.name}</span>
-                    </>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -420,10 +414,10 @@ export default function CustomizePage() {
           <Card>
             <CardContent className="p-4 space-y-3">
               <p className="text-xs text-muted-foreground">Botão primário</p>
-              < variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
+              <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
-              </>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: brand.accent_color }}>Tag 1</span>

@@ -1,16 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Progress } from '@/components/ui/ds';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
 import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Progress, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;
@@ -201,10 +197,10 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
 
       {/* Summary badges */}
       <div className="flex gap-3 justify-center flex-wrap">
-        <Badge variant="neutral" className="bg-success/20 text-success">{successCount} novos</Badge>
-        {state.duplicates.length > 0 && <Badge variant="neutral" className="bg-warning/20 text-warning">{state.duplicates.length} duplicatas</Badge>}
+        <Badge variant="secondary" className="bg-success/20 text-success">{successCount} novos</Badge>
+        {state.duplicates.length > 0 && <Badge variant="secondary" className="bg-warning/20 text-warning">{state.duplicates.length} duplicatas</Badge>}
         {errorCount > 0 && <Badge variant="error">{errorCount} erros</Badge>}
-        {warningCount > 0 && <Badge variant="neutral" className="bg-accent/20 text-accent">{warningCount} avisos</Badge>}
+        {warningCount > 0 && <Badge variant="secondary" className="bg-accent/20 text-accent">{warningCount} avisos</Badge>}
       </div>
 
       {state.error && (
@@ -236,7 +232,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           {state.newOptions.newTags.length > 0 && (
             <div className="flex flex-wrap gap-1 items-center">
               <span className="text-[11px] text-muted-foreground">Tags:</span>
-              {state.newOptions.newTags.map(t => <Badge key={t} variant="neutral" className="text-[10px]">{t}</Badge>)}
+              {state.newOptions.newTags.map(t => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
             </div>
           )}
         </div>

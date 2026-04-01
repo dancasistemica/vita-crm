@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Skeleton } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
+import { Badge, Skeleton } from "@/components/ui/ds";
 import {
   UserPlus, ArrowRight, MessageSquare, CheckSquare, CheckCircle, ShoppingCart, Clock
 } from 'lucide-react';
@@ -246,7 +245,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
                 </div>
                 <div className="flex-1 pt-0.5">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <Badge variant="neutral" className="text-[10px] px-1.5 py-0">
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                       {config.label}
                     </Badge>
                     <span className="text-xs text-muted-foreground">

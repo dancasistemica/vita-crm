@@ -1,15 +1,10 @@
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
 import { EditOrganizationModal } from './EditOrganizationModal';
 import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface Org {
   id: string;
@@ -154,9 +149,9 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 : `${orgs.length} organização(ões) cadastrada(s)`}
             </span>
           </div>
-          < onClick={() => setCreateOpen(true)} className="gap-3">
+          <Button onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
-          </>
+          </Button>
         </div>
 
         {/* Filter bar */}
@@ -192,9 +187,9 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             </SelectContent>
           </Select>
           {hasActiveFilters && (
-            < variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
               <X className="h-4 w-4" /> Limpar
-            </>
+            </Button>
           )}
         </div>
 
@@ -222,7 +217,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 <TableCell className="font-medium">{org.name}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
                 <TableCell>
-                  <Badge variant="neutral">{org.plan}</Badge>
+                  <Badge variant="secondary">{org.plan}</Badge>
                 </TableCell>
                 <TableCell>
                   <Select
@@ -247,7 +242,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={org.active ? 'default' : 'destructive'}>
+                  <Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
                   </Badge>
                 </TableCell>
@@ -256,19 +251,18 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    < variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
+                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
-                    </>
-                    < variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
-                    </>
-                    <
-                      variant={org.active ? 'destructive' : 'default'}
+                    </Button>
+                    <Button variant={org.active ? 'error' : 'primary'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
-                    </>
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

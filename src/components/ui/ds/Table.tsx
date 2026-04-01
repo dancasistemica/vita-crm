@@ -29,8 +29,11 @@ export const TableRow = ({ children, className = '', onClick }: { children: Reac
   </tr>
 );
 
-export const TableHead = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <th className={`px-4 py-3 font-medium ${className}`}>
+export const TableHead = ({ children, className = '', onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
+  <th 
+    onClick={onClick}
+    className={`px-4 py-3 font-medium ${className} ${onClick ? 'cursor-pointer' : ''}`}
+  >
     {children}
   </th>
 );
@@ -38,7 +41,7 @@ export const TableHead = ({ children, className = '' }: { children: React.ReactN
 export const TableCell = ({ children, className = '', onClick }: { children: React.ReactNode; className?: string; onClick?: (e: any) => void }) => (
   <td 
     onClick={onClick}
-    className={`px-4 py-3 text-sm ${className}`}
+    className={`px-4 py-3 text-sm ${className} ${onClick ? 'cursor-pointer' : ''}`}
   >
     {children}
   </td>

@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 import { useBotconversaConfig } from '@/hooks/useBotconversaConfig';
-import { Alert, AlertDescription } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
+import { Alert, AlertDescription, Button, Input, Label } from "@/components/ui/ds";
 
 interface BotconversaSettingsProps {
   organizationId: string;
@@ -90,9 +87,9 @@ export const BotconversaSettings = ({
           </AlertDescription>
         </Alert>
 
-        < onClick={() => window.location.reload()}>
+        <Button onClick={() => window.location.reload()}>
           Recarregar Página
-        </>
+        </Button>
       </div>
     );
   }
@@ -116,16 +113,15 @@ export const BotconversaSettings = ({
           </div>
 
           <div className="flex gap-3">
-            <
-              variant="neutral"
+            <Button variant="secondary"
               onClick={() => setIsEditing(true)}
               disabled={isSaving}
             >
               Editar
-            </>
-            < variant="error" onClick={handleDelete} disabled={isSaving}>
+            </Button>
+            <Button variant="error" onClick={handleDelete} disabled={isSaving}>
               Remover
-            </>
+            </Button>
           </div>
         </div>
       ) : (
@@ -143,19 +139,18 @@ export const BotconversaSettings = ({
           </div>
 
           <div className="flex gap-3">
-            < onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
+            <Button onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
               {isSaving ? 'Salvando...' : 'Salvar Chave'}
-            </>
+            </Button>
             {config && (
-              <
-                variant="neutral"
+              <Button variant="secondary"
                 onClick={() => {
                   setIsEditing(false);
                   setApiKey(config.api_key || '');
                 }}
               >
                 Cancelar
-              </>
+              </Button>
             )}
           </div>
         </div>

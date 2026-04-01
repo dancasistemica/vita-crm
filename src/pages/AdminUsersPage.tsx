@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/ds";
 import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDialog, Badge, Button, Card, Dialog, Input, Select, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface AdminUser {
   user_id: string;
@@ -344,7 +345,7 @@ export default function AdminUsersPage() {
       <div className="flex items-center gap-3">
         <Users className="h-6 w-6 text-primary-600" />
         <h1 className="text-4xl font-bold text-neutral-900">Todos os Usuários</h1>
-        <Badge variant="neutral" className="ml-auto">{filtered.length} usuários</Badge>
+        <Badge variant="secondary" className="ml-auto">{filtered.length} usuários</Badge>
       </div>
 
       <Card padding="md">
@@ -385,9 +386,9 @@ export default function AdminUsersPage() {
               />
             </div>
             {hasFilters && (
-              < variant="ghost" onClick={resetFilters} className="sm:mb-1">
+              <Button variant="ghost" onClick={resetFilters} className="sm:mb-1">
                 <X className="h-4 w-4 mr-1" /> Resetar
-              </>
+              </Button>
             )}
           </div>
         </div>
@@ -429,29 +430,29 @@ export default function AdminUsersPage() {
                     </TableCell>
                     <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral">{roleLabels[u.role] || u.role}</Badge>
+                      <Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
                       {new Date(u.created_at).toLocaleDateString("pt-BR")}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
-                        < variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
+                        <Button variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
                           <Edit className="h-4 w-4" />
-                        </>
+                        </Button>
                         {u.email && u.org_id && (
-                          < variant="ghost" title="Resetar senha" onClick={() => handleResetPassword(u)} className="p-1 h-8 w-8">
+                          <Button variant="ghost" title="Resetar senha" onClick={() => handleResetPassword(u)} className="p-1 h-8 w-8">
                             <RotateCcw className="h-4 w-4" />
-                          </>
+                          </Button>
                         )}
                         {u.org_id && (
-                          < variant="ghost" title="Ver organização" onClick={() => navigate("/superadmin")} className="p-1 h-8 w-8">
+                          <Button variant="ghost" title="Ver organização" onClick={() => navigate("/superadmin")} className="p-1 h-8 w-8">
                             <Eye className="h-4 w-4" />
-                          </>
+                          </Button>
                         )}
-                        < variant="ghost" title="Remover" onClick={() => setDeleteTarget(u)} className="p-1 h-8 w-8 text-error-600">
+                        <Button variant="ghost" title="Remover" onClick={() => setDeleteTarget(u)} className="p-1 h-8 w-8 text-error-600">
                           <Trash2 className="h-4 w-4" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -463,8 +464,8 @@ export default function AdminUsersPage() {
               <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t border-neutral-100">
                 <span>Página {page} de {totalPages}</span>
                 <div className="flex gap-1">
-                  < variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
-                  < variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
+                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+                  <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
                 </div>
               </div>
             )}
@@ -532,12 +533,12 @@ export default function AdminUsersPage() {
         </div>
 
         <div className="flex gap-3 pt-4 border-t border-neutral-100">
-          < variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
+          <Button variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
             Cancelar
-          </>
-          < variant="primary" onClick={handleEditSave} isLoading={saving} className="flex-1">
+          </Button>
+          <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
             Salvar Alterações
-          </>
+          </Button>
         </div>
       </Dialog>
 

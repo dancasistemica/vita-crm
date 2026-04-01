@@ -1,20 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Select } from "@/components/ui/ds/Select";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActions from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Checkbox } from "@/components/ui/ds";
-import { Skeleton } from "@/components/ui/ds";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
 import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
@@ -24,6 +14,7 @@ import { useDataAccess } from "@/hooks/useDataAccess";
 import { useLeadsData } from "@/hooks/useLeadsData";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, Badge, Button, Calendar, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Checkbox, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton } from "@/components/ui/ds";
 
 interface TaskRow {
   id: string;
@@ -412,10 +403,10 @@ export default function TarefasPage() {
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
-              <Badge variant="neutral" className="text-xs">{getTypeLabel(task.type)}</Badge>
+              <Badge variant="secondary" className="text-xs">{getTypeLabel(task.type)}</Badge>
               {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
-                <Badge variant="neutral" className="text-xs gap-1">
+                <Badge variant="secondary" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
                   {assignedName}
                 </Badge>
@@ -483,9 +474,9 @@ export default function TarefasPage() {
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          < variant="neutral" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          <Button variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
-          </>
+          </Button>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
             <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</></DialogTrigger>
             <DialogContent>
@@ -568,25 +559,25 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        < variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
           <UserCircle className="h-4 w-4" />
-        </>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
-        < variant="secondary" size="sm"
+        <Button variant="secondary" size="sm"
           onClick={() => onAssign(taskId, null)}
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
-        </>
+        </Button>
         {orgMembers.map(m => (
-          < variant="secondary" size="sm"
+          <Button variant="secondary" size="sm"
             key={m.user_id}
             onClick={() => onAssign(taskId, m.user_id)}
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
           >
             {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-          </>
+          </Button>
         ))}
       </PopoverContent>
     </Popover>
@@ -668,9 +659,9 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
         <AIFollowUpGenerator lead={selectedLead} stageName={stageName} />
       )}
 
-      < className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
         {initialData ? 'Salvar Alterações' : 'Salvar'}
-      </>
+      </Button>
     </div>
   );
 }

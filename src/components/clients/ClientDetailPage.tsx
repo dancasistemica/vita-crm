@@ -2,11 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
-import { Card, Badge, Input, Select, Alert } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
 import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
@@ -16,6 +11,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { deleteSale } from '@/services/saleService';
+import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, Tabs, TabsContent, TabsList, TabsTrigger, Textarea } from "@/components/ui/ds";
 
 const statusBadgeVariants: Record<string, any> = {
   ativo: 'success',
@@ -182,15 +178,15 @@ export default function ClientDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Total em Vendas</p>
               <p className="text-2xl font-bold text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</p>
             </Card>
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Compras</p>
               <p className="text-2xl font-bold text-neutral-900">{sales.length}</p>
             </Card>
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Interações</p>
               <p className="text-2xl font-bold text-neutral-900">{interactions.length}</p>
             </Card>
@@ -283,7 +279,7 @@ export default function ClientDetailPage() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
-                          <Badge variant="neutral" size="sm">{typeLabel}</Badge>
+                          <Badge variant="secondary" size="sm">{typeLabel}</Badge>
                           <span className="text-xs text-neutral-500">{int.date}</span>
                         </div>
                         <p className="text-sm text-neutral-800">{int.note}</p>

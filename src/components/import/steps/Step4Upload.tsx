@@ -1,12 +1,10 @@
 import { useState, useCallback } from 'react';
 import { Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
 import { parseFile, getFileType } from '@/services/excelParser';
 import { ImportModalState } from '@/hooks/useImportModal';
+import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;
@@ -143,7 +141,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-4 w-4 text-success" />
               <span className="text-sm font-medium text-foreground">{state.fileName}</span>
-              <Badge variant="neutral">{state.csvRows.length} linhas</Badge>
+              <Badge variant="secondary">{state.csvRows.length} linhas</Badge>
             </div>
             <Button variant="ghost" size="sm" onClick={() => update({ file: null, fileName: '', csvHeaders: [], csvRows: [], mapping: {}, dateConversions: 0 })}>
               <X className="h-4 w-4 mr-1" /> Trocar

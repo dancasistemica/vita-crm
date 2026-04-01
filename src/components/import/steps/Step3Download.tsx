@@ -1,9 +1,7 @@
 import { FileSpreadsheet, FileText, Download } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Card, CardContent } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import { downloadTemplate, downloadTemplateXLSX, TEMPLATE_COLUMNS, templateExamples } from '@/services/templateService';
 import { toast } from 'sonner';
+import { Badge, Button, Card, CardContent } from "@/components/ui/ds";
 
 interface Props {
   onNext: () => void;
@@ -31,7 +29,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
             <FileSpreadsheet className="h-8 w-8 text-primary mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">XLSX</p>
-              <Badge variant="neutral" className="text-[10px] mt-1">Recomendado</Badge>
+              <Badge variant="secondary" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
             <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
             <Button size="sm" className="w-full mt-2">

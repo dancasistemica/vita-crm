@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
 import { supabase } from '@/integrations/supabase/client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { Card, Select, Badge, Alert } from '@/components/ui/ds';
 import { OrganizationsTab } from '@/components/superadmin/OrganizationsTab';
 import { PlansTab } from '@/components/superadmin/PlansTab';
 import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
@@ -14,6 +12,7 @@ import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, 
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
 import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
 import { getAllOrganizations } from '@/services/superadminService';
+import { Alert, Badge, Button, Card, Select, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();
@@ -136,9 +135,9 @@ export default function SuperadminDashboard() {
           </div>
         </Card>
         <Card interactive variant="elevated" padding="md">
-          < variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
+          <Button variant="primary" fullWidth size="lg" icon={<Plus className="w-5 h-5" />} onClick={() => orgsTabRef.current?.openCreateModal?.()}>
             Nova Org
-          </>
+          </Button>
         </Card>
       </div>
 
@@ -170,7 +169,7 @@ export default function SuperadminDashboard() {
           </TabsList>
         </div>
 
-        <Card variant="default" padding="lg">
+        <Card variant="primary" padding="lg">
           <TabsContent value="organizations">
             <OrganizationsTab ref={orgsTabRef} onStatsChange={fetchStats} />
           </TabsContent>

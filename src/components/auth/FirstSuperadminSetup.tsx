@@ -5,11 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
-import { Button } from '@/components/ui/ds/';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Alert } from '@/components/ui/ds/Alert';
 import { Shield, Info } from 'lucide-react';
+import { Alert, Button, Card, Input } from "@/components/ui/ds";
 
 const setupSchema = z.object({
   fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),

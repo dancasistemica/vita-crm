@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog } from './Dialog';
-import { } from './';
+import { Button } from './Button';
 
 interface AlertDialogProps {
   isOpen?: boolean;
@@ -47,12 +47,12 @@ export const AlertDialog = ({
             {description}
           </div>
           <div className="flex gap-3 pt-4 border-t border-neutral-100">
-            < variant="secondary" onClick={handleClose} disabled={isLoading} className="flex-1">
+            <Button variant="secondary" onClick={handleClose} disabled={isLoading} className="flex-1">
               {cancelText}
-            </>
-            < variant={variant} onClick={onConfirm} isLoading={isLoading} className="flex-1">
+            </Button>
+            <Button variant={variant as any} onClick={onConfirm} loading={isLoading} className="flex-1">
               {confirmText}
-            </>
+            </Button>
           </div>
         </div>
       )}
@@ -66,6 +66,21 @@ export const AlertDialogHeader = ({ children }: { children: React.ReactNode }) =
 export const AlertDialogTitle = ({ children }: { children: React.ReactNode }) => <div className="text-xl font-semibold">{children}</div>;
 export const AlertDialogDescription = ({ children }: { children: React.ReactNode }) => <p className="text-sm text-neutral-500 mt-2">{children}</p>;
 export const AlertDialogFooter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>;
-export const AlertDialogAction = ({ children, asChild }: any) => children;
-export const AlertDialogCancel = ({ children, asChild }: any) => children;
-export const AlertDialogTrigger = ({ children, asChild }: any) => children;
+export const AlertDialogAction = ({ children, asChild, ...props }: any) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement, props);
+  }
+  return <Button {...props}>{children}</Button>;
+};
+export const AlertDialogCancel = ({ children, asChild, ...props }: any) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement, { variant: 'secondary', ...props });
+  }
+  return <Button variant="secondary" {...props}>{children}</Button>;
+};
+export const AlertDialogTrigger = ({ children, asChild, ...props }: any) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement, props);
+  }
+  return <div {...props}>{children}</div>;
+};

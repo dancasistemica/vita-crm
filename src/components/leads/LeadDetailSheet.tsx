@@ -1,9 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -13,6 +8,7 @@ import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDial
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
 import { toast } from 'sonner';
+import { Badge, Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -144,8 +140,8 @@ export default function LeadDetailSheet({
           <SheetHeader>
             <SheetTitle className="text-lg font-display">{lead.name}</SheetTitle>
             <SheetDescription className="flex items-center gap-3 flex-wrap">
-              {stageName && <Badge variant="neutral" className="text-xs">{stageName}</Badge>}
-              {interestLabel && <Badge variant="neutral" className="text-xs">{interestLabel}</Badge>}
+              {stageName && <Badge variant="secondary" className="text-xs">{stageName}</Badge>}
+              {interestLabel && <Badge variant="secondary" className="text-xs">{interestLabel}</Badge>}
               {lead.origin && <span className="text-xs">{lead.origin}</span>}
             </SheetDescription>
           </SheetHeader>
@@ -157,11 +153,11 @@ export default function LeadDetailSheet({
               <TabsTrigger value="info" className="text-xs">Informações</TabsTrigger>
               <TabsTrigger value="tasks" className="text-xs">
                 Tarefas
-                {tasks.length > 0 && <Badge variant="neutral" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
+                {tasks.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
               </TabsTrigger>
               <TabsTrigger value="interactions" className="text-xs">
                 Interações
-                {interactions.length > 0 && <Badge variant="neutral" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
+                {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
               </TabsTrigger>
               <TabsTrigger value="scheduled" className="text-xs">Agendamentos</TabsTrigger>
               <TabsTrigger value="history" className="text-xs">Histórico</TabsTrigger>
@@ -187,7 +183,7 @@ export default function LeadDetailSheet({
               <div>
                 <span className="text-xs text-muted-foreground font-medium">Tags</span>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {lead.tags.map(t => <Badge key={t} variant="neutral" className="text-xs">{t}</Badge>)}
+                  {lead.tags.map(t => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
                 </div>
               </div>
             )}
@@ -295,7 +291,7 @@ export default function LeadDetailSheet({
               interactions.map(i => (
                 <div key={i.id} className="p-3 rounded-lg border border-border bg-card">
                   <div className="flex items-center justify-between">
-                    <Badge variant="neutral" className="text-xs">{i.type}</Badge>
+                    <Badge variant="secondary" className="text-xs">{i.type}</Badge>
                     <span className="text-xs text-muted-foreground">
                       {i.interaction_date ? formatDate(i.interaction_date) : formatDate(i.created_at)}
                     </span>

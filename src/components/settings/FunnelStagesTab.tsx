@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { PipelineStage } from "@/types/crm";
-import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, Input } from "@/components/ui/ds";
 import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from "@/components/ui/ds";
 
 export default function FunnelStagesTab() {
   const { pipelineStages, addPipelineStage, updatePipelineStage, removePipelineStage } = useCRMStore();
