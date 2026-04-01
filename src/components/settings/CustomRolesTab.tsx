@@ -1,9 +1,9 @@
-import { Alert, AlertDialog, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Textarea } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
+import { Plus, Edit, Trash2, Shield, Loader, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface CustomRole {

@@ -1,15 +1,5 @@
-import {
-  Alert,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/ds";
-import { Loader2 } from "lucide-react";
+import { Alert, Button, Card } from "@/components/ui/ds";
+import { Loader } from "lucide-react";
 
 interface ConfirmDeleteDialogProps {
   isOpen: boolean;
