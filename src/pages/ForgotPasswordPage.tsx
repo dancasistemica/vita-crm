@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
 import { ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
@@ -66,10 +66,10 @@ export default function ForgotPasswordPage() {
         {status === 'sent' ? (
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <CheckCircle className="w-16 h-16 text-success-600" />
+              <CheckCircle className="w-16 h-16 text-green-600" />
             </div>
-            <div className="p-4 bg-success-50 border border-success-200 rounded-lg">
-              <p className="text-sm text-success-800">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800">
                 Email enviado com sucesso! Verifique sua caixa de entrada e siga as instruções.
               </p>
             </div>
@@ -99,9 +99,9 @@ export default function ForgotPasswordPage() {
             </div>
 
             {status === 'error' && (
-              <div className="p-3 bg-error-50 border border-error-200 rounded-lg flex gap-3">
-                <AlertCircle className="w-5 h-5 text-error-600 shrink-0" />
-                <p className="text-sm text-error-600">{errorMessage}</p>
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+                <p className="text-sm text-red-600">{errorMessage}</p>
               </div>
             )}
 

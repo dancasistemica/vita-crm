@@ -57,6 +57,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/setup" element={<FirstSuperadminSetup />} />
 
               {/* Protected routes */}
