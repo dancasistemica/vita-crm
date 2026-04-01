@@ -11,7 +11,6 @@ import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import NewSaleModal from '@/components/sales/NewSaleModal';
 import RecordCounter from "@/components/common/RecordCounter";
-import { DashboardLayout } from "@/layouts/DashboardLayout";
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
