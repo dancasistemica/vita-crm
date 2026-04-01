@@ -67,7 +67,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByProduct} layout="vertical">
-                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><div className="relative group"> `R$ ${v}`} />
+                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><Tooltip formatter={(v: any) => `R$ ${v.toLocaleString('pt-BR')}`} />
                 <Bar dataKey="value" fill="hsl(152,55%,45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
