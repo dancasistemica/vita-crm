@@ -5,10 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds/';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
+import { Button, Input, Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { useAuth } from '@/hooks/useAuth';
 import { hasSuperadmin } from '@/services/bootstrapService';
 
@@ -60,8 +57,8 @@ export default function AuthPage() {
 
   if (loading || checkingBootstrap) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <div className="h-8 w-8 rounded-full border-2 border-primary-600 border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -79,7 +76,6 @@ export default function AuthPage() {
       });
       if (error) throw error;
 
-      // Check if user has an org, if not create one
       await ensureOrganization();
       toast.success('Login realizado com sucesso!');
       navigate('/');
@@ -148,7 +144,6 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="flex flex-col items-center gap-3 mb-8">
           <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl">
             💃
@@ -174,18 +169,18 @@ export default function AuthPage() {
                 placeholder="seu@email.com"
                 required
               />
-              < onClick={handleForgotPassword} disabled={isSubmitting} fullWidth>
+              <Button onClick={handleForgotPassword} disabled={isSubmitting} fullWidth>
                 {isSubmitting ? 'Enviando...' : 'Enviar link de recuperação'}
-              </>
-              < variant="ghost" fullWidth onClick={() => setShowForgotPassword(false)}>
+              </Button>
+              <Button variant="ghost" fullWidth onClick={() => setShowForgotPassword(false)}>
                 Voltar ao login
-              </>
+              </Button>
             </div>
           </Card>
         ) : (
           <Card padding="none" className="overflow-hidden">
             <Tabs defaultValue="login">
-              <div className="p-6 pb-3 border-b">
+              <div className="p-6 pb-3 border-b border-neutral-100">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">Entrar</TabsTrigger>
                   <TabsTrigger value="signup">Criar Conta</TabsTrigger>
@@ -210,10 +205,10 @@ export default function AuthPage() {
                       required
                       {...loginForm.register('password')}
                     />
-                    < type="submit" disabled={isSubmitting} fullWidth>
+                    <Button type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Entrando...' : 'Entrar'}
-                    </>
-                    <
+                    </Button>
+                    <Button
                       type="button"
                       variant="ghost"
                       fullWidth
@@ -221,7 +216,7 @@ export default function AuthPage() {
                       onClick={() => setShowForgotPassword(true)}
                     >
                       Esqueci minha senha
-                    </>
+                    </Button>
                   </form>
                 </TabsContent>
 
@@ -258,9 +253,9 @@ export default function AuthPage() {
                       required
                       {...signupForm.register('confirmPassword')}
                     />
-                    < type="submit" disabled={isSubmitting} fullWidth>
+                    <Button type="submit" disabled={isSubmitting} fullWidth>
                       {isSubmitting ? 'Criando conta...' : 'Criar conta'}
-                    </>
+                    </Button>
                   </form>
                 </TabsContent>
               </div>
