@@ -13,6 +13,7 @@ interface Tag {
 }
 
 export const TagsManagement = () => {
+  const { organizationId } = useOrganization();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTagName, setNewTagName] = useState('');
