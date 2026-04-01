@@ -79,32 +79,6 @@ export default function AuthPage() {
     }
   };
 
-  const handleSignup = async (data: SignupForm) => {
-    setIsSubmitting(true);
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: { full_name: data.fullName },
-          emailRedirectTo: window.location.origin,
-        },
-      });
-      if (error) throw error;
-
-      toast.success('Conta criada! Verifique seu email para confirmar o cadastro.');
-      signupForm.reset();
-    } catch (error: any) {
-      console.error('[AuthPage] Signup error:', error);
-      if (error.message?.includes('already registered')) {
-        toast.error('Este email já está cadastrado');
-      } else {
-        toast.error(error.message || 'Erro ao criar conta');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
