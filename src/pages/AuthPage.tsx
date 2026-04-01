@@ -1,6 +1,6 @@
-import { Button, Card, Input, Tabs } from "@/components/ui/ds";
+import { Button, Card, Input } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,20 +14,10 @@ const loginSchema = z.object({
   password: z.string().min(6, 'Mínimo 6 caracteres').max(100),
 });
 
-const signupSchema = z.object({
-  fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),
-  email: z.string().trim().email('Email inválido').max(255),
-  password: z.string().min(6, 'Mínimo 6 caracteres').max(100),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'As senhas não coincidem',
-  path: ['confirmPassword'],
-});
-
 type LoginForm = z.infer<typeof loginSchema>;
-type SignupForm = z.infer<typeof signupSchema>;
 
 export default function AuthPage() {
+
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,10 +40,6 @@ export default function AuthPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  const signupForm = useForm<SignupForm>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
-  });
 
   if (loading || checkingBootstrap) {
     return (
@@ -93,32 +79,6 @@ export default function AuthPage() {
     }
   };
 
-  const handleSignup = async (data: SignupForm) => {
-    setIsSubmitting(true);
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: { full_name: data.fullName },
-          emailRedirectTo: window.location.origin,
-        },
-      });
-      if (error) throw error;
-
-      toast.success('Conta criada! Verifique seu email para confirmar o cadastro.');
-      signupForm.reset();
-    } catch (error: any) {
-      console.error('[AuthPage] Signup error:', error);
-      if (error.message?.includes('already registered')) {
-        toast.error('Este email já está cadastrado');
-      } else {
-        toast.error(error.message || 'Erro ao criar conta');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
@@ -178,89 +138,53 @@ export default function AuthPage() {
             </div>
           </Card>
         ) : (
-          <Card padding="none" className="overflow-hidden">
-            <Tabs defaultValue="login">
-              <div className="p-6 pb-3 border-b border-neutral-100">
-                <div className="flex gap-2 border-b border-neutral-200 mb-4">
-                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Entrar</button>
-                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Criar Conta</button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div>
-                  <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      error={loginForm.formState.errors.email?.message}
-                      required
-                      {...loginForm.register('email')}
-                    />
-                    <Input
-                      label="Senha"
-                      type="password"
-                      placeholder="••••••"
-                      error={loginForm.formState.errors.password?.message}
-                      required
-                      {...loginForm.register('password')}
-                    />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
-                      {isSubmitting ? 'Entrando...' : 'Entrar'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      fullWidth
-                      className="text-sm"
-                      onClick={() => setShowForgotPassword(true)}
-                    >
-                      Esqueci minha senha
-                    </Button>
-                  </form>
-                </div>
+          <Card padding="lg" className="overflow-hidden">
+            <div className="space-y-6">
+              <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+                <Input
+                  label="Email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  error={loginForm.formState.errors.email?.message}
+                  required
+                  {...loginForm.register('email')}
+                />
+                <Input
+                  label="Senha"
+                  type="password"
+                  placeholder="••••••"
+                  error={loginForm.formState.errors.password?.message}
+                  required
+                  {...loginForm.register('password')}
+                />
+                <Button type="submit" disabled={isSubmitting} fullWidth>
+                  {isSubmitting ? 'Entrando...' : 'Entrar'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  fullWidth
+                  className="text-sm"
+                  onClick={() => setShowForgotPassword(true)}
+                >
+                  Esqueci minha senha
+                </Button>
+              </form>
 
-                <div>
-                  <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
-                    <Input
-                      label="Nome completo"
-                      placeholder="Seu nome"
-                      error={signupForm.formState.errors.fullName?.message}
-                      required
-                      {...signupForm.register('fullName')}
-                    />
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      error={signupForm.formState.errors.email?.message}
-                      required
-                      {...signupForm.register('email')}
-                    />
-                    <Input
-                      label="Senha"
-                      type="password"
-                      placeholder="Mínimo 6 caracteres"
-                      error={signupForm.formState.errors.password?.message}
-                      required
-                      {...signupForm.register('password')}
-                    />
-                    <Input
-                      label="Confirmar senha"
-                      type="password"
-                      placeholder="Repita a senha"
-                      error={signupForm.formState.errors.confirmPassword?.message}
-                      required
-                      {...signupForm.register('confirmPassword')}
-                    />
-                    <Button type="submit" disabled={isSubmitting} fullWidth>
-                      {isSubmitting ? 'Criando conta...' : 'Criar conta'}
-                    </Button>
-                  </form>
-                </div>
+              <div className="text-center pt-4 border-t border-neutral-100">
+                <p className="text-sm text-neutral-600">
+                  Ainda não tem uma conta?{' '}
+                  <Link
+                    to="/signup"
+                    className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+                  >
+                    Criar conta
+                  </Link>
+                </p>
               </div>
-            </Tabs>
+            </div>
           </Card>
+
         )}
       </div>
     </div>

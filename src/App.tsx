@@ -20,6 +20,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage";
+import SignUpPage from "@/pages/SignUpPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
@@ -56,6 +57,7 @@ const App = () => (
               {/* Public routes */}
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/setup" element={<FirstSuperadminSetup />} />
