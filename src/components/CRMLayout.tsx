@@ -34,10 +34,10 @@ export default function CRMLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full relative">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="flex items-center justify-between gap-4 px-4 py-3 bg-white border-b border-neutral-200">
+          <header className="sticky top-0 z-30 flex items-center justify-between gap-4 px-4 py-3 bg-white/80 backdrop-blur-md border-b border-neutral-200">
             <div className="flex items-center gap-3 min-w-fit">
               <HeaderMenu />
               <div className="hidden sm:flex flex-col">

@@ -43,7 +43,7 @@ const baseItems = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpen } = useSidebar();
   const location = useLocation();
   const collapsed = state === "collapsed";
   const { user, signOut } = useAuth();
@@ -128,7 +128,16 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild active={location.pathname === item.url}>
+                  <SidebarMenuButton 
+                    asChild 
+                    active={location.pathname === item.url}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) {
+                        // @ts-ignore
+                        setOpen(false);
+                      }
+                    }}
+                  >
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
