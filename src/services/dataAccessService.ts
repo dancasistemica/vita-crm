@@ -13,10 +13,14 @@ export class DataAccessService {
     return this._orgId;
   }
 
+  get isConsolidated(): boolean {
+    return this._orgId === 'consolidado';
+  }
+
   constructor(options: DataAccessOptions) {
     this._orgId = options.organizationId;
     this.userId = options.userId;
-    console.log('[DataAccessService] Inicializado para org:', this.orgId);
+    console.log('[DataAccessService] Inicializado para org:', this.orgId, 'consolidado:', this.isConsolidated);
   }
 
   // ── LEADS ──────────────────────────────────────────────
