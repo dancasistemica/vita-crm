@@ -30,7 +30,7 @@ export const SidebarGroupLabel = ({ children }: { children: React.ReactNode }) =
 export const SidebarGroupContent = ({ children }: { children: React.ReactNode }) => <div className="space-y-1">{children}</div>;
 export const SidebarMenu = ({ children }: { children: React.ReactNode }) => <nav className="space-y-1">{children}</nav>;
 export const SidebarMenuItem = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-export const SidebarMenu = ({ children, active, onClick, className = '', asChild }: any) => (
+export const SidebarMenuButton = ({ children, active, onClick, className = '', asChild }: any) => (
   <button
     onClick={onClick}
     className={`
