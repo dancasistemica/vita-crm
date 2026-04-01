@@ -26,7 +26,8 @@ import {
   SidebarMenuItem,
   SidebarFooter, 
   useSidebar,
-  Button
+  Button,
+  Skeleton
 } from "@/components/ui/ds";
 
 const baseItems = [
