@@ -4,7 +4,8 @@ import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
-import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail, ArrowLeft } from 'lucide-react';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';
@@ -25,6 +26,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -232,7 +234,7 @@ export default function LoginPage() {
             <Button variant="ghost"
               fullWidth
               size="sm"
-              onClick={() => navigate('/auth')}
+              onClick={() => setShowForgotPassword(true)}
             >
               Esqueci minha senha
             </Button>
@@ -255,6 +257,11 @@ export default function LoginPage() {
             </p>
           </div>
         </Card>
+        <ForgotPasswordModal
+          isOpen={showForgotPassword}
+          onClose={() => setShowForgotPassword(false)}
+          onBackToLogin={() => setShowForgotPassword(false)}
+        />
       </div>
     </div>
   );
