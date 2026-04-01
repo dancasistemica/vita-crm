@@ -3,26 +3,56 @@ import { useNavigate } from 'react-router-dom';
 import { Search, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/ds';
-import { useOrganization } from '@/contexts/OrganizationContext';
 
 interface HeaderProps {
-  onOpenSidebar?: () => void;
+  onOpenSidebar: () => void;
   sidebarOpen?: boolean;
   title?: string;
 }
 
-export function Header({ onOpenSidebar, sidebarOpen, title }: HeaderProps) {
+export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: HeaderProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const { organization } = useOrganization();
-  const organizationName = organization?.name || 'Dança Sistêmica';
+  const [organizationName, setOrganizationName] = useState('Dança Sistêmica');
+
+  React.useEffect(() => {
+    const loadOrganization = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Using organization_members to match project schema
+        const { data: membership } = await supabase
+          .from('organization_members')
+          .select('organization_id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (membership?.organization_id) {
+          const { data: org } = await supabase
+            .from('organizations')
+            .select('name')
+            .eq('id', membership.organization_id)
+            .single();
+
+          if (org) {
+            setOrganizationName(org.name);
+          }
+        }
+      } catch (err) {
+        console.error('[Header] Erro ao carregar organização:', err);
+      }
+    };
+
+    loadOrganization();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      console.log('[Header] Navegando para busca:', searchQuery);
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-      setSearchQuery('');
+      console.log('[Header] Buscando:', searchQuery);
+      // Global search logic implementation placeholder
+      // navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -39,7 +69,7 @@ export function Header({ onOpenSidebar, sidebarOpen, title }: HeaderProps) {
         <div className="flex items-center gap-4 min-w-0">
           {/* Hamburger Menu - Mobile Only */}
           <button
-            onClick={onOpenSidebar}
+            onClick={onMenuClick}
             className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             aria-label="Menu"
           >
