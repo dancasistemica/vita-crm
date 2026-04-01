@@ -68,7 +68,7 @@ export default function CRMLayout() {
                 <span className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wide font-medium">
                   {isDashboard ? "CRM" : getPageTitle()}
                 </span>
-                <span className="text-xs md:text-sm font-bold text-neutral-900 truncate max-w-[120px] md:max-w-none">
+                <span className="text-sm font-bold text-neutral-900 truncate max-w-[120px] md:max-w-none">
                   {organizationName}
                 </span>
               </div>

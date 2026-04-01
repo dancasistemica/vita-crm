@@ -56,7 +56,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
         ${isMobile ? 'fixed inset-y-0 left-0 shadow-2xl' : 'relative'}
         ${open ? 'translate-x-0 w-64' : (isMobile ? '-translate-x-full w-0' : 'w-20')}
       `}>
-        <div className={isMobile ? 'w-64 h-full' : 'w-full h-full'}>
+        <div className={isMobile ? 'w-64 h-full bg-white' : 'w-full h-full'}>
           {children}
         </div>
       </aside>
