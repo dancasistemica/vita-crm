@@ -66,10 +66,10 @@ export default function ForgotPasswordPage() {
         {status === 'sent' ? (
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <CheckCircle className="w-16 h-16 text-green-600" />
+              <CheckCircle className="w-16 h-16 text-success-600" />
             </div>
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-800">
+            <div className="p-4 bg-success-50 border border-success-200 rounded-lg">
+              <p className="text-sm text-success-800">
                 Email enviado com sucesso! Verifique sua caixa de entrada e siga as instruções.
               </p>
             </div>
