@@ -142,13 +142,13 @@ export default function ClientsTable({
             <Card 
               key={client.id} 
               padding="none" 
-              className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              className={`hover:shadow-md transition-shadow cursor-pointer relative ${openMenu === client.id ? 'z-[60]' : ''}`}
               onClick={() => {
                 if (onSelectClient) onSelectClient(client);
                 else navigate(`/clientes/${client.id}`);
               }}
             >
-              <div className={`h-1 w-full ${statusBarColors[status] || 'bg-neutral-200'}`} />
+              <div className={`h-1 w-full rounded-t-lg ${statusBarColors[status] || 'bg-neutral-200'}`} />
               
               <div className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4 flex-1 min-w-0">
