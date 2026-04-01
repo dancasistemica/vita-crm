@@ -137,7 +137,7 @@ export function AppSidebar() {
                     asChild 
                     active={location.pathname === item.url}
                     onClick={() => {
-                      if (window.innerWidth < 1024) {
+                      if (window.innerWidth < 768) {
                         // @ts-ignore
                         setOpen(false);
                       }

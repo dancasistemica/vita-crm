@@ -30,8 +30,8 @@ export default function PipelinePage() {
   };
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">Funil de Vendas</h1>
+    <div className="space-y-4 px-1 py-4 sm:p-6">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Funil de Vendas</h1>
       <ScrollArea className="w-full">
         <div className="flex gap-4 pb-4 min-w-max">
           {pipelineStages.sort((a, b) => a.order - b.order).map(stage => {

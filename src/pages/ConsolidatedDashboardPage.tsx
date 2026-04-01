@@ -55,9 +55,9 @@ export default function ConsolidatedDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
-        <p className="text-sm text-neutral-500 mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
+      <div className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">📊 Dashboard Consolidado</h1>
+        <p className="text-xs sm:text-sm text-neutral-500 font-medium">Visão 360° de <strong className="text-neutral-700">todas as organizações</strong></p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />

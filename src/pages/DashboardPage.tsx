@@ -199,19 +199,23 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">📊 Dashboard</h1>
-          <p className="text-sm text-neutral-500 mt-0.5">
-            Dados de <strong>{organization?.name || 'sua organização'}</strong>
+      <div className="flex items-center justify-between flex-wrap gap-4 px-1">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
+            📊 Dashboard
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-500 font-medium">
+            Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
           </p>
         </div>
         {(canAccessSettings || isSuperadmin) && (
-          <DashboardCustomizer
-            settings={settings}
-            onToggleVisibility={toggleVisibility}
-            onReorder={reorder}
-          />
+          <div className="flex-shrink-0">
+            <DashboardCustomizer
+              settings={settings}
+              onToggleVisibility={toggleVisibility}
+              onReorder={reorder}
+            />
+          </div>
         )}
       </div>
 

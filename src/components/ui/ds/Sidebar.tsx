@@ -8,7 +8,7 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 1024;
+      const mobile = window.innerWidth < 768; // Changed from 1024 to 768 for standard mobile breakpoint
       setIsMobile(mobile);
       if (mobile) {
         setOpen(false);
