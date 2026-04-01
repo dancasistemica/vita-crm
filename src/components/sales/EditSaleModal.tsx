@@ -189,26 +189,27 @@ export const EditSaleModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100">
+      <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-semibold text-neutral-900">Editar Venda</h2>
+            <h2 className="text-xl font-semibold text-white">Editar Venda</h2>
             <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
               {sale.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
             </span>
           </div>
-          <Button variant="secondary" size="sm"
+          <button
             onClick={onClose}
             disabled={loading}
             className="p-1 hover:bg-white/20 rounded-full transition-colors"
+            aria-label="Fechar"
           >
             <X className="w-5 h-5 text-white" />
-          </Button>
+          </button>
         </div>
 
         {/* Conteúdo */}
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto">
           {loadingData ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader className="w-10 h-10 animate-spin text-blue-600 mb-4" />
