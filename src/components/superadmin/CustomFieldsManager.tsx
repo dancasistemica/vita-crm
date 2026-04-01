@@ -499,7 +499,7 @@ export function CustomFieldsManager() {
                 </tr>
               </thead>
               <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">{filteredGlobalFields.map((field) => (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><table className="w-full border-collapse">{field.field_label}</td>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">{field.field_label}</td>
                     <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_name}</td>
                     <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
@@ -549,8 +549,7 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><table className="w-full border-collapse">
-                  <table className="w-full border-collapse">Op</th>
+            <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">Op</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Label</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>

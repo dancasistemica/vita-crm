@@ -208,8 +208,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
               <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
-          <table className="w-full border-collapse">
-            {filteredOrgs.map((org) => (
+          <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{filteredOrgs.map((org) => (
               <table className="w-full border-collapse">
                 <table className="w-full border-collapse">{org.name}</td>
                 <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{org.contact_email || '—'}</td>

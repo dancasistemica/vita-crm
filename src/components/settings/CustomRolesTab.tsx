@@ -181,8 +181,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
-                <table className="w-full border-collapse">
-                  {roles.map((r) => (
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{roles.map((r) => (
                     <table className="w-full border-collapse">
                       <table className="w-full border-collapse">
                         <div className="flex items-center gap-3">

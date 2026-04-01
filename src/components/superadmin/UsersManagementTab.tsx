@@ -96,8 +96,7 @@ export function UsersManagementTab() {
             <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
           </tr>
         </thead>
-        <table className="w-full border-collapse">
-          {users.map((u) => (
+        <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{users.map((u) => (
             <table className="w-full border-collapse">
               <table className="w-full border-collapse">{u.full_name || '—'}</td>
               <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email || '—'}</td>
