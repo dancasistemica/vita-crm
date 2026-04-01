@@ -58,7 +58,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {insights.topProducts.map((product, idx) => (
                 <div key={idx} className="bg-muted/50 rounded-lg p-3 border border-border/40">
                   <p className="text-xs text-neutral-500">#{idx + 1}</p>
@@ -232,7 +232,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       )}
 
       {/* TIER 4: PADRÕES DE USO */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="shadow-card border-border/60 border-l-4 border-l-info">
           <div>
             <p className="text-xs text-neutral-500 mb-1">📅 Leads por Dia</p>

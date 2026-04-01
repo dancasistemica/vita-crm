@@ -31,9 +31,9 @@ export default function InteracoesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
-        <Button onClick={() => setDialogOpen(true)} icon={<Plus className="h-4 w-4" />}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">Interações</h1>
+        <Button onClick={() => setDialogOpen(true)} icon={<Plus className="h-4 w-4" />} className="w-full sm:w-auto">
           Nova Interação
         </Button>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen} title="Nova Interação">
