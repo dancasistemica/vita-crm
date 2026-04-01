@@ -1,217 +1,181 @@
-import { useCallback, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
-export type GlobalSearchResultType = "lead" | "client" | "task" | "product";
-
-export interface GlobalSearchResult {
+export interface SearchResult {
   id: string;
-  type: GlobalSearchResultType;
+  type: 'lead' | 'client' | 'task' | 'sale' | 'product';
   title: string;
-  subtitle?: string;
+  description?: string;
+  email?: string;
+  phone?: string;
+  status?: string;
+  value?: number;
+  date?: string;
+  path: string;
 }
 
-const normalizeSearchValue = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-
-interface LeadResult {
-  id: string;
-  name: string;
-  email: string | null;
-  phone: string | null;
-  pipeline_stage: string | null;
+interface SearchResults {
+  leads: SearchResult[];
+  clientes: SearchResult[];
+  tarefas: SearchResult[];
+  vendas: SearchResult[];
+  produtos: SearchResult[];
+  total: number;
 }
 
-interface ClientResult {
-  id: string;
-  name: string;
-  email: string | null;
-  phone: string | null;
-}
-
-interface TaskResult {
-  id: string;
-  title: string;
-  lead_id: string | null;
-  due_date: string | null;
-}
-
-interface ProductResult {
-  id: string;
-  name: string;
-  type: string | null;
-  description: string | null;
-  notes: string | null;
-}
-
-export function useGlobalSearch(organizationId?: string | null) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<GlobalSearchResult[]>([]);
+export function useGlobalSearch() {
+  const { organizationId } = useOrganization();
+  const [results, setResults] = useState<SearchResults>({
+    leads: [],
+    clientes: [],
+    tarefas: [],
+    vendas: [],
+    produtos: [],
+    total: 0,
+  });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const filterProductsByTerm = useCallback((items: ProductResult[], term: string) => {
-    const filterTerm = normalizeSearchValue(term);
-    if (!filterTerm) return [];
-    const tokens = filterTerm.split(/\s+/).filter(Boolean);
-    return items.filter((product) => {
-      const haystack = normalizeSearchValue(
-        [product.name, product.type, product.description, product.notes]
-          .filter(Boolean)
-          .join(" "),
-      );
-      return tokens.every((token) => haystack.includes(token));
-    }).slice(0, 5);
-  }, []);
+  const search = useCallback(async (query: string) => {
+    if (!query.trim() || !organizationId) {
+      setResults({
+        leads: [],
+        clientes: [],
+        tarefas: [],
+        vendas: [],
+        produtos: [],
+        total: 0,
+      });
+      return;
+    }
 
-  const clearResults = useCallback(() => {
-    setResults([]);
-  }, []);
+    setLoading(true);
+    setError(null);
 
-  const search = useCallback(
-    async (searchTerm: string) => {
-      const normalized = searchTerm.trim();
-      setQuery(searchTerm);
+    try {
+      console.log('[useGlobalSearch] Buscando:', query);
 
-      if (!organizationId || normalized.length < 2) {
-        setResults([]);
-        return;
-      }
+      const searchTerm = `%${query}%`;
 
-      setLoading(true);
-      const term = normalized;
+      // Parallelized search across tables
+      const [leadsRes, clientsRes, tasksRes, salesRes, productsRes] = await Promise.all([
+        supabase
+          .from('leads')
+          .select('id, name, email, phone, pipeline_stage, created_at')
+          .eq('organization_id', organizationId)
+          .or(`name.ilike.${searchTerm},email.ilike.${searchTerm},phone.ilike.${searchTerm}`)
+          .limit(10),
+        supabase
+          .from('clients')
+          .select('id, name, email, phone, created_at')
+          .eq('organization_id', organizationId)
+          .or(`name.ilike.${searchTerm},email.ilike.${searchTerm},phone.ilike.${searchTerm}`)
+          .limit(10),
+        supabase
+          .from('tasks')
+          .select('id, title, description, status, due_date')
+          .eq('organization_id', organizationId)
+          .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
+          .limit(10),
+        supabase
+          .from('sales')
+          .select('id, title, client_id, value, status, created_at')
+          .eq('organization_id', organizationId)
+          .or(`title.ilike.${searchTerm}`)
+          .limit(10),
+        supabase
+          .from('products')
+          .select('id, name, description, price, type')
+          .eq('organization_id', organizationId)
+          .or(`name.ilike.${searchTerm},description.ilike.${searchTerm}`)
+          .limit(10),
+      ]);
 
-      try {
-        const [leadsResponse, clientsResponse, tasksResponse, productsResponse] = await Promise.all([
-          supabase
-            .from("leads")
-            .select("id, name, email, phone, pipeline_stage")
-            .eq("organization_id", organizationId)
-            .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
-            )
-            .limit(5),
-          supabase
-            .from("clients")
-            .select("id, name, email, phone")
-            .eq("organization_id", organizationId)
-            .or(
-              `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`,
-            )
-            .limit(5),
-          supabase
-            .from("tasks")
-            .select("id, title, lead_id, due_date")
-            .eq("organization_id", organizationId)
-            .ilike("title", `%${term}%`)
-            .limit(5),
-          supabase
-            .from("products")
-            .select("id, name, type, description, notes")
-            .eq("organization_id", organizationId)
-            .or(
-              `name.ilike.%${term}%,type.ilike.%${term}%,description.ilike.%${term}%,notes.ilike.%${term}%`,
-            )
-            .limit(5),
-        ]);
+      // Handle Errors
+      if (leadsRes.error) console.error('[useGlobalSearch] Erro em leads:', leadsRes.error);
+      if (clientsRes.error) console.error('[useGlobalSearch] Erro em clientes:', clientsRes.error);
+      if (tasksRes.error) console.error('[useGlobalSearch] Erro em tarefas:', tasksRes.error);
+      if (salesRes.error) console.error('[useGlobalSearch] Erro em vendas:', salesRes.error);
+      if (productsRes.error) console.error('[useGlobalSearch] Erro em produtos:', productsRes.error);
 
-        if (leadsResponse.error) {
-          console.error("[GlobalSearch] Erro ao buscar leads:", leadsResponse.error);
-        }
-        if (clientsResponse.error) {
-          console.error("[GlobalSearch] Erro ao buscar clientes:", clientsResponse.error);
-        }
-        if (tasksResponse.error) {
-          console.error("[GlobalSearch] Erro ao buscar tarefas:", tasksResponse.error);
-        }
-        const leads = (leadsResponse.data || []) as LeadResult[];
-        const clients = (clientsResponse.data || []) as ClientResult[];
-        const tasks = (tasksResponse.data || []) as TaskResult[];
-        let products = (productsResponse.data || []) as ProductResult[];
+      // Transform leads
+      const leadsResults: SearchResult[] = (leadsRes.data || []).map(lead => ({
+        id: lead.id,
+        type: 'lead',
+        title: lead.name,
+        email: lead.email || undefined,
+        phone: lead.phone || undefined,
+        status: lead.pipeline_stage || undefined,
+        path: `/leads`, // Navigating to leads page with potential filtering
+      }));
 
-        if (productsResponse.error) {
-          console.error("[GlobalSearch] Erro ao buscar produtos:", productsResponse.error);
-          const fallback = await supabase
-            .from("products")
-            .select("id, name, type, description, notes")
-            .eq("organization_id", organizationId)
-            .limit(200);
-          if (fallback.error) {
-            console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
-          } else {
-            products = filterProductsByTerm(fallback.data || [], term);
-          }
-        } else {
-          products = filterProductsByTerm(products, term);
-          if (products.length === 0 && (productsResponse.data || []).length > 0) {
-            const fallback = await supabase
-              .from("products")
-              .select("id, name, type, description, notes")
-              .eq("organization_id", organizationId)
-              .limit(200);
-            if (fallback.error) {
-              console.error("[GlobalSearch] Erro no fallback de produtos:", fallback.error);
-            } else {
-              products = filterProductsByTerm(fallback.data || [], term);
-            }
-          }
-        }
+      // Transform clients
+      const clientesResults: SearchResult[] = (clientsRes.data || []).map(client => ({
+        id: client.id,
+        type: 'client',
+        title: client.name,
+        email: client.email || undefined,
+        phone: client.phone || undefined,
+        path: `/clientes/${client.id}`,
+      }));
 
-        const allResults: GlobalSearchResult[] = [
-          ...leads.map((lead) => ({
-            id: lead.id,
-            type: "lead" as const,
-            title: lead.name,
-            subtitle: lead.email || lead.phone || undefined,
-          })),
-          ...clients.map((client) => ({
-            id: client.id,
-            type: "client" as const,
-            title: client.name,
-            subtitle: client.email || client.phone || undefined,
-          })),
-          ...tasks.map((task) => ({
-            id: task.id,
-            type: "task" as const,
-            title: task.title,
-            subtitle: task.due_date
-              ? `Prazo: ${new Date(task.due_date).toLocaleDateString("pt-BR")}`
-              : "Sem prazo",
-          })),
-          ...products.map((product) => ({
-            id: product.id,
-            type: "product" as const,
-            title: product.name,
-            subtitle: product.type || product.description || product.notes || undefined,
-          })),
-        ];
+      // Transform tasks
+      const tarefasResults: SearchResult[] = (tasksRes.data || []).map(task => ({
+        id: task.id,
+        type: 'task',
+        title: task.title,
+        description: task.description || undefined,
+        status: task.status || undefined,
+        date: task.due_date || undefined,
+        path: `/tarefas`,
+      }));
 
-        console.log("[GlobalSearch] Resultados encontrados:", allResults.length, {
-          leads: leads.length,
-          clientes: clients.length,
-          tarefas: tasks.length,
-          produtos: products.length,
-        });
+      // Transform sales
+      const vendasResults: SearchResult[] = (salesRes.data || []).map(sale => ({
+        id: sale.id,
+        type: 'sale',
+        title: sale.title || 'Venda sem título',
+        value: sale.value || undefined,
+        status: sale.status || undefined,
+        path: `/vendas`,
+      }));
 
-        setResults(allResults);
-      } catch (error) {
-        console.error("[GlobalSearch] Erro inesperado na busca:", error);
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [filterProductsByTerm, organizationId],
-  );
+      // Transform products
+      const produtosResults: SearchResult[] = (productsRes.data || []).map(product => ({
+        id: product.id,
+        type: 'product',
+        title: product.name,
+        description: product.description || undefined,
+        value: product.price || undefined,
+        status: product.type || undefined,
+        path: `/produtos`,
+      }));
 
-  return {
-    query,
-    setQuery,
-    results,
-    loading,
-    search,
-    clearResults,
-  };
+      const total = 
+        leadsResults.length +
+        clientesResults.length +
+        tarefasResults.length +
+        vendasResults.length +
+        produtosResults.length;
+
+      setResults({
+        leads: leadsResults,
+        clientes: clientesResults,
+        tarefas: tarefasResults,
+        vendas: vendasResults,
+        produtos: produtosResults,
+        total,
+      });
+
+      console.log('[useGlobalSearch] Resultados encontrados:', total);
+    } catch (err) {
+      console.error('[useGlobalSearch] Erro na busca:', err);
+      setError('Erro ao realizar busca');
+    } finally {
+      setLoading(false);
+    }
+  }, [organizationId]);
+
+  return { results, loading, error, search };
 }
