@@ -37,175 +37,136 @@ export default function ClientesPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold text-neutral-900">Clientes</h1>
-          <p className="text-sm text-neutral-600 mt-1">
-            Gestão de clientes e histórico de vendas
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <Button 
-            variant="secondary" 
-            size="md" 
-            icon={<FileDown className="w-4 h-4" />}
-            onClick={() => setExportOpen(true)}
-          >
-            Exportar
-          </Button>
-          <Button 
-            variant="secondary" 
-            size="md" 
-            icon={<Plus className="w-4 h-4" />}
-            onClick={() => setShowSubscriptionModal(true)}
-          >
-            Nova Mensalidade
-          </Button>
-          <Button 
-            variant="primary" 
-            size="md" 
-            icon={<Plus className="w-4 h-4" />}
-            onClick={() => setShowCreateModal(true)}
-          >
-            Nova Venda
-          </Button>
-        </div>
-      </div>
-
-      {hook.selectedIds.length > 0 && (
-        <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
-          <div className="flex gap-3 mt-2">
-            <Button variant="secondary" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
-              Editar em Massa
-            </Button>
-            <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
-              Deletar Selecionados
-            </Button>
+    <DashboardLayout title="Clientes">
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-neutral-900">Clientes</h1>
+            <p className="text-sm text-neutral-600 mt-1">
+              Gestão de clientes e histórico de vendas
+            </p>
           </div>
-        </Alert>
-      )}
-
-      <Card variant="primary" padding="md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <Input
-              placeholder="Buscar por nome, email ou telefone..."
-              icon={<Search className="w-4 h-4" />}
-              value={hook.filters.search || ''}
-              onChange={(e) => hook.updateFilter('search', e.target.value)}
-            />
-          </div>
-          <Button 
-            variant={showFilters ? 'primary' : 'secondary'} 
-            size="md" 
-            icon={<Filter className="w-4 h-4" />}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            {showFilters ? 'Ocultar Filtros' : 'Filtros Avançados'}
-          </Button>
-        </div>
-      </Card>
-
-      <RecordCounter
-        totalCount={hook.totalCount}
-        filteredCount={hook.totalFiltered}
-        perPage={hook.perPage}
-        onPerPageChange={hook.setPerPage}
-      />
-
-      <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-neutral-100 rounded-lg">
-        <span className="text-sm font-medium text-neutral-700">Ordenar por:</span>
-        <div className="flex-1 flex gap-3">
-          <div className="flex-1">
-            <select
-              value={hook.sortField}
-              onChange={(e) => hook.toggleSort(e.target.value as SortField)}
-              className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          <div className="flex flex-wrap gap-3">
+            <Button 
+              variant="secondary" 
+              size="md" 
+              icon={<FileDown className="w-4 h-4" />}
+              onClick={() => setExportOpen(true)}
             >
-              <option value="name">🔤 Nome</option>
-              <option value="value">💰 Valor</option>
-              <option value="date">📅 Data Compra</option>
-              <option value="status">🏷️ Status</option>
-              <option value="lastInteraction">💬 Interação</option>
-            </select>
+              Exportar
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="md" 
+              icon={<Plus className="w-4 h-4" />}
+              onClick={() => setShowSubscriptionModal(true)}
+            >
+              Nova Mensalidade
+            </Button>
+            <Button 
+              variant="primary" 
+              size="md" 
+              icon={<Plus className="w-4 h-4" />}
+              onClick={() => setShowCreateModal(true)}
+            >
+              Nova Venda
+            </Button>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => hook.toggleSort(hook.sortField)}
-          >
-            {hook.sortDir === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-          </Button>
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <ClientsTable
-          clients={hook.filteredClients}
-          getClientSales={hook.getClientSales}
-          getLastInteraction={hook.getLastInteraction}
-          sortField={hook.sortField}
-          sortDir={hook.sortDir}
-          toggleSort={hook.toggleSort}
-          selectedIds={hook.selectedIds}
-          toggleSelect={hook.toggleSelect}
-          toggleSelectAll={hook.toggleSelectAll}
-          page={hook.page}
-          setPage={hook.setPage}
+        {hook.selectedIds.length > 0 && (
+          <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
+            <div className="flex gap-3 mt-2">
+              <Button variant="secondary" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
+                Editar em Massa
+              </Button>
+              <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
+                Deletar Selecionados
+              </Button>
+            </div>
+          </Alert>
+        )}
+
+        {/* ... existing card and filter code ... */}
+// ... keep existing code
+
+        <RecordCounter
+          totalCount={hook.totalCount}
+          filteredCount={hook.totalFiltered}
           perPage={hook.perPage}
-          setPerPage={hook.setPerPage}
-          totalPages={hook.totalPages}
-          totalFiltered={hook.totalFiltered}
-          onNewSale={handleNewSale}
-          loading={hook.loading}
-          products={hook.products}
-          onSelectClient={handleSelectClient}
+          onPerPageChange={hook.setPerPage}
+        />
+
+        {/* ... existing sorting code ... */}
+// ... keep existing code
+
+        <div className="space-y-4">
+          <ClientsTable
+            clients={hook.filteredClients}
+            getClientSales={hook.getClientSales}
+            getLastInteraction={hook.getLastInteraction}
+            sortField={hook.sortField}
+            sortDir={hook.sortDir}
+            toggleSort={hook.toggleSort}
+            selectedIds={hook.selectedIds}
+            toggleSelect={hook.toggleSelect}
+            toggleSelectAll={hook.toggleSelectAll}
+            page={hook.page}
+            setPage={hook.setPage}
+            perPage={hook.perPage}
+            setPerPage={hook.setPerPage}
+            totalPages={hook.totalPages}
+            totalFiltered={hook.totalFiltered}
+            onNewSale={handleNewSale}
+            loading={hook.loading}
+            products={hook.products}
+            onSelectClient={handleSelectClient}
+          />
+        </div>
+
+        <ExportModal
+          open={exportOpen}
+          onOpenChange={setExportOpen}
+          type="clients"
+          allData={hook.filteredClients}
+          filteredData={hook.filteredClients}
+        />
+        <BulkDeleteModal
+          open={bulkDeleteOpen}
+          onOpenChange={setBulkDeleteOpen}
+          selectedIds={hook.selectedIds}
+          type="clients"
+          onSuccess={() => {
+            hook.selectedIds.forEach(id => hook.toggleSelect(id));
+          }}
+          items={hook.filteredClients.map((c: any) => ({ id: c.id, name: c.name, email: c.email, phone: c.phone }))}
+        />
+        <BulkEditModal
+          open={bulkEditOpen}
+          onOpenChange={setBulkEditOpen}
+          selectedIds={hook.selectedIds}
+          type="clients"
+          onSuccess={() => {
+            hook.selectedIds.forEach(id => hook.toggleSelect(id));
+          }}
+        />
+        <NewSaleModal
+          open={saleModalOpen}
+          onOpenChange={setSaleModalOpen}
+          preSelectedLeadId={saleLeadId}
+          onSaleCreated={() => hook.refetchData()}
+        />
+        <CreateSaleModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={() => hook.refetchData()}
+        />
+        <CreateSubscriptionModal
+          isOpen={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+          onSuccess={() => hook.refetchData()}
         />
       </div>
-
-      <ExportModal
-        open={exportOpen}
-        onOpenChange={setExportOpen}
-        type="clients"
-        allData={hook.filteredClients}
-        filteredData={hook.filteredClients}
-      />
-      <BulkDeleteModal
-        open={bulkDeleteOpen}
-        onOpenChange={setBulkDeleteOpen}
-        selectedIds={hook.selectedIds}
-        type="clients"
-        onSuccess={() => {
-          hook.selectedIds.forEach(id => hook.toggleSelect(id));
-        }}
-        items={hook.filteredClients.map((c: any) => ({ id: c.id, name: c.name, email: c.email, phone: c.phone }))}
-      />
-      <BulkEditModal
-        open={bulkEditOpen}
-        onOpenChange={setBulkEditOpen}
-        selectedIds={hook.selectedIds}
-        type="clients"
-        onSuccess={() => {
-          hook.selectedIds.forEach(id => hook.toggleSelect(id));
-        }}
-      />
-      <NewSaleModal
-        open={saleModalOpen}
-        onOpenChange={setSaleModalOpen}
-        preSelectedLeadId={saleLeadId}
-        onSaleCreated={() => hook.refetchData()}
-      />
-      <CreateSaleModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSuccess={() => hook.refetchData()}
-      />
-      <CreateSubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-        onSuccess={() => hook.refetchData()}
-      />
-    </div>
+    </DashboardLayout>
   );
 }
