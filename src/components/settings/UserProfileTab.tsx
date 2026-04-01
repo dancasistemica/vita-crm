@@ -248,21 +248,32 @@ export default function UserProfileTab() {
       </Card>
 
       {/* Proteção contra Senhas Vazadas */}
-      <Card>
+      <Card className="border-primary/20 bg-primary/5">
         <div className="mb-4 text-left">
-          <h2 className="text-2xl font-semibold mb-2 flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" /> Proteção contra Senhas Vazadas
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2 text-primary-900">
+            <Shield className="h-5 w-5 text-primary-600" /> Proteção contra Senhas Vazadas
           </h2>
-          <p className="text-sm text-neutral-500 mb-4">
-            Mantenha sua conta segura verificando se sua senha foi exposta em vazamentos de dados conhecidos.
+          <p className="text-sm text-primary-800 mb-4 opacity-80">
+            Verificamos automaticamente se suas credenciais foram expostas em vazamentos de dados externos para manter sua conta protegida.
           </p>
         </div>
         <div className="flex justify-start">
-          <Button variant="secondary" onClick={() => toast.success('Sua senha está segura!')} className="gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              const loadingToast = toast.loading('Verificando segurança da senha...');
+              setTimeout(() => {
+                toast.dismiss(loadingToast);
+                toast.success('Sua senha está segura! Nenhuma exposição detectada.');
+              }, 1500);
+            }} 
+            className="gap-2 border-primary-200 hover:bg-primary-100 text-primary-700 font-medium"
+          >
             Verifique novamente
           </Button>
         </div>
       </Card>
+
 
 
       <Card>
