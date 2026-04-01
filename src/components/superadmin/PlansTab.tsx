@@ -95,7 +95,7 @@ export function PlansTab() {
       <div className="flex justify-end">
         <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Novo Plano
-        </>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -137,7 +137,7 @@ export function PlansTab() {
 
               <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
-              </>
+              </Button>
             </CardContent>
           </Card>
         ))}
@@ -191,8 +191,8 @@ export function PlansTab() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
-            <Button onClick={handleCreate}>Criar Plano</>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCreate}>Criar Plano</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

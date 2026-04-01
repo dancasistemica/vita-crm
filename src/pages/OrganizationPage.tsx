@@ -324,7 +324,7 @@ export default function OrganizationPage() {
 
       <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </>
+      </Button>
     </div>
   );
 }

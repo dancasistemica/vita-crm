@@ -206,7 +206,7 @@ export default function LoginPage() {
                 className="absolute right-3 top-[38px] text-neutral-500 hover:text-neutral-700 disabled:opacity-50 transition"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </>
+              </Button>
             </div>
 
             <div className="flex items-center gap-3">
@@ -227,7 +227,7 @@ export default function LoginPage() {
               loading={loading}
             >
               Entrar
-            </>
+            </Button>
           </form>
 
           {/* Secondary links */}
@@ -238,7 +238,7 @@ export default function LoginPage() {
               onClick={() => navigate('/auth')}
             >
               Esqueci minha senha
-            </>
+            </Button>
             <p className="text-sm text-neutral-600">
               Não tem conta?{' '}
               <Button variant="secondary" size="sm"
@@ -246,7 +246,7 @@ export default function LoginPage() {
                 className="text-primary-600 hover:underline font-medium"
               >
                 Criar conta
-              </>
+              </Button>
             </p>
           </div>
 

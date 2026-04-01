@@ -117,7 +117,7 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
         />
       )}
 
-      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.leadId}>Salvar</Button>
     </div>
   );
 }

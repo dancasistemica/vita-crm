@@ -87,7 +87,7 @@ export function UsersManagementTab() {
         </div>
         <Button onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Adicionar Superadmin
-        </>
+        </Button>
       </div>
 
       <Table>
@@ -110,7 +110,7 @@ export function UsersManagementTab() {
               <TableCell>
                 <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
-                </>
+                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -137,10 +137,10 @@ export function UsersManagementTab() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button onClick={handleAdd} disabled={submitting}>
               {submitting ? 'Adicionando...' : 'Adicionar'}
-            </>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

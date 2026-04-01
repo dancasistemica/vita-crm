@@ -54,12 +54,12 @@ export default function TaskFilters({
           <Button variant="secondary" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
             Filtros
-          </>
+          </Button>
         </CollapsibleTrigger>
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
             <X className="h-4 w-4" /> Limpar
-          </>
+          </Button>
         )}
       </div>
 

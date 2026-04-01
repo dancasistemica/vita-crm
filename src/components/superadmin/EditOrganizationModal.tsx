@@ -336,11 +336,11 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </>
+                    </Button>
                   </div>
                   <Button type="button" variant="secondary" onClick={handleGeneratePassword} className="gap-1 shrink-0">
                     <RefreshCw className="h-4 w-4" /> Gerar
-                  </>
+                  </Button>
                 </div>
 
                 {passwordStrength && (
@@ -364,11 +364,11 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         )}
 
         <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
-          </>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

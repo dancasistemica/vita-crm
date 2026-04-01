@@ -109,10 +109,10 @@ export default function CustomizePage() {
         <div className="flex gap-3">
           <Button variant="secondary" onClick={handleReset} disabled={saving}>
             <RotateCcw className="h-4 w-4 mr-1" /> Restaurar padrões
-          </>
+          </Button>
           <Button onClick={handleSave} disabled={saving}>
             <Save className="h-4 w-4 mr-1" /> {saving ? 'Salvando...' : 'Salvar'}
-          </>
+          </Button>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export default function CustomizePage() {
                 {brand.logo_url && (
                   <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeLogo(); }} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </>
+                  </Button>
                 )}
                 {brand.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -260,7 +260,7 @@ export default function CustomizePage() {
                   <AlertDialogTrigger asChild>
                     <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
                       <Globe className="h-4 w-4" /> Usar Cores Globais
-                    </>
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -328,7 +328,7 @@ export default function CustomizePage() {
                         <div className="w-5 h-5 rounded-full border" style={{ backgroundColor: p.accent }} />
                       </div>
                       <span className="text-xs font-medium">{p.name}</span>
-                    </>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -417,7 +417,7 @@ export default function CustomizePage() {
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
-              </>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: brand.accent_color }}>Tag 1</span>

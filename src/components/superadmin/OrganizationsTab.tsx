@@ -151,7 +151,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           </div>
           <Button onClick={() => setCreateOpen(true)} className="gap-3">
             <Plus className="h-4 w-4" /> Nova Organização
-          </>
+          </Button>
         </div>
 
         {/* Filter bar */}
@@ -189,7 +189,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
               <X className="h-4 w-4" /> Limpar
-            </>
+            </Button>
           )}
         </div>
 
@@ -253,16 +253,16 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                   <div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
-                    </>
+                    </Button>
                     <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
                       <Trash2 className="h-4 w-4 text-destructive" />
-                    </>
+                    </Button>
                     <Button variant={org.active ? 'destructive' : 'default'}
                       size="sm"
                       onClick={() => handleToggleStatus(org)}
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
-                    </>
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

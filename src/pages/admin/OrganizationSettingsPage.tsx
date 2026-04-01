@@ -306,14 +306,14 @@ const BotconversaSettings = ({ organizationId, cronSecretToken }: BotconversaSet
                 ) : (
                   'Salvar'
                 )}
-              </>
+              </Button>
               {/* TESTE: Botão SEM condição */}
               <Button onClick={handleActivateAutomation}
                 className="bg-green-600 hover:bg-green-700 w-full mt-4"
                 data-testid="activate-automation-button"
               >
                 Ativar Automação (TESTE)
-              </>
+              </Button>
               {!showActivate && (
                 <div className="text-sm text-amber-600 p-3 bg-amber-50 rounded border border-amber-200">
                   ⚠️ Debug: showActivate = {String(showActivate)}
@@ -472,13 +472,13 @@ export default function OrganizationSettingsPage() {
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <Button variant="secondary" onClick={handleCopy} disabled={!token || loading}>
                   Copy
-                </>
+                </Button>
                 <Button variant="error"
                   onClick={() => setConfirmOpen(true)}
                   disabled={!token || loading || regenerating}
                 >
                   {regenerating ? 'Regenerating...' : 'Regenerate'}
-                </>
+                </Button>
               </div>
             </div>
           </div>

@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
           <CardContent>
             <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
-            </>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
           </div>
           <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
             {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
-          </>
+          </Button>
         </CardContent>
       </Card>
     </div>

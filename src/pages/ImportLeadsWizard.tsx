@@ -32,7 +32,7 @@ export default function ImportLeadsWizard() {
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" onClick={handleClose}>
           <ArrowLeft className="h-4 w-4" />
-        </>
+        </Button>
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-neutral-900">📥 Importar Leads</h1>
         </div>

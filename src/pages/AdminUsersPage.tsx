@@ -387,7 +387,7 @@ export default function AdminUsersPage() {
             {hasFilters && (
               <Button variant="ghost" onClick={resetFilters} className="sm:mb-1">
                 <X className="h-4 w-4 mr-1" /> Resetar
-              </>
+              </Button>
             )}
           </div>
         </div>
@@ -438,20 +438,20 @@ export default function AdminUsersPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
                           <Edit className="h-4 w-4" />
-                        </>
+                        </Button>
                         {u.email && u.org_id && (
                           <Button variant="ghost" title="Resetar senha" onClick={() => handleResetPassword(u)} className="p-1 h-8 w-8">
                             <RotateCcw className="h-4 w-4" />
-                          </>
+                          </Button>
                         )}
                         {u.org_id && (
                           <Button variant="ghost" title="Ver organização" onClick={() => navigate("/superadmin")} className="p-1 h-8 w-8">
                             <Eye className="h-4 w-4" />
-                          </>
+                          </Button>
                         )}
                         <Button variant="ghost" title="Remover" onClick={() => setDeleteTarget(u)} className="p-1 h-8 w-8 text-error-600">
                           <Trash2 className="h-4 w-4" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -463,8 +463,8 @@ export default function AdminUsersPage() {
               <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t border-neutral-100">
                 <span>Página {page} de {totalPages}</span>
                 <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
-                  <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
+                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+                  <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
                 </div>
               </div>
             )}
@@ -534,10 +534,10 @@ export default function AdminUsersPage() {
         <div className="flex gap-3 pt-4 border-t border-neutral-100">
           <Button variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
             Cancelar
-          </>
+          </Button>
           <Button variant="primary" onClick={handleEditSave} isLoading={saving} className="flex-1">
             Salvar Alterações
-          </>
+          </Button>
         </div>
       </Dialog>
 

@@ -89,7 +89,7 @@ export const BotconversaSettings = ({
 
         <Button onClick={() => window.location.reload()}>
           Recarregar Página
-        </>
+        </Button>
       </div>
     );
   }
@@ -118,10 +118,10 @@ export const BotconversaSettings = ({
               disabled={isSaving}
             >
               Editar
-            </>
+            </Button>
             <Button variant="error" onClick={handleDelete} disabled={isSaving}>
               Remover
-            </>
+            </Button>
           </div>
         </div>
       ) : (
@@ -141,7 +141,7 @@ export const BotconversaSettings = ({
           <div className="flex gap-3">
             <Button onClick={handleSave} disabled={isSaving || !apiKey.trim()}>
               {isSaving ? 'Salvando...' : 'Salvar Chave'}
-            </>
+            </Button>
             {config && (
               <Button variant="secondary"
                 onClick={() => {
@@ -150,7 +150,7 @@ export const BotconversaSettings = ({
                 }}
               >
                 Cancelar
-              </>
+              </Button>
             )}
           </div>
         </div>

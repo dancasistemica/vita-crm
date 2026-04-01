@@ -206,11 +206,11 @@ export default function UserProfileTab() {
           <div className="flex gap-3">
             <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()}>
               <Camera className="h-4 w-4 mr-1" /> Alterar Foto
-            </>
+            </Button>
             {(displayAvatar) && (
               <Button variant="secondary" size="sm" onClick={handleRemovePhoto}>
                 <Trash2 className="h-4 w-4 mr-1" /> Remover
-              </>
+              </Button>
             )}
           </div>
           {previewUrl && <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
@@ -272,7 +272,7 @@ export default function UserProfileTab() {
 
       <Button onClick={handleSave} disabled={saving || uploading} className="w-full sm:w-auto">
         {saving ? 'Salvando...' : 'Salvar Alterações'}
-      </>
+      </Button>
     </div>
   );
 }

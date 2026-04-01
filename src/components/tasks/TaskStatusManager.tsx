@@ -73,7 +73,7 @@ export default function TaskStatusManager({
           </CardTitle>
           <Button size="sm" variant="secondary" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          </>
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -89,7 +89,7 @@ export default function TaskStatusManager({
             </div>
             <Button size="sm" onClick={handleSubmit} disabled={!form.name.trim()}>
               {editingId ? "Salvar" : "Criar"}
-            </>
+            </Button>
           </div>
         )}
         {statuses.length === 0 && !showForm && (
@@ -104,10 +104,10 @@ export default function TaskStatusManager({
             <div className="flex gap-1">
               <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleEdit(s)}>
                 <Edit2 className="h-3 w-3" />
-              </>
+              </Button>
               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => handleDelete(s)}>
                 <Trash2 className="h-3 w-3" />
-              </>
+              </Button>
             </div>
           </div>
         ))}

@@ -149,7 +149,7 @@ export default function LeadSelectWithSearch({
           <span className="text-muted-foreground">{placeholder}</span>
         )}
         <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-      </>
+      </Button>
 
       {/* Dropdown */}
       {open && (
@@ -167,7 +167,7 @@ export default function LeadSelectWithSearch({
             {query && (
               <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
-              </>
+              </Button>
             )}
           </div>
 
@@ -215,7 +215,7 @@ export default function LeadSelectWithSearch({
                         )}
                       </div>
                     </div>
-                  </>
+                  </Button>
                 ))
               )}
             </div>

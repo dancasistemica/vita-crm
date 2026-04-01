@@ -481,7 +481,7 @@ export default function TarefasPage() {
           />
           <Button variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
-          </>
+          </Button>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
             <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Tarefa</></DialogTrigger>
             <DialogContent>
@@ -566,7 +566,7 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Designar responsável">
           <UserCircle className="h-4 w-4" />
-        </>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end">
         <Button variant="secondary" size="sm"
@@ -574,7 +574,7 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
           className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${!assignedTo ? 'bg-muted font-medium' : ''}`}
         >
           Sem responsável
-        </>
+        </Button>
         {orgMembers.map(m => (
           <Button variant="secondary" size="sm"
             key={m.user_id}
@@ -582,7 +582,7 @@ function AssignPopover({ taskId, assignedTo, orgMembers, onAssign }: {
             className={`w-full text-left text-sm px-3 py-2 rounded hover:bg-muted transition ${assignedTo === m.user_id ? 'bg-muted font-medium' : ''}`}
           >
             {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-          </>
+          </Button>
         ))}
       </PopoverContent>
     </Popover>
@@ -666,7 +666,7 @@ function TaskForm({ leads, pipelineStages, orgMembers, taskStatuses, onSave, ini
 
       <Button className="w-full" onClick={() => onSave(form)} disabled={!form.title.trim()}>
         {initialData ? 'Salvar Alterações' : 'Salvar'}
-      </>
+      </Button>
     </div>
   );
 }

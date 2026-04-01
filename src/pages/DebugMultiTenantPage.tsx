@@ -134,7 +134,7 @@ export default function DebugMultiTenantPage() {
         <h1 className="text-4xl font-bold text-neutral-900">🔍 Debug Multi-Tenant</h1>
         <Button variant="secondary" size="sm" onClick={runDiagnostics}>
           <RefreshCw className="h-4 w-4 mr-2" /> Recarregar
-        </>
+        </Button>
       </div>
 
       {/* User Info */}

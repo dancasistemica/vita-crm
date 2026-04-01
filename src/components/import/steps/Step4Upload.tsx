@@ -197,7 +197,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
               ))}
             </div>
           </div>
-        </>
+        </Button>
       )}
 
       <div className="flex justify-between">

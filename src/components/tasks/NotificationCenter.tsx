@@ -30,7 +30,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
               {unread}
             </span>
           )}
-        </>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between p-3 border-b">
@@ -38,7 +38,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
           {unread > 0 && (
             <Button variant="ghost" size="sm" className="text-xs h-6" onClick={onMarkAllAsRead}>
               Marcar tudo como lido
-            </>
+            </Button>
           )}
         </div>
         <ScrollArea className="max-h-64">
@@ -52,7 +52,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
                   {!n.read && (
                     <Button variant="ghost" size="sm" className="h-6 w-6 p-0 shrink-0" onClick={() => onMarkAsRead(n.id)}>
                       <CheckCircle className="h-3 w-3" />
-                    </>
+                    </Button>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">

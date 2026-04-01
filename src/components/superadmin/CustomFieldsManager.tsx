@@ -474,7 +474,7 @@ export function CustomFieldsManager() {
             </div>
             <Button onClick={openCreateModal} size="sm" className="gap-1.5 min-h-[44px]">
               <Plus className="h-4 w-4" /> Adicionar Campo
-            </>
+            </Button>
           </div>
         )}
       </div>
@@ -522,14 +522,14 @@ export function CustomFieldsManager() {
                           onClick={() => handleApplyToAll(field)}
                         >
                           Aplicar para todas
-                        </>
+                        </Button>
                       )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                         <Button variant="ghost"
                           size="sm"
                           className="h-7 w-7 text-destructive"
@@ -539,7 +539,7 @@ export function CustomFieldsManager() {
                           }}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -606,10 +606,10 @@ export function CustomFieldsManager() {
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
                           <Pencil className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                         <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
                           <Trash2 className="h-3.5 w-3.5" />
-                        </>
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -662,7 +662,7 @@ export function CustomFieldsManager() {
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  <Button type="button" variant="secondary" size="sm" onClick={addOption}>+</>
+                  <Button type="button" variant="secondary" size="sm" onClick={addOption}>+</Button>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
@@ -685,10 +685,10 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
+            <Button variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
             <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
-            </>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

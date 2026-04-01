@@ -305,7 +305,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
         <Button onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
           <Save className="h-4 w-4 mr-2" />
           {saving ? 'Salvando...' : 'Salvar Permissões'}
-        </>
+        </Button>
       </div>
     </div>
   );

@@ -229,7 +229,7 @@ export function SystemSettings() {
                 {settings.logo_url && (
                   <Button variant="ghost" size="sm" onClick={() => updateSetting('logo_url', null)} className="text-destructive mt-2">
                     <Trash2 className="h-4 w-4 mr-1" /> Remover logo
-                  </>
+                  </Button>
                 )}
                 {settings.logo_url && (
                   <div className="mt-3 space-y-4">
@@ -506,7 +506,7 @@ export function SystemSettings() {
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
                 Salvar alterações
-              </>
+              </Button>
               <div className="flex gap-3 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: settings.accent_color }}>Tag 1</span>
@@ -529,7 +529,7 @@ export function SystemSettings() {
         <Button onClick={handleSave} disabled={saving || uploading} className="min-h-[44px] gap-3">
           <Save className="h-4 w-4" />
           {saving ? 'Salvando...' : 'Salvar Configurações do Sistema'}
-        </>
+        </Button>
       </div>
     </div>
   );

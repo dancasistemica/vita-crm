@@ -194,7 +194,7 @@ export default function PaymentMethodsTab() {
                       <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(null)}>
                         <X className="h-3 w-3" />
                       </Button>
-                    </>
+                    </Button>
                   ) : (
                     <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setEditingMethod(m)}>
                       <Edit className="h-3 w-3" />

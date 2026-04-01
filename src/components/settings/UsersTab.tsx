@@ -310,7 +310,7 @@ export default function UsersTab() {
         </CardTitle>
         <Button size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
-        </>
+        </Button>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
@@ -383,7 +383,7 @@ export default function UsersTab() {
                             onClick={() => openEdit(u)}
                           >
                             <Edit className="h-4 w-4" />
-                          </>
+                          </Button>
                           <Button variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -391,7 +391,7 @@ export default function UsersTab() {
                             onClick={() => handleResetPassword(u)}
                           >
                             <RotateCcw className="h-4 w-4" />
-                          </>
+                          </Button>
                           {u.role !== "owner" && (
                             <Button variant="ghost"
                               size="sm"
@@ -400,7 +400,7 @@ export default function UsersTab() {
                               onClick={() => setDeleteTarget(u)}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </>
+                            </Button>
                           )}
                         </div>
                       </TableCell>
@@ -423,14 +423,14 @@ export default function UsersTab() {
                     onClick={() => setPage(page - 1)}
                   >
                     Anterior
-                  </>
+                  </Button>
                   <Button variant="secondary"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
                   >
                     Próximo
-                  </>
+                  </Button>
                 </div>
               </div>
             )}
@@ -480,7 +480,7 @@ export default function UsersTab() {
                           ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
                           : "Selecione uma organização"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </>
+                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
                       <Command>
@@ -546,11 +546,11 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</>
+              <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
               <Button onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}
-              </>
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

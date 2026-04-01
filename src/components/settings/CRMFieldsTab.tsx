@@ -551,7 +551,7 @@ export default function CRMFieldsTab() {
                 )}
                 <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(o.id, o.name, 'origem')} disabled={originsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
-            </>
+            </Button>
           ),
           "Nenhuma origem cadastrada.",
           "Arraste para reordenar. A ordem é salva automaticamente."
@@ -596,7 +596,7 @@ export default function CRMFieldsTab() {
                 )}
                 <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(l.id, l.label, 'nível de interesse')} disabled={levelsSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
-            </>
+            </Button>
           ),
           "Nenhum nível cadastrado.",
           "Arraste para reordenar. A ordem é salva automaticamente."
@@ -638,7 +638,7 @@ export default function CRMFieldsTab() {
                 )}
                 <Button size="sm" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => openDeleteConfirm(s.id, s.name, 'etapa do funil')} disabled={stagesSaving}><Trash2 className="h-3 w-3" /></Button>
               </div>
-            </>
+            </Button>
           ),
           "Nenhuma etapa cadastrada.",
           "Arraste as etapas para reordenar. A ordem é salva automaticamente."
