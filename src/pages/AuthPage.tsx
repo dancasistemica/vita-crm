@@ -40,10 +40,6 @@ export default function AuthPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  const signupForm = useForm<SignupForm>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
-  });
 
   if (loading || checkingBootstrap) {
     return (
