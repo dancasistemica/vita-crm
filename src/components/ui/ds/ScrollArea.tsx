@@ -6,4 +6,4 @@ export const ScrollArea = ({ children, className = '', ...props }: React.HTMLAtt
   </div>
 );
 
-export const ScrollBar = () => null; // Simple replacement
+export const ScrollBar = ({ orientation, ...props }: any) => null;
