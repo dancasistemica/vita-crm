@@ -3,7 +3,7 @@ import { CheckSquare, Package, User, UserPlus } from "lucide-react";
 import type { SearchResult, SearchResultType } from "@/hooks/useGlobalSearch";
 
 interface SearchResultsProps {
-  results: GlobalSearchResult[];
+  results: SearchResult[];
   loading: boolean;
   query: string;
   onSelect: (result: GlobalSearchResult) => void;
