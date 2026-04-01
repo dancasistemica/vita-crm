@@ -30,8 +30,14 @@ export default function CRMLayout() {
   };
 
   return (
-    <DashboardLayout title={getPageTitle()}>
-      <Outlet />
-    </DashboardLayout>
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        <Header title={getPageTitle()} />
+        <main className="flex-1 overflow-auto bg-neutral-50 p-4 sm:p-6 lg:p-8">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }
