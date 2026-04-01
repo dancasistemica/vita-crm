@@ -142,7 +142,7 @@ export default function ClientsTable({
             <Card 
               key={client.id} 
               padding="none" 
-              className={`hover:shadow-md transition-shadow cursor-pointer relative ${openMenu === client.id ? 'z-[60]' : 'z-0'}`}
+              className={`hover:shadow-md transition-shadow cursor-pointer relative ${openMenu === client.id ? 'z-[60]' : ''}`}
               onClick={() => {
                 if (onSelectClient) onSelectClient(client);
                 else navigate(`/clientes/${client.id}`);
