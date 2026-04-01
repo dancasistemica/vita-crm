@@ -503,7 +503,7 @@ export default function AdminUsersPage() {
               onChange={(e) => setEditPassword(e.target.value)}
               placeholder="Mínimo 6 caracteres"
               icon={
-                <button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
+                <Button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
                   {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                 </button>
               }
