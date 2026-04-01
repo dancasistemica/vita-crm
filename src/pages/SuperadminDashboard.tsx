@@ -1,4 +1,4 @@
-import { Alert, Badge, Button, Card, Select, Tabs } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Select, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/ds";
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
@@ -144,48 +144,48 @@ export default function SuperadminDashboard() {
       {/* MAIN TABS */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <div className="overflow-x-auto pb-2">
-          <div className="flex gap-2 border-b border-neutral-200 mb-4">
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+          <TabsList className="gap-2 border-b border-neutral-200 mb-4">
+            <TabsTrigger value="organizations" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" /> Organizações
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="plans" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" /> Planos
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" /> Superadmins
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="email-templates" className="flex items-center gap-2">
               <Mail className="h-4 w-4" /> Email Templates
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="custom-fields" className="flex items-center gap-2">
               <Settings2 className="h-4 w-4" /> Campos Custom
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="botconversa" className="flex items-center gap-2">
               <Bot className="h-4 w-4" /> Botconversa
-            </button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
+            </TabsTrigger>
+            <TabsTrigger value="system" className="flex items-center gap-2">
               <Cog className="h-4 w-4" /> Sistema
-            </button>
-          </div>
+            </TabsTrigger>
+          </TabsList>
         </div>
 
         <Card variant="primary" padding="lg">
-          <div>
+          <TabsContent value="organizations">
             <OrganizationsTab ref={orgsTabRef} onStatsChange={fetchStats} />
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="plans">
             <PlansTab />
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="users">
             <UsersManagementTab />
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="email-templates">
             <EmailTemplatesTab />
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="custom-fields">
             <CustomFieldsManager />
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="botconversa">
             <div>
               <Select
                 label="Selecione uma organização"
@@ -206,10 +206,10 @@ export default function SuperadminDashboard() {
                 organizationName={selectedBotconversaOrg.name}
               />
             )}
-          </div>
-          <div>
+          </TabsContent>
+          <TabsContent value="system">
             <SystemSettings />
-          </div>
+          </TabsContent>
         </Card>
       </Tabs>
     </div>
