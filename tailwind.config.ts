@@ -21,22 +21,27 @@ export default {
         background: '#ffffff',
         foreground: '#171717',
         primary: {
+          ...designTokens.colors.primary,
           DEFAULT: designTokens.colors.primary[500],
           foreground: '#ffffff',
         },
         secondary: {
+          ...designTokens.colors.neutral,
           DEFAULT: designTokens.colors.neutral[200],
           foreground: designTokens.colors.foreground.default,
         },
         destructive: {
+          ...designTokens.colors.error,
           DEFAULT: designTokens.colors.error[500],
           foreground: '#ffffff',
         },
         muted: {
+          ...designTokens.colors.neutral,
           DEFAULT: designTokens.colors.neutral[100],
           foreground: designTokens.colors.foreground.secondary,
         },
         accent: {
+          ...designTokens.colors.primary,
           DEFAULT: designTokens.colors.primary[500],
           foreground: '#ffffff',
         },
