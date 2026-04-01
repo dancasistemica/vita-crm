@@ -207,7 +207,7 @@ export default function DebugMultiTenantPage() {
                 <span className="font-medium text-foreground">{table}</span>
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground">{info.visible} registros</span>
-                  <Badge variant={info.org_ids.length <= 1 ? 'default' : 'destructive'} className="text-xs">
+                  <Badge variant={info.org_ids.length <= 1 ? 'default' : 'error'} className="text-xs">
                     {info.org_ids.length <= 1 ? '✅' : `❌ ${info.org_ids.length} orgs`}
                   </Badge>
                 </div>
