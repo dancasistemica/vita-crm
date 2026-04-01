@@ -153,14 +153,14 @@ export const ScheduleMessageDialog = ({
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)} className="min-h-[44px]">
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={handleSchedule} disabled={loading} className="min-h-[44px]">
+          <Button className="flex-1" onClick={handleSchedule} disabled={loading}>
             {loading ? 'Agendando...' : 'Agendar'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

@@ -268,7 +268,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <Label>
-                    CEP {loadingCEP && <Loader2 className="inline h-3 w-3 animate-spin ml-1" />}
+                    CEP {loadingCEP && <Loader className="inline h-3 w-3 animate-spin ml-1" />}
                   </Label>
                   <Input
                     value={form.cep}

@@ -1,8 +1,8 @@
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Select, Switch, Table, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
+import { Alert, Badge, Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Select, Switch, Table, ToggleGroup, ToggleGroupItem, Card } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
+import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe, Loader } from 'lucide-react';
 
 interface CustomField {
   id: string;
@@ -470,7 +470,7 @@ export function CustomFieldsManager() {
         {isGlobalMode ? (
           loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : filteredGlobalFields.length === 0 ? (
             <div className="text-center py-12 text-neutral-500 text-sm">
@@ -526,7 +526,7 @@ export function CustomFieldsManager() {
           selectedOrgId && (
             loading ? (
               <div className="flex justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <Loader className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : filteredFields.length === 0 ? (
               <div className="text-center py-12 text-neutral-500 text-sm">
@@ -649,47 +649,49 @@ export function CustomFieldsManager() {
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar Campo'}</Button>
-          </DialogFooter>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setModalOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar Campo'}</Button>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Delete confirmation */}
-      <AlertDialog open={!!deleteFieldId} onOpenChange={open => !open && setDeleteFieldId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir campo customizado?</AlertDialogTitle>
-            <AlertDialogDescription>
+      {deleteFieldId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Excluir campo customizado?</h2>
+            <p className="text-sm text-neutral-600 mb-6">
               Tem certeza que deseja excluir este campo? Todos os dados vinculados a este campo em leads desta organização serão perdidos permanentemente.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDelete}>Excluir</Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteFieldId(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDelete}>
+                Excluir
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Global Delete confirmation */}
-      <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => !open && setDeleteGlobalFieldName(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-destructive flex items-center gap-2">
+      {deleteGlobalFieldName && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2 text-error flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" /> EXCLUIR CAMPO GLOBAL
-            </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3">
-              <p>Você está prestes a excluir o campo <strong>"{deleteGlobalFieldLabel}"</strong> de <strong>TODAS as organizações</strong> ({totalOrgs}).</p>
-              <p className="bg-destructive/10 text-destructive p-3 rounded-md font-bold uppercase text-xs">ESTA AÇÃO É IRREVERSÍVEL E APAGARÁ DADOS DE TODOS OS LEADS DO SISTEMA.</p>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDeleteGlobal}>CONFIRMAR EXCLUSÃO GLOBAL</Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </h2>
+            <div className="space-y-3 mb-6">
+              <p className="text-sm text-neutral-600">Você está prestes a excluir o campo <strong>"{deleteGlobalFieldLabel}"</strong> de <strong>TODAS as organizações</strong>.</p>
+              <p className="bg-error/10 text-error p-3 rounded-md font-bold uppercase text-xs">ESTA AÇÃO É IRREVERSÍVEL E APAGARÁ DADOS DE TODOS OS LEADS DO SISTEMA.</p>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteGlobalFieldName(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDeleteGlobal}>CONFIRMAR EXCLUSÃO GLOBAL</Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

@@ -169,7 +169,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
 
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+              <Loader className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : roles.length === 0 ? (
             <p className="text-center text-neutral-500 py-8">

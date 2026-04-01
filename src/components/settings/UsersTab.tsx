@@ -324,7 +324,7 @@ export default function UsersTab() {
 
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+              <Loader className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : filtered.length === 0 ? (
             <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
@@ -462,12 +462,12 @@ export default function UsersTab() {
               </Select>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving}>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleSave} disabled={saving}>
               {saving ? "Salvando..." : "Salvar"}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
