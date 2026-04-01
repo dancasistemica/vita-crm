@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, Badge, Button, Card, Dialog, Input, Label, Table, Textarea } from "@/components/ui/ds";
+import { Alert, AlertDialog, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -20,7 +20,7 @@ interface CustomRolesTabProps {
 
 export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   const { organizationId } = useOrganization();
-  const { role, canAccessSettings } = useUserRole();
+  const { canAccessSettings } = useUserRole();
   const [roles, setRoles] = useState<CustomRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
@@ -141,8 +141,8 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   if (!canAccessSettings) {
     return (
       <Card>
-        <div>
-          <Lock className="h-12 w-12" />
+        <div className="flex flex-col items-center justify-center py-12">
+          <Lock className="h-12 w-12 text-neutral-400 mb-4" />
           <p className="text-lg font-medium">Acesso Restrito</p>
         </div>
       </Card>
@@ -152,19 +152,21 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   return (
     <div className="space-y-4">
       <Card>
-        <div className="mb-4">
-          <h2 className="text-2xl font-semibold mb-2">
-            <Shield className="h-5 w-5" />
-            Roles Customizáveis
-          </h2>
-          <Button size="sm" onClick={openCreate}>
-            <Plus className="h-4 w-4 mr-1" /> Nova Role
-          </Button>
-        </div>
-        <div>
-          <p className="text-sm text-neutral-500 mb-4">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">Roles Customizáveis</h2>
+            </div>
+            <Button size="sm" onClick={openCreate}>
+              <Plus className="h-4 w-4 mr-1" /> Nova Role
+            </Button>
+          </div>
+          
+          <p className="text-sm text-neutral-500 mb-6">
             Crie roles personalizadas para sua organização. Após criar, configure as permissões na aba <strong>Permissões</strong>.
           </p>
+
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
@@ -174,42 +176,43 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Usuário) estão disponíveis na aba Permissões.
             </p>
           ) : (
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="border-b border-neutral-100">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {roles.map((r) => (
-                      <tr key={r.id}>
-                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            {r.name}
-                            {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{r.description || '—'}</td>
-                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
-                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
-                              <Edit className="h-4 w-4" />
+            <div className="overflow-x-auto rounded-lg border border-neutral-200">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-neutral-50 border-b border-neutral-200">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100">
+                  {roles.map((r) => (
+                    <tr key={r.id} className="hover:bg-neutral-50 transition-colors">
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          {r.name}
+                          {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-neutral-500">{r.description || '—'}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-500 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          {!r.is_default && (
+                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
+                              <Trash2 className="h-4 w-4" />
                             </Button>
-                            {!r.is_default && (
-                              <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -217,11 +220,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
 
       {/* Create/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-        
-          <div className="mb-4">
-            <h2 className="text-2xl font-semibold">{editing ? 'Editar Role' : 'Nova Role'}</h2>
-          </div>
-          <div className="space-y-4">
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editing ? 'Editar Role' : 'Nova Role'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
             <div className="space-y-1">
               <Label>Nome *</Label>
               <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ex: Gerente, Supervisor" />
@@ -238,24 +241,24 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               {editing ? 'Salvar' : 'Criar'}
             </Button>
           </DialogFooter>
-        
+        </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remover role "{deleteTarget?.name}"?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <DialogHeader>
+            <DialogTitle>Remover role "{deleteTarget?.name}"?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-neutral-500 py-4">
+            Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
+          </p>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+            <Button onClick={handleDelete} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               {saving ? 'Removendo...' : 'Remover'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
+            </Button>
+          </DialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
