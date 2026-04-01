@@ -331,11 +331,10 @@ export class DataAccessService {
 
   // ── TASK STATUSES ───────────────────────────────────────
   async getTaskStatuses() {
-    const { data, error } = await supabase
-      .from('task_statuses')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('order_index');
+    let query = supabase.from('task_statuses').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('order_index');
     if (error) { console.error('[DataAccessService] getTaskStatuses error:', error); throw error; }
     return data || [];
   }
