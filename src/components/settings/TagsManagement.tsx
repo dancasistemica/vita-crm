@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +13,7 @@ interface Tag {
 }
 
 export const TagsManagement = () => {
+  const { organizationId } = useOrganization();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTagName, setNewTagName] = useState('');
@@ -38,7 +40,7 @@ export const TagsManagement = () => {
 
       // Get usage count for each tag
       const { data: usageData, error: usageError } = await supabase
-        .from('lead_tags')
+        .from('lead_tags' as any)
         .select('tag_id');
 
       if (usageError) throw usageError;
@@ -72,7 +74,7 @@ export const TagsManagement = () => {
       setIsSaving(true);
       const { data, error } = await supabase
         .from('tags')
-        .insert([{ name: newTagName.trim(), color: newTagColor }])
+        .insert([{ name: newTagName.trim(), color: newTagColor, organization_id: organizationId }])
         .select()
         .single();
 

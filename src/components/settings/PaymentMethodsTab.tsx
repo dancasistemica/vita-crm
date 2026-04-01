@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Edit, Trash2, GripVertical, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,10 +9,11 @@ interface PaymentMethod {
   id: string;
   name: string;
   active: boolean;
-  order_index: number;
+  sort_order: number;
 }
 
 export default function PaymentMethodsTab() {
+  const { organizationId } = useOrganization();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [newMethod, setNewMethod] = useState('');
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function PaymentMethodsTab() {
       const { data, error } = await supabase
         .from('payment_methods')
         .select('*')
-        .order('order_index');
+        .order('sort_order');
 
       if (error) throw error;
       setPaymentMethods(data || []);
@@ -48,8 +50,9 @@ export default function PaymentMethodsTab() {
         .from('payment_methods')
         .insert([{ 
           name: newMethod.trim(), 
-          order_index: paymentMethods.length,
-          active: true 
+          sort_order: paymentMethods.length,
+          active: true,
+          organization_id: organizationId
         }])
         .select()
         .single();

@@ -26,10 +26,11 @@ export const Popover = ({ open, onOpenChange, children }: any) => {
 
 export const PopoverTrigger = ({ children, setIsOpen }: any) => {
   if (React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<any>, {
+    const child = children as React.ReactElement<any>;
+    return React.cloneElement(child, {
       onClick: (e: any) => {
         setIsOpen((v: boolean) => !v);
-        if (children.props.onClick) children.props.onClick(e);
+        if (child.props.onClick) child.props.onClick(e);
       }
     });
   }

@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
-import TaskActions from "@/components/tasks/TaskActions";
+import { TaskActions } from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
-import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
+import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar as CalendarIcon } from "lucide-react";
 import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
@@ -417,7 +417,7 @@ export default function TarefasPage() {
                 </Badge>
               )}
               <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
+                <CalendarIcon className="h-3 w-3" />
                 {formatCreatedDate(task.created_at)}
               </span>
             </div>

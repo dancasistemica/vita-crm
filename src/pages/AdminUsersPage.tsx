@@ -3,23 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { useNavigate } from "react-router-dom";
 import { 
-  Card, 
-  
-  Input, 
-  Badge, 
-  Select, 
-  Dialog, 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
+  Alert,
+  AlertDialog,
+  Badge,
+  Button,
+  Card,
+  Dialog,
+  Input,
+  Select,
+  Table,
+  TableBody,
   TableCell,
-  AlertDialog 
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/ds";
 import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
-import { Alert, AlertDialog, Badge, Button, Card, Dialog, Input, Select, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface AdminUser {
   user_id: string;
@@ -503,9 +503,9 @@ export default function AdminUsersPage() {
               onChange={(e) => setEditPassword(e.target.value)}
               placeholder="Mínimo 6 caracteres"
               icon={
-                <button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
+                <Button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
                   {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                </button>
+                </Button>
               }
             />
           </div>

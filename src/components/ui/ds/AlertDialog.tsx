@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog } from './Dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './Dialog';
 import { Button } from './Button';
 
 interface AlertDialogProps {
@@ -61,23 +61,40 @@ export const AlertDialog = ({
 };
 
 // Shims for compound components
-export const AlertDialogContent = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-export const AlertDialogHeader = ({ children }: { children: React.ReactNode }) => <div className="mb-4">{children}</div>;
-export const AlertDialogTitle = ({ children }: { children: React.ReactNode }) => <div className="text-xl font-semibold">{children}</div>;
-export const AlertDialogDescription = ({ children }: { children: React.ReactNode }) => <p className="text-sm text-neutral-500 mt-2">{children}</p>;
-export const AlertDialogFooter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => <div className={`mt-6 flex justify-end gap-3 ${className}`}>{children}</div>;
+export const AlertDialogContent = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <DialogContent className={className}>{children}</DialogContent>
+);
+
+export const AlertDialogHeader = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <DialogHeader className={className}>{children}</DialogHeader>
+);
+
+export const AlertDialogTitle = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <DialogTitle className={className}>{children}</DialogTitle>
+);
+
+export const AlertDialogDescription = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <DialogDescription className={className}>{children}</DialogDescription>
+);
+
+export const AlertDialogFooter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <DialogFooter className={className}>{children}</DialogFooter>
+);
+
 export const AlertDialogAction = ({ children, asChild, ...props }: any) => {
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children as React.ReactElement, props);
   }
   return <Button {...props}>{children}</Button>;
 };
+
 export const AlertDialogCancel = ({ children, asChild, ...props }: any) => {
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children as React.ReactElement, { variant: 'secondary', ...props });
   }
   return <Button variant="secondary" {...props}>{children}</Button>;
 };
+
 export const AlertDialogTrigger = ({ children, asChild, ...props }: any) => {
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children as React.ReactElement, props);
