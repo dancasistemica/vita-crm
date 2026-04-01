@@ -56,7 +56,7 @@ export default function LoginPage() {
 
 
         {/* Formulário */}
-        <form onSubmit={isSignUp ? handleSignUp : handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -101,18 +101,16 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* Link "Esqueci Minha Senha" - APENAS na aba de Login */}
-            {!isSignUp && (
-              <div className="mt-2 text-right">
-                <button
-                  type="button"
-                  onClick={() => navigate('/forgot-password')}
-                  className="text-xs text-primary-600 hover:text-primary-700 transition-colors font-medium"
-                >
-                  Esqueci minha senha
-                </button>
-              </div>
-            )}
+            {/* Link "Esqueci Minha Senha" */}
+            <div className="mt-2 text-right">
+              <button
+                type="button"
+                onClick={() => navigate('/forgot-password')}
+                className="text-xs text-primary-600 hover:text-primary-700 transition-colors font-medium"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
           </div>
 
           {/* Mensagem de Erro */}
@@ -129,9 +127,22 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
           >
-            {loading ? 'Processando...' : isSignUp ? 'Criar Conta' : 'Entrar'}
+            {loading ? 'Processando...' : 'Entrar'}
           </Button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-neutral-600">
+            Ainda não tem uma conta?{' '}
+            <button
+              onClick={() => navigate('/signup')}
+              className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            >
+              Criar conta
+            </button>
+          </p>
+        </div>
+
       </Card>
     </div>
   );
