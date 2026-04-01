@@ -34,8 +34,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         {/* Header */}
         <Header
           title={title}
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-          menuOpen={sidebarOpen}
         />
 
         {/* Page Content */}
