@@ -242,7 +242,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={org.active ? 'default' : 'destructive'}>
+                  <Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
                   </Badge>
                 </TableCell>
