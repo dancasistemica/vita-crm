@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
+import { validateEmail, RateLimiter } from '@/lib/security';
 import { Card } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
 import { Eye, EyeOff } from 'lucide-react';
