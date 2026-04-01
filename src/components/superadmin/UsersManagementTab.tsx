@@ -68,7 +68,7 @@ export function UsersManagementTab() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+    return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
   }
 
   return (
@@ -81,7 +81,7 @@ export function UsersManagementTab() {
         onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-muted-foreground text-sm">
+        <div className="flex items-center gap-3 text-neutral-500 text-sm">
           <ShieldCheck className="h-4 w-4" />
           <span>{users.length} superadmin(s)</span>
         </div>
@@ -104,7 +104,7 @@ export function UsersManagementTab() {
             <TableRow key={u.id}>
               <TableCell className="font-medium">{u.full_name || '—'}</TableCell>
               <TableCell>{u.email || '—'}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">
+              <TableCell className="text-sm text-neutral-500">
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
               </TableCell>
               <TableCell>
@@ -131,7 +131,7 @@ export function UsersManagementTab() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="usuario@email.com"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-neutral-500">
                 O usuário já deve estar cadastrado no sistema.
               </p>
             </div>

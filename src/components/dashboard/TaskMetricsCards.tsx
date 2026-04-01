@@ -128,12 +128,12 @@ export default function TaskMetricsCards() {
               <AlertCircle className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Tarefas Vencidas</p>
+              <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Tarefas Vencidas</p>
               <p className="text-2xl font-bold text-destructive">{overdueCount}</p>
             </div>
           </div>
           {overdueCount === 0 ? (
-            <p className="text-sm text-muted-foreground">✅ Nenhuma tarefa vencida</p>
+            <p className="text-sm text-neutral-500">✅ Nenhuma tarefa vencida</p>
           ) : (
             <div className="space-y-1.5">
               {overdueTasks.map(t => (
@@ -160,12 +160,12 @@ export default function TaskMetricsCards() {
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Tarefas Pendentes</p>
+              <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Tarefas Pendentes</p>
               <p className="text-2xl font-bold text-warning">{pendingCount}</p>
             </div>
           </div>
           {pendingCount === 0 ? (
-            <p className="text-sm text-muted-foreground">✅ Nenhuma tarefa pendente</p>
+            <p className="text-sm text-neutral-500">✅ Nenhuma tarefa pendente</p>
           ) : (
             <div className="space-y-1.5">
               {pendingTasks.map(t => (

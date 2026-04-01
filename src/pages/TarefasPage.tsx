@@ -402,9 +402,9 @@ export default function TarefasPage() {
           <div className="flex-1 min-w-0">
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
+              <span className="text-xs text-neutral-500">{getLeadName(task.lead_id)}</span>
               <Badge variant="secondary" className="text-xs">{getTypeLabel(task.type)}</Badge>
-              {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
+              {task.due_date && <span className="text-xs text-neutral-500">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
                 <Badge variant="secondary" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
@@ -416,7 +416,7 @@ export default function TarefasPage() {
                   {status.name}
                 </Badge>
               )}
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <span className="text-xs text-neutral-500 flex items-center gap-1">
                 <CalendarIcon className="h-3 w-3" />
                 {formatCreatedDate(task.created_at)}
               </span>
@@ -528,13 +528,13 @@ export default function TarefasPage() {
       <section>
         <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-primary" /><h2 className="text-2xl font-semibold text-neutral-900">Hoje ({todayTasks.length})</h2></div>
         <div className="space-y-3">
-          {todayTasks.length === 0 ? <p className="text-sm text-muted-foreground">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
+          {todayTasks.length === 0 ? <p className="text-sm text-neutral-500">Nenhuma tarefa para hoje.</p> : todayTasks.map(t => <TaskItem key={t.id} task={t} />)}
         </div>
       </section>
 
       {upcoming.length > 0 && (
         <section>
-          <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-muted-foreground" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
+          <div className="flex items-center gap-3 mb-2"><Clock className="h-4 w-4 text-neutral-500" /><h2 className="text-2xl font-semibold text-neutral-900">Próximos ({upcoming.length})</h2></div>
           <div className="space-y-3">{upcoming.map(t => <TaskItem key={t.id} task={t} />)}</div>
         </section>
       )}

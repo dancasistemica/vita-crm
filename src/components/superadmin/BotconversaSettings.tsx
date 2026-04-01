@@ -57,7 +57,7 @@ export const BotconversaSettings = ({
   if (loading && !config) {
     console.log('[BotconversaSettings] Renderizando loading state');
     return (
-      <div className="p-6 text-center text-muted-foreground">
+      <div className="p-6 text-center text-neutral-500">
         Carregando configurações...
       </div>
     );
@@ -69,7 +69,7 @@ export const BotconversaSettings = ({
       <div className="space-y-6 p-6 border rounded-lg bg-card">
         <div>
           <h3 className="text-lg font-semibold text-neutral-700">🤖 Botconversa</h3>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-neutral-500 mt-1">
             Organização: <strong>{organizationName}</strong>
           </p>
         </div>
@@ -81,7 +81,7 @@ export const BotconversaSettings = ({
             <p className="text-sm font-mono bg-destructive/10 p-2 rounded mb-2">
               {error}
             </p>
-            <p className="text-xs text-muted-foreground mb-3">
+            <p className="text-xs text-neutral-500 mb-3">
               Abra o console (F12) e procure por logs [BotconversaConfig] para mais detalhes.
             </p>
           </AlertDescription>
@@ -98,7 +98,7 @@ export const BotconversaSettings = ({
     <div className="space-y-6 p-6 border rounded-lg bg-card">
       <div>
         <h3 className="text-lg font-semibold text-neutral-700">🤖 Botconversa</h3>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-neutral-500 mt-1">
           Organização: <strong>{organizationName}</strong>
         </p>
       </div>
@@ -106,7 +106,7 @@ export const BotconversaSettings = ({
       {!isEditing && config ? (
         <div className="space-y-4">
           <div>
-            <Label className="text-xs text-muted-foreground">Chave API</Label>
+            <Label className="text-xs text-neutral-500">Chave API</Label>
             <div className="mt-2 p-3 bg-muted rounded font-mono text-sm break-all">
               {apiKey.substring(0, 8)}...{apiKey.substring(apiKey.length - 8)}
             </div>

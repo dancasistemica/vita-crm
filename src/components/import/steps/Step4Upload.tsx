@@ -123,13 +123,13 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
           {state.loading ? (
             <div className="space-y-3">
               <div className="h-10 w-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-sm text-muted-foreground">Processando arquivo...</p>
+              <p className="text-sm text-neutral-500">Processando arquivo...</p>
             </div>
           ) : (
             <>
-              <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+              <Upload className="h-10 w-10 text-neutral-500 mx-auto mb-3" />
               <p className="text-sm font-medium text-foreground">Arraste seu arquivo aqui</p>
-              <p className="text-xs text-muted-foreground mt-1">CSV, XLSX ou XLS (máx 10MB, 1.000 linhas)</p>
+              <p className="text-xs text-neutral-500 mt-1">CSV, XLSX ou XLS (máx 10MB, 1.000 linhas)</p>
             </>
           )}
           <input id="import-file-input" type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
@@ -150,7 +150,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
 
           {/* Preview */}
           <div className="rounded-lg border border-border overflow-hidden">
-            <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">Primeiras 5 linhas</div>
+            <div className="bg-muted/50 px-3 py-1.5 text-xs text-neutral-500">Primeiras 5 linhas</div>
             <div className="overflow-x-auto">
               <table className="text-[11px] w-full">
                 <thead>
@@ -161,7 +161,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
                 <tbody>
                   {state.csvRows.slice(0, 5).map((row, i) => (
                     <tr key={i} className="border-t border-border/50">
-                      {state.csvHeaders.map(h => <td key={h} className="px-2 py-1 text-muted-foreground max-w-[120px] truncate">{row[h]}</td>)}
+                      {state.csvHeaders.map(h => <td key={h} className="px-2 py-1 text-neutral-500 max-w-[120px] truncate">{row[h]}</td>)}
                     </tr>
                   ))}
                 </tbody>
@@ -178,7 +178,7 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
               {state.csvHeaders.map(header => (
                 <div key={header} className="flex items-center gap-3 p-2 rounded bg-muted/30">
                   <span className="text-xs font-medium text-foreground flex-1 truncate">{header}</span>
-                  <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
+                  <MapPin className="h-3 w-3 text-neutral-500 shrink-0" />
                   <Select
                     value={state.mapping[header] || '_ignore'}
                     onValueChange={v => update({ mapping: { ...state.mapping, [header]: v === '_ignore' ? '' : v } })}

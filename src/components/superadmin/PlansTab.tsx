@@ -80,7 +80,7 @@ export function PlansTab() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+    return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
   }
 
   return (
@@ -109,28 +109,28 @@ export function PlansTab() {
                 </Badge>
               </div>
               {plan.description && (
-                <p className="text-sm text-muted-foreground">{plan.description}</p>
+                <p className="text-sm text-neutral-500">{plan.description}</p>
               )}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-2xl font-bold text-primary">
                 R$ {Number(plan.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                <span className="text-sm font-normal text-muted-foreground">
+                <span className="text-sm font-normal text-neutral-500">
                   /{plan.period === 'monthly' ? 'mês' : 'ano'}
                 </span>
               </div>
 
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3">
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <Users className="h-4 w-4 text-neutral-500" />
                   <span>Até {plan.max_users} usuários</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <FileText className="h-4 w-4 text-neutral-500" />
                   <span>{plan.max_leads ? `Até ${plan.max_leads} leads` : 'Leads ilimitados'}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Link className="h-4 w-4 text-muted-foreground" />
+                  <Link className="h-4 w-4 text-neutral-500" />
                   <span>{plan.max_integrations ? `Até ${plan.max_integrations} integrações` : 'Integrações ilimitadas'}</span>
                 </div>
               </div>

@@ -65,7 +65,7 @@ Gere o resumo semanal.`;
       <CardContent>
         {!hasLoaded && !loading ? (
           <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground mb-3">Clique para gerar o resumo inteligente da semana</p>
+            <p className="text-sm text-neutral-500 mb-3">Clique para gerar o resumo inteligente da semana</p>
             <Button onClick={handleLoad} variant="secondary" size="sm">
               <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" /> Gerar Resumo
             </Button>
@@ -83,7 +83,7 @@ Gere o resumo semanal.`;
             <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
               <ReactMarkdown>{response}</ReactMarkdown>
             </div>
-            <p className="text-[10px] text-muted-foreground pt-1">Sugestão gerada por IA — revise antes de agir</p>
+            <p className="text-[10px] text-neutral-500 pt-1">Sugestão gerada por IA — revise antes de agir</p>
           </div>
         ) : null}
       </CardContent>

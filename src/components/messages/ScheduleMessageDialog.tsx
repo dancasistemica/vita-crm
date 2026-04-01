@@ -112,7 +112,7 @@ export const ScheduleMessageDialog = ({
               onChange={(e) => setMessageText(e.target.value)}
               className="mt-2 min-h-[120px]"
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-neutral-500 mt-1">
               {messageText.length} caracteres
             </p>
           </div>
@@ -149,7 +149,7 @@ export const ScheduleMessageDialog = ({
 
           <div className="bg-muted p-3 rounded text-sm">
             <p className="font-semibold mb-2">Preview:</p>
-            <p className="text-muted-foreground whitespace-pre-wrap">{messageText || '(vazio)'}</p>
+            <p className="text-neutral-500 whitespace-pre-wrap">{messageText || '(vazio)'}</p>
           </div>
         </div>
 

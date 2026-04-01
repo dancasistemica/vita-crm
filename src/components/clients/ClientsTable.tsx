@@ -33,7 +33,7 @@ interface SimpleProduct {
 const statusColors: Record<string, string> = {
   ativo: 'bg-success/20 text-success border-success/30',
   concluído: 'bg-info/20 text-info border-info/30',
-  cancelado: 'bg-muted text-muted-foreground border-border',
+  cancelado: 'bg-muted text-neutral-500 border-border',
   pendência: 'bg-warning/20 text-warning border-warning/30',
 };
 
@@ -123,10 +123,10 @@ export default function ClientsTable({
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-          <Clock className="h-8 w-8 text-muted-foreground" />
+          <Clock className="h-8 w-8 text-neutral-500" />
         </div>
-        <p className="text-muted-foreground text-sm">Nenhum cliente encontrado.</p>
-        <p className="text-muted-foreground text-xs mt-1">Ajuste os filtros ou cadastre um novo cliente.</p>
+        <p className="text-neutral-500 text-sm">Nenhum cliente encontrado.</p>
+        <p className="text-neutral-500 text-xs mt-1">Ajuste os filtros ou cadastre um novo cliente.</p>
       </div>
     );
   }
@@ -156,7 +156,7 @@ export default function ClientsTable({
                 </div>
                 <div>
                   <p className="font-medium text-foreground text-sm">{client.name}</p>
-                   <p className="text-xs text-muted-foreground">{client.email}</p>
+                   <p className="text-xs text-neutral-500">{client.email}</p>
                    {client.is_client && client.became_client_at && (
                      <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
                        <CheckCircle className="w-2.5 h-2.5" />
@@ -252,7 +252,7 @@ export default function ClientsTable({
                     </div>
                     <div>
                       <p className="font-medium text-foreground text-sm">{client.name}</p>
-                       <p className="text-xs text-muted-foreground">{client.email}</p>
+                       <p className="text-xs text-neutral-500">{client.email}</p>
                        {client.is_client && client.became_client_at && (
                          <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
                            <CheckCircle className="w-2.5 h-2.5" />
@@ -307,11 +307,11 @@ export default function ClientsTable({
                   {lastInt ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-sm text-muted-foreground">{relativeDate(lastInt.date)}</span>
+                        <span className="text-sm text-neutral-500">{relativeDate(lastInt.date)}</span>
                       </TooltipTrigger>
                       <TooltipContent>{lastInt.date}</TooltipContent>
                     </Tooltip>
-                  ) : <span className="text-sm text-muted-foreground">—</span>}
+                  ) : <span className="text-sm text-neutral-500">—</span>}
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
@@ -356,7 +356,7 @@ export default function ClientsTable({
 
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+        <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>{totalFiltered} clientes</span>
           <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
             <SelectTrigger className="h-8 w-20 text-xs">
@@ -373,7 +373,7 @@ export default function ClientsTable({
         </div>
         <div className="flex items-center gap-1">
           <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-          <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
+          <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
           <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
       </div>

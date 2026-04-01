@@ -73,7 +73,7 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
             <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
             <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
-          <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
+          <p className="text-[10px] text-neutral-500">Sugestão gerada por IA — revise antes de enviar</p>
         </div>
       )}
     </div>

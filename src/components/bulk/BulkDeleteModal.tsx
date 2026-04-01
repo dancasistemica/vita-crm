@@ -61,17 +61,17 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
         </DialogHeader>
 
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-neutral-500">
             Você está prestes a deletar <strong>{selectedIds.length}</strong> {selectedIds.length > 1 ? labelPlural : label} permanentemente.
           </p>
 
           <div className="rounded-lg border border-border bg-muted/30 p-3 max-h-40 overflow-y-auto space-y-1">
-            <p className="text-xs font-medium text-muted-foreground mb-2">{type === 'leads' ? 'Leads' : 'Clientes'} a deletar:</p>
+            <p className="text-xs font-medium text-neutral-500 mb-2">{type === 'leads' ? 'Leads' : 'Clientes'} a deletar:</p>
             {selectedItems.slice(0, 5).map(item => (
               <p key={item.id} className="text-sm text-foreground">• {item.name} ({item.email || item.phone})</p>
             ))}
             {selectedIds.length > 5 && (
-              <p className="text-xs text-muted-foreground mt-1">... e mais {selectedIds.length - 5}</p>
+              <p className="text-xs text-neutral-500 mt-1">... e mais {selectedIds.length - 5}</p>
             )}
           </div>
 

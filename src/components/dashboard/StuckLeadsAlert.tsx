@@ -28,7 +28,7 @@ export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsA
             >
               <div>
                 <p className="font-semibold text-foreground text-sm">{lead.name}</p>
-                <div className="flex items-center gap-1.5 mt-0.5 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 mt-0.5 text-xs text-neutral-500">
                   <Clock className="h-3 w-3" />
                   {lead.daysInStage} dias em "{lead.stage}"
                 </div>
@@ -40,7 +40,7 @@ export default function StuckLeadsAlert({ stuckLeads, onLeadClick }: StuckLeadsA
           ))}
         </div>
         {stuckLeads.length > 5 && (
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-xs text-neutral-500 mt-2">
             +{stuckLeads.length - 5} lead(s) adicional(is)
           </p>
         )}

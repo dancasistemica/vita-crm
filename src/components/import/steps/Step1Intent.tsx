@@ -18,7 +18,7 @@ export default function Step1Intent({ onNext, onClose }: Props) {
       <div>
         <div className="text-5xl mb-3">📥</div>
         <h2 className="text-2xl font-semibold text-neutral-900">Importar Leads</h2>
-        <p className="text-sm text-muted-foreground mt-1">Adicione novos leads em massa ao seu CRM</p>
+        <p className="text-sm text-neutral-500 mt-1">Adicione novos leads em massa ao seu CRM</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -27,7 +27,7 @@ export default function Step1Intent({ onNext, onClose }: Props) {
             <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
               <Icon className="h-7 w-7 text-primary mx-auto" />
               <p className="text-sm font-semibold text-foreground">{title}</p>
-              <p className="text-xs text-muted-foreground">{desc}</p>
+              <p className="text-xs text-neutral-500">{desc}</p>
             </CardContent>
           </Card>
         ))}

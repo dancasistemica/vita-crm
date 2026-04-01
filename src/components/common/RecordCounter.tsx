@@ -15,17 +15,17 @@ export default function RecordCounter({ totalCount, filteredCount, perPage, onPe
       {/* Counter */}
       <div className="flex items-center gap-4">
         <div>
-          <p className="text-xs text-muted-foreground">Total de registros</p>
+          <p className="text-xs text-neutral-500">Total de registros</p>
           <p className="text-xl font-bold text-foreground">{filteredCount}</p>
           {isFiltered && (
-            <p className="text-[10px] text-muted-foreground">de {totalCount} total</p>
+            <p className="text-[10px] text-neutral-500">de {totalCount} total</p>
           )}
         </div>
       </div>
 
       {/* Per page selector */}
       <div className="flex items-center gap-3">
-        <span className="text-sm text-muted-foreground">Exibir por página:</span>
+        <span className="text-sm text-neutral-500">Exibir por página:</span>
         <Select value={String(perPage)} onValueChange={v => onPerPageChange(Number(v))}>
           <SelectTrigger className="h-8 w-20 text-xs">
             <SelectValue />

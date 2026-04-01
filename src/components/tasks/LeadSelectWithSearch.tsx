@@ -140,13 +140,13 @@ export default function LeadSelectWithSearch({
             </Avatar>
             <span className="font-medium truncate">{selected.name}</span>
             {selected.email && (
-              <span className="text-xs text-muted-foreground truncate hidden sm:inline">
+              <span className="text-xs text-neutral-500 truncate hidden sm:inline">
                 {selected.email}
               </span>
             )}
           </span>
         ) : (
-          <span className="text-muted-foreground">{placeholder}</span>
+          <span className="text-neutral-500">{placeholder}</span>
         )}
         <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
       </Button>
@@ -156,16 +156,16 @@ export default function LeadSelectWithSearch({
         <div className="absolute z-50 mt-1 w-full rounded-md border border-input bg-popover shadow-md animate-in fade-in-0 zoom-in-95">
           {/* Search */}
           <div className="flex items-center gap-3 border-b border-border px-3 py-2">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <Search className="h-4 w-4 shrink-0 text-neutral-500" />
             <input
               ref={inputRef}
               value={query}
               onChange={e => { setQuery(e.target.value); setFocusIndex(-1); }}
               placeholder="Buscar por nome, email ou telefone..."
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-neutral-500"
             />
             {query && (
-              <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+              <Button variant="secondary" size="sm" type="button" onClick={() => setQuery("")} className="text-neutral-500 hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
               </Button>
             )}
@@ -175,11 +175,11 @@ export default function LeadSelectWithSearch({
           <ScrollArea className="max-h-[300px]">
             <div ref={listRef} role="listbox">
               {leads.length === 0 ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">
+                <p className="py-6 text-center text-sm text-neutral-500">
                   Nenhum lead cadastrado. Crie um lead primeiro.
                 </p>
               ) : filtered.length === 0 ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">
+                <p className="py-6 text-center text-sm text-neutral-500">
                   Nenhum lead encontrado
                 </p>
               ) : (
@@ -206,10 +206,10 @@ export default function LeadSelectWithSearch({
                       <p className="font-medium truncate">{lead.name}</p>
                       <div className="flex items-center gap-3">
                         {lead.email && (
-                          <span className="text-xs text-muted-foreground truncate">{lead.email}</span>
+                          <span className="text-xs text-neutral-500 truncate">{lead.email}</span>
                         )}
                         {lead.phone && (
-                          <span className="text-xs text-muted-foreground/60 truncate hidden sm:inline">
+                          <span className="text-xs text-neutral-500/60 truncate hidden sm:inline">
                             {lead.phone}
                           </span>
                         )}

@@ -55,7 +55,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
   };
 
   if (loading) {
-    return <div className="text-center text-muted-foreground">Carregando...</div>;
+    return <div className="text-center text-neutral-500">Carregando...</div>;
   }
 
   return (
@@ -69,10 +69,10 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{getRecipientName(msg)}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{msg.message_text}</p>
+                    <p className="text-xs text-neutral-500 mt-1">{msg.message_text}</p>
                     <div className="flex items-center gap-3 mt-2">
-                      <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3 text-neutral-500" />
+                      <span className="text-xs text-neutral-500">
                         {formatDateTime(msg.scheduled_at)}
                       </span>
                     </div>
@@ -104,10 +104,10 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{getRecipientName(msg)}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{msg.message_text}</p>
+                    <p className="text-xs text-neutral-500 mt-1">{msg.message_text}</p>
                     <div className="flex items-center gap-3 mt-2">
                       <CheckCircle className="h-3 w-3 text-green-600" />
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-neutral-500">
                         Enviado em {formatDateTime(msg.sent_at)}
                       </span>
                     </div>
@@ -129,7 +129,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{getRecipientName(msg)}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{msg.message_text}</p>
+                    <p className="text-xs text-neutral-500 mt-1">{msg.message_text}</p>
                     {msg.error_message && (
                       <p className="text-xs text-red-600 mt-2">Erro: {msg.error_message}</p>
                     )}
@@ -143,7 +143,7 @@ export const ScheduledMessagesList = ({ organizationId, leadId, clientId }: Sche
       )}
 
       {filteredMessages.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="text-center py-8 text-neutral-500">
           <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
           <p>Nenhuma mensagem agendada</p>
         </div>

@@ -61,10 +61,10 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {insights.topProducts.map((product, idx) => (
                 <div key={idx} className="bg-muted/50 rounded-lg p-3 border border-border/40">
-                  <p className="text-xs text-muted-foreground">#{idx + 1}</p>
+                  <p className="text-xs text-neutral-500">#{idx + 1}</p>
                   <p className="font-semibold text-foreground text-sm truncate">{product.name}</p>
                   <p className="text-lg font-bold text-primary mt-1">{product.sales} vendas</p>
-                  <p className="text-xs text-muted-foreground">{product.percentOfTotal.toFixed(1)}% do total</p>
+                  <p className="text-xs text-neutral-500">{product.percentOfTotal.toFixed(1)}% do total</p>
                 </div>
               ))}
             </div>
@@ -82,7 +82,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
             <p className="text-5xl font-bold text-success mb-2">
               {insights.conversionBenchmark.overallRate.toFixed(1)}%
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-neutral-500">
               {insights.conversionBenchmark.overallRate > 0
                 ? `${Math.round(insights.conversionBenchmark.overallRate * insights.funnelAnalysis.totalLeads / 100)} conversões de ${insights.funnelAnalysis.totalLeads} leads`
                 : 'Nenhum lead neste período'
@@ -111,7 +111,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                       style={{ width: `${Math.min(stage.rate, 100)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">{stage.leadsCount} leads</p>
+                  <p className="text-xs text-neutral-500 mt-1">{stage.leadsCount} leads</p>
                   {stage.isBottleneck && (
                     <p className="text-xs text-destructive font-semibold mt-1 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" /> Gargalo detectado
@@ -153,7 +153,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                           {stage.stage}
                           {stage.isFinalStage && <span className="text-xs text-success ml-1">✓ Final</span>}
                         </td>
-                        <td className="p-2 text-center text-muted-foreground">{stage.leads}</td>
+                        <td className="p-2 text-center text-neutral-500">{stage.leads}</td>
                         <td className="p-2 text-center text-success font-semibold">{stage.converted}</td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded text-xs font-bold ${
@@ -162,7 +162,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                             {stage.conversionRate.toFixed(1)}%
                           </span>
                         </td>
-                        <td className="p-2 text-center text-muted-foreground">{stage.avgDaysInStage}d</td>
+                        <td className="p-2 text-center text-neutral-500">{stage.avgDaysInStage}d</td>
                       </tr>
                     ))}
                   </tbody>
@@ -171,11 +171,11 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
 
               <div className="bg-info/5 rounded-lg p-6 border border-info/20 flex flex-col justify-center">
                 <h4 className="text-base font-bold text-foreground mb-3">💡 Recomendação</h4>
-                <p className="text-sm text-muted-foreground mb-4">{insights.funnelAnalysis.recommendedOptimization}</p>
+                <p className="text-sm text-neutral-500 mb-4">{insights.funnelAnalysis.recommendedOptimization}</p>
                 {insights.funnelAnalysis.bottleneckStage && (
                   <div className="bg-card rounded-lg p-4 border border-border/60">
                     <p className="text-sm font-semibold text-foreground mb-2">🎯 Foco: {insights.funnelAnalysis.bottleneckStage}</p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="text-sm text-neutral-500 space-y-1">
                       <li>✓ Revisar critérios de qualificação</li>
                       <li>✓ Treinar equipe de vendas</li>
                       <li>✓ Melhorar materiais de apresentação</li>
@@ -188,7 +188,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
             {/* Taxa de Progresso Sequencial */}
             <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
               <h4 className="font-semibold text-foreground mb-2">📊 Taxa de Progresso Sequencial</h4>
-              <p className="text-xs text-muted-foreground mb-3">De 100% dos leads em cada etapa, quantos % avançam para a próxima?</p>
+              <p className="text-xs text-neutral-500 mb-3">De 100% dos leads em cada etapa, quantos % avançam para a próxima?</p>
               <div className="space-y-3">
                 {insights.funnelAnalysis.byStage
                   .filter((stage) => !stage.isFinalStage)
@@ -197,11 +197,11 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <p className="font-semibold text-foreground text-sm">{stage.stage} → {stage.nextStageName}</p>
-                          <p className="text-xs text-muted-foreground">De {stage.leads} leads</p>
+                          <p className="text-xs text-neutral-500">De {stage.leads} leads</p>
                         </div>
                         <div className="text-right">
                           <p className="text-2xl font-bold text-primary">{stage.progressionRate.toFixed(0)}%</p>
-                          <p className="text-xs text-muted-foreground">{Math.round((stage.progressionRate / 100) * stage.leads)} avançam</p>
+                          <p className="text-xs text-neutral-500">{Math.round((stage.progressionRate / 100) * stage.leads)} avançam</p>
                         </div>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
@@ -235,28 +235,28 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="shadow-card border-border/60 border-l-4 border-l-info">
           <CardContent className="pt-5 pb-4">
-            <p className="text-xs text-muted-foreground mb-1">📅 Leads por Dia</p>
+            <p className="text-xs text-neutral-500 mb-1">📅 Leads por Dia</p>
             <p className="text-2xl font-bold text-info">{Number(insights.usagePatterns.leadsPerDay).toFixed(1)}</p>
-            <p className="text-xs text-muted-foreground mt-1">Média do período</p>
+            <p className="text-xs text-neutral-500 mt-1">Média do período</p>
           </CardContent>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-success">
           <CardContent className="pt-5 pb-4">
-            <p className="text-xs text-muted-foreground mb-1">✅ Conversões/Dia</p>
+            <p className="text-xs text-neutral-500 mb-1">✅ Conversões/Dia</p>
             <p className="text-2xl font-bold text-success">{Number(insights.usagePatterns.conversionPerDay).toFixed(1)}</p>
-            <p className="text-xs text-muted-foreground mt-1">Média do período</p>
+            <p className="text-xs text-neutral-500 mt-1">Média do período</p>
           </CardContent>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-primary">
           <CardContent className="pt-5 pb-4">
-            <p className="text-xs text-muted-foreground mb-1">⏱️ Tempo Médio</p>
+            <p className="text-xs text-neutral-500 mb-1">⏱️ Tempo Médio</p>
             <p className="text-2xl font-bold text-primary">{Number(insights.usagePatterns.avgTimeToConvert).toFixed(1)}d</p>
-            <p className="text-xs text-muted-foreground mt-1">Lead → Conversão</p>
+            <p className="text-xs text-neutral-500 mt-1">Lead → Conversão</p>
           </CardContent>
         </Card>
         <Card className="shadow-card border-border/60 border-l-4 border-l-warning">
           <CardContent className="pt-5 pb-4">
-            <p className="text-xs text-muted-foreground mb-1">📊 Sazonalidade</p>
+            <p className="text-xs text-neutral-500 mb-1">📊 Sazonalidade</p>
             <p className="text-2xl font-bold text-warning">
               {insights.usagePatterns.seasonality === 'high' ? '🔥 Alta' : insights.usagePatterns.seasonality === 'medium' ? '🔶 Média' : '🔵 Baixa'}
             </p>
@@ -274,7 +274,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
             {insights.topProducts[0] && (
               <div>
                 <p className="font-semibold text-foreground mb-1 text-sm">📌 Produto Destaque</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-neutral-500">
                   <span className="font-bold text-foreground">{insights.topProducts[0].name}</span> gera{' '}
                   <span className="font-bold text-foreground">{insights.topProducts[0].percentOfTotal.toFixed(1)}%</span> da receita total
                 </p>
@@ -282,19 +282,19 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
             )}
             <div>
               <p className="font-semibold text-foreground mb-1 text-sm">🚀 Oportunidade</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-neutral-500">
                 Otimizar <span className="font-bold text-foreground">{insights.funnelAnalysis.bottleneckStage || 'funil'}</span> pode aumentar receita
               </p>
             </div>
             <div>
               <p className="font-semibold text-foreground mb-1 text-sm">⚡ Velocidade</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-neutral-500">
                 Leads convertem em <span className="font-bold text-foreground">{insights.usagePatterns.avgTimeToConvert} dias</span> em média
               </p>
             </div>
             <div>
               <p className="font-semibold text-foreground mb-1 text-sm">📊 Saúde</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-neutral-500">
                 Taxa de conversão <span className="font-bold text-foreground">{insights.conversionBenchmark.overallRate.toFixed(1)}%</span>
               </p>
             </div>

@@ -22,11 +22,11 @@ export function QuickAccessCard({ icon: Icon, title, description, onClick, stat,
         </div>
         <div className="min-w-0">
           <p className="font-semibold text-foreground">{title}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
+          <p className="text-xs text-neutral-500">{description}</p>
         </div>
       </div>
       {stat !== undefined && (
-        <div className="mt-3 pt-3 border-t text-xs text-muted-foreground">
+        <div className="mt-3 pt-3 border-t text-xs text-neutral-500">
           {statLabel || 'Total'}: <span className="font-bold text-foreground">{stat}</span>
         </div>
       )}

@@ -28,7 +28,7 @@ export default function ConsolidatedDashboardPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Carregando...</p>
+          <p className="text-sm text-neutral-500 mt-0.5">Carregando...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
@@ -57,7 +57,7 @@ export default function ConsolidatedDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
+        <p className="text-sm text-neutral-500 mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
@@ -71,7 +71,7 @@ export default function ConsolidatedDashboardPage() {
                   <m.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{m.label}</p>
+                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{m.label}</p>
                   <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
                 </div>
               </div>
@@ -89,10 +89,10 @@ export default function ConsolidatedDashboardPage() {
               {consolidatedData.topOrganizations.map((org, index) => (
                 <div key={org.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                    <span className="text-lg font-bold text-neutral-500">#{index + 1}</span>
                     <div>
                       <p className="font-semibold text-foreground">{org.name}</p>
-                      <p className="text-sm text-muted-foreground">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
+                      <p className="text-sm text-neutral-500">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
                     </div>
                   </div>
                   <p className="font-bold text-success">R$ {org.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
@@ -165,10 +165,10 @@ export default function ConsolidatedDashboardPage() {
                 {topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                      <span className="text-lg font-bold text-neutral-500">#{index + 1}</span>
                       <div>
                         <p className="font-semibold text-foreground">{product.name}</p>
-                        <p className="text-sm text-muted-foreground">{product.count} vendas</p>
+                        <p className="text-sm text-neutral-500">{product.count} vendas</p>
                       </div>
                     </div>
                     <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
@@ -186,7 +186,7 @@ export default function ConsolidatedDashboardPage() {
               <div className="space-y-3">
                 {salesByDay.slice(-7).map((day) => (
                   <div key={day.day} className="flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground w-24">{day.day}</span>
+                    <span className="text-sm text-neutral-500 w-24">{day.day}</span>
                     <div className="flex-1 bg-muted rounded-full h-2">
                       <div className="bg-purple-500 h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
                     </div>

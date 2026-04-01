@@ -153,7 +153,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
         {step === 2 && (
           <div className="space-y-3">
             {plans.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">Nenhum plano cadastrado. Crie um plano na aba "Planos" primeiro.</p>
+              <p className="text-sm text-neutral-500 text-center py-4">Nenhum plano cadastrado. Crie um plano na aba "Planos" primeiro.</p>
             )}
             {plans.map(plan => (
               <Card
@@ -164,14 +164,14 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <p className="font-semibold">{plan.name}</p>
-                    {plan.description && <p className="text-xs text-muted-foreground">{plan.description}</p>}
+                    {plan.description && <p className="text-xs text-neutral-500">{plan.description}</p>}
                   </div>
                   <div className="text-right">
                     <p className="font-bold">R$ {plan.value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    <p className="text-xs text-muted-foreground">/{plan.period === 'monthly' ? 'mês' : 'ano'}</p>
+                    <p className="text-xs text-neutral-500">/{plan.period === 'monthly' ? 'mês' : 'ano'}</p>
                   </div>
                 </div>
-                <div className="flex gap-3 text-xs text-muted-foreground">
+                <div className="flex gap-3 text-xs text-neutral-500">
                   <span>👥 {plan.max_users} usuários</span>
                   <span>📋 {plan.max_leads || '∞'} leads</span>
                   <span>🔗 {plan.max_integrations || '∞'} integrações</span>
@@ -184,7 +184,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
         {/* Step 3: Admin User */}
         {step === 3 && (
           <div className="space-y-4">
-            <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground">
+            <div className="bg-muted/50 rounded-lg p-3 text-sm text-neutral-500">
               <Users className="h-4 w-4 inline mr-1" />
               Este usuário será o administrador (owner) da organização. Uma senha temporária será gerada automaticamente.
             </div>
@@ -200,9 +200,9 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
             {/* Summary */}
             <div className="border rounded-lg p-3 space-y-1 text-sm">
               <p className="font-medium mb-2 flex items-center gap-1"><FileText className="h-4 w-4" /> Resumo</p>
-              <p><span className="text-muted-foreground">Organização:</span> {form.name}</p>
-              <p><span className="text-muted-foreground">Plano:</span> {selectedPlan?.name}</p>
-              <p><span className="text-muted-foreground">Admin:</span> {form.admin_name} ({form.admin_email})</p>
+              <p><span className="text-neutral-500">Organização:</span> {form.name}</p>
+              <p><span className="text-neutral-500">Plano:</span> {selectedPlan?.name}</p>
+              <p><span className="text-neutral-500">Admin:</span> {form.admin_name} ({form.admin_email})</p>
             </div>
           </div>
         )}
@@ -215,12 +215,12 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
             </div>
             <div>
               <p className="font-semibold text-lg">Organização criada!</p>
-              <p className="text-sm text-muted-foreground mt-1">Compartilhe as credenciais com o admin</p>
+              <p className="text-sm text-neutral-500 mt-1">Compartilhe as credenciais com o admin</p>
             </div>
             <div className="bg-muted rounded-lg p-4 text-left space-y-3 text-sm">
-              <p><span className="text-muted-foreground">Email:</span> {form.admin_email}</p>
+              <p><span className="text-neutral-500">Email:</span> {form.admin_email}</p>
               <div className="flex items-center justify-between">
-                <p><span className="text-muted-foreground">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>
+                <p><span className="text-neutral-500">Senha:</span> <code className="bg-background px-2 py-0.5 rounded">{result.temp_password}</code></p>
                 <Button variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></Button>
               </div>
             </div>

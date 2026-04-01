@@ -122,7 +122,7 @@ export default function DebugMultiTenantPage() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground">Diagnosticando...</p>
+          <p className="text-sm text-neutral-500">Diagnosticando...</p>
         </div>
       </div>
     );
@@ -176,16 +176,16 @@ export default function DebugMultiTenantPage() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-muted rounded p-4 text-center">
-              <p className="text-sm text-muted-foreground">Leads Visíveis (total)</p>
+              <p className="text-sm text-neutral-500">Leads Visíveis (total)</p>
               <p className="text-3xl font-bold text-foreground">{debugInfo?.data_isolation?.total_leads_visible}</p>
             </div>
             <div className="bg-muted rounded p-4 text-center">
-              <p className="text-sm text-muted-foreground">Leads da Sua Org</p>
+              <p className="text-sm text-neutral-500">Leads da Sua Org</p>
               <p className="text-3xl font-bold text-foreground">{debugInfo?.data_isolation?.org_leads_visible}</p>
             </div>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Org IDs nos dados visíveis:</p>
+            <p className="text-sm font-medium text-neutral-500">Org IDs nos dados visíveis:</p>
             <div className="flex flex-wrap gap-1 mt-1">
               {debugInfo?.data_isolation?.unique_org_ids.map(id => (
                 <Badge key={id} variant={id === organizationId ? 'default' : 'error'} className="text-xs">
@@ -206,7 +206,7 @@ export default function DebugMultiTenantPage() {
               <div key={table} className="flex items-center justify-between bg-muted rounded p-3">
                 <span className="font-medium text-foreground">{table}</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">{info.visible} registros</span>
+                  <span className="text-sm text-neutral-500">{info.visible} registros</span>
                   <Badge variant={info.org_ids.length <= 1 ? 'default' : 'error'} className="text-xs">
                     {info.org_ids.length <= 1 ? '✅' : `❌ ${info.org_ids.length} orgs`}
                   </Badge>

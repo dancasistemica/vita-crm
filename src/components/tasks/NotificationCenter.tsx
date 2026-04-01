@@ -42,7 +42,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
         </div>
         <ScrollArea className="max-h-64">
           {notifications.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-6">Nenhuma notificação</p>
+            <p className="text-sm text-neutral-500 text-center py-6">Nenhuma notificação</p>
           ) : (
             notifications.map(n => (
               <div key={n.id} className={`p-3 border-b last:border-0 text-sm ${!n.read ? 'bg-muted/50' : ''}`}>
@@ -54,7 +54,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
                     </Button>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-neutral-500 mt-1">
                   {new Date(n.created_at).toLocaleDateString('pt-BR')}
                 </p>
               </div>

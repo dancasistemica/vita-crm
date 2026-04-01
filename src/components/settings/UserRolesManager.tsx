@@ -231,7 +231,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   if (!isAdmin) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
+        <CardContent className="flex flex-col items-center justify-center py-16 text-neutral-500 gap-3">
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
           <p className="text-sm">Apenas administradores têm acesso a esta seção.</p>
@@ -273,7 +273,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                             </Badge>
                           </CardTitle>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs text-muted-foreground">Tudo</span>
+                            <span className="text-xs text-neutral-500">Tudo</span>
                             <Switch
                               checked={allEnabled}
                               onCheckedChange={(checked) => toggleModule(mod, checked)}

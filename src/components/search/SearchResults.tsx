@@ -17,16 +17,16 @@ const typeLabels: Record<GlobalSearchResultType, string> = {
 };
 
 const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
-  lead: <UserPlus className="h-4 w-4 text-muted-foreground" />,
-  client: <User className="h-4 w-4 text-muted-foreground" />,
-  task: <CheckSquare className="h-4 w-4 text-muted-foreground" />,
-  product: <Package className="h-4 w-4 text-muted-foreground" />,
+  lead: <UserPlus className="h-4 w-4 text-neutral-500" />,
+  client: <User className="h-4 w-4 text-neutral-500" />,
+  task: <CheckSquare className="h-4 w-4 text-neutral-500" />,
+  product: <Package className="h-4 w-4 text-neutral-500" />,
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
   if (loading) {
     return (
-      <div className="p-4 text-center text-sm text-muted-foreground">
+      <div className="p-4 text-center text-sm text-neutral-500">
         Buscando...
       </div>
     );
@@ -34,7 +34,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
 
   if (!loading && results.length === 0 && query.trim().length >= 2) {
     return (
-      <div className="p-4 text-center text-sm text-muted-foreground">
+      <div className="p-4 text-center text-sm text-neutral-500">
         Nenhum resultado encontrado
       </div>
     );
@@ -52,7 +52,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
 
         return (
           <div key={type}>
-            <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase">
+            <div className="px-4 py-2 text-xs font-semibold text-neutral-500 uppercase">
               {type === "lead"
                 ? "👤"
                 : type === "client"
@@ -74,7 +74,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
                     {result.title}
                   </div>
                   {result.subtitle && (
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-neutral-500">
                       {result.subtitle}
                     </div>
                   )}

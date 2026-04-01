@@ -59,8 +59,8 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
     <Card className="shadow-card border-border/60">
       <CardContent className="pt-4 pb-4">
         <div className="flex flex-wrap items-center gap-3">
-          <CalendarDays className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground mr-1">Período:</span>
+          <CalendarDays className="h-4 w-4 text-neutral-500" />
+          <span className="text-sm font-medium text-neutral-500 mr-1">Período:</span>
           {PRESET_PERIODS.map(preset => (
             <Button
               key={preset.label}

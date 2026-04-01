@@ -135,13 +135,13 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     };
 
     if (loading) {
-      return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+      return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
     }
 
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-muted-foreground text-sm">
+          <div className="flex items-center gap-3 text-neutral-500 text-sm">
             <Building2 className="h-4 w-4" />
             <span>
               {hasActiveFilters
@@ -157,7 +157,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         {/* Filter bar */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Buscar por nome ou email..."
               value={searchTerm}
@@ -194,7 +194,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         </div>
 
         {filteredOrgs.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-neutral-500">
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
@@ -215,7 +215,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {filteredOrgs.map((org) => (
               <TableRow key={org.id}>
                 <TableCell className="font-medium">{org.name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
+                <TableCell className="text-sm text-neutral-500">{org.contact_email || '—'}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{org.plan}</Badge>
                 </TableCell>
@@ -246,7 +246,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     {org.active ? 'Ativa' : 'Suspensa'}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-sm text-neutral-500">
                   {new Date(org.created_at).toLocaleDateString('pt-BR')}
                 </TableCell>
                 <TableCell>

@@ -20,7 +20,7 @@ export function EmailTemplatesTab() {
           <Mail className="h-5 w-5 text-primary" />
           <CardTitle className="text-lg">Email Templates</CardTitle>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-neutral-500">
           Customize os templates de email enviados pelo sistema.
         </p>
       </CardHeader>

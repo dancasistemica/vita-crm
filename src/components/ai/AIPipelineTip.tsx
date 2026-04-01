@@ -41,7 +41,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
           {loading ? (
             <div className="flex items-center gap-3 py-3">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-500" />
-              <span className="text-xs text-muted-foreground">Analisando...</span>
+              <span className="text-xs text-neutral-500">Analisando...</span>
             </div>
           ) : response ? (
             <>
@@ -56,7 +56,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
                   <RefreshCw className="h-3 w-3 mr-1" /> Nova sugestão
                 </Button>
               </div>
-              <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA</p>
+              <p className="text-[10px] text-neutral-500">Sugestão gerada por IA</p>
             </>
           ) : null}
         </div>

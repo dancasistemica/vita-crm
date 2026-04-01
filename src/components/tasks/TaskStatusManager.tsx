@@ -90,7 +90,7 @@ export default function TaskStatusManager({
           </div>
         )}
         {statuses.length === 0 && !showForm && (
-          <p className="text-sm text-muted-foreground text-center py-2">Nenhum status criado. Clique em + para adicionar.</p>
+          <p className="text-sm text-neutral-500 text-center py-2">Nenhum status criado. Clique em + para adicionar.</p>
         )}
         {statuses.map(s => (
           <div key={s.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition">

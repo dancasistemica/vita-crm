@@ -56,14 +56,14 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
               <ReactMarkdown>{response}</ReactMarkdown>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de agir</span>
+              <span className="text-[10px] text-neutral-500">Sugestão gerada por IA — revise antes de agir</span>
               <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                 <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Nenhum insight disponível.</p>
+          <p className="text-sm text-neutral-500">Nenhum insight disponível.</p>
         )}
       </CardContent>
     </Card>

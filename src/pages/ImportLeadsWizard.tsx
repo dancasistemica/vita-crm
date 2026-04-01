@@ -36,7 +36,7 @@ export default function ImportLeadsWizard() {
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-neutral-900">📥 Importar Leads</h1>
         </div>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-neutral-500">
           {state.currentStep}/6 — {STEP_LABELS[state.currentStep - 1]}
         </span>
       </div>

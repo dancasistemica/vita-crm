@@ -54,7 +54,7 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
         {...listeners}
         className="cursor-grab active:cursor-grabbing touch-none p-1"
       >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="h-4 w-4 text-neutral-500" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
             {groupLabel}
           </Badge>
         </div>
-        <p className="text-xs text-muted-foreground truncate">{config.description}</p>
+        <p className="text-xs text-neutral-500 truncate">{config.description}</p>
       </div>
       <Switch
         checked={setting.is_visible}
@@ -103,7 +103,7 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-lg font-display">Personalizar Dashboard</SheetTitle>
-          <p className="text-sm text-muted-foreground">Arraste para reordenar e alterne a visibilidade dos cards.</p>
+          <p className="text-sm text-neutral-500">Arraste para reordenar e alterne a visibilidade dos cards.</p>
         </SheetHeader>
         <div className="mt-6 space-y-3">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

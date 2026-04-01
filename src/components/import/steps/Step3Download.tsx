@@ -31,7 +31,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
               <p className="text-sm font-semibold text-foreground">XLSX</p>
               <Badge variant="secondary" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
-            <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
+            <p className="text-xs text-neutral-500">Formato nativo do Excel</p>
             <Button size="sm" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar XLSX
             </Button>
@@ -40,11 +40,11 @@ export default function Step3Download({ onNext, onBack }: Props) {
 
         <Card className="border-border/50 cursor-pointer hover:shadow-md transition-shadow" onClick={handleDownloadCSV}>
           <CardContent className="pt-5 pb-4 px-4 text-center space-y-3">
-            <FileText className="h-8 w-8 text-muted-foreground mx-auto" />
+            <FileText className="h-8 w-8 text-neutral-500 mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">CSV</p>
             </div>
-            <p className="text-xs text-muted-foreground">Texto separado por vírgula</p>
+            <p className="text-xs text-neutral-500">Texto separado por vírgula</p>
             <Button size="sm" variant="secondary" className="w-full mt-2">
               <Download className="h-3 w-3 mr-1" /> Baixar CSV
             </Button>
@@ -54,7 +54,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
 
       {/* Preview */}
       <div className="rounded-lg border border-border overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">Preview do modelo (3 linhas de exemplo)</div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium text-neutral-500">Preview do modelo (3 linhas de exemplo)</div>
         <div className="overflow-x-auto">
           <table className="text-[11px] w-full">
             <thead>
@@ -68,7 +68,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
               {templateExamples.map((row, i) => (
                 <tr key={i} className="border-t border-border/50">
                   {TEMPLATE_COLUMNS.slice(0, 6).map(c => (
-                    <td key={c.key} className="px-2 py-1 text-muted-foreground whitespace-nowrap">{row[c.key as keyof typeof row]}</td>
+                    <td key={c.key} className="px-2 py-1 text-neutral-500 whitespace-nowrap">{row[c.key as keyof typeof row]}</td>
                   ))}
                 </tr>
               ))}

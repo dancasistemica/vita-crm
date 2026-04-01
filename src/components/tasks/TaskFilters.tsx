@@ -39,7 +39,7 @@ export default function TaskFilters({
     <Collapsible open={open} onOpenChange={setOpen}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
           <Input
             placeholder="Buscar por título..."
             value={searchTerm}
@@ -63,7 +63,7 @@ export default function TaskFilters({
       <CollapsibleContent className="mt-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-lg border bg-muted/30">
           <div>
-            <Label className="text-xs text-muted-foreground">Tipo</Label>
+            <Label className="text-xs text-neutral-500">Tipo</Label>
             <Select value={typeFilter} onValueChange={onTypeChange}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -76,7 +76,7 @@ export default function TaskFilters({
           </div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">Responsável</Label>
+            <Label className="text-xs text-neutral-500">Responsável</Label>
             <Select value={assignedFilter} onValueChange={onAssignedChange}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -92,12 +92,12 @@ export default function TaskFilters({
           </div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">De</Label>
+            <Label className="text-xs text-neutral-500">De</Label>
             <Input type="date" value={dateFrom} onChange={e => onDateFromChange(e.target.value)} />
           </div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">Até</Label>
+            <Label className="text-xs text-neutral-500">Até</Label>
             <Input type="date" value={dateTo} onChange={e => onDateToChange(e.target.value)} />
           </div>
         </div>

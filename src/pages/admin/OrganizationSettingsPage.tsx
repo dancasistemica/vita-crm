@@ -451,15 +451,15 @@ export default function OrganizationSettingsPage() {
   };
 
   if (roleLoading) {
-    return <div className="py-10 text-muted-foreground">Carregando...</div>;
+    return <div className="py-10 text-neutral-500">Carregando...</div>;
   }
 
   if (!canManage) {
-    return <div className="py-10 text-muted-foreground">Acesso restrito.</div>;
+    return <div className="py-10 text-neutral-500">Acesso restrito.</div>;
   }
 
   if (!organizationId) {
-    return <div className="py-10 text-muted-foreground">Nenhuma organização selecionada.</div>;
+    return <div className="py-10 text-neutral-500">Nenhuma organização selecionada.</div>;
   }
 
   return (
@@ -494,7 +494,7 @@ export default function OrganizationSettingsPage() {
 
           <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
             <p className="text-sm font-medium">Instruções para Cron-Job.org</p>
-            <div className="text-sm text-muted-foreground space-y-1">
+            <div className="text-sm text-neutral-500 space-y-1">
               <p>1. Go to https://cron-job.org</p>
               <p>2. Create new cron job with:</p>
               <p className="pl-3">URL: {CRON_URL}</p>
@@ -506,21 +506,21 @@ export default function OrganizationSettingsPage() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-lg border p-4">
-              <p className="text-xs uppercase text-muted-foreground">Last execution</p>
+              <p className="text-xs uppercase text-neutral-500">Last execution</p>
               <p className="mt-1 text-sm">
                 {lastExecutionDate ? lastExecutionDate.toLocaleString('pt-BR') : '—'}
               </p>
             </div>
             <div className="rounded-lg border p-4">
-              <p className="text-xs uppercase text-muted-foreground">Next execution (estimated)</p>
+              <p className="text-xs uppercase text-neutral-500">Next execution (estimated)</p>
               <p className="mt-1 text-sm">
                 {nextExecutionDate ? nextExecutionDate.toLocaleString('pt-BR') : '—'}
               </p>
             </div>
             <div className="rounded-lg border p-4">
-              <p className="text-xs uppercase text-muted-foreground">Status</p>
+              <p className="text-xs uppercase text-neutral-500">Status</p>
               <div className="mt-2">
-                <Badge className={isActive ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-muted text-muted-foreground'}>
+                <Badge className={isActive ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-muted text-neutral-500'}>
                   {isActive ? 'Active' : 'Inactive'}
                 </Badge>
               </div>

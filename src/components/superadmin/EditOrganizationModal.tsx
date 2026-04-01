@@ -201,7 +201,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
         </DialogHeader>
 
         {loading ? (
-          <div className="flex items-center justify-center py-8 text-muted-foreground">Carregando...</div>
+          <div className="flex items-center justify-center py-8 text-neutral-500">Carregando...</div>
         ) : (
           <div className="space-y-6">
             {/* Dados Básicos */}
@@ -333,7 +333,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -346,7 +346,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 {passwordStrength && (
                   <div className="flex items-center gap-3">
                     <div className={`h-1.5 flex-1 rounded-full ${passwordStrength.color}`} />
-                    <span className="text-xs font-medium text-muted-foreground">{passwordStrength.label}</span>
+                    <span className="text-xs font-medium text-neutral-500">{passwordStrength.label}</span>
                   </div>
                 )}
 

@@ -63,7 +63,7 @@ export default function EmailPreview({
 
   return (
     <div className="border rounded-lg overflow-hidden bg-muted/30 p-4">
-      <p className="text-xs font-medium text-muted-foreground mb-3">📧 Preview do Email</p>
+      <p className="text-xs font-medium text-neutral-500 mb-3">📧 Preview do Email</p>
       <div
         className="bg-white rounded shadow-sm"
         dangerouslySetInnerHTML={{ __html: renderedHtml }}

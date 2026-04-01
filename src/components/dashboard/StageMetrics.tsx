@@ -24,13 +24,13 @@ export default function StageMetrics({ metrics }: StageMetricsProps) {
             <div className="space-y-1.5">
               <div>
                 <span className="text-2xl font-bold text-foreground">{metric.leadCount}</span>
-                <span className="text-xs text-muted-foreground ml-1">leads</span>
+                <span className="text-xs text-neutral-500 ml-1">leads</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <span className="text-success font-semibold">{metric.conversionRate.toFixed(0)}%</span>
-                <span className="text-muted-foreground">·</span>
+                <span className="text-neutral-500">·</span>
                 <span className="text-accent font-semibold">{metric.avgDaysInStage}d</span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-neutral-500">
                   {metric.avgDaysInStage === 0 ? 'hoje' : 'média'}
                 </span>
               </div>

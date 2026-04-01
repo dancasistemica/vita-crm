@@ -181,7 +181,7 @@ export default function LeadDetailSheet({
 
             {lead.tags.length > 0 && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Tags</span>
+                <span className="text-xs text-neutral-500 font-medium">Tags</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {lead.tags.map(t => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
                 </div>
@@ -190,7 +190,7 @@ export default function LeadDetailSheet({
 
             {lead.notes && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Observações</span>
+                <span className="text-xs text-neutral-500 font-medium">Observações</span>
                 <p className="text-sm text-foreground mt-1 whitespace-pre-wrap">{lead.notes}</p>
               </div>
             )}
@@ -198,7 +198,7 @@ export default function LeadDetailSheet({
             {/* Custom data */}
             {lead.customData && Object.keys(lead.customData).length > 0 && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Campos Personalizados</span>
+                <span className="text-xs text-neutral-500 font-medium">Campos Personalizados</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {Object.entries(lead.customData).map(([key, value]) => (
                     <InfoField key={key} label={key} value={String(value ?? '')} />
@@ -258,7 +258,7 @@ export default function LeadDetailSheet({
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : tasks.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">Nenhuma tarefa vinculada a este lead.</p>
+              <p className="text-sm text-neutral-500 text-center py-8">Nenhuma tarefa vinculada a este lead.</p>
             ) : (
               tasks.map(t => {
                 const status = getTaskStatus(t);
@@ -267,8 +267,8 @@ export default function LeadDetailSheet({
                   <div key={t.id} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card">
                     <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${status.color}`} />
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium ${t.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{t.title}</p>
-                      <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
+                      <p className={`text-sm font-medium ${t.completed ? 'line-through text-neutral-500' : 'text-foreground'}`}>{t.title}</p>
+                      <div className="flex items-center gap-3 mt-0.5 text-xs text-neutral-500">
                         <span className={status.color}>{status.label}</span>
                         {t.due_date && <span>Prazo: {formatDate(t.due_date)}</span>}
                       </div>
@@ -286,13 +286,13 @@ export default function LeadDetailSheet({
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : interactions.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">Nenhuma interação registrada para este lead.</p>
+              <p className="text-sm text-neutral-500 text-center py-8">Nenhuma interação registrada para este lead.</p>
             ) : (
               interactions.map(i => (
                 <div key={i.id} className="p-3 rounded-lg border border-border bg-card">
                   <div className="flex items-center justify-between">
                     <Badge variant="secondary" className="text-xs">{i.type}</Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-neutral-500">
                       {i.interaction_date ? formatDate(i.interaction_date) : formatDate(i.created_at)}
                     </span>
                   </div>
@@ -337,8 +337,8 @@ export default function LeadDetailSheet({
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="text-xs text-muted-foreground font-medium">{label}</span>
-      <p className={`text-sm ${value ? 'text-foreground' : 'text-muted-foreground italic'}`}>
+      <span className="text-xs text-neutral-500 font-medium">{label}</span>
+      <p className={`text-sm ${value ? 'text-foreground' : 'text-neutral-500 italic'}`}>
         {value || 'Não informado'}
       </p>
     </div>

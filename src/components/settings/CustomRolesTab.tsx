@@ -141,7 +141,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   if (!canAccessSettings) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
+        <CardContent className="flex flex-col items-center justify-center py-16 text-neutral-500 gap-3">
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
         </CardContent>
@@ -162,15 +162,15 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
           </Button>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-sm text-neutral-500 mb-4">
             Crie roles personalizadas para sua organização. Após criar, configure as permissões na aba <strong>Permissões</strong>.
           </p>
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : roles.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
+            <p className="text-center text-neutral-500 py-8">
               Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Usuário) estão disponíveis na aba Permissões.
             </p>
           ) : (
@@ -193,8 +193,8 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                           {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{r.description || '—'}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
+                      <TableCell className="text-sm text-neutral-500">{r.description || '—'}</TableCell>
+                      <TableCell className="hidden sm:table-cell text-sm text-neutral-500">
                         {new Date(r.created_at).toLocaleDateString('pt-BR')}
                       </TableCell>
                       <TableCell className="text-right">

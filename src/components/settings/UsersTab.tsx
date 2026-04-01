@@ -311,7 +311,7 @@ export default function UsersTab() {
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Buscar por nome ou email..."
               value={search}
@@ -335,10 +335,10 @@ export default function UsersTab() {
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
           </div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">Nenhum usuário encontrado.</p>
+          <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -358,7 +358,7 @@ export default function UsersTab() {
                     <TableRow key={u.member_id}>
                       <TableCell className="font-medium">{u.full_name}</TableCell>
                       <TableCell className="text-sm">{u.email}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
+                      <TableCell className="hidden sm:table-cell text-sm text-neutral-500">
                         {u.phone || "—"}
                       </TableCell>
                       <TableCell>
@@ -366,7 +366,7 @@ export default function UsersTab() {
                           {roleLabels[u.role] || u.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
+                      <TableCell className="hidden md:table-cell text-sm text-neutral-500">
                         {new Date(u.created_at).toLocaleDateString("pt-BR")}
                       </TableCell>
                       <TableCell className="text-right">
@@ -407,7 +407,7 @@ export default function UsersTab() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center justify-between text-sm text-neutral-500">
                 <span>
                   {filtered.length} usuário(s) · Página {page} de {totalPages}
                 </span>
@@ -453,7 +453,7 @@ export default function UsersTab() {
                   disabled={!!editing}
                 />
                 {editing && (
-                  <p className="text-xs text-muted-foreground">O email não pode ser alterado.</p>
+                  <p className="text-xs text-neutral-500">O email não pode ser alterado.</p>
                 )}
               </div>
               <div className="space-y-1">
@@ -500,7 +500,7 @@ export default function UsersTab() {
                                 <div className="flex flex-col">
                                   <span>{org.name}</span>
                                   {org.cnpj && (
-                                    <span className="text-xs text-muted-foreground">{org.cnpj}</span>
+                                    <span className="text-xs text-neutral-500">{org.cnpj}</span>
                                   )}
                                 </div>
                               </CommandItem>
@@ -511,10 +511,10 @@ export default function UsersTab() {
                     </PopoverContent>
                   </Popover>
                   {orgsLoading && (
-                    <div className="text-sm text-muted-foreground">Carregando organizações...</div>
+                    <div className="text-sm text-neutral-500">Carregando organizações...</div>
                   )}
                   {!orgsLoading && orgOptions.length === 0 && (
-                    <div className="text-sm text-muted-foreground">Nenhuma organização disponível</div>
+                    <div className="text-sm text-neutral-500">Nenhuma organização disponível</div>
                   )}
                 </div>
               )}
@@ -530,7 +530,7 @@ export default function UsersTab() {
                     <SelectItem value="member">Usuário</SelectItem>
                     {customRoleOptions.length > 0 && (
                       <>
-                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t mt-1 pt-1">Roles Customizadas</div>
+                        <div className="px-2 py-1.5 text-xs font-medium text-neutral-500 border-t mt-1 pt-1">Roles Customizadas</div>
                         {customRoleOptions.map(cr => (
                           <SelectItem key={cr} value={cr}>{cr}</SelectItem>
                         ))}

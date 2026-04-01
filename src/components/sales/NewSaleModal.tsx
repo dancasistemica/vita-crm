@@ -209,7 +209,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 <div className="flex items-center gap-3">
                   <div>
                     <p className="text-sm font-medium text-foreground">{selectedLead.name}</p>
-                    <p className="text-xs text-muted-foreground">{selectedLead.email}</p>
+                    <p className="text-xs text-neutral-500">{selectedLead.email}</p>
                   </div>
                   <Badge variant={isClient(selectedLead.id) ? 'default' : 'secondary'} className="text-[10px]">
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
@@ -221,7 +221,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               </div>
             ) : (
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
                 <Input
                   value={searchQuery}
                   onChange={e => { setSearchQuery(e.target.value); setShowResults(true); }}
@@ -239,7 +239,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                       >
                         <div>
                           <p className="text-sm font-medium text-foreground">{lead.name}</p>
-                          <p className="text-xs text-muted-foreground">{lead.email} • {lead.phone}</p>
+                          <p className="text-xs text-neutral-500">{lead.email} • {lead.phone}</p>
                         </div>
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
@@ -304,7 +304,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Valor (R$) *</Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">R$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-neutral-500">R$</span>
                 <Input
                   value={value}
                   onChange={handleValueChange}
@@ -319,7 +319,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               <Label>Data da Venda *</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-neutral-500')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
                   </Button>

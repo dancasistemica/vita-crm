@@ -464,7 +464,7 @@ export function CustomFieldsManager() {
         {(isGlobalMode || selectedOrgId) && (
           <div className="flex items-end gap-3">
             <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
               <Input
                 placeholder="Buscar campos..."
                 value={searchTerm}
@@ -486,7 +486,7 @@ export function CustomFieldsManager() {
             <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         ) : filteredGlobalFields.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground text-sm">
+          <div className="text-center py-8 text-neutral-500 text-sm">
             {globalFields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
           </div>
         ) : (
@@ -505,7 +505,7 @@ export function CustomFieldsManager() {
                 {filteredGlobalFields.map((field) => (
                   <TableRow key={field.field_name}>
                     <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-xs text-neutral-500 font-mono">{field.field_name}</TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
@@ -555,7 +555,7 @@ export function CustomFieldsManager() {
             <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         ) : filteredFields.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground text-sm">
+          <div className="text-center py-8 text-neutral-500 text-sm">
             {fields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
           </div>
         ) : (
@@ -583,17 +583,17 @@ export function CustomFieldsManager() {
                     className={dragIndex === index ? 'opacity-50' : ''}
                   >
                     <TableCell className="cursor-grab">
-                      <GripVertical className="h-4 w-4 text-muted-foreground" />
+                      <GripVertical className="h-4 w-4 text-neutral-500" />
                     </TableCell>
                     <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-xs text-neutral-500 font-mono">{field.field_name}</TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
+                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}
                     </TableCell>
                     <TableCell>
                       <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
@@ -628,7 +628,7 @@ export function CustomFieldsManager() {
           <div>
             <Label htmlFor="name">Nome do Campo (Internal Name)</Label>
             <Input id="name" value={fieldName} onChange={e => setFieldName(e.target.value)} disabled={!!editingField || !!editingGlobalField} placeholder="Ex: tamanho_camiseta" />
-            <p className="text-[10px] text-muted-foreground mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
+            <p className="text-[10px] text-neutral-500 mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
           </div>
           <div>
             <Label htmlFor="type">Tipo de Campo</Label>
@@ -658,7 +658,7 @@ export function CustomFieldsManager() {
                     <X className="h-3 w-3 cursor-pointer hover:text-error-600" onClick={() => removeOption(opt)} />
                   </Badge>
                 ))}
-                {fieldOptions.length === 0 && <p className="text-xs text-muted-foreground">Nenhuma opção adicionada.</p>}
+                {fieldOptions.length === 0 && <p className="text-xs text-neutral-500">Nenhuma opção adicionada.</p>}
               </div>
             </div>
           )}

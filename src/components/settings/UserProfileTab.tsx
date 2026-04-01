@@ -213,7 +213,7 @@ export default function UserProfileTab() {
               </Button>
             )}
           </div>
-          {previewUrl && <p className="text-xs text-muted-foreground">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
+          {previewUrl && <p className="text-xs text-neutral-500">Nova foto selecionada. Clique em Salvar para aplicar.</p>}
           {uploading && <Progress value={uploadProgress} className="w-48 h-2" />}
         </CardContent>
       </Card>

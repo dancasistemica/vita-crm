@@ -165,7 +165,7 @@ export default function OrganizationPage() {
   if (!organizationId) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-muted-foreground">Nenhuma organização vinculada à sua conta.</p>
+        <p className="text-neutral-500">Nenhuma organização vinculada à sua conta.</p>
       </div>
     );
   }
@@ -184,7 +184,7 @@ export default function OrganizationPage() {
         <h1 className="text-4xl font-bold text-neutral-900">
           <Building2 className="h-6 w-6" /> Dados da Organização
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">Edite as informações da sua empresa</p>
+        <p className="text-neutral-500 text-sm mt-1">Edite as informações da sua empresa</p>
       </div>
 
       <Card>

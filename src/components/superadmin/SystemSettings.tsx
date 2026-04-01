@@ -198,7 +198,7 @@ export function SystemSettings() {
               {/* Logo upload */}
               <div>
                 <Label>Logo do Sistema</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, SVG ou WebP (máx. 2MB)</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, SVG ou WebP (máx. 2MB)</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
                   onDragOver={e => e.preventDefault()}
@@ -217,12 +217,12 @@ export function SystemSettings() {
                           <img src={settings.logo_url} alt="Logo escuro" className="h-10 object-contain" />
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
+                      <p className="text-xs text-neutral-500">Clique ou arraste para trocar</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
+                      <Upload className="h-8 w-8 mx-auto text-neutral-500" />
+                      <p className="text-sm text-neutral-500">Clique ou arraste a logo aqui</p>
                     </div>
                   )}
                 </div>
@@ -237,7 +237,7 @@ export function SystemSettings() {
                     
                     {/* Desktop */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">🖥️ Desktop</Label>
+                      <Label className="text-xs text-neutral-500">🖥️ Desktop</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[Number(settings.logo_size_desktop) || 40]}
@@ -250,9 +250,9 @@ export function SystemSettings() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_desktop || '40'}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{settings.logo_size_desktop || '40'}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>24px</span><span>200px</span>
                       </div>
                       {Number(settings.logo_size_desktop) > 120 && (
@@ -262,7 +262,7 @@ export function SystemSettings() {
 
                     {/* Mobile */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">📱 Mobile</Label>
+                      <Label className="text-xs text-neutral-500">📱 Mobile</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[Number(settings.logo_size_mobile) || 32]}
@@ -275,9 +275,9 @@ export function SystemSettings() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_mobile || '32'}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{settings.logo_size_mobile || '32'}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>20px</span><span>80px</span>
                       </div>
                       {Number(settings.logo_size_mobile) > 56 && (
@@ -291,7 +291,7 @@ export function SystemSettings() {
               {/* Favicon upload */}
               <div>
                 <Label>Favicon do Sistema (32x32px)</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, ICO ou SVG</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, ICO ou SVG</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
                   onDragOver={e => e.preventDefault()}
@@ -303,12 +303,12 @@ export function SystemSettings() {
                   {settings.favicon_url ? (
                     <div className="flex items-center gap-3">
                       <img src={settings.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
-                      <span className="text-xs text-muted-foreground">Clique para trocar</span>
+                      <span className="text-xs text-neutral-500">Clique para trocar</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
-                      <Upload className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Upload favicon</span>
+                      <Upload className="h-5 w-5 text-neutral-500" />
+                      <span className="text-sm text-neutral-500">Upload favicon</span>
                     </div>
                   )}
                 </div>
@@ -541,7 +541,7 @@ function SystemColorPicker({ label, description, value, onChange }: {
   return (
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
-      <p className="text-xs text-muted-foreground">{description}</p>
+      <p className="text-xs text-neutral-500">{description}</p>
       <div className="flex items-center gap-3 mt-1">
         <input type="color" value={value} onChange={e => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />

@@ -45,7 +45,7 @@ export default function AIContextTab() {
     updateServices(key, current.filter(s => s !== value));
   };
 
-  if (loading) return <div className="flex items-center justify-center p-6 text-muted-foreground">Carregando...</div>;
+  if (loading) return <div className="flex items-center justify-center p-6 text-neutral-500">Carregando...</div>;
 
   return (
     <div className="space-y-6">
@@ -66,7 +66,7 @@ export default function AIContextTab() {
             onChange={e => setForm(prev => ({ ...prev, ai_context: e.target.value }))}
             className="min-h-[100px]"
           />
-          <p className="text-xs text-muted-foreground mt-1">{form.ai_context.length}/500 caracteres</p>
+          <p className="text-xs text-neutral-500 mt-1">{form.ai_context.length}/500 caracteres</p>
         </CardContent>
       </Card>
 
@@ -117,7 +117,7 @@ export default function AIContextTab() {
 
           {/* Serviços NÃO Oferecidos */}
           <div className="space-y-3">
-            <Label>Serviços NÃO Oferecidos <span className="text-muted-foreground text-xs">(IA evitará sugerir)</span></Label>
+            <Label>Serviços NÃO Oferecidos <span className="text-neutral-500 text-xs">(IA evitará sugerir)</span></Label>
             <div className="flex gap-3">
               <Input
                 placeholder="Adicionar serviço a excluir..."
@@ -158,7 +158,7 @@ export default function AIContextTab() {
               value={form.ai_target_audience}
               onChange={e => setForm(prev => ({ ...prev, ai_target_audience: e.target.value }))}
             />
-            <p className="text-xs text-muted-foreground">{form.ai_target_audience.length}/300 caracteres</p>
+            <p className="text-xs text-neutral-500">{form.ai_target_audience.length}/300 caracteres</p>
           </div>
           <div className="space-y-3">
             <Label>Modelo de Negócio</Label>
@@ -192,7 +192,7 @@ export default function AIContextTab() {
             }))}
             className="min-h-[100px]"
           />
-          <p className="text-xs text-muted-foreground mt-1">{customInstructions.length}/1000 caracteres</p>
+          <p className="text-xs text-neutral-500 mt-1">{customInstructions.length}/1000 caracteres</p>
         </CardContent>
       </Card>
 
@@ -202,7 +202,7 @@ export default function AIContextTab() {
           <CardTitle className="flex items-center gap-3 text-lg">
             <Eye className="h-5 w-5 text-primary" />
             Preview do Contexto
-            <span className="text-xs text-muted-foreground">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>
+            <span className="text-xs text-neutral-500">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>
           </CardTitle>
         </CardHeader>
         {showPreview && (
