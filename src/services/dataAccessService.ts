@@ -544,10 +544,10 @@ export class DataAccessService {
   }
 
   async getPaymentMethods() {
-    const { data, error } = await supabase
-      .from('payment_methods')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('payment_methods').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('name');
     if (error) { console.error('[DataAccessService] getPaymentMethods error:', error); throw error; }
