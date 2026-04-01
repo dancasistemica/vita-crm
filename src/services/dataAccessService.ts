@@ -578,10 +578,10 @@ export class DataAccessService {
   }
 
   async getRolePermissions() {
-    const { data, error } = await supabase
-      .from('role_permissions')
-      .select('*')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('role_permissions').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query;
     if (error) { console.error('[DataAccessService] getRolePermissions error:', error); throw error; }
     return data || [];
   }
