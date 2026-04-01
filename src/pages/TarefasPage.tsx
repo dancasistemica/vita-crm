@@ -417,7 +417,7 @@ export default function TarefasPage() {
                 </Badge>
               )}
               <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
+                <CalendarIcon className="h-3 w-3" />
                 {formatCreatedDate(task.created_at)}
               </span>
             </div>
