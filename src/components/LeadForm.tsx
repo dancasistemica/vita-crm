@@ -86,7 +86,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
           {cpfWarning && <p className="text-xs text-error-600 mt-1">⚠️ CPF inválido</p>}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Select 
           label="Origem"
           value={form.origin || ''} 
@@ -142,7 +142,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
       {customFields.length > 0 && (
         <div className="space-y-3 border-t pt-3 border-neutral-100">
           <p className="text-sm font-medium text-neutral-500">Campos Customizados</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {customFields.map(cf => (
               <div key={cf.id}>
                 {cf.field_type === 'text' && (
