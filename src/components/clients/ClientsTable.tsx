@@ -1,6 +1,6 @@
-import { Badge, Button, Checkbox, Select, Skeleton } from "@/components/ui/ds";
+import { Badge, Button, Card, Checkbox, Select, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle, Phone, Trash2, Calendar, ShoppingBag, DollarSign } from 'lucide-react';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
 import { useState } from 'react';
 
