@@ -48,7 +48,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
 
   return (
     <div className="divide-y max-h-[60vh] overflow-y-auto">
-      {(["lead", "client", "task", "product"] as GlobalSearchResultType[]).map((type) => {
+      {(["lead", "client", "task", "product", "sale"] as SearchResultType[]).map((type) => {
         const typeResults = results.filter((result) => result.type === type);
         if (typeResults.length === 0) return null;
 
