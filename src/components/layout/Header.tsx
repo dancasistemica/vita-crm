@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, LogOut } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, secureLogout } from '@/lib/supabase';
+import { sanitizeInput } from '@/lib/security';
 import { Button } from '@/components/ui/ds';
 
 interface HeaderProps {
