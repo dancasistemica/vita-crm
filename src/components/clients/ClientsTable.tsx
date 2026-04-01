@@ -243,7 +243,7 @@ export default function ClientsTable({
         })}
       </div>
 
-      <div className="flex items-center justify-between gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
         <span className="text-sm text-neutral-500">{totalFiltered} clientes</span>
         <div className="flex items-center gap-1">
           <Button variant="secondary" size="sm" className="h-8 px-3" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
