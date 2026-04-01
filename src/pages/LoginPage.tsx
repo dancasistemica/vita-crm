@@ -12,7 +12,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,37 +41,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      console.log('[LoginPage] Criando conta com:', email);
-
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (signUpError) {
-        console.error('[LoginPage] Erro de cadastro:', signUpError);
-        setError(signUpError.message || 'Erro ao criar conta');
-      } else {
-        console.log('[LoginPage] Conta criada com sucesso');
-        setError('');
-        alert('Verifique seu email para confirmar a conta');
-        setEmail('');
-        setPassword('');
-      }
-    } catch (err) {
-      console.error('[LoginPage] Erro inesperado:', err);
-      setError('Erro ao criar conta. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <Card variant="elevated" padding="lg" className="w-full max-w-md">
@@ -86,29 +54,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Abas de Navegação */}
-        <div className="flex gap-4 mb-6 border-b border-neutral-200">
-          <button
-            onClick={() => setIsSignUp(false)}
-            className={`pb-3 px-2 font-medium transition-colors ${
-              !isSignUp
-                ? 'text-primary-600 border-b-2 border-primary-600'
-                : 'text-neutral-600 hover:text-neutral-900'
-            }`}
-          >
-            Entrar
-          </button>
-          <button
-            onClick={() => setIsSignUp(true)}
-            className={`pb-3 px-2 font-medium transition-colors ${
-              isSignUp
-                ? 'text-primary-600 border-b-2 border-primary-600'
-                : 'text-neutral-600 hover:text-neutral-900'
-            }`}
-          >
-            Criar Conta
-          </button>
-        </div>
 
         {/* Formulário */}
         <form onSubmit={isSignUp ? handleSignUp : handleLogin} className="space-y-4">
