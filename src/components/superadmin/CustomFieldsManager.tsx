@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
+import { Alert, AlertDialog, Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
 
 interface CustomField {
   id: string;
@@ -497,12 +497,12 @@ export function CustomFieldsManager() {
                   <TableHead>Label</TableHead>
                   <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
                   <TableHead>Tipo</TableHead>
-                  <TableHead>Organizações</TableHead>
-                  <TableHead className="w-28">Ações</TableHead>
+                  <TableHead className="hidden md:table-cell">Orgs</TableHead>
+                  <TableHead className="w-20">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredGlobalFields.map(field => (
+                {filteredGlobalFields.map((field) => (
                   <TableRow key={field.field_name}>
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
@@ -511,34 +511,32 @@ export function CustomFieldsManager() {
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      <Badge variant={field.org_count === totalOrgs ? 'default' : 'secondary'} className="text-xs">
-                        {field.org_count} de {totalOrgs}
+                    <TableCell className="hidden md:table-cell">
+                      <Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
+                        {field.org_count}/{totalOrgs}
                       </Badge>
-                      {field.org_count < totalOrgs && (
-                        <Button variant="ghost"
-                          size="sm"
-                          className="text-xs px-1 h-auto"
-                          onClick={() => handleApplyToAll(field)}
-                        >
-                          Aplicar para todas
-                        </Button>
-                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditGlobalModal(field)}>
-                          <Pencil className="h-3.5 w-3.5" />
+                        <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0">
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost"
+                        <Button
                           size="sm"
-                          className="h-7 w-7 text-destructive"
-                          onClick={() => {
-                            setDeleteGlobalFieldName(field.field_name);
-                            setDeleteGlobalFieldLabel(field.field_label);
-                          }}
+                          variant="ghost"
+                          onClick={() => handleApplyToAll(field)}
+                          className="h-8 w-8 p-0 text-primary-600"
+                          title="Aplicar a todas as organizações"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Globe className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => { setDeleteGlobalFieldName(field.field_name); setDeleteGlobalFieldLabel(field.field_label); }}
+                          className="h-8 w-8 p-0 text-error-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
@@ -598,17 +596,17 @@ export function CustomFieldsManager() {
                       {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={field.is_active ? 'default' : 'secondary'} className="text-xs">
+                      <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
                         {field.is_active ? 'Ativo' : 'Inativo'}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => openEditModal(field)}>
-                          <Pencil className="h-3.5 w-3.5" />
+                        <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0">
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-7 w-7 text-destructive" onClick={() => setDeleteFieldId(field.id)}>
-                          <Trash2 className="h-3.5 w-3.5" />
+                        <Button size="sm" variant="ghost" onClick={() => setDeleteFieldId(field.id)} className="h-8 w-8 p-0 text-error-600">
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
@@ -620,114 +618,100 @@ export function CustomFieldsManager() {
         )
       )}
 
-      {/* Create/Edit Modal */}
-      <Dialog open={modalOpen} onOpenChange={open => { if (!open) { setModalOpen(false); resetForm(); } }}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo Customizado'}
-              {isGlobalMode && (
-                <Badge variant="secondary" className="ml-2 text-xs">Global</Badge>
-              )}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Label do campo *</Label>
-              <Input value={fieldLabel} onChange={e => handleLabelChange(e.target.value)} placeholder="Ex: Objetivo Terapêutico" />
-            </div>
-            <div>
-              <Label>Nome interno</Label>
-              <Input value={fieldName} onChange={e => setFieldName(e.target.value)} placeholder="objetivo_terapeutico" className="font-mono text-sm" disabled={!!(editingField || editingGlobalField)} />
-              <p className="text-xs text-muted-foreground mt-1">Auto-gerado a partir do label</p>
-            </div>
-            <div>
-              <Label>Tipo</Label>
-              <Select value={fieldType} onValueChange={setFieldType}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {FIELD_TYPES.map(t => (
-                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {fieldType === 'select' && (
-              <div>
-                <Label>Opções</Label>
-                <div className="flex gap-3 mt-1">
-                  <Input
-                    value={optionInput}
-                    onChange={e => setOptionInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
-                    placeholder="Adicionar opção"
-                  />
-                  <Button type="button" variant="secondary" size="sm" onClick={addOption}>+</Button>
-                </div>
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {fieldOptions.map(opt => (
-                    <Badge key={opt} variant="secondary" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
-                      {opt} <X className="h-3 w-3" />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="flex items-center justify-between">
-              <Label>Obrigatório</Label>
-              <Switch checked={isRequired} onCheckedChange={setIsRequired} />
-            </div>
-            {!isGlobalMode && (
-              <div className="flex items-center justify-between">
-                <Label>Ativo</Label>
-                <Switch checked={isActive} onCheckedChange={setIsActive} />
-              </div>
-            )}
+      {/* Field Editor Modal */}
+      <Dialog isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo'}>
+        <div className="space-y-4 py-4">
+          <div>
+            <Label htmlFor="label">Rótulo do Campo (Label)</Label>
+            <Input id="label" value={fieldLabel} onChange={e => handleLabelChange(e.target.value)} placeholder="Ex: Tamanho da Camiseta" />
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
-              {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+          <div>
+            <Label htmlFor="name">Nome do Campo (Internal Name)</Label>
+            <Input id="name" value={fieldName} onChange={e => setFieldName(e.target.value)} disabled={!!editingField || !!editingGlobalField} placeholder="Ex: tamanho_camiseta" />
+            <p className="text-[10px] text-muted-foreground mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
+          </div>
+          <div>
+            <Label htmlFor="type">Tipo de Campo</Label>
+            <Select value={fieldType} onValueChange={setFieldType}>
+              <SelectTrigger id="type">
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIELD_TYPES.map(t => (
+                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {fieldType === 'select' && (
+            <div className="space-y-3 p-3 border rounded-md bg-neutral-50">
+              <Label>Opções da Seleção</Label>
+              <div className="flex gap-2">
+                <Input value={optionInput} onChange={e => setOptionInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addOption()} placeholder="Nova opção..." />
+                <Button variant="secondary" onClick={addOption} size="sm">Adicionar</Button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {fieldOptions.map(opt => (
+                  <Badge key={opt} variant="secondary" className="gap-1.5 py-1 px-2 text-sm">
+                    {opt}
+                    <X className="h-3 w-3 cursor-pointer hover:text-error-600" onClick={() => removeOption(opt)} />
+                  </Badge>
+                ))}
+                {fieldOptions.length === 0 && <p className="text-xs text-muted-foreground">Nenhuma opção adicionada.</p>}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-3 pt-2">
+            <div className="flex items-center gap-2">
+              <Switch checked={isRequired} onCheckedChange={setIsRequired} id="required" />
+              <Label htmlFor="required" className="cursor-pointer">Campo obrigatório</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch checked={isActive} onCheckedChange={setIsActive} id="active" />
+              <Label htmlFor="active" className="cursor-pointer">Campo ativo</Label>
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancelar</Button>
+          <Button onClick={handleSave} disabled={saving}>{saving ? 'Salvando...' : 'Salvar Campo'}</Button>
+        </DialogFooter>
       </Dialog>
 
-      {/* Delete confirmation (specific org) */}
-      <AlertDialog open={!!deleteFieldId} onOpenChange={open => { if (!open) setDeleteFieldId(null); }}>
+      {/* Delete confirmation */}
+      <AlertDialog open={!!deleteFieldId} onOpenChange={open => !open && setDeleteFieldId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover campo customizado?</AlertDialogTitle>
+            <AlertDialogTitle>Excluir campo customizado?</AlertDialogTitle>
             <AlertDialogDescription>
-              Isso removerá o campo de todos os cadastros. Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir este campo? Todos os dados salvos neste campo em todos os leads desta organização serão removidos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Remover
-            </AlertDialogAction>
+            <Button variant="error" onClick={handleDelete}>Excluir</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete confirmation (global) */}
-      <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => { if (!open) { setDeleteGlobalFieldName(null); setDeleteGlobalFieldLabel(''); } }}>
+      {/* Global Delete confirmation */}
+      <AlertDialog open={!!deleteGlobalFieldName} onOpenChange={open => !open && setDeleteGlobalFieldName(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              Remover campo de TODAS as organizações?
+            <AlertDialogTitle className="text-error-600 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" /> EXCLUIR CAMPO GLOBAL
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Isso removerá o campo "<strong>{deleteGlobalFieldLabel}</strong>" de <strong>TODAS as organizações</strong> e seus dados associados. Esta ação <strong>não pode ser desfeita</strong>.
+              Você está prestes a excluir o campo <strong>"{deleteGlobalFieldLabel}"</strong> de <strong>TODAS as organizações</strong> ({totalOrgs}).
+              <br /><br />
+              <span className="text-error-600 font-bold uppercase">ESTA AÇÃO É IRREVERSÍVEL E APAGARÁ DADOS DE TODOS OS LEADS DO SISTEMA.</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteGlobal} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Remover de todas
-            </AlertDialogAction>
+            <Button variant="error" onClick={handleDeleteGlobal}>CONFIRMAR EXCLUSÃO GLOBAL</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -51,7 +51,8 @@ export default function PaymentMethodsTab() {
         .insert([{ 
           name: newMethod.trim(), 
           sort_order: paymentMethods.length,
-          active: true 
+          active: true,
+          organization_id: organizationId
         }])
         .select()
         .single();
