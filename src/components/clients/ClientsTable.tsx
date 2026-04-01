@@ -38,6 +38,13 @@ const statusColors: Record<string, string> = {
   pendência: 'bg-warning/20 text-warning border-warning/30',
 };
 
+const statusBarColors: Record<string, string> = {
+  ativo: 'bg-success',
+  concluído: 'bg-info',
+  cancelado: 'bg-neutral-300',
+  pendência: 'bg-warning',
+};
+
 function getInitials(name: string) {
   return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 }
