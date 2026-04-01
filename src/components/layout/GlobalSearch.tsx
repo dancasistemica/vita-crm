@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import {
   useGlobalSearch,
-  type GlobalSearchResult,
+  type SearchResult,
 } from "@/hooks/useGlobalSearch";
 import { SearchResults } from "@/components/search/SearchResults";
 
