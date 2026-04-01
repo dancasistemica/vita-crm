@@ -55,6 +55,12 @@ export default function LoginPage() {
   useEffect(() => {
     if (token) navigate(`/first-login?token=${token}`, { replace: true });
     if (resetToken) navigate(`/reset-password?reset=${resetToken}`, { replace: true });
+    
+    // Check if we should show the reset-password form directly on this page
+    const hash = window.location.hash;
+    if (hash.includes('type=recovery')) {
+      setView('reset-password');
+    }
   }, [token, resetToken, navigate]);
 
   // Rate limit countdown
