@@ -259,7 +259,7 @@ export default function UserProfileTab() {
         </div>
         <div className="flex justify-start">
           <Button 
-            variant="outline" 
+            variant="secondary" 
             onClick={() => {
               const loadingToast = toast.loading('Verificando segurança da senha...');
               setTimeout(() => {
