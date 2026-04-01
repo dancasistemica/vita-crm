@@ -220,11 +220,10 @@ export class DataAccessService {
 
   // ── PRODUCTS ───────────────────────────────────────────
   async getProducts() {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*, product_sales_stages(*)')
-      .eq('organization_id', this.orgId)
-      .order('created_at', { ascending: false });
+    let query = supabase.from('products').select('*, product_sales_stages(*)');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
     if (error) { console.error('[DataAccessService] getProducts error:', error); throw error; }
     return data || [];
   }
