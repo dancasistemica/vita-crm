@@ -8,7 +8,7 @@ interface PaymentMethod {
   id: string;
   name: string;
   active: boolean;
-  order_index: number;
+  sort_order: number;
 }
 
 export default function PaymentMethodsTab() {

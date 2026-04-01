@@ -565,7 +565,7 @@ export function CustomFieldsManager() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-10"></TableHead>
+                  <TableHead className="w-10">Op</TableHead>
                   <TableHead>Label</TableHead>
                   <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
                   <TableHead>Tipo</TableHead>
