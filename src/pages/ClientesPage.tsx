@@ -88,7 +88,17 @@ export default function ClientesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-4">
-            <h2 className="text-lg font-semibold mb-4">Filtros Avançados</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Filtros Avançados</h2>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={hook.resetFilters}
+                icon={<Filter className="w-4 h-4" />}
+                className="h-8 w-8 p-0"
+                title="Limpar filtros"
+              />
+            </div>
             <ClientsAdvancedFilter
               filters={hook.filters}
               updateFilter={hook.updateFilter}
@@ -103,7 +113,7 @@ export default function ClientesPage() {
         </div>
 
         <div className="lg:col-span-3 space-y-6">
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2">
             {hook.getActiveFilterChips.map(chip => (
               <FilterChip
                 key={chip.key}
@@ -130,30 +140,30 @@ export default function ClientesPage() {
             onPerPageChange={hook.setPerPage}
           />
 
-
-      <div className="space-y-4">
-        <ClientsTable
-          clients={hook.filteredClients}
-          getClientSales={hook.getClientSales}
-          getLastInteraction={hook.getLastInteraction}
-          sortField={hook.sortField}
-          sortDir={hook.sortDir}
-          toggleSort={hook.toggleSort}
-          selectedIds={hook.selectedIds}
-          toggleSelect={hook.toggleSelect}
-          toggleSelectAll={hook.toggleSelectAll}
-          page={hook.page}
-          setPage={hook.setPage}
-          perPage={hook.perPage}
-          setPerPage={hook.setPerPage}
-          totalPages={hook.totalPages}
-          totalFiltered={hook.totalFiltered}
-          onNewSale={handleNewSale}
-          loading={hook.loading}
-          products={hook.products}
-          onSelectClient={handleSelectClient}
-        />
+          <ClientsTable
+            clients={hook.filteredClients}
+            getClientSales={hook.getClientSales}
+            getLastInteraction={hook.getLastInteraction}
+            sortField={hook.sortField}
+            sortDir={hook.sortDir}
+            toggleSort={hook.toggleSort}
+            selectedIds={hook.selectedIds}
+            toggleSelect={hook.toggleSelect}
+            toggleSelectAll={hook.toggleSelectAll}
+            page={hook.page}
+            setPage={hook.setPage}
+            perPage={hook.perPage}
+            setPerPage={hook.setPerPage}
+            totalPages={hook.totalPages}
+            totalFiltered={hook.totalFiltered}
+            onNewSale={handleNewSale}
+            loading={hook.loading}
+            products={hook.products}
+            onSelectClient={handleSelectClient}
+          />
+        </div>
       </div>
+
 
       <ExportModal
         open={exportOpen}
