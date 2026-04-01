@@ -36,18 +36,23 @@ function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: '
 function FilterSection({ title, count, children, defaultOpen = false }: { title: string; count: number; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className="border-b border-border pb-3">
-      <CollapsibleTrigger className="flex w-full items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+    <div className="border-b border-border pb-3">
+      <button 
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+      >
         <div className="flex items-center gap-3">
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           {title}
         </div>
         {count > 0 && <Badge variant="error" className="h-5 min-w-5 justify-center rounded-full px-1.5 text-[10px]">{count}</Badge>}
-      </CollapsibleTrigger>
-      <CollapsibleContent className="pt-2 space-y-3">
-        {children}
-      </CollapsibleContent>
-    </Collapsible>
+      </button>
+      {open && (
+        <div className="pt-2 space-y-3">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
