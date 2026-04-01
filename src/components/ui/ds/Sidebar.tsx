@@ -56,7 +56,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
         ${isMobile ? 'fixed inset-y-0 left-0 shadow-2xl' : 'relative'}
         ${open ? 'translate-x-0 w-64' : (isMobile ? '-translate-x-full w-0' : 'w-20')}
       `}>
-        <div className={isMobile ? 'w-64 h-full' : 'w-full h-full'}>
+        <div className={isMobile ? 'w-64 h-full bg-white' : 'w-full h-full'}>
           {children}
         </div>
       </aside>
@@ -64,7 +64,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const SidebarContent = ({ children }: { children: React.ReactNode }) => <div className="p-4 h-full overflow-y-auto">{children}</div>;
+export const SidebarContent = ({ children }: { children: React.ReactNode }) => <div className="p-4 h-full overflow-y-auto bg-white">{children}</div>;
 export const SidebarGroup = ({ children }: { children: React.ReactNode }) => <div className="mb-6">{children}</div>;
 export const SidebarGroupLabel = ({ children }: { children: React.ReactNode }) => <div className="px-2 mb-2 text-xs font-semibold text-neutral-400 uppercase tracking-wider">{children}</div>;
 export const SidebarGroupContent = ({ children }: { children: React.ReactNode }) => <div className="space-y-1">{children}</div>;

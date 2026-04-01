@@ -58,17 +58,17 @@ export default function CRMLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full relative bg-neutral-50/50">
+      <div className="min-h-screen flex w-full relative bg-neutral-50">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="sticky top-0 z-30 flex items-center justify-between gap-2 px-3 py-2 md:px-4 md:py-3 bg-white/90 backdrop-blur-md border-b border-neutral-200 shadow-sm transition-all">
+          <header className="sticky top-0 z-30 flex items-center justify-between gap-2 px-3 py-2 md:px-4 md:py-3 bg-white border-b border-neutral-200 shadow-sm transition-all">
             <div className="flex items-center gap-2 md:gap-3 min-w-fit">
               <HeaderMenu />
               <div className="flex flex-col">
-                <span className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wide font-medium">
+                <span className="text-xs text-neutral-500 uppercase tracking-wide font-medium">
                   {isDashboard ? "CRM" : getPageTitle()}
                 </span>
-                <span className="text-xs md:text-sm font-bold text-neutral-900 truncate max-w-[120px] md:max-w-none">
+                <span className="text-sm font-bold text-neutral-900 truncate max-w-[120px] md:max-w-none">
                   {organizationName}
                 </span>
               </div>
