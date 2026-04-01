@@ -1,6 +1,6 @@
 import { Badge, Button, Card, Checkbox, Select, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle, Phone, Trash2, Calendar, ShoppingBag, DollarSign } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle, Phone, Trash2, Calendar, ShoppingBag, DollarSign, Plus } from 'lucide-react';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
 import { useState } from 'react';
 
@@ -45,22 +45,6 @@ const statusBarColors: Record<string, string> = {
   pendência: 'bg-warning',
 };
 
-function getInitials(name: string) {
-  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-}
-
-function getInitialColor(name: string) {
-  const colors = [
-    'bg-primary/20 text-primary',
-    'bg-accent/20 text-accent',
-    'bg-success/20 text-success',
-    'bg-info/20 text-info',
-    'bg-warning/20 text-warning',
-  ];
-  const idx = name.charCodeAt(0) % colors.length;
-  return colors[idx];
-}
-
 function formatDate(dateStr: string) {
   if (!dateStr) return '—';
   const d = new Date(dateStr + 'T00:00:00');
@@ -102,11 +86,6 @@ interface Props {
   onSelectClient?: (client: ClientLead) => void;
 }
 
-function SortIcon({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
-  if (field !== current) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-40" />;
-  return dir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
-}
-
 export default function ClientsTable({
   clients, getClientSales, getLastInteraction,
   sortField, sortDir, toggleSort,
@@ -122,7 +101,7 @@ export default function ClientsTable({
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-lg" />
+          <Skeleton key={i} className="h-20 w-full rounded-lg" />
         ))}
       </div>
     );
@@ -140,202 +119,159 @@ export default function ClientsTable({
     );
   }
 
-  const mobileView = (
-    <div className="space-y-3 md:hidden">
-      {clients.map(client => {
-        const clientSales = getClientSales(client.id);
-        const totalValue = clientSales.reduce((s, x) => s + x.value, 0);
-        const lastSale = clientSales.sort((a, b) => b.date.localeCompare(a.date))[0];
-
-        return (
-          <div
-            key={client.id}
-            className="rounded-xl border border-neutral-200 bg-white p-4 cursor-pointer hover:shadow-md transition-all"
-            onClick={() => {
-              if (onSelectClient) onSelectClient(client as any);
-              else navigate(`/clientes/${client.id}`);
-            }}
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold ${getInitialColor(client.name)}`}>
-                  {getInitials(client.name)}
-                </div>
-                <div>
-                  <p className="font-medium text-neutral-900 text-sm">{client.name}</p>
-                   <p className="text-xs text-neutral-500">{client.email}</p>
-                   {client.is_client && client.became_client_at && (
-                     <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
-                       <CheckCircle className="w-2.5 h-2.5" />
-                       <span>Cliente desde {new Date(client.became_client_at).toLocaleDateString('pt-BR')}</span>
-                     </div>
-                   )}
-                </div>
-              </div>
-              <div className="relative">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8" 
-                  onClick={e => { e.stopPropagation(); setOpenMenu(openMenu === client.id ? null : client.id); }}
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-                {openMenu === client.id && (
-                  <div className="absolute right-0 z-50 mt-2 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg py-1">
-                    <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); setOpenMenu(null); }}>Ver detalhes</button>
-                    <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={e => { e.stopPropagation(); onNewSale?.(client.id); setOpenMenu(null); }}>Nova venda</button>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-1 mb-2">
-              {clientSales.slice(0, 2).map(s => (
-                <Badge key={s.id} variant="secondary" className="text-[10px]">{getProductName(s.productId)}</Badge>
-              ))}
-              {clientSales.length > 2 && <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>}
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</span>
-              {lastSale && <Badge className={`text-[10px] ${statusColors[lastSale.status] || ''}`}>{lastSale.status}</Badge>}
-            </div>
+  return (
+    <div className="space-y-4">
+      {/* Header with Sort and Select All - mimicking LeadsPage style */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-neutral-100 rounded-lg">
+        <div className="flex items-center gap-3">
+          <Checkbox
+            checked={selectedIds.length === clients.length && clients.length > 0}
+            onCheckedChange={toggleSelectAll}
+          />
+          <span className="text-xs text-neutral-500 font-medium uppercase">Selecionar todos</span>
+        </div>
+        
+        <div className="flex items-center gap-4 flex-1 md:justify-end">
+          <span className="text-sm font-medium text-neutral-700 whitespace-nowrap">Ordenar por:</span>
+          <div className="flex gap-2">
+            <select
+              value={sortField}
+              onChange={(e) => toggleSort(e.target.value as SortField)}
+              className="px-3 py-1.5 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-w-[140px]"
+            >
+              <option value="name">🔤 Nome</option>
+              <option value="value">💰 Valor</option>
+              <option value="date">📅 Data Compra</option>
+              <option value="status">🏷️ Status</option>
+              <option value="lastInteraction">💬 Interação</option>
+            </select>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => toggleSort(sortField)}
+              className="h-9 px-3"
+            >
+              {sortDir === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
+            </Button>
           </div>
-        );
-      })}
-    </div>
-  );
+        </div>
+      </div>
 
-  const desktopView = (
-    <div className="hidden md:block rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm">
-      <table className="w-full border-collapse">
-        <thead className="bg-neutral-50 border-b border-neutral-200">
-          <tr>
-            <th className="px-4 py-3 text-left w-10">
-              <Checkbox
-                checked={selectedIds.length === clients.length && clients.length > 0}
-                onCheckedChange={toggleSelectAll}
-              />
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('name')}>
-              <div className="flex items-center">Nome <SortIcon field="name" current={sortField} dir={sortDir} /></div>
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Produto</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('value')}>
-              <div className="flex items-center">Valor <SortIcon field="value" current={sortField} dir={sortDir} /></div>
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('date')}>
-              <div className="flex items-center">Data Compra <SortIcon field="date" current={sortField} dir={sortDir} /></div>
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('status')}>
-              <div className="flex items-center">Status <SortIcon field="status" current={sortField} dir={sortDir} /></div>
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('lastInteraction')}>
-              <div className="flex items-center">Última Interação <SortIcon field="lastInteraction" current={sortField} dir={sortDir} /></div>
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-neutral-100">
-          {clients.map(client => {
-            const clientSales = getClientSales(client.id);
-            const totalValue = clientSales.reduce((s, x) => s + x.value, 0);
-            const lastSale = clientSales.sort((a, b) => b.date.localeCompare(a.date))[0];
-            const lastInt = getLastInteraction(client.id);
+      <div className="space-y-4">
+        {clients.map(client => {
+          const clientSales = getClientSales(client.id);
+          const totalValue = clientSales.reduce((s, x) => s + x.value, 0);
+          const lastSale = [...clientSales].sort((a, b) => b.date.localeCompare(a.date))[0];
+          const lastInt = getLastInteraction(client.id);
+          const status = lastSale?.status || '—';
 
-            return (
-              <tr 
-                key={client.id}
-                className="hover:bg-neutral-50 transition-colors group cursor-pointer"
-                onClick={() => {
-                  if (onSelectClient) onSelectClient(client as any);
-                  else navigate(`/clientes/${client.id}`);
-                }}
-              >
-                <td className="px-4 py-4" onClick={e => e.stopPropagation()}>
-                  <Checkbox checked={selectedIds.includes(client.id)} onCheckedChange={() => toggleSelect(client.id)} />
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${getInitialColor(client.name)}`}>
-                      {getInitials(client.name)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-neutral-900 text-sm">{client.name}</p>
-                      <p className="text-xs text-neutral-500">{client.email}</p>
-                    </div>
+          return (
+            <Card 
+              key={client.id} 
+              padding="none" 
+              className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => {
+                if (onSelectClient) onSelectClient(client);
+                else navigate(`/clientes/${client.id}`);
+              }}
+            >
+              {/* Top bar like leads */}
+              <div className={`h-1 w-full ${statusBarColors[status] || 'bg-neutral-200'}`} />
+              
+              <div className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div onClick={e => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedIds.includes(client.id)}
+                      onCheckedChange={() => toggleSelect(client.id)}
+                    />
                   </div>
-                </td>
-                <td className="px-4 py-4" onClick={e => e.stopPropagation()}>
-                  {client.phone ? (
-                    <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-success-600 hover:underline">
-                      <ExternalLink className="h-3 w-3" />
-                      {client.phone}
-                    </a>
-                  ) : '—'}
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex flex-wrap gap-1">
-                    {clientSales.slice(0, 2).map(s => (
-                      <Badge key={s.id} variant="secondary" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
-                    ))}
-                    {clientSales.length > 2 && (
-                      <Badge variant="secondary" className="text-[10px]" title={clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}>
-                        +{clientSales.length - 2}
-                      </Badge>
-                    )}
-                  </div>
-                </td>
-                <td className="px-4 py-4">
-                  <span className="font-semibold text-sm text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</span>
-                </td>
-                <td className="px-4 py-4">
-                  {lastSale ? <span className="text-sm text-neutral-900" title={relativeDate(lastSale.date)}>{formatDate(lastSale.date)}</span> : '—'}
-                </td>
-                <td className="px-4 py-4">
-                  {lastSale ? <Badge className={`text-[10px] ${statusColors[lastSale.status] || ''}`}>{lastSale.status}</Badge> : '—'}
-                </td>
-                <td className="px-4 py-4">
-                  <span className="text-sm text-neutral-500">{lastInt ? relativeDate(lastInt.date) : '—'}</span>
-                </td>
-                <td className="px-4 py-4 text-right" onClick={e => e.stopPropagation()}>
-                  <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => navigate(`/clientes/${client.id}`)}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <div className="relative">
-                      <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => setOpenMenu(openMenu === `row-${client.id}` ? null : `row-${client.id}`)}>
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                      {openMenu === `row-${client.id}` && (
-                        <div className="absolute right-0 z-50 mt-2 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 text-left">
-                          <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={() => { navigate(`/clientes/${client.id}`); setOpenMenu(null); }}>Ver detalhes</button>
-                          <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={() => { onNewSale?.(client.id); setOpenMenu(null); }}>Nova venda</button>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-neutral-900 text-sm hover:underline hover:text-primary-600">
+                        {client.name}
+                      </span>
+                      {lastSale && (
+                        <Badge className={`text-[10px] uppercase font-bold border ${statusColors[lastSale.status] || ''}`}>
+                          {lastSale.status}
+                        </Badge>
+                      )}
+                      <div className="flex gap-1 flex-wrap">
+                        {clientSales.slice(0, 2).map(s => (
+                          <Badge key={s.id} variant="secondary" className="text-[10px]">{getProductName(s.productId)}</Badge>
+                        ))}
+                        {clientSales.length > 2 && <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>}
+                      </div>
+                    </div>
+                    
+                    {/* Information Grid requested by user: Telefone, produto, valor, data da compra, status, ações */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-3">
+                      {client.phone && (
+                        <div className="flex items-center gap-2 text-xs text-neutral-500" onClick={e => e.stopPropagation()}>
+                          <Phone className="h-3.5 w-3.5 text-success-600" />
+                          <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="hover:underline text-success-700 font-medium">
+                            {client.phone}
+                          </a>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-2 text-xs text-neutral-500">
+                        <DollarSign className="h-3.5 w-3.5 text-neutral-400" />
+                        <span className="font-semibold text-neutral-900">R$ {totalValue.toLocaleString('pt-BR')}</span>
+                      </div>
+                      
+                      {lastSale && (
+                        <div className="flex items-center gap-2 text-xs text-neutral-500">
+                          <Calendar className="h-3.5 w-3.5 text-neutral-400" />
+                          <span>Compra: {formatDate(lastSale.date)}</span>
+                        </div>
+                      )}
+                      
+                      {lastInt && (
+                        <div className="flex items-center gap-2 text-xs text-neutral-500">
+                          <Clock className="h-3.5 w-3.5 text-neutral-400" />
+                          <span>Interação: {relativeDate(lastInt.date)}</span>
                         </div>
                       )}
                     </div>
                   </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  return (
-    <div className="space-y-4">
-      {selectedIds.length >= 2 && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary-50 border border-primary-100">
-          <span className="text-sm font-medium text-neutral-900">{selectedIds.length} selecionados</span>
-          <Button variant="secondary" size="sm" className="h-8 text-xs">Exportar selecionados</Button>
-          <Button variant="secondary" size="sm" className="h-8 text-xs">Atribuir responsável</Button>
-        </div>
-      )}
-
-      {mobileView}
-      {desktopView}
+                </div>
+                
+                {/* Actions requested by user */}
+                <div className="flex items-center gap-1 w-full md:w-auto justify-end border-t md:border-0 pt-3 md:pt-0" onClick={e => e.stopPropagation()}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate(`/clientes/${client.id}`)}>
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                  
+                  <div className="relative">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setOpenMenu(openMenu === client.id ? null : client.id)}>
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                    
+                    {openMenu === client.id && (
+                      <div className="absolute right-0 z-50 mt-2 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 shadow-xl">
+                        <button 
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center gap-2 text-neutral-700" 
+                          onClick={() => { navigate(`/clientes/${client.id}`); setOpenMenu(null); }}
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" /> Ver detalhes
+                        </button>
+                        <button 
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center gap-2 text-neutral-700" 
+                          onClick={() => { onNewSale?.(client.id); setOpenMenu(null); }}
+                        >
+                          <Plus className="h-3.5 w-3.5" /> Nova venda
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-100">
         <div className="flex items-center gap-3 text-sm text-neutral-500">
