@@ -174,36 +174,42 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Usuário) estão disponíveis na aba Permissões.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-                  </tr>
-                </thead>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{roles.map((r) => (
-                    <table className="w-full border-collapse">
-                      <table className="w-full border-collapse">
-                        <div className="flex items-center gap-3">
-                          {r.name}
-                          {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
-                        </div></td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{r.description || '—'}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          {!r.is_default && (
-                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div></td>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b border-neutral-100">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {roles.map((r) => (
+                      <tr key={r.id}>
+                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            {r.name}
+                            {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{r.description || '—'}</td>
+                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            {!r.is_default && (
+                              <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(r)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
             </div>
           )}
         </div>

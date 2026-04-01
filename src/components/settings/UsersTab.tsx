@@ -342,7 +342,10 @@ export default function UsersTab() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-neutral-100">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Função</th>
@@ -350,43 +353,33 @@ export default function UsersTab() {
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{paginated.map((u) => (
-                    <table className="w-full border-collapse">
-                      <table className="w-full border-collapse">{u.full_name}</td>
+                <tbody className="divide-y divide-neutral-100">
+                  {paginated.map((u) => (
+                    <tr key={u.user_id}>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.full_name}</td>
                       <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email}</td>
                       <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.phone || "—"}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={roleBadgeVariant(u.role)}>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <Badge variant={roleBadgeVariant(u.role)}>
                           {roleLabels[u.role] || u.role}
-                        </Badge></td>
+                        </Badge>
+                      </td>
                       <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost"
-                            size="sm"
-                            className="h-8 w-8"
-                            title="Editar"
-                            onClick={() => openEdit(u)}
-                          >
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(u)}>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost"
-                            size="sm"
-                            className="h-8 w-8"
-                            title="Resetar senha"
-                            onClick={() => handleResetPassword(u)}
-                          >
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Resetar senha" onClick={() => handleResetPassword(u)}>
                             <RotateCcw className="h-4 w-4" />
                           </Button>
                           {u.role !== "owner" && (
-                            <Button variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 text-destructive"
-                              title="Remover"
-                              onClick={() => setDeleteTarget(u)}
-                            >
+                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(u)}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div></td>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

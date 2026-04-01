@@ -491,8 +491,15 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Label</th>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b border-neutral-100">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Label</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
+                  {/* ... resto da tabela ... */}
+                </tr>
+              </thead>
+            </table>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Orgs</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
