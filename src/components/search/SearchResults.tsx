@@ -75,9 +75,9 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
                   <div className="font-medium text-sm text-foreground">
                     {result.title}
                   </div>
-                  {result.subtitle && (
+                  {(result.description || result.email || result.phone) && (
                     <div className="text-xs text-neutral-500">
-                      {result.subtitle}
+                      {result.description || result.email || result.phone}
                     </div>
                   )}
                 </div>

@@ -17,7 +17,7 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
 
   const { query, setQuery, results, loading, search, clearResults } =
-    useGlobalSearch(organizationId);
+    useGlobalSearch();
 
   useEffect(() => {
     return () => {
