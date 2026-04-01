@@ -37,7 +37,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 
         // Verificar se é SuperAdmin
         const { data: superAdminData } = await supabase
-          .from('super_admins')
+          .from('superadmin_roles')
           .select('id')
           .eq('user_id', user.id)
           .maybeSingle();
@@ -64,17 +64,17 @@ export function Sidebar({ onClose }: SidebarProps) {
         } else {
           // Carregar organização do usuário normal
           console.log('[Sidebar] Carregando organização do usuário...');
-          const { data: userData } = await supabase
-            .from('profiles')
+          const { data: memberData } = await supabase
+            .from('organization_members')
             .select('organization_id')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .maybeSingle();
 
-          if (userData?.organization_id) {
+          if (memberData?.organization_id) {
             const { data: org } = await supabase
               .from('organizations')
               .select('id, name')
-              .eq('id', userData.organization_id)
+              .eq('id', memberData.organization_id)
               .maybeSingle();
 
             if (org) {
