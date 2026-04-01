@@ -11,6 +11,7 @@ const variantStyles = {
   default: 'bg-white border border-neutral-200 rounded-lg',
   elevated: 'bg-white rounded-lg shadow-md',
   outlined: 'bg-transparent border-2 border-primary-500 rounded-lg',
+  primary: 'bg-white border border-primary-100 rounded-lg shadow-sm ring-1 ring-primary-50',
 };
 
 const paddingStyles = {
