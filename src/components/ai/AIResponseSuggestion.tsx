@@ -1,9 +1,9 @@
+import { Button, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead, Interaction } from '@/types/crm';
-import { Button, Textarea } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;

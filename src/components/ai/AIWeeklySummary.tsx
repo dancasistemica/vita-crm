@@ -1,9 +1,9 @@
+import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { useCRMStore } from '@/store/crmStore';
 import { Sparkles, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 
 export default function AIWeeklySummary() {
   const { leads, tasks, sales, pipelineStages } = useCRMStore();

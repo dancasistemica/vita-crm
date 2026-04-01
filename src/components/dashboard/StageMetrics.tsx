@@ -1,5 +1,5 @@
-import type { StageMetric } from '@/hooks/useDashboardData';
 import { Card, CardContent } from "@/components/ui/ds";
+import type { StageMetric } from '@/hooks/useDashboardData';
 
 interface StageMetricsProps {
   metrics: StageMetric[];

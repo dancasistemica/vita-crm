@@ -1,10 +1,10 @@
+import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { X, Loader, ChevronRight, Check, Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 interface CreateSaleModalProps {
   isOpen: boolean;

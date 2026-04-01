@@ -1,5 +1,5 @@
-import { Download, FileSpreadsheet, Upload, CheckCircle, Database } from 'lucide-react';
 import { Button } from "@/components/ui/ds";
+import { Download, FileSpreadsheet, Upload, CheckCircle, Database } from 'lucide-react';
 
 interface Props {
   onNext: () => void;

@@ -1,3 +1,4 @@
+import { Badge, Button, Calendar, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { CalendarIcon, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -6,7 +7,6 @@ import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useDataAccess } from '@/hooks/useDataAccess';
 import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
-import { Badge, Button, Calendar, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
 

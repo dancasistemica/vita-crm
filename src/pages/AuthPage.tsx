@@ -1,3 +1,4 @@
+import { Button, Card, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { hasSuperadmin } from '@/services/bootstrapService';
-import { Button, Card, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 const loginSchema = z.object({
   email: z.string().trim().email('Email inválido').max(255),

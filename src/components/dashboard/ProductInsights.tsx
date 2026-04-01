@@ -1,6 +1,6 @@
+import { Alert, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/ds";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Target, AlertCircle, Zap } from "lucide-react";
-import { Alert, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/ds";
 
 export interface ProductInsightsData {
   topProducts: { name: string; sales: number; revenue: number; percentOfTotal: number }[];

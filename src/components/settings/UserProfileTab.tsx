@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Progress } from "@/components/ui/ds";
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -6,7 +7,6 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCPF, validateCPF } from '@/services/cpfValidator';
 import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Progress } from "@/components/ui/ds";
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024;

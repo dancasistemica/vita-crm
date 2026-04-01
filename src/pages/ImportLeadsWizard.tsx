@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/ds";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useImportModal } from '@/hooks/useImportModal';
@@ -8,7 +9,6 @@ import Step3Download from '@/components/import/steps/Step3Download';
 import Step4Upload from '@/components/import/steps/Step4Upload';
 import Step5Import from '@/components/import/steps/Step5Import';
 import Step6Results from '@/components/import/steps/Step6Results';
-import { Button } from "@/components/ui/ds";
 
 const STEP_LABELS = ['Intenção', 'Explicação', 'Download', 'Upload', 'Importação', 'Resultado'];
 

@@ -1,9 +1,9 @@
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@/components/ui/ds";
 import { useState } from "react";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@/components/ui/ds";
 
 export default function TagsTab() {
   const { tags, addTag, updateTag, removeTag } = useCRMStore();

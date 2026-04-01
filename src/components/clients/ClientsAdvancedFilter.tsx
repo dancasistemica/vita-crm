@@ -1,7 +1,7 @@
+import { Badge, Button, Checkbox, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Label, Slider } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';
-import { Badge, Button, Checkbox, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Label, Slider } from "@/components/ui/ds";
 interface SimpleProduct {
   id: string;
   name: string;

@@ -1,3 +1,4 @@
+import { Alert, Badge, Button, Card, Select, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSuperadmin } from '@/hooks/useSuperadmin';
@@ -12,7 +13,6 @@ import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, 
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
 import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
 import { getAllOrganizations } from '@/services/superadminService';
-import { Alert, Badge, Button, Card, Select, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 export default function SuperadminDashboard() {
   const { isSuperadmin, loading } = useSuperadmin();

@@ -1,3 +1,4 @@
+import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, Tabs, TabsContent, TabsList, TabsTrigger, Textarea } from "@/components/ui/ds";
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
@@ -11,7 +12,6 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { deleteSale } from '@/services/saleService';
-import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, Tabs, TabsContent, TabsList, TabsTrigger, Textarea } from "@/components/ui/ds";
 
 const statusBadgeVariants: Record<string, any> = {
   ativo: 'success',

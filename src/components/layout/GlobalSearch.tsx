@@ -1,3 +1,4 @@
+import { Input, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -7,7 +8,6 @@ import {
   type GlobalSearchResult,
 } from "@/hooks/useGlobalSearch";
 import { SearchResults } from "@/components/search/SearchResults";
-import { Input, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 
 export function GlobalSearch() {
   const { organizationId } = useOrganization();

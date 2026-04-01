@@ -1,10 +1,10 @@
+import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 import { useState, useCallback } from 'react';
 import { Upload, CheckCircle, X, FileSpreadsheet, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { parseCSVText, suggestMapping, getCRMFields, convertExcelDate, type CSVRow } from '@/services/importService';
 import { parseFile, getFileType } from '@/services/excelParser';
 import { ImportModalState } from '@/hooks/useImportModal';
-import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;

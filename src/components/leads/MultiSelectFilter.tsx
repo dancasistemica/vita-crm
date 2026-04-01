@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/ds";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/ds";
 
 interface MultiSelectFilterProps {
   label: string;

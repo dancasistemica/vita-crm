@@ -1,3 +1,4 @@
+import { Alert, Badge, Card, ScrollArea, ScrollBar, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 import { useState } from "react";
 import UsersTab from "@/components/settings/UsersTab";
 import CRMFieldsTab from "@/components/settings/CRMFieldsTab";
@@ -8,7 +9,6 @@ import OrganizationPage from "@/pages/OrganizationPage";
 import AIContextTab from "@/components/settings/AIContextTab";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Users, ClipboardList, CreditCard, Shield, Lock, Building2, Brain } from "lucide-react";
-import { Alert, Badge, Card, ScrollArea, ScrollBar, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 export default function ConfiguracoesPage() {
   const { canAccessSettings } = useUserRole();

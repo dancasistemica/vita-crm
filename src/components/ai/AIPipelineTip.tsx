@@ -1,8 +1,8 @@
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, RefreshCw, Plus } from 'lucide-react';
 import type { Lead } from '@/types/crm';
-import { Button, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;

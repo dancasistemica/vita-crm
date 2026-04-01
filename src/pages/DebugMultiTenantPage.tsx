@@ -1,9 +1,9 @@
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
 import { RefreshCw } from 'lucide-react';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
 
 interface DebugInfo {
   timestamp: string;

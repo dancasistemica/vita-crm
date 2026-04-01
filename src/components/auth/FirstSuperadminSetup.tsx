@@ -1,3 +1,4 @@
+import { Alert, Button, Card, Input } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -6,7 +7,6 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { hasSuperadmin, createFirstSuperadmin } from '@/services/bootstrapService';
 import { Shield, Info } from 'lucide-react';
-import { Alert, Button, Card, Input } from "@/components/ui/ds";
 
 const setupSchema = z.object({
   fullName: z.string().trim().min(2, 'Mínimo 2 caracteres').max(100),

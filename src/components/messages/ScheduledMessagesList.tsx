@@ -1,7 +1,7 @@
+import { Badge, Button } from "@/components/ui/ds";
 import { useMemo } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
-import { Badge, Button } from "@/components/ui/ds";
 
 interface ScheduledMessagesListProps {
   organizationId: string | null;

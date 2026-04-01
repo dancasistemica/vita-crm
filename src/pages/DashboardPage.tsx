@@ -1,3 +1,4 @@
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
@@ -14,7 +15,6 @@ import ProductInsights from "@/components/dashboard/ProductInsights";
 import DashboardCustomizer from "@/components/dashboard/DashboardCustomizer";
 import { useDashboardSettings } from "@/hooks/useDashboardSettings";
 import { useUserRole } from "@/hooks/useUserRole";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 

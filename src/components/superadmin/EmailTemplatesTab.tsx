@@ -1,7 +1,7 @@
+import { Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import EmailTemplateEditor from './EmailTemplateEditor';
-import { Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 const TEMPLATE_OPTIONS = [
   { value: 'confirmation_email', label: '✉️ Confirmação de Email' },

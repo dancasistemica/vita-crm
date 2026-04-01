@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/ds";
 import { CheckSquare, Package, User, UserPlus } from "lucide-react";
 import type { GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
-import { Button } from "@/components/ui/ds";
 
 interface SearchResultsProps {
   results: GlobalSearchResult[];

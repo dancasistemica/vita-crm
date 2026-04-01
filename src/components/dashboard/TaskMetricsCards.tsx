@@ -1,9 +1,9 @@
+import { Alert, Button, Card, CardContent, Skeleton } from "@/components/ui/ds";
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { AlertCircle, Clock, ArrowRight } from 'lucide-react';
-import { Alert, Button, Card, CardContent, Skeleton } from "@/components/ui/ds";
 
 interface TaskPreview {
   id: string;
