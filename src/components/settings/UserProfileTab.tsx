@@ -5,7 +5,7 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCPF, validateCPF } from '@/services/cpfValidator';
-import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Camera, Trash2, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
