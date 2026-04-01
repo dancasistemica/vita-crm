@@ -12,6 +12,7 @@ interface PaymentMethod {
 }
 
 export default function PaymentMethodsTab() {
+  const { organizationId } = useOrganization();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [newMethod, setNewMethod] = useState('');
   const [loading, setLoading] = useState(true);
