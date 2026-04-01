@@ -79,3 +79,12 @@ export const CommandGroup = ({ children, heading }: any) => (
 export const CommandItem = ({ children, onSelect }: any) => (
   <div onClick={onSelect} className="px-2 py-1.5 text-sm rounded cursor-pointer hover:bg-neutral-100">{children}</div>
 );
+
+export const Accordion = ({ children }: any) => <div className="space-y-2">{children}</div>;
+export const AccordionItem = ({ children }: any) => <div className="border border-neutral-200 rounded-lg">{children}</div>;
+export const AccordionTrigger = ({ children, onClick }: any) => (
+  <button onClick={onClick} className="w-full flex items-center justify-between p-4 font-medium text-left">
+    {children}
+  </button>
+);
+export const AccordionContent = ({ children }: any) => <div className="p-4 pt-0 border-t border-neutral-100">{children}</div>;
