@@ -172,12 +172,12 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleExport} disabled={selectedColumns.length === 0 || loading}>
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button className="flex-1" onClick={handleExport} disabled={selectedColumns.length === 0 || loading}>
             {loading ? 'Exportando...' : `Exportar ${format.toUpperCase()}`}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );
