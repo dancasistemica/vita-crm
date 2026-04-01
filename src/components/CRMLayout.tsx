@@ -1,5 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { DashboardLayout } from "@/layouts/DashboardLayout";
+import { SidebarProvider } from "@/components/ui/ds";
+import { AppSidebar } from "@/components/AppSidebar";
+import { Header } from "@/components/layout/Header";
 
 export default function CRMLayout() {
   const location = useLocation();
