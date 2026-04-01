@@ -363,13 +363,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
           </div>
         )}
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button className="flex-1" onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

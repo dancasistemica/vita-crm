@@ -274,22 +274,22 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
           onSuccess={() => { fetchData(); onStatsChange?.(); }}
         />
 
-        <AlertDialog open={!!deleteConfirmOrg} onOpenChange={(open) => { if (!open) setDeleteConfirmOrg(null); }}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Deletar organização</AlertDialogTitle>
-              <AlertDialogDescription>
+        {deleteConfirmOrg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+            <Card variant="default" padding="lg" className="w-full max-w-md">
+              <h2 className="text-2xl font-semibold mb-2">Deletar organização</h2>
+              <p className="text-sm text-neutral-600 mb-6">
                 Tem certeza que deseja deletar "{deleteConfirmOrg?.name}"? Esta ação não pode ser desfeita e removerá todos os dados vinculados a esta organização.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Deletar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+              </p>
+              <div className="flex gap-3">
+                <Button variant="secondary" className="flex-1" onClick={() => setDeleteConfirmOrg(null)}>Cancelar</Button>
+                <Button variant="error" className="flex-1" onClick={handleDelete}>
+                  Deletar
+                </Button>
+              </div>
+            </Card>
+          </div>
+        )}
       </div>
     );
   }
