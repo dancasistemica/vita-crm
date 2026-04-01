@@ -1,13 +1,11 @@
 import React from 'react';
-import { designSystemStandards } from '@/styles/design-system-standards';
 
-export interfaceProps extends React.HTMLAttributes<HTMLElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'error' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
   icon?: React.ReactNode;
-  disabled?: boolean;
 }
 
 const variantStyles = {
@@ -24,7 +22,7 @@ const sizeStyles = {
   lg: 'px-6 py-3 text-lg font-semibold rounded-lg',
 };
 
-export const = React.forwardRef<HTMLElement,Props>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       variant = 'primary',
@@ -35,19 +33,21 @@ export const = React.forwardRef<HTMLElement,Props>(
       className = '',
       disabled,
       children,
+      type = 'button',
       ...props
     },
     ref
   ) => {
     return (
-      < variant="secondary" size="sm"
+      <button
         ref={ref}
+        type={type}
         disabled={disabled || loading}
         className={`
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${fullWidth ? 'w-full' : ''}
-          flex items-center justify-center gap-3
+          flex items-center justify-center gap-2
           transition-colors duration-200
           disabled:opacity-50 disabled:cursor-not-allowed
           min-h-[44px] md:min-h-auto
@@ -69,9 +69,9 @@ export const = React.forwardRef<HTMLElement,Props>(
         )}
         {icon && !loading && icon}
         {children}
-      </>
+      </button>
     );
   }
 );
 
-.displayName = '';
+Button.displayName = 'Button';

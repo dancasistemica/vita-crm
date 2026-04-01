@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Card } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
-import { Input } from "@/components/ui/ds/Input";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Checkbox } from "@/components/ui/ds";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, Input, Badge, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Checkbox } from "@/components/ui/ds";
 import { Plus, Search, Phone, Mail, Instagram, Trash2, Edit, Upload, FileDown, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
@@ -299,6 +294,15 @@ export default function LeadsPage() {
     }
   };
 
+  const resetFilters = () => {
+    setSelectedOrigins([]);
+    setSelectedInterests([]);
+    setSelectedStages([]);
+    setSelectedTags([]);
+    setSearch("");
+    resetPage();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -311,8 +315,8 @@ export default function LeadsPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="text-destructive font-medium">Erro ao carregar leads</p>
-        <p className="text-sm text-muted-foreground mt-1">{error}</p>
+        <p className="text-error-600 font-medium">Erro ao carregar leads</p>
+        <p className="text-sm text-neutral-500 mt-1">{error}</p>
       </div>
     );
   }
@@ -328,17 +332,17 @@ export default function LeadsPage() {
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {userCanCreate && (
-            < variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
-              <Upload className="h-4 w-4" /> Importar Leads
-            </>
+            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
+              <Upload className="h-4 w-4 mr-2" /> Importar Leads
+            </Button>
           )}
-          < variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
-            <FileDown className="h-4 w-4" /> Exportar
-          </>
+          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4 mr-2" /> Exportar
+          </Button>
           {userCanCreate && (
             <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
               <DialogTrigger asChild>
-                < size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</>
+                <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
@@ -365,7 +369,7 @@ export default function LeadsPage() {
           {activeFiltersCount > 0 && (
             <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
               <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
-              <Badge variant="default" size="sm">
+              <Badge variant="primary" size="sm">
                 {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} ativo{activeFiltersCount !== 1 ? 's' : ''}
               </Badge>
             </div>
@@ -373,7 +377,7 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Origem</label>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenOrigin(!openOrigin);
@@ -389,12 +393,12 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openOrigin ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </>
+              </Button>
 
               {openOrigin && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {origins.map((origin) => (
-                    <label key={origin} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={origin} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedOrigins.includes(origin)}
@@ -410,15 +414,15 @@ export default function LeadsPage() {
               {selectedOrigins.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedOrigins.map((origin) => (
-                    <Badge key={origin} variant="default" size="sm" className="gap-1">
+                    <Badge key={origin} variant="primary" size="sm" className="gap-1">
                       {origin}
-                      < variant="secondary" size="sm"
+                      <button
                         type="button"
                         onClick={() => toggleSelection(origin, selectedOrigins, setSelectedOrigins, 'Origem')}
                         className="ml-1 hover:text-primary-900"
                       >
                         ×
-                      </>
+                      </button>
                     </Badge>
                   ))}
                 </div>
@@ -427,7 +431,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Nível de Interesse</label>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenInterest(!openInterest);
@@ -443,17 +447,17 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openInterest ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </>
+              </Button>
 
               {openInterest && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {interestLevels.map((level) => (
-                    <label key={level.value} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={level.value} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedInterests.includes(level.value)}
                         onChange={() => toggleSelection(level.value, selectedInterests, setSelectedInterests, 'Nível de interesse')}
-                        className="w-4 h-4 rounded border-neutral-300 text-green-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-primary-600"
                       />
                       <span className="text-sm text-neutral-700">{level.label}</span>
                     </label>
@@ -464,26 +468,24 @@ export default function LeadsPage() {
               {selectedInterests.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedInterests.map((interest) => (
-                    <span key={interest} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                    <Badge key={interest} variant="success" size="sm" className="gap-1">
                       {getInterestLabel(interest)}
-                      < variant="secondary" size="sm"
+                      <button
                         type="button"
                         onClick={() => toggleSelection(interest, selectedInterests, setSelectedInterests, 'Nível de interesse')}
-                        className="ml-1 hover:text-green-900"
+                        className="ml-1 hover:text-success-900"
                       >
                         ×
-                      </>
-                    </span>
+                      </button>
+                    </Badge>
                   ))}
                 </div>
               )}
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Etapa do Funil</label>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenStage(!openStage);
@@ -499,17 +501,17 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openStage ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </>
+              </Button>
 
               {openStage && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
                   {pipelineStages.map((stage) => (
-                    <label key={stage.id} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={stage.id} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedStages.includes(stage.id)}
                         onChange={() => toggleSelection(stage.id, selectedStages, setSelectedStages, 'Etapa do funil')}
-                        className="w-4 h-4 rounded border-neutral-300 text-purple-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-primary-600"
                       />
                       <span className="text-sm text-neutral-700">{stage.name}</span>
                     </label>
@@ -520,16 +522,16 @@ export default function LeadsPage() {
               {selectedStages.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedStages.map((stage) => (
-                    <span key={stage} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                    <Badge key={stage} variant="primary" size="sm" className="gap-1">
                       {getStageName(stage)}
-                      < variant="secondary" size="sm"
+                      <button
                         type="button"
                         onClick={() => toggleSelection(stage, selectedStages, setSelectedStages, 'Etapa do funil')}
-                        className="ml-1 hover:text-purple-900"
+                        className="ml-1 hover:text-primary-900"
                       >
                         ×
-                      </>
-                    </span>
+                      </button>
+                    </Badge>
                   ))}
                 </div>
               )}
@@ -537,7 +539,7 @@ export default function LeadsPage() {
 
             <div className="relative space-y-3">
               <label className="block text-sm font-semibold text-neutral-700">Tags</label>
-              < variant="secondary" size="sm"
+              <Button variant="secondary" size="sm"
                 type="button"
                 onClick={() => {
                   setOpenTags(!openTags);
@@ -553,7 +555,7 @@ export default function LeadsPage() {
                 <svg className={`w-4 h-4 transition-transform ${openTags ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
-              </>
+              </Button>
 
               {openTags && (
                 <div className="absolute z-50 w-full border border-neutral-200 rounded-lg bg-white shadow-lg mt-1 max-h-48 overflow-y-auto">
@@ -561,12 +563,12 @@ export default function LeadsPage() {
                     Selecione as tags desejadas
                   </div>
                   {tags.map((tag) => (
-                    <label key={tag.name} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                    <label key={tag.name} className="flex items-center gap-3 px-4 py-2 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100 last:border-b-0">
                       <input
                         type="checkbox"
                         checked={selectedTags.includes(tag.name)}
                         onChange={() => toggleSelection(tag.name, selectedTags, setSelectedTags, 'Tags')}
-                        className="w-4 h-4 rounded border-neutral-300 text-orange-600"
+                        className="w-4 h-4 rounded border-neutral-300 text-primary-600"
                       />
                       <span className="text-sm text-neutral-700">{tag.name}</span>
                     </label>
@@ -577,16 +579,16 @@ export default function LeadsPage() {
               {selectedTags.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-2">
                   {selectedTags.map((tag) => (
-                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
+                    <Badge key={tag} variant="secondary" size="sm" className="gap-1">
                       {tag}
-                      < variant="secondary" size="sm"
+                      <button
                         type="button"
                         onClick={() => toggleSelection(tag, selectedTags, setSelectedTags, 'Tags')}
-                        className="ml-1 hover:text-orange-900"
+                        className="ml-1 hover:text-neutral-900"
                       >
                         ×
-                      </>
-                    </span>
+                      </button>
+                    </Badge>
                   ))}
                 </div>
               )}
@@ -594,7 +596,7 @@ export default function LeadsPage() {
           </div>
           
           <div className="flex justify-end pt-2">
-            < variant="secondary" size="sm" onClick={resetFilters}>Limpar Filtros</>
+            <Button variant="secondary" size="sm" onClick={resetFilters}>Limpar Filtros</Button>
           </div>
         </Card>
       </div>
@@ -619,13 +621,13 @@ export default function LeadsPage() {
               <option value="name">🔤 Ordem Alfabética</option>
             </select>
           </div>
-          <
+          <Button
             variant="secondary"
             size="sm"
             onClick={() => { setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); resetPage(); }}
           >
             {sortOrder === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
-          </>
+          </Button>
         </div>
       </div>
 
@@ -634,16 +636,16 @@ export default function LeadsPage() {
           <span className="text-sm font-medium text-primary-700">{selectedIds.length} selecionado(s)</span>
           <div className="ml-auto flex gap-2">
             {userCanEdit && (
-              < variant="secondary" size="sm" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3 w-3" />}>
-                Editar
-              </>
+              <Button variant="secondary" size="sm" onClick={() => setBulkEditOpen(true)}>
+                <Pencil className="h-3 w-3 mr-2" /> Editar
+              </Button>
             )}
             {userCanDelete && (
-              < variant="error" size="sm" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3 w-3" />}>
-                Deletar
-              </>
+              <Button variant="error" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+                <Trash2 className="h-3 w-3 mr-2" /> Deletar
+              </Button>
             )}
-            < variant="ghost" size="sm" onClick={() => setSelectedIds([])}>Limpar</>
+            <Button variant="ghost" size="sm" onClick={() => setSelectedIds([])}>Limpar</Button>
           </div>
         </Card>
       )}
@@ -675,8 +677,8 @@ export default function LeadsPage() {
                     <span className="font-semibold text-neutral-900 text-sm cursor-pointer hover:underline hover:text-primary-600" onClick={() => setDetailLead(lead)}>
                       {lead.name}
                     </span>
-                    <Badge variant="neutral" size="sm">{getInterestLabel(lead.interestLevel)}</Badge>
-                    <Badge variant="default" size="sm">{getStageName(lead.pipelineStage)}</Badge>
+                    <Badge variant="secondary" size="sm">{getInterestLabel(lead.interestLevel)}</Badge>
+                    <Badge variant="primary" size="sm">{getStageName(lead.pipelineStage)}</Badge>
                   </div>
                   <div className="flex items-center gap-3 mt-1 text-xs text-neutral-500">
                     <span>{lead.origin}</span>
@@ -686,18 +688,18 @@ export default function LeadsPage() {
               </div>
               <div className="flex items-center gap-1">
                 {lead.phone && (
-                  < variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(`https://wa.me/${lead.phone}`, '_blank')}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(`https://wa.me/${lead.phone}`, '_blank')}>
                     <Phone className="h-4 w-4" />
-                  </>
+                  </Button>
                 )}
                 {userCanEdit && (
-                  < variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
                     <Edit className="h-4 w-4" />
-                  </>
+                  </Button>
                 )}
-                < variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" onClick={() => handleDeleteClick(lead)}>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-error-600" onClick={() => handleDeleteClick(lead)}>
                   <Trash2 className="h-4 w-4" />
-                </>
+                </Button>
               </div>
             </div>
           </Card>
@@ -706,11 +708,11 @@ export default function LeadsPage() {
 
       {filtered.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <span className="text-sm text-muted-foreground">{filtered.length} leads</span>
+          <span className="text-sm text-neutral-500">{filtered.length} leads</span>
           <div className="flex items-center gap-1">
-            < variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</>
-            <span className="text-sm text-muted-foreground px-3">{page} / {totalPages}</span>
-            < variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</>
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
           </div>
         </div>
       )}

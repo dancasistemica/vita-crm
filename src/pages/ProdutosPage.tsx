@@ -1,11 +1,5 @@
 import { type DragEvent, useEffect, useState } from "react";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
-import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Textarea } from "@/components/ui/ds";
-import { Badge } from "@/components/ui/ds/Badge";
+import { Button, Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Textarea, Badge } from "@/components/ui/ds";
 import { Plus, Edit, Trash2, ExternalLink, Loader2, GripVertical } from "lucide-react";
 import { useProductsData, ProductView, ProductInput } from "@/hooks/useProductsData";
 import { useOrganization } from "@/contexts/OrganizationContext";
@@ -83,14 +77,18 @@ export default function ProdutosPage() {
     <div className="space-y-4">
         <div className="flex items-center justify-between">
          <h1 className="text-4xl font-bold text-neutral-900">Produtos</h1>
-         <div className="flex items-center gap-3 text-sm text-muted-foreground">
+         <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>Arraste para ordenar</span>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
             <DialogTrigger asChild>
-              < onClick={() => setEditing(null)}><Plus className="h-4 w-4 mr-1" /> Novo Produto</>
+              <Button onClick={() => setEditing(null)} variant="primary">
+                <Plus className="h-4 w-4 mr-1" /> Novo Produto
+              </Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader><DialogTitle className="font-display">{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle>
+              </DialogHeader>
               <ProductForm product={editing} onSave={handleSave} />
             </DialogContent>
           </Dialog>
@@ -99,10 +97,10 @@ export default function ProdutosPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Loader2 className="h-6 w-6 animate-spin text-primary-600" />
         </div>
       ) : products.length === 0 ? (
-        <p className="text-muted-foreground text-center py-12">Nenhum produto cadastrado</p>
+        <p className="text-neutral-500 text-center py-12">Nenhum produto cadastrado</p>
       ) : (
         <div className="space-y-3">
           {orderedProducts.map((product, index) => (
@@ -117,15 +115,15 @@ export default function ProdutosPage() {
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex gap-3">
-                    <div className="pt-1 text-muted-foreground cursor-grab">
+                    <div className="pt-1 text-neutral-400 cursor-grab">
                       <GripVertical className="h-4 w-4" />
                     </div>
                     <div>
-                    <CardTitle className="text-lg font-display">{product.name}</CardTitle>
+                    <CardTitle className="text-lg">{product.name}</CardTitle>
                     <div className="flex flex-wrap items-center gap-3 mt-1">
-                      {product.type && <Badge variant="neutral">{product.type}</Badge>}
+                      {product.type && <Badge variant="secondary">{product.type}</Badge>}
                       {product.createdAt && (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-neutral-500">
                           Criado em {new Date(product.createdAt).toLocaleDateString("pt-BR")}
                         </span>
                       )}
@@ -133,40 +131,46 @@ export default function ProdutosPage() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    < variant="ghost" size="sm" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}><Edit className="h-4 w-4" /></>
-                    < variant="ghost" size="sm" className="h-8 w-8 text-destructive" onClick={() => deleteProduct(product.id)}><Trash2 className="h-4 w-4" /></>
+                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => { setEditing(product); setDialogOpen(true); }}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 text-error-600" onClick={() => deleteProduct(product.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
                 {product.description && (
                   <div>
-                    <div className="text-xs uppercase text-muted-foreground mb-1">Descrição</div>
-                    <p className="text-sm text-foreground/90">{product.description}</p>
+                    <div className="text-xs uppercase text-neutral-500 font-semibold mb-1">Descrição</div>
+                    <p className="text-sm text-neutral-800">{product.description}</p>
                   </div>
                 )}
                 {product.notes && (
                   <div>
-                    <div className="text-xs uppercase text-muted-foreground mb-1">Observações</div>
-                    <p className="text-sm text-muted-foreground">{product.notes}</p>
+                    <div className="text-xs uppercase text-neutral-500 font-semibold mb-1">Observações</div>
+                    <p className="text-sm text-neutral-600">{product.notes}</p>
                   </div>
                 )}
                 {product.salesStages.length > 0 && (
                   <div>
-                    <div className="text-xs uppercase text-muted-foreground mb-2">Etapas de venda</div>
+                    <div className="text-xs uppercase text-neutral-500 font-semibold mb-2">Etapas de venda</div>
                     <div className="space-y-1">
                       {product.salesStages.map(stage => (
-                        <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
+                        <div key={stage.id} className="flex items-center justify-between text-sm p-2 rounded bg-neutral-50 border border-neutral-100">
                           <div className="flex items-center gap-3">
                             <span>{stage.name}</span>
-                            <Badge variant="neutral" className="text-[10px] py-0 px-1">
+                            <Badge variant="secondary" className="text-[10px] py-0 px-1">
                               {stage.sale_type === 'mensalidade' ? '📅 Mensal' : '💳 Única'}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="font-semibold">R$ {stage.value.toLocaleString('pt-BR')}</span>
+                            <span className="font-semibold text-neutral-900">R$ {stage.value.toLocaleString('pt-BR')}</span>
                             {stage.link && (
-                              <a href={stage.link} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3 text-primary" /></a>
+                              <a href={stage.link} target="_blank" rel="noreferrer" className="text-primary-600 hover:text-primary-700">
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
                             )}
                           </div>
                         </div>
@@ -205,7 +209,7 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
   const removeStage = (id: string) => set('salesStages', form.salesStages.filter(s => s.id !== id));
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div><Label>Nome</Label><Input value={form.name} onChange={e => set('name', e.target.value)} /></div>
       <div><Label>Tipo</Label><Input value={form.type} onChange={e => set('type', e.target.value)} placeholder="Programa online, Mentoria..." /></div>
       <div><Label>Descrição</Label><Textarea value={form.description} onChange={e => set('description', e.target.value)} /></div>
@@ -213,14 +217,18 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
       <div>
         <div className="flex items-center justify-between mb-2">
           <Label>Etapas de Venda</Label>
-          < variant="neutral" size="sm" onClick={addStage}><Plus className="h-3 w-3 mr-1" /> Etapa</>
+          <Button variant="secondary" size="sm" onClick={addStage}>
+            <Plus className="h-3 w-3 mr-1" /> Etapa
+          </Button>
         </div>
         {form.salesStages.map(stage => (
-          <div key={stage.id} className="p-3 border rounded-lg bg-muted/20 mb-3 space-y-3">
-            <div className="grid grid-cols-[1fr_80px_auto] gap-3 items-end">
+          <div key={stage.id} className="p-3 border border-neutral-200 rounded-lg bg-neutral-50 mb-3 space-y-3">
+            <div className="grid grid-cols-[1fr_100px_auto] gap-3 items-end">
               <div><Label className="text-xs">Nome</Label><Input placeholder="Nome" value={stage.name} onChange={e => updateStage(stage.id, 'name', e.target.value)} /></div>
               <div><Label className="text-xs">R$</Label><Input type="number" placeholder="R$" value={stage.value || ''} onChange={e => updateStage(stage.id, 'value', Number(e.target.value))} /></div>
-              < variant="ghost" size="sm" className="h-9 w-9 text-destructive" onClick={() => removeStage(stage.id)}><Trash2 className="h-3 w-3" /></>
+              <Button variant="ghost" size="sm" className="h-9 w-9 text-error-600" onClick={() => removeStage(stage.id)}>
+                <Trash2 className="h-3 w-3" />
+              </Button>
             </div>
             <div className="grid grid-cols-2 gap-3">
                <div>
@@ -228,7 +236,7 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
                   <select
                     value={stage.sale_type}
                     onChange={(e) => updateStage(stage.id, 'sale_type', e.target.value as 'unica' | 'mensalidade')}
-                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background focus:ring-2 focus:ring-ring"
+                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="unica">💳 Única</option>
                     <option value="mensalidade">📅 Mensal</option>
@@ -241,7 +249,9 @@ function ProductForm({ product, onSave }: { product: ProductView | null; onSave:
       </div>
 
       <div><Label>Observações</Label><Textarea value={form.notes} onChange={e => set('notes', e.target.value)} /></div>
-      < className="w-full" onClick={() => onSave(form)} disabled={!form.name.trim()}>Salvar</>
+      <Button className="w-full" onClick={() => onSave(form)} disabled={!form.name.trim()}>
+        Salvar
+      </Button>
     </div>
   );
 }
