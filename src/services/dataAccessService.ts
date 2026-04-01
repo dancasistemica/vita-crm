@@ -186,10 +186,8 @@ export class DataAccessService {
 
   // ── INTERACTIONS ───────────────────────────────────────
   async getInteractions(filters?: { leadId?: string }) {
-    let query = supabase
-      .from('interactions')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('interactions').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.leadId) {
       query = query.eq('lead_id', filters.leadId);
