@@ -44,9 +44,9 @@ const baseItems = [
 ];
 
 export function AppSidebar() {
-  const { state, setOpen } = useSidebar();
+  const { open, setOpen } = useSidebar();
   const location = useLocation();
-  const collapsed = state === "collapsed";
+  const collapsed = !open;
   const { user, signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
 
