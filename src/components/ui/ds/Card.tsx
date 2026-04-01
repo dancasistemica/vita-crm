@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from "@/components/ui/ds";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'outlined';
+  variant?: 'default' | 'elevated' | 'outlined' | 'primary';
   padding?: 'sm' | 'md' | 'lg' | 'none';
   interactive?: boolean;
 }
