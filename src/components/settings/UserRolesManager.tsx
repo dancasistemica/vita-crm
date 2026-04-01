@@ -1,9 +1,9 @@
-import { Badge, Button, Card, Checkbox, ScrollArea, ScrollBar, Switch, Tabs } from "@/components/ui/ds";
+import { Badge, Button, Card, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Lock, Save } from 'lucide-react';
+import { Lock, Save, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface PermissionModule {
@@ -231,10 +231,10 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   if (!isAdmin) {
     return (
       <Card>
-        <div>
-          <Lock className="h-12 w-12" />
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Lock className="h-12 w-12 text-neutral-400 mb-4" />
           <p className="text-lg font-medium">Acesso Restrito</p>
-          <p className="text-sm">Apenas administradores têm acesso a esta seção.</p>
+          <p className="text-sm text-neutral-500">Apenas administradores têm acesso a esta seção.</p>
         </div>
       </Card>
     );
@@ -244,16 +244,18 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
     <div className="space-y-4">
       <Tabs value={selectedRole} onValueChange={setSelectedRole}>
         <ScrollArea className="w-full">
-          <div className="flex gap-2 border-b border-neutral-200 mb-4">
+          <TabsList className="gap-2 border-b border-neutral-200 mb-4">
             {ROLES.map(r => (
-              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">{r.label}</button>
+              <TabsTrigger key={r.value} value={r.value}>
+                {r.label}
+              </TabsTrigger>
             ))}
-          </div>
+          </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
         {ROLES.map(r => (
-          <div>
+          <TabsContent key={r.value} value={r.value}>
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -263,17 +265,17 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                 {MODULES.map(mod => {
                   const allEnabled = mod.permissions.every(p => permissions[p.key]);
                   return (
-                    <Card key={mod.label}>
+                    <Card key={mod.label} variant="primary" padding="lg">
                       <div className="mb-4">
                         <div className="flex items-center justify-between">
-                          <h2 className="text-2xl font-semibold mb-2">
+                          <h2 className="text-xl font-semibold flex items-center gap-2">
                             <span>{mod.icon}</span> {mod.label}
-                            <Badge variant="secondary" className="ml-1 text-xs">
+                            <Badge variant="secondary" className="ml-1 text-[10px]">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
                           </h2>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs text-neutral-500">Tudo</span>
+                            <span className="text-[10px] text-neutral-500 uppercase font-bold">Tudo</span>
                             <Switch
                               checked={allEnabled}
                               onCheckedChange={(checked) => toggleModule(mod, checked)}
@@ -281,14 +283,14 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                           </div>
                         </div>
                       </div>
-                      <div>
+                      <div className="space-y-2">
                         {mod.permissions.map(perm => (
-                          <label key={perm.key} className="flex items-center gap-3.5 cursor-pointer text-sm">
+                          <label key={perm.key} className="flex items-center gap-3.5 cursor-pointer text-sm py-1 hover:bg-neutral-50 rounded px-2 -mx-2 transition-colors">
                             <Checkbox
                               checked={permissions[perm.key] || false}
                               onCheckedChange={() => togglePermission(perm.key)}
                             />
-                            <span className="text-foreground">{perm.label}</span>
+                            <span className="text-neutral-700">{perm.label}</span>
                           </label>
                         ))}
                       </div>
@@ -297,13 +299,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                 })}
               </div>
             )}
-          </div>
+          </TabsContent>
         ))}
       </Tabs>
 
-      <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t">
-        <Button onClick={handleSave} disabled={saving || loading} className="w-full sm:w-auto">
-          <Save className="h-4 w-4 mr-2" />
+      <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t mt-6 flex justify-end">
+        <Button onClick={handleSave} disabled={saving || loading} variant="primary" size="lg" className="min-w-[200px]">
+          {saving ? <Loader className="w-4 h-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           {saving ? 'Salvando...' : 'Salvar Permissões'}
         </Button>
       </div>
