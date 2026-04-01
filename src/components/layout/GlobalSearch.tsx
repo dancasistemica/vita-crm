@@ -113,10 +113,8 @@ export function GlobalSearch() {
           />
         </div>
       
-      <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg"
-        align="start"
-        className="w-[--radix-popover-trigger-width] max-w-[90vw] p-0"
-      >
+      {open && (
+        <div className="absolute z-50 mt-2 p-0 bg-white border border-neutral-200 rounded-lg shadow-lg w-full max-w-[90vw] overflow-hidden">
         <SearchResults
           results={results}
           loading={loading}
