@@ -33,12 +33,11 @@ export default function InteracoesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <><Plus className="h-4 w-4 mr-1" /> Nova Interação</>
-          
-            <div className="mb-4"><h2 className="text-2xl font-semibold">Nova Interação</h2></div>
-            <InteractionForm leads={leads} onSave={handleAdd} />
-          
+        <Button onClick={() => setDialogOpen(true)} icon={<Plus className="h-4 w-4" />}>
+          Nova Interação
+        </Button>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen} title="Nova Interação">
+          <InteractionForm leads={leads} onSave={handleAdd} />
         </Dialog>
       </div>
 
