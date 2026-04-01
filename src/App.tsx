@@ -111,6 +111,7 @@ const App = () => {
       </BrandProvider>
     </OrganizationProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
