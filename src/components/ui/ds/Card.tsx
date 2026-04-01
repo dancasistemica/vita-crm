@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card } from "@/components/ui/ds";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'elevated' | 'outlined' | 'primary';

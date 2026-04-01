@@ -1,5 +1,4 @@
 import React from 'react';
-import { Checkbox } from "@/components/ui/ds";
 
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label?: string;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Textarea } from "@/components/ui/ds";
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;

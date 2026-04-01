@@ -1,5 +1,4 @@
 import React from 'react';
-import { Input } from "@/components/ui/ds";
 
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;

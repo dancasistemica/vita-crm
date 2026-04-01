@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
-import { Select } from "@/components/ui/ds";
 
 interface SelectOption {
   value: string;
