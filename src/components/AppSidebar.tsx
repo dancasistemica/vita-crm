@@ -154,7 +154,7 @@ export function AppSidebar() {
             <SidebarMenuButton asChild active={location.pathname === "/perfil"}>
               <NavLink
                 to="/perfil"
-                className="hover:bg-primary-50 transition-colors duration-150 rounded-lg"
+                className="flex items-center w-full px-3 py-2 hover:bg-primary-50 transition-colors duration-150 rounded-lg"
               >
                 <User className="mr-2 h-4 w-4" />
                 {!collapsed && <span className="text-sm">Meu Perfil</span>}
