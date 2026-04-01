@@ -5,7 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
 import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail, ArrowLeft } from 'lucide-react';
-import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
+import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';
@@ -26,7 +27,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [view, setView] = useState<'login' | 'forgot-password' | 'reset-password'>('login');
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -54,6 +55,12 @@ export default function LoginPage() {
   useEffect(() => {
     if (token) navigate(`/first-login?token=${token}`, { replace: true });
     if (resetToken) navigate(`/reset-password?reset=${resetToken}`, { replace: true });
+    
+    // Check if we should show the reset-password form directly on this page
+    const hash = window.location.hash;
+    if (hash.includes('type=recovery')) {
+      setView('reset-password');
+    }
   }, [token, resetToken, navigate]);
 
   // Rate limit countdown
@@ -159,109 +166,116 @@ export default function LoginPage() {
         </div>
 
         <Card padding="lg">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-neutral-900">Bem-vindo de volta</h2>
-            <p className="text-sm text-neutral-600 mt-1">Entre com suas credenciais para continuar</p>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Rate limit banner */}
-            {rateLimited && (
-              <div className="rounded-lg bg-error-50 border border-error-200 p-3 text-sm text-error-600 flex items-center gap-3">
-                <Lock className="h-4 w-4 shrink-0" />
-                <span>Muitas tentativas. Tente novamente em {rateLimitMinutes} minuto{rateLimitMinutes !== 1 ? 's' : ''}.</span>
+          {view === 'login' && (
+            <>
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-semibold text-neutral-900">Bem-vindo de volta</h2>
+                <p className="text-sm text-neutral-600 mt-1">Entre com suas credenciais para continuar</p>
               </div>
-            )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Rate limit banner */}
+                {rateLimited && (
+                  <div className="rounded-lg bg-error-50 border border-error-200 p-3 text-sm text-error-600 flex items-center gap-3">
+                    <Lock className="h-4 w-4 shrink-0" />
+                    <span>Muitas tentativas. Tente novamente em {rateLimitMinutes} minuto{rateLimitMinutes !== 1 ? 's' : ''}.</span>
+                  </div>
+                )}
 
-            <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => setEmailTouched(true)}
-              placeholder="seu@email.com"
-              disabled={loading}
-              error={emailError}
-              icon={<Mail className="h-4 w-4" />}
-              required
-            />
+                <Input
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => setEmailTouched(true)}
+                  placeholder="seu@email.com"
+                  disabled={loading}
+                  error={emailError}
+                  icon={<Mail className="h-4 w-4" />}
+                  required
+                />
 
-            <div className="space-y-3 relative">
-               <Input
-                label="Senha"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={() => setPasswordTouched(true)}
-                placeholder="••••••••"
-                disabled={loading}
-                error={passwordError}
-                icon={<Lock className="h-4 w-4" />}
-                required
-              />
-              <Button variant="secondary" size="sm"
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={loading}
-                className="absolute right-3 top-[38px] text-neutral-500 hover:text-neutral-700 disabled:opacity-50 transition"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
-            </div>
+                <div className="space-y-3 relative">
+                   <Input
+                    label="Senha"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onBlur={() => setPasswordTouched(true)}
+                    placeholder="••••••••"
+                    disabled={loading}
+                    error={passwordError}
+                    icon={<Lock className="h-4 w-4" />}
+                    required
+                  />
+                  <Button variant="secondary" size="sm"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={loading}
+                    className="absolute right-3 top-[38px] text-neutral-500 hover:text-neutral-700 disabled:opacity-50 transition"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
 
-            <div className="flex items-center gap-3">
-              <Checkbox
-                id="remember-me"
-                checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-                disabled={loading}
-              />
-              <label htmlFor="remember-me" className="text-sm font-normal text-neutral-700 cursor-pointer">
-                Lembrar-me por 30 dias
-              </label>
-            </div>
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    id="remember-me"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    disabled={loading}
+                  />
+                  <label htmlFor="remember-me" className="text-sm font-normal text-neutral-700 cursor-pointer">
+                    Lembrar-me por 30 dias
+                  </label>
+                </div>
 
-            <Button type="submit"
-              disabled={!isFormValid || loading}
-              fullWidth
-              loading={loading}
-            >
-              Entrar
-            </Button>
-          </form>
+                <Button type="submit"
+                  disabled={!isFormValid || loading}
+                  fullWidth
+                  loading={loading}
+                >
+                  Entrar
+                </Button>
+              </form>
 
-          {/* Secondary links */}
-          <div className="mt-4 space-y-3 text-center">
-            <Button variant="ghost"
-              fullWidth
-              size="sm"
-              onClick={() => setShowForgotPassword(true)}
-            >
-              Esqueci minha senha
-            </Button>
-            <p className="text-sm text-neutral-600">
-              Não tem conta?{' '}
-              <Button variant="secondary" size="sm"
-                onClick={() => navigate('/auth')}
-                className="text-primary-600 hover:underline font-medium"
-              >
-                Criar conta
-              </Button>
-            </p>
-          </div>
+              {/* Secondary links */}
+              <div className="mt-4 space-y-3 text-center">
+                <Button variant="ghost"
+                  fullWidth
+                  size="sm"
+                  onClick={() => setView('forgot-password')}
+                >
+                  Esqueci minha senha
+                </Button>
+                <p className="text-sm text-neutral-600">
+                  Não tem conta?{' '}
+                  <Button variant="secondary" size="sm"
+                    onClick={() => navigate('/auth')}
+                    className="text-primary-600 hover:underline font-medium"
+                  >
+                    Criar conta
+                  </Button>
+                </p>
+              </div>
 
-          {/* Security footer */}
-          <div className="mt-6 pt-4 border-t text-center">
-            <p className="text-xs text-neutral-500 flex items-center justify-center gap-1">
-              <Lock className="h-3 w-3" />
-              Sua senha é armazenada de forma segura com criptografia
-            </p>
-          </div>
+              {/* Security footer */}
+              <div className="mt-6 pt-4 border-t text-center">
+                <p className="text-xs text-neutral-500 flex items-center justify-center gap-1">
+                  <Lock className="h-3 w-3" />
+                  Sua senha é armazenada de forma segura com criptografia
+                </p>
+              </div>
+            </>
+          )}
+
+          {view === 'forgot-password' && (
+            <ForgotPasswordForm onBackToLogin={() => setView('login')} />
+          )}
+
+          {view === 'reset-password' && (
+            <ResetPasswordForm />
+          )}
         </Card>
-        <ForgotPasswordModal
-          isOpen={showForgotPassword}
-          onClose={() => setShowForgotPassword(false)}
-          onBackToLogin={() => setShowForgotPassword(false)}
-        />
       </div>
     </div>
   );
