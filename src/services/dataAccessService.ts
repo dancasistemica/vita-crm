@@ -555,10 +555,10 @@ export class DataAccessService {
   }
 
   async getOrgMembers() {
-    const { data: members, error } = await supabase
-      .from('organization_members')
-      .select('id, user_id, organization_id, role, created_at')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('organization_members').select('id, user_id, organization_id, role, created_at');
+    query = this.applyOrgFilter(query);
+
+    const { data: members, error } = await query;
     if (error) { console.error('[DataAccessService] getOrgMembers error:', error); throw error; }
     if (!members || members.length === 0) return [];
 
