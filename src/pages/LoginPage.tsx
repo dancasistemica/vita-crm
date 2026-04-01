@@ -234,7 +234,7 @@ export default function LoginPage() {
             <Button variant="ghost"
               fullWidth
               size="sm"
-              onClick={() => navigate('/auth')}
+              onClick={() => setShowForgotPassword(true)}
             >
               Esqueci minha senha
             </Button>
