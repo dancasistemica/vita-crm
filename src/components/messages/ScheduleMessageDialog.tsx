@@ -97,9 +97,9 @@ export const ScheduleMessageDialog = ({
       
         <div className="mb-4">
           <h2 className="text-2xl font-semibold">Agendar Mensagem WhatsApp</h2>
-          <DialogDescription>
+          <p className="text-sm text-neutral-600 mb-4">
             Para: {recipient?.name} ({recipient?.phone})
-          </DialogDescription>
+          </p>
         </div>
 
         <div className="space-y-4">
