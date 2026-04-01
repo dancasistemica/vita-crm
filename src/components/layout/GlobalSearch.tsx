@@ -50,7 +50,7 @@ export function GlobalSearch() {
     }
   };
 
-  const handleSelectResult = (result: GlobalSearchResult) => {
+  const handleSelectResult = (result: SearchResult) => {
     if (result.type === "lead") {
       navigate("/leads", { state: { leadId: result.id } });
     } else if (result.type === "client") {

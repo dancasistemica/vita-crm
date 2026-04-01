@@ -29,6 +29,7 @@ import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
 import { VendasPage } from "@/pages/VendasPage";
+import SearchResultsPage from "@/pages/SearchResultsPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
