@@ -107,7 +107,7 @@ export default function ClientesPage() {
       </Card>
 
       <RecordCounter
-        totalCount={hook.totalFiltered} // Note: hook.totalFiltered is actually the filtered count in useClientsFilter
+        totalCount={hook.totalCount}
         filteredCount={hook.totalFiltered}
         perPage={hook.perPage}
         onPerPageChange={hook.setPerPage}
