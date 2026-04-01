@@ -40,7 +40,7 @@ export const TagsManagement = () => {
 
       // Get usage count for each tag
       const { data: usageData, error: usageError } = await supabase
-        .from('lead_tags')
+        .from('lead_tags' as any)
         .select('tag_id');
 
       if (usageError) throw usageError;
