@@ -5,7 +5,7 @@ import { TaskActions } from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
-import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
+import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar as CalendarIcon } from "lucide-react";
 import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
 import { toast } from "sonner";
