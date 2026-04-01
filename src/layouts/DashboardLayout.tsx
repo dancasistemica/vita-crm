@@ -35,6 +35,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         <Header
           title={title}
           onOpenSidebar={() => setSidebarOpen(true)}
+          sidebarOpen={sidebarOpen}
         />
 
 
