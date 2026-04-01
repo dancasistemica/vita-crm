@@ -2,7 +2,7 @@ import { Alert, Badge, Button, Card, Input } from "@/components/ui/ds";
 import React, { useState } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Search, Filter, FileDown, Pencil, Trash2 } from 'lucide-react';
-import { useClientsFilter } from '@/hooks/useClientsFilter';
+import { useClientsFilter, SortField } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
@@ -10,6 +10,7 @@ import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import NewSaleModal from '@/components/sales/NewSaleModal';
+import RecordCounter from "@/components/common/RecordCounter";
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
@@ -105,30 +106,61 @@ export default function ClientesPage() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 gap-6">
-        <Card variant="elevated" padding="none">
-          <ClientsTable
-            clients={hook.filteredClients}
-            getClientSales={hook.getClientSales}
-            getLastInteraction={hook.getLastInteraction}
-            sortField={hook.sortField}
-            sortDir={hook.sortDir}
-            toggleSort={hook.toggleSort}
-            selectedIds={hook.selectedIds}
-            toggleSelect={hook.toggleSelect}
-            toggleSelectAll={hook.toggleSelectAll}
-            page={hook.page}
-            setPage={hook.setPage}
-            perPage={hook.perPage}
-            setPerPage={hook.setPerPage}
-            totalPages={hook.totalPages}
-            totalFiltered={hook.totalFiltered}
-            onNewSale={handleNewSale}
-            loading={hook.loading}
-            products={hook.products}
-            onSelectClient={handleSelectClient}
-          />
-        </Card>
+      <RecordCounter
+        totalCount={hook.totalCount}
+        filteredCount={hook.totalFiltered}
+        perPage={hook.perPage}
+        onPerPageChange={hook.setPerPage}
+      />
+
+      <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 bg-neutral-100 rounded-lg">
+        <span className="text-sm font-medium text-neutral-700">Ordenar por:</span>
+        <div className="flex-1 flex gap-3">
+          <div className="flex-1">
+            <select
+              value={hook.sortField}
+              onChange={(e) => hook.toggleSort(e.target.value as SortField)}
+              className="w-full px-3 py-2 bg-white border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="name">🔤 Nome</option>
+              <option value="value">💰 Valor</option>
+              <option value="date">📅 Data Compra</option>
+              <option value="status">🏷️ Status</option>
+              <option value="lastInteraction">💬 Interação</option>
+            </select>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => hook.toggleSort(hook.sortField)}
+          >
+            {hook.sortDir === 'desc' ? '↓ Decrescente' : '↑ Crescente'}
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <ClientsTable
+          clients={hook.filteredClients}
+          getClientSales={hook.getClientSales}
+          getLastInteraction={hook.getLastInteraction}
+          sortField={hook.sortField}
+          sortDir={hook.sortDir}
+          toggleSort={hook.toggleSort}
+          selectedIds={hook.selectedIds}
+          toggleSelect={hook.toggleSelect}
+          toggleSelectAll={hook.toggleSelectAll}
+          page={hook.page}
+          setPage={hook.setPage}
+          perPage={hook.perPage}
+          setPerPage={hook.setPerPage}
+          totalPages={hook.totalPages}
+          totalFiltered={hook.totalFiltered}
+          onNewSale={handleNewSale}
+          loading={hook.loading}
+          products={hook.products}
+          onSelectClient={handleSelectClient}
+        />
       </div>
 
       <ExportModal
