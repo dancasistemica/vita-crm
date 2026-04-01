@@ -6,6 +6,9 @@ import { Card } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
 import { Eye, EyeOff } from 'lucide-react';
 
+// Rate limiter para tentativas de login (máximo 5 em 1 minuto)
+const authRateLimiter = new RateLimiter(5, 60000);
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
