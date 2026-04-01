@@ -164,7 +164,7 @@ export default function DebugMultiTenantPage() {
       <Card>
         <CardHeader><CardTitle>🔐 Status RLS</CardTitle></CardHeader>
         <CardContent className="space-y-3">
-          <Badge variant={debugInfo?.rls_status?.isolation_working ? 'default' : 'destructive'} className="text-sm">
+          <Badge variant={debugInfo?.rls_status?.isolation_working ? 'default' : 'error'} className="text-sm">
             {debugInfo?.rls_status?.message}
           </Badge>
         </CardContent>
