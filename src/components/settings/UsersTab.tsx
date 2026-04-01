@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, Badge, Button, Card, Command, Dialog, Input, Label, Popover, Select, Table } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Popover, Select, Table } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
@@ -37,7 +37,7 @@ const roleBadgeVariant = (role: string) => {
 };
 
 export default function UsersTab() {
-  const { organizationId, organization } = useOrganization();
+  const { organizationId } = useOrganization();
   const { isSuperadmin } = useSuperadmin();
   const [users, setUsers] = useState<OrgUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,7 +115,6 @@ export default function UsersTab() {
 
   useEffect(() => {
     fetchUsers();
-    // Load custom roles for the org
     if (organizationId) {
       supabase
         .from('custom_roles')
@@ -128,7 +127,6 @@ export default function UsersTab() {
     }
   }, [organizationId]);
 
-  // Fetch organizations for superadmin
   const fetchOrgs = async () => {
     setOrgsLoading(true);
     try {
@@ -139,7 +137,6 @@ export default function UsersTab() {
         .order("name");
       if (error) throw error;
       setOrgOptions(data || []);
-      console.log("[AddUserDialog] Organizações carregadas:", data?.length || 0);
     } catch (err) {
       console.error("[UsersTab] fetch orgs error:", err);
     } finally {
@@ -193,7 +190,6 @@ export default function UsersTab() {
       return;
     }
     if (!editing && isSuperadmin && !formOrgId) {
-      console.log("[AddUserDialog] Validação: organização obrigatória");
       toast.error("Selecione uma organização");
       return;
     }
@@ -201,14 +197,12 @@ export default function UsersTab() {
     setSaving(true);
     try {
       if (editing) {
-        // Update profile
         const { error: profileError } = await supabase
           .from("profiles")
           .update({ full_name: formName, phone: formPhone || null })
           .eq("id", editing.user_id);
         if (profileError) throw profileError;
 
-        // Update role if changed
         if (formRole !== editing.role) {
           const { error: roleError } = await supabase
             .from("organization_members")
@@ -219,7 +213,6 @@ export default function UsersTab() {
 
         toast.success("Usuário atualizado!");
       } else {
-        // Create via edge function
         const { data, error } = await supabase.functions.invoke("manage-org-users", {
           body: {
             action: "create",
@@ -297,266 +290,203 @@ export default function UsersTab() {
   };
 
   return (
-    <Card>
-      <div className="mb-4">
-        <h2 className="text-2xl font-semibold mb-2">
-          <Users className="h-5 w-5" />
-          Usuários da Organização
-        </h2>
-        <Button size="sm" onClick={openCreate}>
-          <Plus className="h-4 w-4 mr-1" /> Novo Usuário
-        </Button>
-      </div>
-      <div>
-        {/* Filters */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
-            <Input
-              placeholder="Buscar por nome ou email..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="pl-9"
-            />
+    <div className="space-y-4">
+      <Card>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">Usuários da Organização</h2>
+            </div>
+            <Button size="sm" onClick={openCreate}>
+              <Plus className="h-4 w-4 mr-1" /> Novo Usuário
+            </Button>
           </div>
-          <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
-            
-              
-            
-            
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
+              <Input
+                placeholder="Buscar por nome ou email..."
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                className="pl-9"
+              />
+            </div>
+            <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
               <option value="all">Todas as funções</option>
               <option value="owner">Proprietário</option>
               <option value="admin">Administrador</option>
               <option value="vendedor">Vendedor</option>
               <option value="member">Usuário</option>
-            
-          </Select>
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+            </Select>
           </div>
-        ) : filtered.length === 0 ? (
-          <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+            </div>
+          ) : filtered.length === 0 ? (
+            <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
+          ) : (
+            <div className="overflow-x-auto rounded-lg border border-neutral-200">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-neutral-50 border-b border-neutral-200">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Função</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{paginated.map((u) => (
-                    <table className="w-full border-collapse">
-                      <table className="w-full border-collapse">{u.full_name}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.phone || "—"}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={roleBadgeVariant(u.role)}>
+                <tbody className="divide-y divide-neutral-100">
+                  {paginated.map((u) => (
+                    <tr key={u.user_id} className="hover:bg-neutral-50 transition-colors">
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.full_name}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-500 whitespace-nowrap">{u.email}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-500 whitespace-nowrap">{u.phone || "—"}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <Badge variant={roleBadgeVariant(u.role)}>
                           {roleLabels[u.role] || u.role}
-                        </Badge></td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
-                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost"
-                            size="sm"
-                            className="h-8 w-8"
-                            title="Editar"
-                            onClick={() => openEdit(u)}
-                          >
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-neutral-500 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(u)}>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost"
-                            size="sm"
-                            className="h-8 w-8"
-                            title="Resetar senha"
-                            onClick={() => handleResetPassword(u)}
-                          >
+                          <Button variant="ghost" size="sm" className="h-8 w-8" title="Resetar senha" onClick={() => handleResetPassword(u)}>
                             <RotateCcw className="h-4 w-4" />
                           </Button>
                           {u.role !== "owner" && (
-                            <Button variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 text-destructive"
-                              title="Remover"
-                              onClick={() => setDeleteTarget(u)}
-                            >
+                            <Button variant="ghost" size="sm" className="h-8 w-8 text-destructive" title="Remover" onClick={() => setDeleteTarget(u)}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div></td>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          )}
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between text-sm text-neutral-500">
-                <span>
-                  {filtered.length} usuário(s) · Página {page} de {totalPages}
-                </span>
-                <div className="flex gap-1">
-                  <Button variant="secondary"
-                    size="sm"
-                    disabled={page <= 1}
-                    onClick={() => setPage(page - 1)}
-                  >
-                    Anterior
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between text-sm text-neutral-500 mt-6">
+              <span>
+                {filtered.length} usuário(s) · Página {page} de {totalPages}
+              </span>
+              <div className="flex gap-1">
+                <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+                <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{editing ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-1">
+              <Label>Nome *</Label>
+              <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Nome completo" />
+            </div>
+            <div className="space-y-1">
+              <Label>Email *</Label>
+              <Input
+                type="email"
+                value={formEmail}
+                onChange={(e) => setFormEmail(e.target.value)}
+                placeholder="email@exemplo.com"
+                disabled={!!editing}
+              />
+              {editing && <p className="text-xs text-neutral-500">O email não pode ser alterado.</p>}
+            </div>
+            <div className="space-y-1">
+              <Label>Telefone</Label>
+              <Input value={formPhone} onChange={(e) => setFormPhone(e.target.value)} placeholder="(11) 99999-9999" />
+            </div>
+            {isSuperadmin && !editing && (
+              <div className="space-y-1">
+                <Label>Organização *</Label>
+                <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
+                  <Button variant="secondary" role="combobox" aria-expanded={orgSelectOpen} className="w-full justify-between font-normal">
+                    {formOrgId ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..." : "Selecione uma organização"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
-                  <Button variant="secondary"
-                    size="sm"
-                    disabled={page >= totalPages}
-                    onClick={() => setPage(page + 1)}
-                  >
-                    Próximo
-                  </Button>
-                </div>
+                  <div className="absolute z-50 mt-2 w-[400px] bg-white border border-neutral-200 rounded-lg shadow-lg">
+                    <Command>
+                      <CommandInput placeholder="Buscar organização..." className="h-10" />
+                      <CommandList>
+                        <CommandEmpty>{orgsLoading ? "Carregando..." : "Nenhuma organização encontrada."}</CommandEmpty>
+                        <CommandGroup>
+                          {orgOptions.map((org) => (
+                            <CommandItem
+                              key={org.id}
+                              onSelect={() => {
+                                setFormOrgId(org.id);
+                                setOrgSelectOpen(false);
+                              }}
+                            >
+                              <Check className={cn("mr-2 h-4 w-4", formOrgId === org.id ? "opacity-100" : "opacity-0")} />
+                              <div className="flex flex-col">
+                                <span>{org.name}</span>
+                                {org.cnpj && <span className="text-xs text-neutral-500">{org.cnpj}</span>}
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </div>
+                </Popover>
               </div>
             )}
-          </>
-        )}
-
-        {/* Create/Edit Dialog */}
-        <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-          
-            <div className="mb-4">
-              <h2 className="text-2xl font-semibold">{editing ? "Editar Usuário" : "Novo Usuário"}</h2>
+            <div className="space-y-1">
+              <Label>Função</Label>
+              <Select value={formRole} onValueChange={setFormRole}>
+                <option value="admin">Administrador</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="member">Usuário</option>
+                {customRoleOptions.map(cr => (
+                  <option key={cr} value={cr}>{cr}</option>
+                ))}
+              </Select>
             </div>
-            <div className="p-6 space-y-4">
-              <div className="space-y-1">
-                <Label>Nome *</Label>
-                <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Nome completo" />
-              </div>
-              <div className="space-y-1">
-                <Label>Email *</Label>
-                <Input
-                  type="email"
-                  value={formEmail}
-                  onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder="email@exemplo.com"
-                  disabled={!!editing}
-                />
-                {editing && (
-                  <p className="text-xs text-neutral-500">O email não pode ser alterado.</p>
-                )}
-              </div>
-              <div className="space-y-1">
-                <Label>Telefone</Label>
-                <Input value={formPhone} onChange={(e) => setFormPhone(e.target.value)} placeholder="(11) 99999-9999" />
-              </div>
-              {/* Organization select - superadmin only, create mode only */}
-              {isSuperadmin && !editing && (
-                <div className="space-y-1">
-                  <Label>Organização *</Label>
-                  <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
-                    
-                      <Button variant="secondary"
-                        role="combobox"
-                        aria-expanded={orgSelectOpen}
-                        className="w-full justify-between font-normal"
-                      >
-                        {formOrgId
-                          ? orgOptions.find((o) => o.id === formOrgId)?.name || "Selecione..."
-                          : "Selecione uma organização"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    
-                    <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
-                      <Command>
-                        <CommandInput placeholder="Buscar organização..." className="h-10" />
-                        <CommandList>
-                          <CommandEmpty>
-                            {orgsLoading ? "Carregando..." : "Nenhuma organização encontrada."}
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {orgOptions.map((org) => (
-                              <CommandItem
-                                key={org.id}
-                                value={`${org.name} ${org.cnpj || ""}`}
-                                onSelect={() => {
-                                  setFormOrgId(org.id);
-                                  console.log("[AddUserDialog] Organização selecionada:", org.id, org.name);
-                                  setOrgSelectOpen(false);
-                                }}
-                                className="min-h-[44px]"
-                              >
-                                <Check className={cn("mr-2 h-4 w-4", formOrgId === org.id ? "opacity-100" : "opacity-0")} />
-                                <div className="flex flex-col">
-                                  <span>{org.name}</span>
-                                  {org.cnpj && (
-                                    <span className="text-xs text-neutral-500">{org.cnpj}</span>
-                                  )}
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </div>
-                  </Popover>
-                  {orgsLoading && (
-                    <div className="text-sm text-neutral-500">Carregando organizações...</div>
-                  )}
-                  {!orgsLoading && orgOptions.length === 0 && (
-                    <div className="text-sm text-neutral-500">Nenhuma organização disponível</div>
-                  )}
-                </div>
-              )}
-              <div className="space-y-1">
-                <Label>Função</Label>
-                <Select value={formRole} onValueChange={setFormRole}>
-                  
-                    
-                  
-                  
-                    <option value="admin">Administrador</option>
-                    <option value="vendedor">Vendedor</option>
-                    <option value="member">Usuário</option>
-                    {customRoleOptions.length > 0 && (
-                      <>
-                        <div className="px-2 py-1.5 text-xs font-medium text-neutral-500 border-t mt-1 pt-1">Roles Customizadas</div>
-                        {customRoleOptions.map(cr => (
-                          <option key={cr} value={cr}>{cr}</option>
-                        ))}
-                      </>
-                    )}
-                  
-                </Select>
-              </div>
-            </div>
-            <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
-              <Button onClick={handleSave} disabled={saving}>
-                {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-                {saving ? "Salvando..." : "Salvar"}
-              </Button>
-            </DialogFooter>
-          
-        </Dialog>
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-        {/* Delete Confirmation */}
-        <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Remover usuário</AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong> da organização?
-                Esta ação não pode ser desfeita.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                {saving ? "Removendo..." : "Remover"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </Card>
+      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover usuário</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong> da organização? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Remover
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }

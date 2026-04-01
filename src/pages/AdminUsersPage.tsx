@@ -9,14 +9,11 @@ import {
   Button,
   Card,
   Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   Input,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/ds";
 import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -84,7 +81,6 @@ export default function AdminUsersPage() {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      // Fetch all orgs
       const { data: orgData } = await supabase
         .from("organizations")
         .select("id, name, owner_id")
@@ -96,12 +92,10 @@ export default function AdminUsersPage() {
         if (o.owner_id) ownerMap.set(o.owner_id, o.id);
       });
 
-      // Fetch all members with org info
       const { data: members } = await supabase
         .from("organization_members")
         .select("id, user_id, role, organization_id, created_at");
 
-      // Fetch all profiles
       const { data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name, email, phone, created_at");
@@ -129,7 +123,6 @@ export default function AdminUsersPage() {
         });
       });
 
-      // Include profiles without org membership (orphaned)
       profiles?.forEach((p) => {
         if (!seenUserIds.has(p.id)) {
           result.push({
@@ -147,9 +140,7 @@ export default function AdminUsersPage() {
         }
       });
 
-      // Sort by created_at desc
       result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
       setUsers(result);
     } catch (err) {
       console.error("[AdminUsersPage] fetch error:", err);
@@ -174,7 +165,9 @@ export default function AdminUsersPage() {
     if (search.trim()) {
       const s = search.toLowerCase();
       list = list.filter(
-        (u) => u.full_name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s)
+        (u) =>
+          u.full_name.toLowerCase().includes(s) ||
+          u.email.toLowerCase().includes(s)
       );
     }
     return list;
@@ -192,7 +185,6 @@ export default function AdminUsersPage() {
 
   const hasFilters = search || orgFilter !== "all" || roleFilter !== "all";
 
-  // Edit handlers
   const openEdit = (u: AdminUser) => {
     setEditUser(u);
     setEditName(u.full_name);
@@ -213,47 +205,30 @@ export default function AdminUsersPage() {
     }
     setSaving(true);
     try {
-      // Update profile (name, phone)
       const { error: profileError } = await supabase
         .from("profiles")
         .update({ full_name: editName, phone: editPhone || null })
         .eq("id", editUser.user_id);
       if (profileError) throw profileError;
 
-      // Handle organization change
       const orgChanged = editOrgId !== editUser.org_id;
       if (orgChanged) {
-        // Remove existing membership(s)
         if (editUser.member_id) {
-          const { error: delError } = await supabase
-            .from("organization_members")
-            .delete()
-            .eq("user_id", editUser.user_id);
-          if (delError) throw delError;
+          await supabase.from("organization_members").delete().eq("user_id", editUser.user_id);
         }
-        // Create new membership if org selected
         if (editOrgId) {
-          const { error: insError } = await supabase
-            .from("organization_members")
-            .insert({
-              user_id: editUser.user_id,
-              organization_id: editOrgId,
-              role: (editRole && editRole !== "—" ? editRole : "member") as any,
-            });
-          if (insError) throw insError;
+          await supabase.from("organization_members").insert({
+            user_id: editUser.user_id,
+            organization_id: editOrgId,
+            role: (editRole && editRole !== "—" ? editRole : "member") as any,
+          });
         }
       } else {
-        // Update role if changed (and has membership)
         if (editUser.member_id && editRole !== editUser.role && editRole !== "—") {
-          const { error: roleError } = await supabase
-            .from("organization_members")
-            .update({ role: editRole as any })
-            .eq("id", editUser.member_id);
-          if (roleError) throw roleError;
+          await supabase.from("organization_members").update({ role: editRole as any }).eq("id", editUser.member_id);
         }
       }
 
-      // Update email/password via edge function if changed
       const emailChanged = editEmail !== editUser.email;
       const passwordChanged = editPassword.length > 0;
 
@@ -266,14 +241,12 @@ export default function AdminUsersPage() {
         if (emailChanged) payload.email = editEmail;
         if (passwordChanged) payload.password = editPassword;
 
-        const { data, error } = await supabase.functions.invoke("manage-org-users", {
-          body: payload,
-        });
+        const { data, error } = await supabase.functions.invoke("manage-org-users", { body: payload });
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
       }
 
-      toast.success(orgChanged ? "Usuário vinculado à organização com sucesso!" : "Usuário atualizado!");
+      toast.success("Usuário atualizado!");
       setEditOpen(false);
       setEditUser(null);
       fetchAll();
@@ -285,7 +258,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  // Delete handler
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setSaving(true);
@@ -311,7 +283,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  // Reset password
   const handleResetPassword = async (u: AdminUser) => {
     if (!u.org_id || !u.email) return;
     try {
@@ -343,50 +314,48 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex items-center gap-3">
-        <Users className="h-6 w-6 text-primary-600" />
-        <h1 className="text-4xl font-bold text-neutral-900">Todos os Usuários</h1>
-        <Badge variant="secondary" className="ml-auto">{filtered.length} usuários</Badge>
+        <Users className="h-6 w-6 text-primary" />
+        <h1 className="text-3xl font-bold text-neutral-900">Gerenciamento de Usuários</h1>
+        <Badge variant="secondary" className="ml-auto">{filtered.length} total</Badge>
       </div>
 
-      <Card padding="md">
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-neutral-700">Filtros</h3>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+      <Card>
+        <div className="p-6">
+          <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">Filtros Avançados</h3>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="flex-1">
-              <Input
-                placeholder="Buscar por nome ou email..."
-                value={search}
-                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                icon={<Search className="h-4 w-4" />}
-              />
+              <Label className="mb-1.5 block">Busca</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                <Input
+                  placeholder="Nome ou email..."
+                  value={search}
+                  onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                  className="pl-10"
+                />
+              </div>
             </div>
-            <div className="w-full sm:w-[220px]">
-              <Select 
-                value={orgFilter} 
-                onChange={(e) => { setOrgFilter(e.target.value); setPage(1); }}
-                placeholder="Organização"
-                options={[
-                  { value: "all", label: "Todas as organizações" },
-                  ...orgs.map(o => ({ value: o.id, label: o.name }))
-                ]}
-              />
+            <div className="w-full sm:w-[240px]">
+              <Label className="mb-1.5 block">Organização</Label>
+              <Select value={orgFilter} onValueChange={(v) => { setOrgFilter(v); setPage(1); }}>
+                <option value="all">Todas as organizações</option>
+                {orgs.map(o => (
+                  <option key={o.id} value={o.id}>{o.name}</option>
+                ))}
+              </Select>
             </div>
             <div className="w-full sm:w-[180px]">
-              <Select 
-                value={roleFilter} 
-                onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-                placeholder="Função"
-                options={[
-                  { value: "all", label: "Todas as funções" },
-                  { value: "owner", label: "Proprietário" },
-                  { value: "admin", label: "Administrador" },
-                  { value: "vendedor", label: "Vendedor" },
-                  { value: "member", label: "Usuário" },
-                ]}
-              />
+              <Label className="mb-1.5 block">Função</Label>
+              <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
+                <option value="all">Todas as funções</option>
+                <option value="owner">Proprietário</option>
+                <option value="admin">Administrador</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="member">Usuário</option>
+              </Select>
             </div>
             {hasFilters && (
-              <Button variant="ghost" onClick={resetFilters} className="sm:mb-1">
+              <Button variant="ghost" onClick={resetFilters} className="text-neutral-500 hover:text-neutral-900">
                 <X className="h-4 w-4 mr-1" /> Resetar
               </Button>
             )}
@@ -394,156 +363,136 @@ export default function AdminUsersPage() {
         </div>
       </Card>
 
-      <Card padding="none" className="overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <p className="text-center text-neutral-500 py-12">Nenhum usuário encontrado.</p>
-        ) : (
-          <>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Organização</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Função</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20 text-neutral-500">Nenhum usuário encontrado.</div>
+          ) : (
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-neutral-50 border-b border-neutral-200">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Nome</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Organização</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Função</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Criado em</th>
+                  <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
                 </tr>
               </thead>
-              <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{paginated.map((u, idx) => (
-                  <table className="w-full border-collapse">
-                    <table className="w-full border-collapse">
-                      {u.full_name}
-                      {u.is_owner && (
-                        <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
-                      )}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.phone || "—"}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.org_name || "Sem org"}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge></td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
-                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        {u.email && u.org_id && (
-                          <Button variant="ghost" title="Resetar senha" onClick={() => handleResetPassword(u)} className="p-1 h-8 w-8">
-                            <RotateCcw className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {u.org_id && (
-                          <Button variant="ghost" title="Ver organização" onClick={() => navigate("/superadmin")} className="p-1 h-8 w-8">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        )}
-                        <Button variant="ghost" title="Remover" onClick={() => setDeleteTarget(u)} className="p-1 h-8 w-8 text-error-600">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div></td>
+              <tbody className="divide-y divide-neutral-100 bg-white">
+                {paginated.map((u) => (
+                  <tr key={u.user_id} className="hover:bg-neutral-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="text-sm font-medium text-neutral-900">{u.full_name}</div>
+                        {u.is_owner && <Badge variant="destructive" className="ml-2 text-[10px]">Dono</Badge>}
+                      </div>
+                      <div className="text-xs text-neutral-500">{u.phone || "—"}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">{u.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">{u.org_name || "—"}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                      {new Date(u.created_at).toLocaleDateString("pt-BR")}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => openEdit(u)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleResetPassword(u)} title="Resetar senha"><RotateCcw className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(u)} className="text-destructive" title="Remover"><Trash2 className="h-4 w-4" /></Button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t border-neutral-100">
-                <span>Página {page} de {totalPages}</span>
-                <div className="flex gap-1">
-                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-                  <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
-                </div>
-              </div>
-            )}
-          </>
+          )}
+        </div>
+        {totalPages > 1 && (
+          <div className="px-6 py-4 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between">
+            <span className="text-sm text-neutral-500">Página {page} de {totalPages}</span>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+              <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+            </div>
+          </div>
         )}
       </Card>
 
-      {/* Edit User Modal */}
-      <Dialog isOpen={editOpen} onClose={() => setEditOpen(false)} title="Editar Usuário">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-          <Input
-            label="Nome Completo"
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            placeholder="Nome do usuário"
-          />
-          <Input
-            label="Telefone"
-            value={editPhone}
-            onChange={(e) => setEditPhone(e.target.value)}
-            placeholder="(00) 00000-0000"
-          />
-          <Input
-            label="Email"
-            type="email"
-            value={editEmail}
-            onChange={(e) => setEditEmail(e.target.value)}
-            placeholder="email@exemplo.com"
-          />
-          <div className="space-y-3">
-            <Input
-              label="Nova Senha (opcional)"
-              type={showPassword ? "text" : "password"}
-              value={editPassword}
-              onChange={(e) => setEditPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
-              icon={
-                <Button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Editar Usuário</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
+            <div className="space-y-1">
+              <Label>Nome Completo</Label>
+              <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>Telefone</Label>
+              <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder="(00) 00000-0000" />
+            </div>
+            <div className="space-y-1">
+              <Label>Email</Label>
+              <Input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>Nova Senha (opcional)</Label>
+              <div className="relative">
+                <Input type={showPassword ? "text" : "password"} value={editPassword} onChange={(e) => setEditPassword(e.target.value)} placeholder="Mínimo 6 caracteres" />
+                <Button variant="ghost" size="sm" className="absolute right-1 top-1 h-8 w-8 p-0" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                 </Button>
-              }
-            />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label>Organização</Label>
+              <Select value={editOrgId || ""} onValueChange={(v) => setEditOrgId(v || null)}>
+                <option value="">Sem organização</option>
+                {orgs.map(o => (
+                  <option key={o.id} value={o.id}>{o.name}</option>
+                ))}
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label>Função</Label>
+              <Select value={editRole} onValueChange={setEditRole}>
+                <option value="owner">Proprietário</option>
+                <option value="admin">Administrador</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="member">Usuário</option>
+                <option value="—">Nenhuma</option>
+              </Select>
+            </div>
           </div>
-          
-          <Select
-            label="Organização"
-            value={editOrgId || ""}
-            onChange={(e) => setEditOrgId(e.target.value || null)}
-            placeholder="Sem organização"
-            options={orgs.map(o => ({ value: o.id, label: o.name }))}
-          />
-          
-          <Select
-            label="Função na Organização"
-            value={editRole}
-            onChange={(e) => setEditRole(e.target.value)}
-            options={[
-              { value: "owner", label: "Proprietário" },
-              { value: "admin", label: "Administrador" },
-              { value: "vendedor", label: "Vendedor" },
-              { value: "member", label: "Usuário" },
-              { value: "—", label: "Nenhuma" },
-            ]}
-          />
-        </div>
-
-        <div className="flex gap-3 pt-4 border-t border-neutral-100">
-          <Button variant="secondary" onClick={() => setEditOpen(false)} disabled={saving} className="flex-1">
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleEditSave} loading={saving} className="flex-1">
-            Salvar Alterações
-          </Button>
-        </div>
+          <div className="flex justify-end gap-3 p-6 border-t bg-neutral-50">
+            <Button variant="secondary" onClick={() => setEditOpen(false)}>Cancelar</Button>
+            <Button onClick={handleEditSave} disabled={saving}>Salvar Alterações</Button>
+          </div>
+        </DialogContent>
       </Dialog>
 
-      <AlertDialog 
-        isOpen={!!deleteTarget} 
-        onClose={() => setDeleteTarget(null)}
-        title="Remover Usuário"
-        description={(
-          <>
-            Tem certeza que deseja remover o usuário <strong>{deleteTarget?.full_name}</strong>? 
-            Esta ação removerá o acesso dele à organização.
-          </>
-        )}
-        variant="error"
-        onConfirm={handleDelete}
-        isLoading={saving}
-        confirmText="Remover Usuário"
-      />
+      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover Usuário</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong>? Esta ação removerá o acesso dele à organização.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <Button variant="destructive" onClick={handleDelete} disabled={saving}>Remover</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

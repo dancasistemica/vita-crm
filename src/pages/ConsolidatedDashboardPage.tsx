@@ -149,7 +149,7 @@ export default function ConsolidatedDashboardPage() {
                 <BarChart data={revenueByProduct}>
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis />
-                  <div className="relative group"> `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+                  <Tooltip formatter={(v: any) => `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} />
                   <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
