@@ -1,14 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Slider } from '@/components/ui/ds';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/ds';
 import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 interface SystemSettingsMap {
   system_name: string;

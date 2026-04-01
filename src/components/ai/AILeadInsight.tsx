@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Card, CardContent, CardHeader, CardTitle, Button, Skeleton } from '@/components/ui/ds';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Lead } from '@/types/crm';
+import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;

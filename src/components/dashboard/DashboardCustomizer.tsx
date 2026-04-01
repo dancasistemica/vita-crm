@@ -15,13 +15,10 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button } from '@/components/ui/ds';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import { GripVertical, Settings2 } from 'lucide-react';
 import { DASHBOARD_CARDS, GROUP_LABELS } from '@/config/dashboardCards';
 import type { DashboardCardSetting } from '@/hooks/useDashboardSettings';
+import { Badge, Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, Switch } from "@/components/ui/ds";
 
 interface Props {
   settings: DashboardCardSetting[];

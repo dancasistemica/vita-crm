@@ -2,17 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/ds';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/ds';
 import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from "@/components/ui/ds";
 
 interface CustomRole {
   id: string;

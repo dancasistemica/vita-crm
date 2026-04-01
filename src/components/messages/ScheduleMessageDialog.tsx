@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Alert, AlertDescription } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
+import { Alert, AlertDescription, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
 
 interface RecipientRef {
   id: string;

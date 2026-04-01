@@ -2,19 +2,14 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { } from "@/components/ui/ds/";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
 import { Select } from "@/components/ui/ds/Select";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
 import LeadSelectWithSearch from "@/components/tasks/LeadSelectWithSearch";
 import TaskActions from "@/components/tasks/TaskActions";
 import TaskFilters from "@/components/tasks/TaskFilters";
 import TaskStatusManager from "@/components/tasks/TaskStatusManager";
 import NotificationCenter from "@/components/tasks/NotificationCenter";
 import { Badge } from "@/components/ui/ds/Badge";
-import { Checkbox } from "@/components/ui/ds";
-import { Skeleton } from "@/components/ui/ds";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { Plus, AlertCircle, Clock, CheckCircle2, UserCircle, Settings, Calendar } from "lucide-react";
 import { formatDateToBR } from "@/utils/dateFormatter";
 import { TASK_TYPES } from "@/types/crm";
@@ -24,6 +19,7 @@ import { useDataAccess } from "@/hooks/useDataAccess";
 import { useLeadsData } from "@/hooks/useLeadsData";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { Checkbox, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Label, Popover, PopoverContent, PopoverTrigger, Skeleton } from "@/components/ui/ds";
 
 interface TaskRow {
   id: string;

@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
-import { Button, Textarea } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead } from '@/types/crm';
+import { Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;

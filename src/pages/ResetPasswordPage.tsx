@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/ds';
 import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();

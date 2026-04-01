@@ -1,6 +1,5 @@
 import { Clock, RefreshCw, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Card, CardContent } from '@/components/ui/ds';
+import { Button, Card, CardContent } from "@/components/ui/ds";
 
 interface Props {
   onNext: () => void;

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { } from "@/components/ui/ds/";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { Bell, CheckCircle } from "lucide-react";
-import { ScrollArea } from "@/components/ui/ds";
+import { Popover, PopoverContent, PopoverTrigger, ScrollArea } from "@/components/ui/ds";
 
 interface Notification {
   id: string;

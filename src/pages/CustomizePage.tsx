@@ -2,15 +2,9 @@ import { useState, useRef, useCallback } from 'react';
 import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Slider } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 const PALETTES = [
   { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },

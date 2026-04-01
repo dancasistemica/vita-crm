@@ -1,12 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Separator } from '@/components/ui/ds';
 import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,6 +6,7 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
 import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
+import { Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 interface EditOrganizationModalProps {
   open: boolean;

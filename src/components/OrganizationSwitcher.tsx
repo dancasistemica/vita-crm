@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useOrganizationSwitch } from '@/hooks/useOrganizationSwitch';
 import { ChevronDown, Search, Building2, Check, Globe } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui/ds';
 import { CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
+import { Avatar, AvatarFallback, AvatarImage, Button } from "@/components/ui/ds";
 
 export function OrganizationSwitcher() {
   const { organizations, currentOrganization, currentOrgId, isSuperadmin, loading, switchOrganization } = useOrganizationSwitch();

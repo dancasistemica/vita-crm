@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 import { useBotconversaConfig } from '@/hooks/useBotconversaConfig';
-import { Alert, AlertDescription } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Input } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
+import { Alert, AlertDescription, Input, Label } from "@/components/ui/ds";
 
 interface BotconversaSettingsProps {
   organizationId: string;

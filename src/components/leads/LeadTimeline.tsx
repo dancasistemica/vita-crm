@@ -1,9 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Skeleton } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
 import {
+import { Badge, Skeleton } from "@/components/ui/ds";
   UserPlus, ArrowRight, MessageSquare, CheckSquare, CheckCircle, ShoppingCart, Clock
 } from 'lucide-react';
 

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Button, Card, Input, Badge, Alert } from '@/components/ui/ds';
 import { Plus, Search, Filter, FileDown, Pencil, Trash2 } from 'lucide-react';
 import { useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
@@ -10,6 +9,7 @@ import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
 import NewSaleModal from '@/components/sales/NewSaleModal';
+import { Alert, Badge, Button, Card, Input } from "@/components/ui/ds";
 
 export default function ClientesPage() {
   const hook = useClientsFilter();

@@ -2,11 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
-import { Card, Badge, Input, Select, Alert } from '@/components/ui/ds';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Textarea } from '@/components/ui/ds';
 import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
@@ -16,6 +11,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDialog';
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { deleteSale } from '@/services/saleService';
+import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Select, Tabs, TabsContent, TabsList, TabsTrigger, Textarea } from "@/components/ui/ds";
 
 const statusBadgeVariants: Record<string, any> = {
   ativo: 'success',

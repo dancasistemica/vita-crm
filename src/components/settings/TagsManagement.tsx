@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Loader, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Button, Input } from '@/components/ui/ds';
+import { Button, Input } from "@/components/ui/ds";
 
 interface Tag {
   id: string;

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, GripVertical, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Button, Card, CardHeader, CardContent, CardTitle, Input } from '@/components/ui/ds';
-import { Switch } from '@/components/ui/switch';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Switch } from "@/components/ui/ds";
 
 interface PaymentMethod {
   id: string;

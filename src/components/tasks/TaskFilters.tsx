@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
 import { } from "@/components/ui/ds/";
 import { Select } from "@/components/ui/ds/Select";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/ds";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, Label } from "@/components/ui/ds";
 
 interface OrgMember {
   user_id: string;

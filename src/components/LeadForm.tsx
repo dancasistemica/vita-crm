@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/ds";
 import { X } from "lucide-react";
 import { formatCPF, formatRG, validateCPF } from "@/services/cpfValidator";
+import { Button } from "@/components/ui/ds";
 
 interface LeadFormProps {
   lead: LeadView | null;

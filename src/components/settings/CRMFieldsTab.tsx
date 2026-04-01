@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/ds/Input";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
+import { Button } from "@/components/ui/ds";
 
 interface DBPipelineStage {
   id: string;

@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useCRMStore } from "@/store/crmStore";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { } from "@/components/ui/ds/";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/ds";
 import { Select } from "@/components/ui/ds/Select";
 import { Input } from "@/components/ui/ds/Input";
-import { Label } from "@/components/ui/ds";
-import { Textarea } from "@/components/ui/ds";
 import { Badge } from "@/components/ui/ds/Badge";
 import { Plus, MessageCircle } from "lucide-react";
 import { Interaction, INTERACTION_TYPES } from "@/types/crm";
 import { toast } from "sonner";
 import AIResponseSuggestion from "@/components/ai/AIResponseSuggestion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Label, Textarea } from "@/components/ui/ds";
 
 export default function InteracoesPage() {
   const { leads, interactions, addInteraction } = useCRMStore();

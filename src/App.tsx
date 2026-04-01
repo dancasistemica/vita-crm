@@ -1,8 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/ds";
-import { Toaster } from "@/components/ui/ds";
-import { TooltipProvider } from "@/components/ui/ds";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -31,6 +28,7 @@ import AdminUsersPage from "@/pages/AdminUsersPage";
 import { VendasPage } from "@/pages/VendasPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
+import { Toaster, Toaster as Sonner, TooltipProvider } from "@/components/ui/ds";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
 if (typeof window !== "undefined") {

@@ -5,14 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCPF, validateCPF } from '@/services/cpfValidator';
 import { Mail, Phone, MapPin, Camera, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Progress } from '@/components/ui/ds';
 import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage, Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Progress } from "@/components/ui/ds";
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024;

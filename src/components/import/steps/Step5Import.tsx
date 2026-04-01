@@ -1,16 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Progress } from '@/components/ui/ds';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { validateRows, getNewOptions, processImportedLeads } from '@/services/importService';
 import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Progress, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;

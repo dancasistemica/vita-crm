@@ -1,6 +1,6 @@
 import { AlertCircle, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui/ds';
 import type { StuckLead } from '@/hooks/useDashboardData';
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
 
 interface StuckLeadsAlertProps {
   stuckLeads: StuckLead[];

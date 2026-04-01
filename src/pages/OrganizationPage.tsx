@@ -5,11 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCNPJ, validateCNPJ } from '@/utils/cnpjValidator';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
-import { Input } from '@/components/ui/ds';
-import { } from '@/components/ui/ds';
-import { Label } from '@/components/ui/ds';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/ds';
 import { toast } from 'sonner';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 export default function OrganizationPage() {
   const { user } = useAuth();

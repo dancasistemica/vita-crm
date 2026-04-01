@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/ds/Input';
 import { Card } from '@/components/ui/ds/Card';
 import { Select } from '@/components/ui/ds/Select';
 import { Badge } from '@/components/ui/ds/Badge';
+import { Button } from "@/components/ui/ds";
 
 interface CreateSubscriptionModalProps {
   isOpen: boolean;

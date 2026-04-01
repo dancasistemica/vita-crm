@@ -1,14 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Checkbox } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ds';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/ds';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
+import { Badge, Button, Checkbox, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/ds";
 
 interface ClientLead {
   id: string;

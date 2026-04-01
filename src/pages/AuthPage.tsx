@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Button, Input, Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/ds';
 import { useAuth } from '@/hooks/useAuth';
 import { hasSuperadmin } from '@/services/bootstrapService';
+import { Button, Card, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 const loginSchema = z.object({
   email: z.string().trim().email('Email inválido').max(255),

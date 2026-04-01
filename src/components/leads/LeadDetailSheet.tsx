@@ -1,9 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/ds';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds';
-import { Badge } from '@/components/ui/ds';
-import { Button } from '@/components/ui/ds';
-import { Skeleton } from '@/components/ui/ds';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -13,6 +8,7 @@ import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDial
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
 import { toast } from 'sonner';
+import { Badge, Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
