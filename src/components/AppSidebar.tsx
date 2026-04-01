@@ -43,7 +43,7 @@ const baseItems = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpen } = useSidebar();
   const location = useLocation();
   const collapsed = state === "collapsed";
   const { user, signOut } = useAuth();
