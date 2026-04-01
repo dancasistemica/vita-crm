@@ -340,19 +340,14 @@ export default function LeadsPage() {
             <FileDown className="h-4 w-4 mr-2" /> Exportar
           </Button>
           {userCanCreate && (
-            <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
-              
-                <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</Button>
-              
-              
-                <div className="mb-4">
-                  <h2 className="text-2xl font-semibold">
-                    <h2 className="text-2xl font-semibold text-neutral-900">{editingLead ? 'Editar Lead' : 'Novo Lead'}</h2>
-                  </h2>
-                </div>
+            <>
+              <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>
+                Novo Lead
+              </Button>
+              <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} title={editingLead ? 'Editar Lead' : 'Novo Lead'}>
                 <LeadForm lead={editingLead} onSave={handleSave} />
-              
-            </Dialog>
+              </Dialog>
+            </>
           )}
         </div>
       </div>
