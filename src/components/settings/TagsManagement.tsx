@@ -74,7 +74,7 @@ export const TagsManagement = () => {
       setIsSaving(true);
       const { data, error } = await supabase
         .from('tags')
-        .insert([{ name: newTagName.trim(), color: newTagColor }])
+        .insert([{ name: newTagName.trim(), color: newTagColor, organization_id: organizationId }])
         .select()
         .single();
 

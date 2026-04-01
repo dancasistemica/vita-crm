@@ -48,7 +48,7 @@ export default function PaymentMethodsTab() {
         .from('payment_methods')
         .insert([{ 
           name: newMethod.trim(), 
-          order_index: paymentMethods.length,
+          sort_order: paymentMethods.length,
           active: true 
         }])
         .select()
