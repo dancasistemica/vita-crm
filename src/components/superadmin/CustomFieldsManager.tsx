@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe, Loader } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 interface CustomField {
   id: string;
