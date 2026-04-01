@@ -94,10 +94,8 @@ export class DataAccessService {
 
   // ── SALES ──────────────────────────────────────────────
   async getSales(filters?: { status?: string }) {
-    let query = supabase
-      .from('sales')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('sales').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.status) {
       query = query.eq('status', filters.status);
