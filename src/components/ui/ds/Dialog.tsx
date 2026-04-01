@@ -23,7 +23,7 @@ export const Dialog = ({ isOpen, open, onClose, onOpenChange, title, children }:
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <Card variant="primary" padding="md" className="w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+      <Card variant="primary" padding="md" className="w-full max-w-xl relative max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4 sticky top-0 bg-white z-10 py-2">
           {title && <h2 className="text-xl font-semibold text-neutral-900">{title}</h2>}
           <button
