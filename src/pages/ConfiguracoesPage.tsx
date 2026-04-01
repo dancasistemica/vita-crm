@@ -28,29 +28,45 @@ export default function ConfiguracoesPage() {
         <p className="text-sm text-neutral-600 mt-1">Gerencie usuários, permissões e parâmetros do sistema</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); if (v !== "permissoes") setPreselectedRole(null); }} className="w-full space-y-4">
+      <div className="w-full space-y-4">
         <div className="overflow-x-auto pb-2">
-          <div className="flex gap-2 border-b border-neutral-200 mb-4">
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Users className="w-4 h-4" /> Usuários</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><ClipboardList className="w-4 h-4" /> Campos do CRM</button>
-            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><CreditCard className="w-4 h-4" /> Pagamento</button>
-            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Shield className="w-4 h-4" /> Roles</button>}
-            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Lock className="w-4 h-4" /> Permissões</button>}
-            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Building2 className="w-4 h-4" /> Organização</button>}
-            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Brain className="w-4 h-4" /> Contexto IA</button>}
+          <div className="flex gap-2 border-b border-neutral-200">
+            {[
+              { id: 'usuarios', label: 'Usuários', icon: Users },
+              { id: 'crm', label: 'Campos do CRM', icon: ClipboardList },
+              { id: 'pagamento', label: 'Pagamento', icon: CreditCard },
+              ...(canAccessSettings ? [
+                { id: 'roles', label: 'Roles', icon: Shield },
+                { id: 'permissoes', label: 'Permissões', icon: Lock },
+                { id: 'organizacao', label: 'Organização', icon: Building2 },
+                { id: 'ai', label: 'Contexto IA', icon: Brain }
+              ] : [])
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); if (tab.id !== "permissoes") setPreselectedRole(null); }}
+                className={`px-4 py-2 font-medium transition-colors border-b-2 flex items-center gap-2 ${
+                  activeTab === tab.id 
+                    ? 'border-primary-600 text-primary-600' 
+                    : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                <tab.icon className="w-4 h-4" /> {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
         <Card variant="elevated" padding="lg">
-          <div><UsersTab /></div>
-          <div><CRMFieldsTab /></div>
-          <div><PaymentMethodsTab /></div>
-          {canAccessSettings && <div><CustomRolesTab onRoleCreated={handleRoleCreated} /></div>}
-          {canAccessSettings && <div><UserRolesManager preselectedRole={preselectedRole} /></div>}
-          {canAccessSettings && <div><OrganizationPage /></div>}
-          {canAccessSettings && <div><AIContextTab /></div>}
+          {activeTab === 'usuarios' && <UsersTab />}
+          {activeTab === 'crm' && <CRMFieldsTab />}
+          {activeTab === 'pagamento' && <PaymentMethodsTab />}
+          {canAccessSettings && activeTab === 'roles' && <CustomRolesTab onRoleCreated={handleRoleCreated} />}
+          {canAccessSettings && activeTab === 'permissoes' && <UserRolesManager preselectedRole={preselectedRole} />}
+          {canAccessSettings && activeTab === 'organizacao' && <OrganizationPage />}
+          {canAccessSettings && activeTab === 'ai' && <AIContextTab />}
         </Card>
-      </Tabs>
+      </div>
     </div>
   );
 }
