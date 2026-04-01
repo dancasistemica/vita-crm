@@ -90,20 +90,20 @@ export function UsersManagementTab() {
         </Button>
       </div>
 
-      <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
+      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><table className="w-full border-collapse">
             <table className="w-full border-collapse">Nome</th>
-            <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Email</th>
-            <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Adicionado em</th>
-            <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Adicionado em</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
           </tr>
         </thead>
         <table className="w-full border-collapse">
           {users.map((u) => (
             <table className="w-full border-collapse">
               <table className="w-full border-collapse">{u.full_name || '—'}</td>
-              <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.email || '—'}</td>
-              <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
-              <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email || '—'}</td>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button></td>
             </tr>

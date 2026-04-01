@@ -175,11 +175,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><table className="w-full border-collapse">
                     <table className="w-full border-collapse">Nome</th>
-                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Descrição</th>
-                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criado em</th>
-                    <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
                 <table className="w-full border-collapse">
@@ -190,9 +190,9 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                           {r.name}
                           {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
                         </div></td>
-                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{r.description || '—'}</td>
-                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
-                      <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center justify-end gap-1">
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{r.description || '—'}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
                           <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
                           </Button>

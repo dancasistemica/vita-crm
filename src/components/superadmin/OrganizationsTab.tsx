@@ -198,24 +198,24 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
-        <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
+        <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><table className="w-full border-collapse">
               <table className="w-full border-collapse">Nome</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Email</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Plano Atual</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Alterar Plano</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Usuários</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Status</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criada em</th>
-              <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Plano Atual</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Alterar Plano</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Usuários</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criada em</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
           <table className="w-full border-collapse">
             {filteredOrgs.map((org) => (
               <table className="w-full border-collapse">
                 <table className="w-full border-collapse">{org.name}</td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{org.contact_email || '—'}</td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant="secondary">{org.plan}</Badge></td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Select
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{org.contact_email || '—'}</td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary">{org.plan}</Badge></td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Select
                     value={org.plan_id || 'none'}
                     onValueChange={(v) => handlePlanChange(org.id, v)}
                   >
@@ -229,15 +229,15 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                       ))}
                     
                   </Select></td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center gap-1">
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
                     {org.organization_members?.length || 0}
                   </div></td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant={org.active ? 'primary' : 'error'}>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
                   </Badge></td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(org.created_at).toLocaleDateString('pt-BR')}</td>
-                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center gap-1">
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(org.created_at).toLocaleDateString('pt-BR')}</td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
                     </Button>

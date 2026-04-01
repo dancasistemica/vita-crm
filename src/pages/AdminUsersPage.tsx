@@ -403,14 +403,14 @@ export default function AdminUsersPage() {
           <p className="text-center text-neutral-500 py-12">Nenhum usuário encontrado.</p>
         ) : (
           <>
-            <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><table className="w-full border-collapse">
                   <table className="w-full border-collapse">Nome</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Email</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Telefone</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Organização</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Função</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Criado em</th>
-                  <th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">Ações</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Organização</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Função</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
                 </tr>
               </thead>
               <table className="w-full border-collapse">
@@ -421,12 +421,12 @@ export default function AdminUsersPage() {
                       {u.is_owner && (
                         <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
                       )}</td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.email}</td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.phone || "—"}</td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{u.org_name || "Sem org"}</td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge></td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
-                    <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><div className="flex items-center justify-end gap-1">
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.phone || "—"}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.org_name || "Sem org"}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
                           <Edit className="h-4 w-4" />
                         </Button>
