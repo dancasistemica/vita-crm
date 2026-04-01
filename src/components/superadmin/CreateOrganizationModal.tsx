@@ -107,9 +107,9 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
           <h2 className="text-2xl font-semibold">
             <Building2 className="h-5 w-5" /> Nova Organização
           </h2>
-          <DialogDescription>
+          <p className="text-sm text-neutral-600 mb-4">
             {step <= 3 ? `Passo ${step} de 3` : 'Concluído'}
-          </DialogDescription>
+          </p>
         </div>
 
         {/* Progress bar */}

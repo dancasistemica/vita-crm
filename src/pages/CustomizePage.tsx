@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, AlertDialogTrigger, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
+import { Alert, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
 import { useState, useRef, useCallback } from 'react';
 import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -19,6 +19,7 @@ export default function CustomizePage() {
   const { organizationId } = useOrganization();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [globalConfirmOpen, setGlobalConfirmOpen] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const faviconInputRef = useRef<HTMLInputElement>(null);
 
@@ -100,6 +101,30 @@ export default function CustomizePage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const applyGlobalColors = async () => {
+    console.log('[BrandCustomizer] Carregando cores globais do sistema');
+    const { data: sysSettings } = await supabase
+      .from('system_settings')
+      .select('setting_key, setting_value')
+      .in('setting_key', ['primary_color', 'secondary_color', 'accent_color', 'sidebar_bg_color']);
+    const sysMap: Record<string, string> = {};
+    for (const row of (sysSettings || [])) {
+      sysMap[row.setting_key] = row.setting_value || '';
+    }
+    const globalColors: Partial<BrandSettings> = {
+      primary_color: sysMap['primary_color'] || DEFAULT_BRAND.primary_color,
+      secondary_color: sysMap['secondary_color'] || DEFAULT_BRAND.secondary_color,
+      accent_color: sysMap['accent_color'] || DEFAULT_BRAND.accent_color,
+      sidebar_color: sysMap['sidebar_bg_color']
+        ? (sysMap['sidebar_bg_color'].startsWith('#') ? hexToHSLString(sysMap['sidebar_bg_color']) : sysMap['sidebar_bg_color'])
+        : DEFAULT_BRAND.sidebar_color,
+    };
+    console.log('[BrandCustomizer] Cores globais aplicadas:', globalColors);
+    updateLocalBrand(globalColors);
+    toast.info('Cores globais aplicadas. Clique em Salvar para confirmar.');
+    setGlobalConfirmOpen(false);
   };
 
   return (
@@ -256,46 +281,9 @@ export default function CustomizePage() {
             <div className="mb-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <h2 className="text-2xl font-semibold mb-2"><Palette className="h-5 w-5" /> Cores</h2>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
-                      <Globe className="h-4 w-4" /> Usar Cores Globais
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Aplicar cores globais?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Isso substituirá as cores atuais da organização pelas cores globais do sistema. Deseja continuar?
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={async () => {
-                        console.log('[BrandCustomizer] Carregando cores globais do sistema');
-                        const { data: sysSettings } = await supabase
-                          .from('system_settings')
-                          .select('setting_key, setting_value')
-                          .in('setting_key', ['primary_color', 'secondary_color', 'accent_color', 'sidebar_bg_color']);
-                        const sysMap: Record<string, string> = {};
-                        for (const row of (sysSettings || [])) {
-                          sysMap[row.setting_key] = row.setting_value || '';
-                        }
-                        const globalColors: Partial<BrandSettings> = {
-                          primary_color: sysMap['primary_color'] || DEFAULT_BRAND.primary_color,
-                          secondary_color: sysMap['secondary_color'] || DEFAULT_BRAND.secondary_color,
-                          accent_color: sysMap['accent_color'] || DEFAULT_BRAND.accent_color,
-                          sidebar_color: sysMap['sidebar_bg_color']
-                            ? (sysMap['sidebar_bg_color'].startsWith('#') ? hexToHSLString(sysMap['sidebar_bg_color']) : sysMap['sidebar_bg_color'])
-                            : DEFAULT_BRAND.sidebar_color,
-                        };
-                        console.log('[BrandCustomizer] Cores globais aplicadas:', globalColors);
-                        updateLocalBrand(globalColors);
-                        toast.info('Cores globais aplicadas. Clique em Salvar para confirmar.');
-                      }}>Aplicar Cores Globais</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <Button variant="secondary" size="sm" className="min-h-[44px] gap-3" onClick={() => setGlobalConfirmOpen(true)}>
+                  <Globe className="h-4 w-4" /> Usar Cores Globais
+                </Button>
               </div>
             </div>
             <div>
@@ -428,6 +416,22 @@ export default function CustomizePage() {
           </Card>
         </div>
       </div>
+
+      {/* Global Colors Confirmation */}
+      {globalConfirmOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Aplicar cores globais?</h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Isso substituirá as cores atuais da organização pelas cores globais do sistema. Deseja continuar?
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setGlobalConfirmOpen(false)}>Cancelar</Button>
+              <Button className="flex-1" onClick={applyGlobalColors}>Aplicar Cores Globais</Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

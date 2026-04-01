@@ -94,14 +94,14 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
           </div>
         </div>
 
-        <DialogFooter className="gap-3 sm:gap-0">
-          <Button variant="secondary" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => { onOpenChange(false); setConfirmed(false); }} disabled={deleting}>
             Cancelar
           </Button>
-          <Button variant="error" onClick={handleDelete} disabled={!confirmed || deleting}>
+          <Button variant="error" className="flex-1" onClick={handleDelete} disabled={!confirmed || deleting}>
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

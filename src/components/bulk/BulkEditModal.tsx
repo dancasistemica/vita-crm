@@ -172,12 +172,12 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
           )}
         </div>
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button className="flex-1" onClick={handleApply} disabled={!selectedField || !hasValue || loading}>
             {loading ? 'Atualizando...' : 'Aplicar'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

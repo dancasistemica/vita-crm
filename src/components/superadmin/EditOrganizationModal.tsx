@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
-import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
+import { Eye, EyeOff, RefreshCw, Loader, XCircle } from 'lucide-react';
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -268,7 +268,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <Label>
-                    CEP {loadingCEP && <Loader2 className="inline h-3 w-3 animate-spin ml-1" />}
+                    CEP {loadingCEP && <Loader className="inline h-3 w-3 animate-spin ml-1" />}
                   </Label>
                   <Input
                     value={form.cep}
@@ -363,13 +363,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
           </div>
         )}
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button className="flex-1" onClick={handleSave} disabled={saving || loading || (cnpjTouched && !cnpjValidation.valid)}
             title={cnpjTouched && !cnpjValidation.valid ? 'Corrija os erros antes de salvar' : ''}>
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

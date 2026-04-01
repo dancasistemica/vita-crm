@@ -1,9 +1,9 @@
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Popover, Select, Table } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Popover, Select, Table } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
-import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
+import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader, Building2, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -324,7 +324,7 @@ export default function UsersTab() {
 
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+              <Loader className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : filtered.length === 0 ? (
             <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
@@ -462,31 +462,31 @@ export default function UsersTab() {
               </Select>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving}>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleSave} disabled={saving}>
               {saving ? "Salvando..." : "Salvar"}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remover usuário</AlertDialogTitle>
-            <AlertDialogDescription>
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Remover usuário</h2>
+            <p className="text-sm text-neutral-600 mb-6">
               Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong> da organização? Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Remover
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDelete}>
+                Remover
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

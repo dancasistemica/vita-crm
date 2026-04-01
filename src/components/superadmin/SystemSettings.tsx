@@ -1,8 +1,8 @@
-import { Accordion, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
+import { Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
+import { Save, Upload, Trash2, Info, Palette, Image, Type, ChevronDown } from 'lucide-react';
 
 interface SystemSettingsMap {
   system_name: string;
@@ -72,10 +72,15 @@ const FONTS = ['DM Sans', 'Inter', 'Poppins', 'Nunito'];
 export function SystemSettings() {
   const [settings, setSettings] = useState<SystemSettingsMap>(DEFAULTS);
   const [loading, setLoading] = useState(true);
+  const [openAccordion, setOpenAccordion] = useState<string[]>(['brand', 'selected', 'typography', 'layout', 'sidebar', 'feedback']);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const logoRef = useRef<HTMLInputElement>(null);
   const faviconRef = useRef<HTMLInputElement>(null);
+
+  const toggleAccordion = (val: string) => {
+    setOpenAccordion(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
+  };
 
   useEffect(() => {
     loadSettings();
@@ -355,95 +360,143 @@ export function SystemSettings() {
                 </p>
               </div>
 
-              <Accordion type="multiple" defaultValue={['brand', 'selected', 'typography', 'layout', 'sidebar', 'feedback']}>
+              <div className="space-y-2">
                 {/* Brand Colors */}
-                <AccordionItem value="brand">
-                  <AccordionTrigger className="text-sm font-medium">🎨 Cores de Marca</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Cor de Hover" description="Efeito ao passar o mouse"
-                        value={settings.color_hover} onChange={v => updateSetting('color_hover', v)} />
-                      <SystemColorPicker label="Cor Ativa/Clicada" description="Efeito ao clicar"
-                        value={settings.color_active} onChange={v => updateSetting('color_active', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('brand')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>🎨 Cores de Marca</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('brand') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('brand') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Cor de Hover" description="Efeito ao passar o mouse"
+                          value={settings.color_hover} onChange={v => updateSetting('color_hover', v)} />
+                        <SystemColorPicker label="Cor Ativa/Clicada" description="Efeito ao clicar"
+                          value={settings.color_active} onChange={v => updateSetting('color_active', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  )}
+                </div>
 
                 {/* Selected */}
-                <AccordionItem value="selected">
-                  <AccordionTrigger className="text-sm font-medium">📋 Seção Selecionada</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Fundo Selecionado" description="Background de itens selecionados"
-                        value={settings.color_selected_bg} onChange={v => updateSetting('color_selected_bg', v)} />
-                      <SystemColorPicker label="Texto Selecionado" description="Cor do texto quando selecionado"
-                        value={settings.color_selected_text} onChange={v => updateSetting('color_selected_text', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('selected')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>📋 Seção Selecionada</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('selected') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('selected') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Fundo Selecionado" description="Background de itens selecionados"
+                          value={settings.color_selected_bg} onChange={v => updateSetting('color_selected_bg', v)} />
+                        <SystemColorPicker label="Texto Selecionado" description="Cor do texto quando selecionado"
+                          value={settings.color_selected_text} onChange={v => updateSetting('color_selected_text', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  )}
+                </div>
 
                 {/* Typography */}
-                <AccordionItem value="typography">
-                  <AccordionTrigger className="text-sm font-medium">🔤 Tipografia</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Texto Principal" description="Cor principal dos textos"
-                        value={settings.color_text_primary} onChange={v => updateSetting('color_text_primary', v)} />
-                      <SystemColorPicker label="Texto Secundário" description="Textos de apoio e legendas"
-                        value={settings.color_text_secondary} onChange={v => updateSetting('color_text_secondary', v)} />
-                      <SystemColorPicker label="Texto dos Botões" description="Cor do texto nos botões primários"
-                        value={settings.color_button_text} onChange={v => updateSetting('color_button_text', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('typography')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>🔤 Tipografia</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('typography') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('typography') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Texto Principal" description="Cor principal dos textos"
+                          value={settings.color_text_primary} onChange={v => updateSetting('color_text_primary', v)} />
+                        <SystemColorPicker label="Texto Secundário" description="Textos de apoio e legendas"
+                          value={settings.color_text_secondary} onChange={v => updateSetting('color_text_secondary', v)} />
+                        <SystemColorPicker label="Texto dos Botões" description="Cor do texto nos botões primários"
+                          value={settings.color_button_text} onChange={v => updateSetting('color_button_text', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  )}
+                </div>
 
                 {/* Layout */}
-                <AccordionItem value="layout">
-                  <AccordionTrigger className="text-sm font-medium">🏗️ Layout e Estrutura</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Fundo da Página" description="Cor de fundo geral"
-                        value={settings.color_background} onChange={v => updateSetting('color_background', v)} />
-                      <SystemColorPicker label="Fundo dos Cards" description="Background dos cartões"
-                        value={settings.color_card_bg} onChange={v => updateSetting('color_card_bg', v)} />
-                      <SystemColorPicker label="Cor das Bordas" description="Bordas e divisórias"
-                        value={settings.color_border} onChange={v => updateSetting('color_border', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('layout')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>🏗️ Layout e Estrutura</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('layout') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('layout') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Fundo da Página" description="Cor de fundo geral"
+                          value={settings.color_background} onChange={v => updateSetting('color_background', v)} />
+                        <SystemColorPicker label="Fundo dos Cards" description="Background dos cartões"
+                          value={settings.color_card_bg} onChange={v => updateSetting('color_card_bg', v)} />
+                        <SystemColorPicker label="Cor das Bordas" description="Bordas e divisórias"
+                          value={settings.color_border} onChange={v => updateSetting('color_border', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  )}
+                </div>
 
                 {/* Sidebar */}
-                <AccordionItem value="sidebar">
-                  <AccordionTrigger className="text-sm font-medium">🗂️ Menu Lateral</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Texto do Menu" description="Cor dos textos na sidebar"
-                        value={settings.color_sidebar_text} onChange={v => updateSetting('color_sidebar_text', v)} />
-                      <SystemColorPicker label="Hover do Menu" description="Efeito ao passar sobre itens"
-                        value={settings.color_sidebar_hover} onChange={v => updateSetting('color_sidebar_hover', v)} />
-                      <SystemColorPicker label="Item Selecionado" description="Item ativo no menu"
-                        value={settings.color_sidebar_selected} onChange={v => updateSetting('color_sidebar_selected', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('sidebar')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>🗂️ Menu Lateral</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('sidebar') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('sidebar') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Texto do Menu" description="Cor dos textos na sidebar"
+                          value={settings.color_sidebar_text} onChange={v => updateSetting('color_sidebar_text', v)} />
+                        <SystemColorPicker label="Hover do Menu" description="Efeito ao passar sobre itens"
+                          value={settings.color_sidebar_hover} onChange={v => updateSetting('color_sidebar_hover', v)} />
+                        <SystemColorPicker label="Item Selecionado" description="Item ativo no menu"
+                          value={settings.color_sidebar_selected} onChange={v => updateSetting('color_sidebar_selected', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  )}
+                </div>
 
                 {/* Feedback */}
-                <AccordionItem value="feedback">
-                  <AccordionTrigger className="text-sm font-medium">🚦 Feedback e Status</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <SystemColorPicker label="Sucesso" description="Ações concluídas com êxito"
-                        value={settings.color_success} onChange={v => updateSetting('color_success', v)} />
-                      <SystemColorPicker label="Aviso" description="Alertas e atenção"
-                        value={settings.color_warning} onChange={v => updateSetting('color_warning', v)} />
-                      <SystemColorPicker label="Erro" description="Falhas e erros"
-                        value={settings.color_error} onChange={v => updateSetting('color_error', v)} />
-                      <SystemColorPicker label="Informação" description="Dicas e informações"
-                        value={settings.color_info} onChange={v => updateSetting('color_info', v)} />
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => toggleAccordion('feedback')}
+                    className="flex items-center justify-between w-full px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors font-semibold"
+                  >
+                    <span>🚦 Feedback e Status</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openAccordion.includes('feedback') ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openAccordion.includes('feedback') && (
+                    <div className="px-4 py-3 bg-neutral-50 rounded-lg">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <SystemColorPicker label="Sucesso" description="Ações concluídas com êxito"
+                          value={settings.color_success} onChange={v => updateSetting('color_success', v)} />
+                        <SystemColorPicker label="Aviso" description="Alertas e atenção"
+                          value={settings.color_warning} onChange={v => updateSetting('color_warning', v)} />
+                        <SystemColorPicker label="Erro" description="Falhas e erros"
+                          value={settings.color_error} onChange={v => updateSetting('color_error', v)} />
+                        <SystemColorPicker label="Informação" description="Dicas e informações"
+                          value={settings.color_info} onChange={v => updateSetting('color_info', v)} />
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                  )}
+                </div>
+              </div>
             </div>
           </Card>
 

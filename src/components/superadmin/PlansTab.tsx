@@ -190,10 +190,10 @@ export function PlansTab() {
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descrição do plano..." />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
-            <Button onClick={handleCreate}>Criar Plano</Button>
-          </DialogFooter>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleCreate}>Criar Plano</Button>
+          </div>
         
       </Dialog>
     </div>

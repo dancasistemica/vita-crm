@@ -1,9 +1,9 @@
-import { Alert, AlertDialog, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Textarea } from "@/components/ui/ds";
+import { Alert, Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
+import { Plus, Edit, Trash2, Shield, Loader, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface CustomRole {
@@ -169,7 +169,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
 
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+              <Loader className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : roles.length === 0 ? (
             <p className="text-center text-neutral-500 py-8">
@@ -234,33 +234,33 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               <Textarea value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Descrição da role..." rows={3} />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setFormOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleSave} disabled={saving}>
+              {saving ? <Loader className="h-4 w-4 animate-spin mr-1" /> : null}
               {editing ? 'Salvar' : 'Criar'}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
-        <AlertDialogContent>
-          <DialogHeader>
-            <DialogTitle>Remover role "{deleteTarget?.name}"?</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-neutral-500 py-4">
-            Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
-          </p>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
-            <Button onClick={handleDelete} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {saving ? 'Removendo...' : 'Remover'}
-            </Button>
-          </DialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Remover role "{deleteTarget?.name}"?</h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDelete} disabled={saving}>
+                {saving ? 'Removendo...' : 'Remover'}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

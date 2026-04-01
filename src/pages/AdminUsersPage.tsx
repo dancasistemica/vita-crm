@@ -4,7 +4,6 @@ import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { useNavigate } from "react-router-dom";
 import { 
   Alert,
-  AlertDialog,
   Badge,
   Button,
   Card,
@@ -14,8 +13,9 @@ import {
   DialogTitle,
   Input,
   Select,
+  Label
 } from "@/components/ui/ds";
-import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader2, X, EyeIcon, EyeOffIcon } from "lucide-react";
+import { Users, Search, Edit, Trash2, RotateCcw, Eye, Loader, X, EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
 
 interface AdminUser {
@@ -304,7 +304,7 @@ export default function AdminUsersPage() {
   if (saLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
+        <Loader className="h-8 w-8 animate-spin text-neutral-400" />
       </div>
     );
   }
@@ -367,7 +367,7 @@ export default function AdminUsersPage() {
         <div className="overflow-x-auto">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
+              <Loader className="h-10 w-10 animate-spin text-primary/30" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-20 text-neutral-500">Nenhum usuário encontrado.</div>
@@ -389,7 +389,7 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="text-sm font-medium text-neutral-900">{u.full_name}</div>
-                        {u.is_owner && <Badge variant="destructive" className="ml-2 text-[10px]">Dono</Badge>}
+                        {u.is_owner && <Badge variant="error" className="ml-2 text-[10px]">Dono</Badge>}
                       </div>
                       <div className="text-xs text-neutral-500">{u.phone || "—"}</div>
                     </td>
@@ -472,27 +472,31 @@ export default function AdminUsersPage() {
               </Select>
             </div>
           </div>
-          <div className="flex justify-end gap-3 p-6 border-t bg-neutral-50">
-            <Button variant="secondary" onClick={() => setEditOpen(false)}>Cancelar</Button>
-            <Button onClick={handleEditSave} disabled={saving}>Salvar Alterações</Button>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setEditOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleEditSave} disabled={saving}>
+              {saving ? "Salvando..." : "Salvar Alterações"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remover Usuário</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong>? Esta ação removerá o acesso dele à organização.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDelete} disabled={saving}>Remover</Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Remover usuário</h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Tem certeza que deseja remover <strong>{deleteTarget?.full_name}</strong>? Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDelete}>
+                Remover
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

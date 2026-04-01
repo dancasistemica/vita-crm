@@ -97,9 +97,9 @@ export const ScheduleMessageDialog = ({
       
         <div className="mb-4">
           <h2 className="text-2xl font-semibold">Agendar Mensagem WhatsApp</h2>
-          <DialogDescription>
+          <p className="text-sm text-neutral-600 mb-4">
             Para: {recipient?.name} ({recipient?.phone})
-          </DialogDescription>
+          </p>
         </div>
 
         <div className="space-y-4">
@@ -153,14 +153,14 @@ export const ScheduleMessageDialog = ({
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)} className="min-h-[44px]">
+        <div className="flex gap-3 pt-4 border-t">
+          <Button variant="secondary" className="flex-1" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={handleSchedule} disabled={loading} className="min-h-[44px]">
+          <Button className="flex-1" onClick={handleSchedule} disabled={loading}>
             {loading ? 'Agendando...' : 'Agendar'}
           </Button>
-        </DialogFooter>
+        </div>
       
     </Dialog>
   );

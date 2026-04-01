@@ -1,4 +1,4 @@
-import { Button, Collapsible, Input, Label, Select } from "@/components/ui/ds";
+import { Button, Input, Label, Select } from "@/components/ui/ds";
 import { useState } from "react";
 import { Search, X, Filter } from "lucide-react";
 import { TASK_TYPES } from "@/types/crm";
@@ -36,7 +36,7 @@ export default function TaskFilters({
   const hasFilters = searchTerm || typeFilter !== 'all' || assignedFilter !== 'all' || dateFrom || dateTo;
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
+    <div className="space-y-3">
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
@@ -47,12 +47,15 @@ export default function TaskFilters({
             className="pl-9"
           />
         </div>
-        <CollapsibleTrigger asChild>
-          <Button variant="secondary" size="sm" className="gap-1">
-            <Filter className="h-4 w-4" />
-            Filtros
-          </Button>
-        </CollapsibleTrigger>
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          className="gap-1"
+          onClick={() => setOpen(!open)}
+        >
+          <Filter className="h-4 w-4" />
+          Filtros
+        </Button>
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={onClear} className="text-destructive gap-1">
             <X className="h-4 w-4" /> Limpar
@@ -60,34 +63,28 @@ export default function TaskFilters({
         )}
       </div>
 
-      <CollapsibleContent className="mt-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-lg border bg-muted/30">
+      {open && (
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 rounded-lg border bg-muted/30">
           <div>
             <Label className="text-xs text-neutral-500">Tipo</Label>
             <Select value={typeFilter} onValueChange={onTypeChange}>
-              
-              
-                <option value="all">Todos os tipos</option>
-                {TASK_TYPES.map(t => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              
+              <option value="all">Todos os tipos</option>
+              {TASK_TYPES.map(t => (
+                <option key={t.value} value={t.value}>{t.label}</option>
+              ))}
             </Select>
           </div>
 
           <div>
             <Label className="text-xs text-neutral-500">Responsável</Label>
             <Select value={assignedFilter} onValueChange={onAssignedChange}>
-              
-              
-                <option value="all">Todos</option>
-                <option value="unassigned">Sem responsável</option>
-                {orgMembers.map(m => (
-                  <option key={m.user_id} value={m.user_id}>
-                    {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-                  </option>
-                ))}
-              
+              <option value="all">Todos</option>
+              <option value="unassigned">Sem responsável</option>
+              {orgMembers.map(m => (
+                <option key={m.user_id} value={m.user_id}>
+                  {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
+                </option>
+              ))}
             </Select>
           </div>
 
@@ -101,7 +98,7 @@ export default function TaskFilters({
             <Input type="date" value={dateTo} onChange={e => onDateToChange(e.target.value)} />
           </div>
         </div>
-      </CollapsibleContent>
-    </Collapsible>
+      )}
+    </div>
   );
 }

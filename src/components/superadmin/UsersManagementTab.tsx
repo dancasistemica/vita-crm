@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Input, Label, Table } from "@/components/ui/ds";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Table } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
@@ -140,12 +140,12 @@ export function UsersManagementTab() {
               </p>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAdd} disabled={submitting}>
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="secondary" className="flex-1" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button className="flex-1" onClick={handleAdd} disabled={submitting}>
               {submitting ? 'Adicionando...' : 'Adicionar'}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
