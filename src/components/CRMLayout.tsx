@@ -1,6 +1,6 @@
 import { Button, Input, SidebarProvider, useSidebar } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
 import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
 import { useSearch } from "@/hooks/useSearch";
