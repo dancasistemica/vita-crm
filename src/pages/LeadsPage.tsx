@@ -361,7 +361,114 @@ export default function LeadsPage() {
         />
 
         {/* ... existing filter code ... */}
-// ... keep existing code
+        <div className="flex flex-wrap items-center gap-2 pt-1" ref={filterRef}>
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openOrigin;
+                setOpenOrigin(next);
+                if (next) { setOpenInterest(false); setOpenStage(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedOrigins.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Origem {selectedOrigins.length > 0 && `(${selectedOrigins.length})`}
+            </Button>
+            {openOrigin && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Origem"
+                  options={origins.map(o => ({ value: o, label: o }))}
+                  selected={selectedOrigins}
+                  onChange={setSelectedOrigins}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openInterest;
+                setOpenInterest(next);
+                if (next) { setOpenOrigin(false); setOpenStage(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedInterests.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Interesse {selectedInterests.length > 0 && `(${selectedInterests.length})`}
+            </Button>
+            {openInterest && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Interesse"
+                  options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+                  selected={selectedInterests}
+                  onChange={setSelectedInterests}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openStage;
+                setOpenStage(next);
+                if (next) { setOpenOrigin(false); setOpenInterest(false); setOpenTags(false); }
+              }}
+              className={`h-8 border-dashed ${selectedStages.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Etapa {selectedStages.length > 0 && `(${selectedStages.length})`}
+            </Button>
+            {openStage && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Etapa"
+                  options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+                  selected={selectedStages}
+                  onChange={setSelectedStages}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const next = !openTags;
+                setOpenTags(next);
+                if (next) { setOpenOrigin(false); setOpenInterest(false); setOpenStage(false); }
+              }}
+              className={`h-8 border-dashed ${selectedTags.length > 0 ? 'bg-primary-50 text-primary-600 border-primary-200' : ''}`}
+            >
+              Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
+            </Button>
+            {openTags && (
+              <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95">
+                <MultiSelectFilter
+                  label="Filtrar por Tags"
+                  options={tags.map(t => ({ value: t.name, label: t.name }))}
+                  selected={selectedTags}
+                  onChange={setSelectedTags}
+                />
+              </div>
+            )}
+          </div>
+
+          {activeFiltersCount > 0 && (
+            <Button variant="secondary" size="sm" onClick={resetFilters} className="h-8 text-neutral-500 hover:text-neutral-900">
+              Limpar Filtros
+            </Button>
+          )}
+        </div>
+
       </div>
 
       {/* ... existing table code ... */}
