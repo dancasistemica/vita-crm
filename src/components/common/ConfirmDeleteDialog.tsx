@@ -40,42 +40,45 @@ export default function ConfirmDeleteDialog({
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && handleCancel()}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title || `Excluir ${itemType}?`}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {description ? (
-              description
-            ) : (
-              <>
-                Tem certeza que deseja excluir <strong>"{itemName}"</strong>?
-                <br />
-                ⚠️ Esta ação <strong>não pode ser desfeita</strong>.
-              </>
-            )}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading} onClick={handleCancel}>
-            Cancelar
-          </AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isLoading}
-            onClick={onConfirm}
-            className="bg-error hover:bg-error/90 text-white"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin mr-1" />
-                Excluindo...
-              </>
-            ) : (
-              "Excluir"
-            )}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">{title || `Excluir ${itemType}?`}</h2>
+            <div className="text-sm text-neutral-600 mb-6">
+              {description ? (
+                description
+              ) : (
+                <>
+                  Tem certeza que deseja excluir <strong>"{itemName}"</strong>?
+                  <br />
+                  ⚠️ Esta ação <strong>não pode ser desfeita</strong>.
+                </>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" disabled={isLoading} onClick={handleCancel}>
+                Cancelar
+              </Button>
+              <Button
+                variant="error"
+                className="flex-1"
+                disabled={isLoading}
+                onClick={onConfirm}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader className="h-4 w-4 animate-spin mr-1" />
+                    Excluindo...
+                  </>
+                ) : (
+                  "Excluir"
+                )}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+    </>
   );
 }
