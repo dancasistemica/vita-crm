@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { convertLeadToClient } from './saleService';
 
 interface CreateSaleInput {
   client_id: string;
