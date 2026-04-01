@@ -1,3 +1,4 @@
+import { Alert, Badge, Button, Progress, Select } from "@/components/ui/ds";
 import { useEffect, useMemo, useState } from 'react';
 import { Check, X, RefreshCw, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,7 +7,6 @@ import { validateRows, getNewOptions, processImportedLeads } from '@/services/im
 import { detectDuplicates } from '@/services/duplicateDetectionService';
 import { ImportModalState, DuplicateMatch } from '@/hooks/useImportModal';
 import { Lead } from '@/types/crm';
-import { Alert, AlertDescription, AlertTitle, Badge, Button, Progress, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;
@@ -179,14 +179,14 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       <div className="text-center py-10 space-y-4">
         <div className="h-12 w-12 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
         <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">Salvando leads no banco de dados...</p>
-          <p className="text-sm text-muted-foreground">✓ Convertendo datas do Excel...</p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-neutral-500">Salvando leads no banco de dados...</p>
+          <p className="text-sm text-neutral-500">✓ Convertendo datas do Excel...</p>
+          <p className="text-xs text-neutral-500">
             {state.importProcessed} / {state.importTotal} leads processados
           </p>
         </div>
         <Progress value={state.importProgress} className="w-full max-w-sm mx-auto" />
-        <p className="text-xs text-muted-foreground">{state.importProgress}%</p>
+        <p className="text-xs text-neutral-500">{state.importProgress}%</p>
       </div>
     );
   }
@@ -206,8 +206,8 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
       {state.error && (
         <Alert variant="error">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Erro na Importação</AlertTitle>
-          <AlertDescription>
+          <h3 className="text-lg font-semibold mb-1">Erro na Importação</h3>
+          <p className="text-sm">
             {state.error}
             {state.invalidRows && (
               <div className="mt-2 text-sm">
@@ -221,7 +221,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
                 </ul>
               </div>
             )}
-          </AlertDescription>
+          </p>
         </Alert>
       )}
 
@@ -231,7 +231,7 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
           <p className="text-xs font-semibold text-foreground">Novas tags a criar automaticamente:</p>
           {state.newOptions.newTags.length > 0 && (
             <div className="flex flex-wrap gap-1 items-center">
-              <span className="text-[11px] text-muted-foreground">Tags:</span>
+              <span className="text-[11px] text-neutral-500">Tags:</span>
               {state.newOptions.newTags.map(t => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
             </div>
           )}
@@ -249,20 +249,20 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
               <div key={i} className="flex items-center justify-between gap-3 p-2 rounded bg-background border border-border/50 text-xs">
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground truncate">{dup.newData.name}</p>
-                  <p className="text-muted-foreground">
+                  <p className="text-neutral-500">
                     Já existe por {dup.matchField === 'email' ? 'email' : 'telefone'}: <span className="font-medium">{dup.matchValue}</span>
                     {' '}(lead: {dup.existingName})
                   </p>
                 </div>
                 <Select value={dup.action} onValueChange={v => updateDuplicateAction(i, v as DuplicateMatch['action'])}>
-                  <SelectTrigger className="w-[110px] h-7 text-[11px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="skip">Ignorar</SelectItem>
-                    <SelectItem value="update">Atualizar</SelectItem>
-                    <SelectItem value="duplicate">Duplicar</SelectItem>
-                  </SelectContent>
+                  
+                    
+                  
+                  
+                    <option value="skip">Ignorar</option>
+                    <option value="update">Atualizar</option>
+                    <option value="duplicate">Duplicar</option>
+                  
                 </Select>
               </div>
             ))}

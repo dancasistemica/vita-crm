@@ -1,9 +1,9 @@
+import { Badge, Button, Card } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
 import { RefreshCw } from 'lucide-react';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
 
 interface DebugInfo {
   timestamp: string;
@@ -122,7 +122,7 @@ export default function DebugMultiTenantPage() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground">Diagnosticando...</p>
+          <p className="text-sm text-neutral-500">Diagnosticando...</p>
         </div>
       </div>
     );
@@ -139,53 +139,53 @@ export default function DebugMultiTenantPage() {
 
       {/* User Info */}
       <Card>
-        <CardHeader><CardTitle>👤 Informações do Usuário</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">👤 Informações do Usuário</h2></div>
+        <div>
           <pre className="text-xs bg-muted p-3 rounded overflow-auto">
             {JSON.stringify(debugInfo?.user, null, 2)}
           </pre>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Organization Info */}
       <Card>
-        <CardHeader><CardTitle>🏢 Organização</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🏢 Organização</h2></div>
+        <div>
           <pre className="text-xs bg-muted p-3 rounded overflow-auto">
             {JSON.stringify(debugInfo?.organization, null, 2)}
           </pre>
           {!organizationId && (
             <p className="text-destructive font-semibold mt-2">⚠️ organization_id não definido!</p>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* RLS Status */}
       <Card>
-        <CardHeader><CardTitle>🔐 Status RLS</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🔐 Status RLS</h2></div>
+        <div>
           <Badge variant={debugInfo?.rls_status?.isolation_working ? 'default' : 'error'} className="text-sm">
             {debugInfo?.rls_status?.message}
           </Badge>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Data Isolation */}
       <Card>
-        <CardHeader><CardTitle>📊 Isolamento de Dados</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📊 Isolamento de Dados</h2></div>
+        <div>
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-muted rounded p-4 text-center">
-              <p className="text-sm text-muted-foreground">Leads Visíveis (total)</p>
+              <p className="text-sm text-neutral-500">Leads Visíveis (total)</p>
               <p className="text-3xl font-bold text-foreground">{debugInfo?.data_isolation?.total_leads_visible}</p>
             </div>
             <div className="bg-muted rounded p-4 text-center">
-              <p className="text-sm text-muted-foreground">Leads da Sua Org</p>
+              <p className="text-sm text-neutral-500">Leads da Sua Org</p>
               <p className="text-3xl font-bold text-foreground">{debugInfo?.data_isolation?.org_leads_visible}</p>
             </div>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Org IDs nos dados visíveis:</p>
+            <p className="text-sm font-medium text-neutral-500">Org IDs nos dados visíveis:</p>
             <div className="flex flex-wrap gap-1 mt-1">
               {debugInfo?.data_isolation?.unique_org_ids.map(id => (
                 <Badge key={id} variant={id === organizationId ? 'default' : 'error'} className="text-xs">
@@ -194,19 +194,19 @@ export default function DebugMultiTenantPage() {
               ))}
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Tables Check */}
       <Card>
-        <CardHeader><CardTitle>📋 Verificação por Tabela</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📋 Verificação por Tabela</h2></div>
+        <div>
           <div className="space-y-3">
             {debugInfo?.tables_checked && Object.entries(debugInfo.tables_checked).map(([table, info]) => (
               <div key={table} className="flex items-center justify-between bg-muted rounded p-3">
                 <span className="font-medium text-foreground">{table}</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">{info.visible} registros</span>
+                  <span className="text-sm text-neutral-500">{info.visible} registros</span>
                   <Badge variant={info.org_ids.length <= 1 ? 'default' : 'error'} className="text-xs">
                     {info.org_ids.length <= 1 ? '✅' : `❌ ${info.org_ids.length} orgs`}
                   </Badge>
@@ -214,7 +214,7 @@ export default function DebugMultiTenantPage() {
               </div>
             ))}
           </div>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

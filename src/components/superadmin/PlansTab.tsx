@@ -1,9 +1,9 @@
+import { Badge, Button, Card, Dialog, Input, Label, Select, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { getAllPlans, createPlan, deletePlan } from '@/services/superadminService';
 import { Plus, Trash2, Users, FileText, Link } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 interface Plan {
   id: string;
@@ -80,7 +80,7 @@ export function PlansTab() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+    return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
   }
 
   return (
@@ -101,36 +101,36 @@ export function PlansTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {plans.map((plan) => (
           <Card key={plan.id}>
-            <CardHeader className="pb-3">
+            <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{plan.name}</CardTitle>
+                <h2 className="text-2xl font-semibold mb-2">{plan.name}</h2>
                 <Badge variant="secondary">
                   {plan.period === 'monthly' ? 'Mensal' : 'Anual'}
                 </Badge>
               </div>
               {plan.description && (
-                <p className="text-sm text-muted-foreground">{plan.description}</p>
+                <p className="text-sm text-neutral-500">{plan.description}</p>
               )}
-            </CardHeader>
-            <CardContent className="space-y-4">
+            </div>
+            <div>
               <div className="text-2xl font-bold text-primary">
                 R$ {Number(plan.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                <span className="text-sm font-normal text-muted-foreground">
+                <span className="text-sm font-normal text-neutral-500">
                   /{plan.period === 'monthly' ? 'mês' : 'ano'}
                 </span>
               </div>
 
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3">
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <Users className="h-4 w-4 text-neutral-500" />
                   <span>Até {plan.max_users} usuários</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <FileText className="h-4 w-4 text-neutral-500" />
                   <span>{plan.max_leads ? `Até ${plan.max_leads} leads` : 'Leads ilimitados'}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Link className="h-4 w-4 text-muted-foreground" />
+                  <Link className="h-4 w-4 text-neutral-500" />
                   <span>{plan.max_integrations ? `Até ${plan.max_integrations} integrações` : 'Integrações ilimitadas'}</span>
                 </div>
               </div>
@@ -138,16 +138,16 @@ export function PlansTab() {
               <Button variant="error" size="sm" className="w-full" onClick={() => setDeleteConfirm({ isOpen: true, id: plan.id, name: plan.name })}>
                 <Trash2 className="h-4 w-4 mr-2" /> Deletar
               </Button>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Novo Plano</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">Novo Plano</h2>
+          </div>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -163,11 +163,11 @@ export function PlansTab() {
               <div className="space-y-3">
                 <Label>Período *</Label>
                 <Select value={form.period} onValueChange={(v) => setForm({ ...form, period: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="monthly">Mensal</SelectItem>
-                    <SelectItem value="annual">Anual</SelectItem>
-                  </SelectContent>
+                  
+                  
+                    <option value="monthly">Mensal</option>
+                    <option value="annual">Anual</option>
+                  
                 </Select>
               </div>
               <div className="space-y-3">
@@ -194,7 +194,7 @@ export function PlansTab() {
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button onClick={handleCreate}>Criar Plano</Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
     </div>
   );

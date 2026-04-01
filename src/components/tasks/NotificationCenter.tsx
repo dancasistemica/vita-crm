@@ -1,6 +1,6 @@
+import { Button, Popover, ScrollArea } from "@/components/ui/ds";
 import { useState } from "react";
 import { Bell, CheckCircle } from "lucide-react";
-import { Button, Popover, PopoverContent, PopoverTrigger, ScrollArea } from "@/components/ui/ds";
 
 interface Notification {
   id: string;
@@ -21,7 +21,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      
         <Button variant="secondary" size="sm" className="relative">
           <Bell className="h-4 w-4" />
           {unread > 0 && (
@@ -30,8 +30,8 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
             </span>
           )}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      
+      <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
         <div className="flex items-center justify-between p-3 border-b">
           <span className="text-sm font-semibold">Notificações</span>
           {unread > 0 && (
@@ -42,7 +42,7 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
         </div>
         <ScrollArea className="max-h-64">
           {notifications.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-6">Nenhuma notificação</p>
+            <p className="text-sm text-neutral-500 text-center py-6">Nenhuma notificação</p>
           ) : (
             notifications.map(n => (
               <div key={n.id} className={`p-3 border-b last:border-0 text-sm ${!n.read ? 'bg-muted/50' : ''}`}>
@@ -54,14 +54,14 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
                     </Button>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-neutral-500 mt-1">
                   {new Date(n.created_at).toLocaleDateString('pt-BR')}
                 </p>
               </div>
             ))
           )}
         </ScrollArea>
-      </PopoverContent>
+      </div>
     </Popover>
   );
 }

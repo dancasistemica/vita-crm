@@ -1,8 +1,8 @@
+import { Accordion, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Save, Upload, Trash2, Info, Palette, Image, Type } from 'lucide-react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 interface SystemSettingsMap {
   system_name: string;
@@ -179,12 +179,12 @@ export function SystemSettings() {
         <div className="lg:col-span-2 space-y-6">
           {/* Identity */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Image className="h-5 w-5" /> Identidade do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h2>
+            </div>
+            <div>
               <div>
                 <Label>Nome do Sistema</Label>
                 <Input
@@ -198,7 +198,7 @@ export function SystemSettings() {
               {/* Logo upload */}
               <div>
                 <Label>Logo do Sistema</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, SVG ou WebP (máx. 2MB)</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, SVG ou WebP (máx. 2MB)</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
                   onDragOver={e => e.preventDefault()}
@@ -217,12 +217,12 @@ export function SystemSettings() {
                           <img src={settings.logo_url} alt="Logo escuro" className="h-10 object-contain" />
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
+                      <p className="text-xs text-neutral-500">Clique ou arraste para trocar</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
+                      <Upload className="h-8 w-8 mx-auto text-neutral-500" />
+                      <p className="text-sm text-neutral-500">Clique ou arraste a logo aqui</p>
                     </div>
                   )}
                 </div>
@@ -237,7 +237,7 @@ export function SystemSettings() {
                     
                     {/* Desktop */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">🖥️ Desktop</Label>
+                      <Label className="text-xs text-neutral-500">🖥️ Desktop</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[Number(settings.logo_size_desktop) || 40]}
@@ -250,9 +250,9 @@ export function SystemSettings() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_desktop || '40'}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{settings.logo_size_desktop || '40'}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>24px</span><span>200px</span>
                       </div>
                       {Number(settings.logo_size_desktop) > 120 && (
@@ -262,7 +262,7 @@ export function SystemSettings() {
 
                     {/* Mobile */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">📱 Mobile</Label>
+                      <Label className="text-xs text-neutral-500">📱 Mobile</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[Number(settings.logo_size_mobile) || 32]}
@@ -275,9 +275,9 @@ export function SystemSettings() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{settings.logo_size_mobile || '32'}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{settings.logo_size_mobile || '32'}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>20px</span><span>80px</span>
                       </div>
                       {Number(settings.logo_size_mobile) > 56 && (
@@ -291,7 +291,7 @@ export function SystemSettings() {
               {/* Favicon upload */}
               <div>
                 <Label>Favicon do Sistema (32x32px)</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, ICO ou SVG</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, ICO ou SVG</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
                   onDragOver={e => e.preventDefault()}
@@ -303,27 +303,27 @@ export function SystemSettings() {
                   {settings.favicon_url ? (
                     <div className="flex items-center gap-3">
                       <img src={settings.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
-                      <span className="text-xs text-muted-foreground">Clique para trocar</span>
+                      <span className="text-xs text-neutral-500">Clique para trocar</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
-                      <Upload className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Upload favicon</span>
+                      <Upload className="h-5 w-5 text-neutral-500" />
+                      <span className="text-sm text-neutral-500">Upload favicon</span>
                     </div>
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Basic Colors */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Palette className="h-5 w-5" /> Cores Padrão do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <SystemColorPicker label="Cor Primária" description="Botões e elementos de destaque"
                   value={settings.primary_color} onChange={v => updateSetting('primary_color', v)} />
@@ -337,17 +337,17 @@ export function SystemSettings() {
                     updateSetting('sidebar_bg_color', v);
                   }} />
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Advanced Colors */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Palette className="h-5 w-5" /> Cores Avançadas do Sistema
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-3 mb-4">
                 <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                 <p className="text-xs text-amber-800 dark:text-amber-300">
@@ -444,29 +444,29 @@ export function SystemSettings() {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Typography */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2">
                 <Type className="h-5 w-5" /> Tipografia Padrão
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
+            </div>
+            <div>
               <Label>Fonte do Sistema</Label>
               <Select value={settings.font_family} onValueChange={v => updateSetting('font_family', v)}>
-                <SelectTrigger className="w-full max-w-xs mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
+                    <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
@@ -501,7 +501,7 @@ export function SystemSettings() {
           </Card>
 
           <Card>
-            <CardContent className="p-4 space-y-3">
+            <div>
               <p className="text-xs" style={{ color: settings.color_text_secondary }}>Botão primário</p>
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium"
                 style={{ backgroundColor: settings.primary_color, color: settings.color_button_text }}>
@@ -519,7 +519,7 @@ export function SystemSettings() {
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_error }}>✕ Erro</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: settings.color_info }}>ℹ Info</span>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>
@@ -541,7 +541,7 @@ function SystemColorPicker({ label, description, value, onChange }: {
   return (
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
-      <p className="text-xs text-muted-foreground">{description}</p>
+      <p className="text-xs text-neutral-500">{description}</p>
       <div className="flex items-center gap-3 mt-1">
         <input type="color" value={value} onChange={e => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />

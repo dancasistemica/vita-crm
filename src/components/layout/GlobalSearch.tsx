@@ -1,3 +1,4 @@
+import { Input, Popover } from "@/components/ui/ds";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -7,7 +8,6 @@ import {
   type GlobalSearchResult,
 } from "@/hooks/useGlobalSearch";
 import { SearchResults } from "@/components/search/SearchResults";
-import { Input, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 
 export function GlobalSearch() {
   const { organizationId } = useOrganization();
@@ -100,9 +100,9 @@ export function GlobalSearch() {
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
+      
         <div className="relative flex-1 w-full sm:max-w-md">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
           <Input
             ref={inputRef}
             placeholder="Buscar leads, clientes, tarefas, produtos..."
@@ -112,18 +112,16 @@ export function GlobalSearch() {
             className="pl-9"
           />
         </div>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-[--radix-popover-trigger-width] max-w-[90vw] p-0"
-      >
+      
+      {open && (
+        <div className="absolute z-50 mt-2 p-0 bg-white border border-neutral-200 rounded-lg shadow-lg w-full max-w-[90vw] overflow-hidden">
         <SearchResults
           results={results}
           loading={loading}
           query={query}
           onSelect={handleSelectResult}
         />
-      </PopoverContent>
+      </div>
     </Popover>
   );
 }

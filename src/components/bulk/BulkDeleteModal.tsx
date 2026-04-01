@@ -1,7 +1,7 @@
+import { Alert, Button, Checkbox, Dialog } from "@/components/ui/ds";
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
-import { Alert, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/ds";
 
 type DeletableType = 'leads' | 'clients';
 
@@ -52,26 +52,26 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!deleting) { onOpenChange(o); setConfirmed(false); } }}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 text-destructive">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             <AlertTriangle className="h-5 w-5" />
             Deletar {type === 'leads' ? 'Leads' : 'Clientes'}
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+        </div>
 
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-neutral-500">
             Você está prestes a deletar <strong>{selectedIds.length}</strong> {selectedIds.length > 1 ? labelPlural : label} permanentemente.
           </p>
 
           <div className="rounded-lg border border-border bg-muted/30 p-3 max-h-40 overflow-y-auto space-y-1">
-            <p className="text-xs font-medium text-muted-foreground mb-2">{type === 'leads' ? 'Leads' : 'Clientes'} a deletar:</p>
+            <p className="text-xs font-medium text-neutral-500 mb-2">{type === 'leads' ? 'Leads' : 'Clientes'} a deletar:</p>
             {selectedItems.slice(0, 5).map(item => (
               <p key={item.id} className="text-sm text-foreground">• {item.name} ({item.email || item.phone})</p>
             ))}
             {selectedIds.length > 5 && (
-              <p className="text-xs text-muted-foreground mt-1">... e mais {selectedIds.length - 5}</p>
+              <p className="text-xs text-neutral-500 mt-1">... e mais {selectedIds.length - 5}</p>
             )}
           </div>
 
@@ -102,7 +102,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }

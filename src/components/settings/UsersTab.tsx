@@ -1,3 +1,4 @@
+import { Alert, AlertDialog, Badge, Button, Card, Command, Dialog, Input, Label, Popover, Select, Table } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
@@ -5,7 +6,6 @@ import { useSuperadmin } from "@/hooks/useSuperadmin";
 import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface OrgUser {
   member_id: string;
@@ -298,20 +298,20 @@ export default function UsersTab() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-lg flex items-center gap-3">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">
           <Users className="h-5 w-5" />
           Usuários da Organização
-        </CardTitle>
+        </h2>
         <Button size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-1" /> Novo Usuário
         </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </div>
+      <div>
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Buscar por nome ou email..."
               value={search}
@@ -320,57 +320,46 @@ export default function UsersTab() {
             />
           </div>
           <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Filtrar por função" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas as funções</SelectItem>
-              <SelectItem value="owner">Proprietário</SelectItem>
-              <SelectItem value="admin">Administrador</SelectItem>
-              <SelectItem value="vendedor">Vendedor</SelectItem>
-              <SelectItem value="member">Usuário</SelectItem>
-            </SelectContent>
+            
+              
+            
+            
+              <option value="all">Todas as funções</option>
+              <option value="owner">Proprietário</option>
+              <option value="admin">Administrador</option>
+              <option value="vendedor">Vendedor</option>
+              <option value="member">Usuário</option>
+            
           </Select>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
           </div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">Nenhum usuário encontrado.</p>
+          <p className="text-center text-neutral-500 py-8">Nenhum usuário encontrado.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead className="hidden sm:table-cell">Telefone</TableHead>
-                    <TableHead>Função</TableHead>
-                    <TableHead className="hidden md:table-cell">Criado em</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginated.map((u) => (
-                    <TableRow key={u.member_id}>
-                      <TableCell className="font-medium">{u.full_name}</TableCell>
-                      <TableCell className="text-sm">{u.email}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
-                        {u.phone || "—"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={roleBadgeVariant(u.role)}>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Função</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                  </tr>
+                </thead>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{paginated.map((u) => (
+                    <table className="w-full border-collapse">
+                      <table className="w-full border-collapse">{u.full_name}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.phone || "—"}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={roleBadgeVariant(u.role)}>
                           {roleLabels[u.role] || u.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
-                        {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
+                        </Badge></td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
                           <Button variant="ghost"
                             size="sm"
                             className="h-8 w-8"
@@ -397,17 +386,16 @@ export default function UsersTab() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                        </div></td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center justify-between text-sm text-neutral-500">
                 <span>
                   {filtered.length} usuário(s) · Página {page} de {totalPages}
                 </span>
@@ -434,10 +422,10 @@ export default function UsersTab() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-          <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
-            <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
-              <DialogTitle>{editing ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
-            </DialogHeader>
+          
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold">{editing ? "Editar Usuário" : "Novo Usuário"}</h2>
+            </div>
             <div className="p-6 space-y-4">
               <div className="space-y-1">
                 <Label>Nome *</Label>
@@ -453,7 +441,7 @@ export default function UsersTab() {
                   disabled={!!editing}
                 />
                 {editing && (
-                  <p className="text-xs text-muted-foreground">O email não pode ser alterado.</p>
+                  <p className="text-xs text-neutral-500">O email não pode ser alterado.</p>
                 )}
               </div>
               <div className="space-y-1">
@@ -465,7 +453,7 @@ export default function UsersTab() {
                 <div className="space-y-1">
                   <Label>Organização *</Label>
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
-                    <PopoverTrigger asChild>
+                    
                       <Button variant="secondary"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
@@ -476,8 +464,8 @@ export default function UsersTab() {
                           : "Selecione uma organização"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
+                    
+                    <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
                       <Command>
                         <CommandInput placeholder="Buscar organização..." className="h-10" />
                         <CommandList>
@@ -500,7 +488,7 @@ export default function UsersTab() {
                                 <div className="flex flex-col">
                                   <span>{org.name}</span>
                                   {org.cnpj && (
-                                    <span className="text-xs text-muted-foreground">{org.cnpj}</span>
+                                    <span className="text-xs text-neutral-500">{org.cnpj}</span>
                                   )}
                                 </div>
                               </CommandItem>
@@ -508,35 +496,35 @@ export default function UsersTab() {
                           </CommandGroup>
                         </CommandList>
                       </Command>
-                    </PopoverContent>
+                    </div>
                   </Popover>
                   {orgsLoading && (
-                    <div className="text-sm text-muted-foreground">Carregando organizações...</div>
+                    <div className="text-sm text-neutral-500">Carregando organizações...</div>
                   )}
                   {!orgsLoading && orgOptions.length === 0 && (
-                    <div className="text-sm text-muted-foreground">Nenhuma organização disponível</div>
+                    <div className="text-sm text-neutral-500">Nenhuma organização disponível</div>
                   )}
                 </div>
               )}
               <div className="space-y-1">
                 <Label>Função</Label>
                 <Select value={formRole} onValueChange={setFormRole}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="vendedor">Vendedor</SelectItem>
-                    <SelectItem value="member">Usuário</SelectItem>
+                  
+                    
+                  
+                  
+                    <option value="admin">Administrador</option>
+                    <option value="vendedor">Vendedor</option>
+                    <option value="member">Usuário</option>
                     {customRoleOptions.length > 0 && (
                       <>
-                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t mt-1 pt-1">Roles Customizadas</div>
+                        <div className="px-2 py-1.5 text-xs font-medium text-neutral-500 border-t mt-1 pt-1">Roles Customizadas</div>
                         {customRoleOptions.map(cr => (
-                          <SelectItem key={cr} value={cr}>{cr}</SelectItem>
+                          <option key={cr} value={cr}>{cr}</option>
                         ))}
                       </>
                     )}
-                  </SelectContent>
+                  
                 </Select>
               </div>
             </div>
@@ -547,7 +535,7 @@ export default function UsersTab() {
                 {saving ? "Salvando..." : "Salvar"}
               </Button>
             </DialogFooter>
-          </DialogContent>
+          
         </Dialog>
 
         {/* Delete Confirmation */}
@@ -568,7 +556,7 @@ export default function UsersTab() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </CardContent>
+      </div>
     </Card>
   );
 }

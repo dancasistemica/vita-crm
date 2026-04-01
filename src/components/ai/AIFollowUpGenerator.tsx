@@ -1,9 +1,9 @@
+import { Button, Label, Select, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead } from '@/types/crm';
-import { Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;
@@ -55,10 +55,10 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
         <div className="flex-1">
           <Label className="text-xs">Canal</Label>
           <Select value={channel} onValueChange={setChannel}>
-            <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {CHANNELS.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
-            </SelectContent>
+            
+            
+              {CHANNELS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            
           </Select>
         </div>
         <Button size="sm" onClick={handleGenerate} disabled={loading}>
@@ -73,7 +73,7 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
             <Button size="sm" variant="secondary" onClick={handleCopy}><Copy className="h-3.5 w-3.5 mr-1" /> Copiar</Button>
             <Button size="sm" variant="secondary" onClick={handleRegenerate} disabled={loading}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Regenerar</Button>
           </div>
-          <p className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</p>
+          <p className="text-[10px] text-neutral-500">Sugestão gerada por IA — revise antes de enviar</p>
         </div>
       )}
     </div>

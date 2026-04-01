@@ -1,3 +1,4 @@
+import { Card, Skeleton } from "@/components/ui/ds";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, DollarSign, TrendingUp, Target, Building2 } from "lucide-react";
@@ -7,7 +8,6 @@ import FilterPeriod, { type DateRange } from "@/components/dashboard/FilterPerio
 import StuckLeadsAlert from "@/components/dashboard/StuckLeadsAlert";
 import StageMetrics from "@/components/dashboard/StageMetrics";
 import ProductInsights from "@/components/dashboard/ProductInsights";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
@@ -28,12 +28,12 @@ export default function ConsolidatedDashboardPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Carregando...</p>
+          <p className="text-sm text-neutral-500 mt-0.5">Carregando...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
             <Card key={i} className="shadow-card border-border/60">
-              <CardContent className="pt-5 pb-4"><Skeleton className="h-16 w-full" /></CardContent>
+              <div><Skeleton className="h-16 w-full" /></div>
             </Card>
           ))}
         </div>
@@ -57,7 +57,7 @@ export default function ConsolidatedDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard Consolidado</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
+        <p className="text-sm text-neutral-500 mt-0.5">Visão 360° de <strong>todas as organizações</strong></p>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
@@ -65,17 +65,17 @@ export default function ConsolidatedDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
           <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
-            <CardContent className="pt-5 pb-4">
+            <div>
               <div className="flex items-center gap-3.5">
                 <div className={`p-2.5 rounded-xl ${m.color}`}>
                   <m.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{m.label}</p>
+                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{m.label}</p>
                   <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
@@ -83,23 +83,23 @@ export default function ConsolidatedDashboardPage() {
       {/* Top Organizations */}
       {consolidatedData && consolidatedData.topOrganizations.length > 0 && (
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top Organizações por Receita</CardTitle></CardHeader>
-          <CardContent>
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🏆 Top Organizações por Receita</h2></div>
+          <div>
             <div className="space-y-3">
               {consolidatedData.topOrganizations.map((org, index) => (
                 <div key={org.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                    <span className="text-lg font-bold text-neutral-500">#{index + 1}</span>
                     <div>
                       <p className="font-semibold text-foreground">{org.name}</p>
-                      <p className="text-sm text-muted-foreground">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
+                      <p className="text-sm text-neutral-500">{org.leads} leads · {org.conversionRate.toFixed(1)}% conversão</p>
                     </div>
                   </div>
                   <p className="font-bold text-success">R$ {org.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
       )}
 
@@ -114,79 +114,79 @@ export default function ConsolidatedDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Etapa do Funil</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Etapa do Funil</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadsByStage}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
                 <YAxis allowDecimals={false} />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)', boxShadow: '0 4px 12px -2px rgb(0 0 0 / 0.06)' }} />
-                <Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
+                <Tooltip />
+<Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         <Card className="shadow-card border-border/60">
-          <CardHeader className="pb-2"><CardTitle className="text-base font-display">Leads por Organização</CardTitle></CardHeader>
-          <CardContent className="h-64">
+          <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Organização</h2></div>
+          <div>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                   {(consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
-              </PieChart>
+                <Tooltip />
+</PieChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         {revenueByProduct.length > 0 && (
           <Card className="shadow-card border-border/60">
-            <CardHeader className="pb-2"><CardTitle className="text-base font-display">Receita por Produto</CardTitle></CardHeader>
-            <CardContent className="h-64">
+            <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
+            <div>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueByProduct}>
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis />
-                  <Tooltip formatter={(v: number) => `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+                  <div className="relative group"> `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
                   <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
+            </div>
           </Card>
         )}
 
         {topProducts.length > 0 && (
           <Card className="shadow-card border-border/60">
-            <CardHeader className="pb-2"><CardTitle className="text-base font-display">🏆 Top 5 Produtos</CardTitle></CardHeader>
-            <CardContent>
+            <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🏆 Top 5 Produtos</h2></div>
+            <div>
               <div className="space-y-3">
                 {topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
+                      <span className="text-lg font-bold text-neutral-500">#{index + 1}</span>
                       <div>
                         <p className="font-semibold text-foreground">{product.name}</p>
-                        <p className="text-sm text-muted-foreground">{product.count} vendas</p>
+                        <p className="text-sm text-neutral-500">{product.count} vendas</p>
                       </div>
                     </div>
                     <p className="font-bold text-success">R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
         )}
 
         {salesByDay.length > 0 && (
           <Card className="shadow-card border-border/60">
-            <CardHeader className="pb-2"><CardTitle className="text-base font-display">📈 Vendas Recentes ({dateRange.label})</CardTitle></CardHeader>
-            <CardContent>
+            <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📈 Vendas Recentes ({dateRange.label})</h2></div>
+            <div>
               <div className="space-y-3">
                 {salesByDay.slice(-7).map((day) => (
                   <div key={day.day} className="flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground w-24">{day.day}</span>
+                    <span className="text-sm text-neutral-500 w-24">{day.day}</span>
                     <div className="flex-1 bg-muted rounded-full h-2">
                       <div className="bg-purple-500 h-2 rounded-full" style={{ width: `${(day.value / Math.max(...salesByDay.map(d => d.value), 1)) * 100}%` }} />
                     </div>
@@ -194,7 +194,7 @@ export default function ConsolidatedDashboardPage() {
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
         )}
       </div>

@@ -1,10 +1,10 @@
+import { Alert, AlertDialog, Badge, Button, Card, Dialog, Input, Label, Table, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from "@/components/ui/ds";
 
 interface CustomRole {
   id: string;
@@ -141,10 +141,10 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   if (!canAccessSettings) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
+        <div>
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
-        </CardContent>
+        </div>
       </Card>
     );
   }
@@ -152,53 +152,45 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg flex items-center gap-3">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Shield className="h-5 w-5" />
             Roles Customizáveis
-          </CardTitle>
+          </h2>
           <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4 mr-1" /> Nova Role
           </Button>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
+        </div>
+        <div>
+          <p className="text-sm text-neutral-500 mb-4">
             Crie roles personalizadas para sua organização. Após criar, configure as permissões na aba <strong>Permissões</strong>.
           </p>
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
             </div>
           ) : roles.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
+            <p className="text-center text-neutral-500 py-8">
               Nenhuma role customizada criada. As roles padrão (Administrador, Vendedor, Usuário) estão disponíveis na aba Permissões.
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead className="hidden sm:table-cell">Criado em</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {roles.map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell className="font-medium">
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Descrição</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criado em</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                  </tr>
+                </thead>
+                <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{roles.map((r) => (
+                    <table className="w-full border-collapse">
+                      <table className="w-full border-collapse">
                         <div className="flex items-center gap-3">
                           {r.name}
                           {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{r.description || '—'}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
-                        {new Date(r.created_at).toLocaleDateString('pt-BR')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
+                        </div></td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{r.description || '—'}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString('pt-BR')}</td>
+                      <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center justify-end gap-1">
                           <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -207,23 +199,22 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                        </div></td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* Create/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{editing ? 'Editar Role' : 'Nova Role'}</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">{editing ? 'Editar Role' : 'Nova Role'}</h2>
+          </div>
           <div className="space-y-4">
             <div className="space-y-1">
               <Label>Nome *</Label>
@@ -241,7 +232,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               {editing ? 'Salvar' : 'Criar'}
             </Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
 
       {/* Delete Confirmation */}

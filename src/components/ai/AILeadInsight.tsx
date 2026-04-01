@@ -1,9 +1,9 @@
+import { Button, Card, Skeleton } from "@/components/ui/ds";
 import { useEffect } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Lead } from '@/types/crm';
-import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;
@@ -35,14 +35,14 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
 
   return (
     <Card className="border-purple-200 dark:border-purple-800/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center gap-3">
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-2">
           <Sparkles className="h-4 w-4 text-purple-500" />
           <span>Insight IA</span>
           <span className="inline-flex items-center text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h2>
+      </div>
+      <div>
         {loading ? (
           <div className="space-y-3">
             <Skeleton className="h-4 w-full" />
@@ -56,16 +56,16 @@ export default function AILeadInsight({ lead, products, stageName }: Props) {
               <ReactMarkdown>{response}</ReactMarkdown>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] text-muted-foreground">Sugestão gerada por IA — revise antes de agir</span>
+              <span className="text-[10px] text-neutral-500">Sugestão gerada por IA — revise antes de agir</span>
               <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                 <RefreshCw className="h-3 w-3 mr-1" /> Atualizar
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Nenhum insight disponível.</p>
+          <p className="text-sm text-neutral-500">Nenhum insight disponível.</p>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

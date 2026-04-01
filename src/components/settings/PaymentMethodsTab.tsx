@@ -1,9 +1,9 @@
+import { Button, Card, Input, Switch } from "@/components/ui/ds";
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Edit, Trash2, GripVertical, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Switch } from "@/components/ui/ds";
 
 interface PaymentMethod {
   id: string;
@@ -138,8 +138,8 @@ export default function PaymentMethodsTab() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader><CardTitle className="text-lg">Adicionar Nova Forma de Pagamento</CardTitle></CardHeader>
-        <CardContent>
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Adicionar Nova Forma de Pagamento</h2></div>
+        <div>
           <div className="flex gap-3">
             <Input
               placeholder="Ex: Pix, Cartão Crédito, Boleto..."
@@ -151,12 +151,12 @@ export default function PaymentMethodsTab() {
               <Plus className="h-4 w-4 mr-1" />Adicionar
             </Button>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="text-lg">Formas de Pagamento Cadastradas</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
+        <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Formas de Pagamento Cadastradas</h2></div>
+        <div>
           {loading && (
             <p className="text-sm text-neutral-500 text-center py-4">Carregando formas de pagamento...</p>
           )}
@@ -213,7 +213,7 @@ export default function PaymentMethodsTab() {
           {!loading && paymentMethods.length === 0 && (
             <p className="text-sm text-neutral-500 text-center py-4">Nenhuma forma de pagamento cadastrada.</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

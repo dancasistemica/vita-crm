@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/ds";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useImportModal } from '@/hooks/useImportModal';
@@ -8,7 +9,6 @@ import Step3Download from '@/components/import/steps/Step3Download';
 import Step4Upload from '@/components/import/steps/Step4Upload';
 import Step5Import from '@/components/import/steps/Step5Import';
 import Step6Results from '@/components/import/steps/Step6Results';
-import { Button } from "@/components/ui/ds";
 
 const STEP_LABELS = ['Intenção', 'Explicação', 'Download', 'Upload', 'Importação', 'Resultado'];
 
@@ -36,7 +36,7 @@ export default function ImportLeadsWizard() {
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-neutral-900">📥 Importar Leads</h1>
         </div>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-neutral-500">
           {state.currentStep}/6 — {STEP_LABELS[state.currentStep - 1]}
         </span>
       </div>

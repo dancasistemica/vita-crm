@@ -1,3 +1,4 @@
+import { Button, Card, Input, Tabs } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { hasSuperadmin } from '@/services/bootstrapService';
-import { Button, Card, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 const loginSchema = z.object({
   email: z.string().trim().email('Email inválido').max(255),
@@ -181,13 +181,13 @@ export default function AuthPage() {
           <Card padding="none" className="overflow-hidden">
             <Tabs defaultValue="login">
               <div className="p-6 pb-3 border-b border-neutral-100">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Entrar</TabsTrigger>
-                  <TabsTrigger value="signup">Criar Conta</TabsTrigger>
-                </TabsList>
+                <div className="flex gap-2 border-b border-neutral-200 mb-4">
+                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Entrar</button>
+                  <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Criar Conta</button>
+                </div>
               </div>
               <div className="p-6">
-                <TabsContent value="login" className="mt-0">
+                <div>
                   <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                     <Input
                       label="Email"
@@ -218,9 +218,9 @@ export default function AuthPage() {
                       Esqueci minha senha
                     </Button>
                   </form>
-                </TabsContent>
+                </div>
 
-                <TabsContent value="signup" className="mt-0">
+                <div>
                   <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
                     <Input
                       label="Nome completo"
@@ -257,7 +257,7 @@ export default function AuthPage() {
                       {isSubmitting ? 'Criando conta...' : 'Criar conta'}
                     </Button>
                   </form>
-                </TabsContent>
+                </div>
               </div>
             </Tabs>
           </Card>

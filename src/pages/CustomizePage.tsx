@@ -1,10 +1,10 @@
+import { Alert, AlertDialog, AlertDialogTrigger, Button, Card, Input, Label, Select, Slider } from "@/components/ui/ds";
 import { useState, useRef, useCallback } from 'react';
 import { useBrand, DEFAULT_BRAND, BrandSettings } from '@/contexts/BrandContext';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Upload, Trash2, RotateCcw, Save, Palette, Image, Type, Globe, Info } from 'lucide-react';
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Slider } from "@/components/ui/ds";
 
 const PALETTES = [
   { name: 'Rosa Terapêutico', primary: '#C4707A', secondary: '#F3E8FF', accent: '#C026D3' },
@@ -121,13 +121,13 @@ export default function CustomizePage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Logo Section */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3"><Image className="h-5 w-5" /> Logomarca</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2"><Image className="h-5 w-5" /> Logomarca</h2>
+            </div>
+            <div>
               <div>
                 <Label>Logo principal</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, SVG ou WebP, fundo transparente recomendado (máx. 2MB)</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, SVG ou WebP, fundo transparente recomendado (máx. 2MB)</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors"
                   onDragOver={e => e.preventDefault()}
@@ -146,12 +146,12 @@ export default function CustomizePage() {
                           <img src={brand.logo_url} alt="Logo escuro" className="h-10 object-contain" />
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">Clique ou arraste para trocar</p>
+                      <p className="text-xs text-neutral-500">Clique ou arraste para trocar</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">Clique ou arraste a logo aqui</p>
+                      <Upload className="h-8 w-8 mx-auto text-neutral-500" />
+                      <p className="text-sm text-neutral-500">Clique ou arraste a logo aqui</p>
                     </div>
                   )}
                 </div>
@@ -166,7 +166,7 @@ export default function CustomizePage() {
                     
                     {/* Desktop */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">🖥️ Desktop</Label>
+                      <Label className="text-xs text-neutral-500">🖥️ Desktop</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[brand.logo_size_desktop]}
@@ -179,9 +179,9 @@ export default function CustomizePage() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{brand.logo_size_desktop}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{brand.logo_size_desktop}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>24px</span><span>200px</span>
                       </div>
                       {brand.logo_size_desktop > 120 && (
@@ -191,7 +191,7 @@ export default function CustomizePage() {
 
                     {/* Mobile */}
                     <div className="space-y-1">
-                      <Label className="text-xs text-muted-foreground">📱 Mobile</Label>
+                      <Label className="text-xs text-neutral-500">📱 Mobile</Label>
                       <div className="flex items-center gap-3">
                         <Slider
                           value={[brand.logo_size_mobile]}
@@ -204,9 +204,9 @@ export default function CustomizePage() {
                           step={4}
                           className="flex-1"
                         />
-                        <span className="text-sm text-muted-foreground w-12 text-right">{brand.logo_size_mobile}px</span>
+                        <span className="text-sm text-neutral-500 w-12 text-right">{brand.logo_size_mobile}px</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <div className="flex justify-between text-[10px] text-neutral-500">
                         <span>20px</span><span>80px</span>
                       </div>
                       {brand.logo_size_mobile > 56 && (
@@ -226,7 +226,7 @@ export default function CustomizePage() {
               </div>
               <div>
                 <Label>Favicon (32x32px)</Label>
-                <p className="text-xs text-muted-foreground mb-2">PNG, ICO ou SVG</p>
+                <p className="text-xs text-neutral-500 mb-2">PNG, ICO ou SVG</p>
                 <div
                   className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-muted/30 transition-colors inline-block"
                   onDragOver={e => e.preventDefault()}
@@ -238,24 +238,24 @@ export default function CustomizePage() {
                   {brand.favicon_url ? (
                     <div className="flex items-center gap-3">
                       <img src={brand.favicon_url} alt="Favicon" className="h-8 w-8 object-contain" />
-                      <span className="text-xs text-muted-foreground">Clique para trocar</span>
+                      <span className="text-xs text-neutral-500">Clique para trocar</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
-                      <Upload className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Upload favicon</span>
+                      <Upload className="h-5 w-5 text-neutral-500" />
+                      <span className="text-sm text-neutral-500">Upload favicon</span>
                     </div>
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Colors Section */}
           <Card>
-            <CardHeader>
+            <div className="mb-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <CardTitle className="text-lg flex items-center gap-3"><Palette className="h-5 w-5" /> Cores</CardTitle>
+                <h2 className="text-2xl font-semibold mb-2"><Palette className="h-5 w-5" /> Cores</h2>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
@@ -297,8 +297,8 @@ export default function CustomizePage() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            </div>
+            <div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <ColorPicker label="Cor Primária" description="Botões e elementos de destaque"
                   value={brand.primary_color} onChange={v => handleColorChange('primary_color', v)} />
@@ -339,27 +339,27 @@ export default function CustomizePage() {
                   ℹ️ As demais cores do sistema (hover, tipografia, layout, feedback) seguem o padrão global definido nas Configurações do Sistema pelo SuperAdmin.
                 </p>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Typography Section */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-3"><Type className="h-5 w-5" /> Tipografia</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold mb-2"><Type className="h-5 w-5" /> Tipografia</h2>
+            </div>
+            <div>
               <Label>Fonte do CRM</Label>
               <Select value={brand.font_family} onValueChange={v => updateLocalBrand({ font_family: v })}>
-                <SelectTrigger className="w-full max-w-xs mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
+                    <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
@@ -397,23 +397,23 @@ export default function CustomizePage() {
 
           {/* Lead card preview */}
           <Card>
-            <CardContent className="p-4 space-y-3">
-              <p className="text-xs text-muted-foreground">Card de lead</p>
+            <div>
+              <p className="text-xs text-neutral-500">Card de lead</p>
               <div className="p-3 rounded-lg border bg-card">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium">Maria Silva</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full text-white"
                     style={{ backgroundColor: brand.accent_color }}>Quente</span>
                 </div>
-                <p className="text-xs text-muted-foreground">Interessada em dança terapêutica</p>
+                <p className="text-xs text-neutral-500">Interessada em dança terapêutica</p>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* preview */}
           <Card>
-            <CardContent className="p-4 space-y-3">
-              <p className="text-xs text-muted-foreground">Botão primário</p>
+            <div>
+              <p className="text-xs text-neutral-500">Botão primário</p>
               <Button variant="secondary" size="sm" className="px-4 py-2 rounded-md text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: brand.primary_color }}>
                 Salvar alterações
@@ -424,7 +424,7 @@ export default function CustomizePage() {
                 <span className="text-[10px] px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: brand.secondary_color }}>Tag 2</span>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>
@@ -438,7 +438,7 @@ function ColorPicker({ label, description, value, onChange }: {
   return (
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
-      <p className="text-xs text-muted-foreground">{description}</p>
+      <p className="text-xs text-neutral-500">{description}</p>
       <div className="flex items-center gap-3 mt-1">
         <input type="color" value={value} onChange={e => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />
@@ -502,7 +502,7 @@ function SidebarColorPicker({ label, description, hslValue, onChange }: {
   return (
     <div className="space-y-1">
       <Label className="text-sm">{label}</Label>
-      <p className="text-xs text-muted-foreground">{description}</p>
+      <p className="text-xs text-neutral-500">{description}</p>
       <div className="flex items-center gap-3 mt-1">
         <input type="color" value={hexValue} onChange={e => onChange(hexToHSLString(e.target.value))}
           className="w-10 h-10 rounded-lg border cursor-pointer p-0.5" />

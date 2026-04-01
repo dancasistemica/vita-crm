@@ -1,3 +1,4 @@
+import { Button, Checkbox, Dialog, Input, Label, Select, Separator, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { updateOrganization } from '@/services/superadminService';
@@ -6,7 +7,6 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
 import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
-import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 interface EditOrganizationModalProps {
   open: boolean;
@@ -195,13 +195,13 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Editar Organização</DialogTitle>
-        </DialogHeader>
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Editar Organização</h2>
+        </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-8 text-muted-foreground">Carregando...</div>
+          <div className="flex items-center justify-center py-8 text-neutral-500">Carregando...</div>
         ) : (
           <div className="space-y-6">
             {/* Dados Básicos */}
@@ -302,14 +302,14 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 <div className="space-y-3">
                   <Label>Estado (UF)</Label>
                   <Select value={form.estado || undefined} onValueChange={(v) => setForm(prev => ({ ...prev, estado: v }))}>
-                    <SelectTrigger disabled={loadingCEP}>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
+                    
+                      
+                    
+                    
                       {UF_OPTIONS.map(uf => (
-                        <SelectItem key={uf} value={uf}>{uf}</SelectItem>
+                        <option key={uf} value={uf}>{uf}</option>
                       ))}
-                    </SelectContent>
+                    
                   </Select>
                 </div>
               </div>
@@ -333,7 +333,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                     <Button variant="secondary" size="sm"
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-foreground"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -346,7 +346,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
                 {passwordStrength && (
                   <div className="flex items-center gap-3">
                     <div className={`h-1.5 flex-1 rounded-full ${passwordStrength.color}`} />
-                    <span className="text-xs font-medium text-muted-foreground">{passwordStrength.label}</span>
+                    <span className="text-xs font-medium text-neutral-500">{passwordStrength.label}</span>
                   </div>
                 )}
 
@@ -370,7 +370,7 @@ export function EditOrganizationModal({ open, onOpenChange, orgId, onSuccess }: 
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }

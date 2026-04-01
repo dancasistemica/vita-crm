@@ -1,5 +1,5 @@
-import { Download, FileSpreadsheet, Upload, CheckCircle, Database } from 'lucide-react';
 import { Button } from "@/components/ui/ds";
+import { Download, FileSpreadsheet, Upload, CheckCircle, Database } from 'lucide-react';
 
 interface Props {
   onNext: () => void;
@@ -30,7 +30,7 @@ export default function Step2Explanation({ onNext, onBack }: Props) {
               <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                 <Icon className="h-4 w-4 text-primary" /> {label}
               </p>
-              <p className="text-xs text-muted-foreground">{desc}</p>
+              <p className="text-xs text-neutral-500">{desc}</p>
             </div>
           </div>
         ))}
@@ -38,7 +38,7 @@ export default function Step2Explanation({ onNext, onBack }: Props) {
 
       <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-1">
         <p className="text-xs font-semibold text-foreground">📌 Informações importantes</p>
-        <ul className="text-xs text-muted-foreground space-y-0.5 list-disc list-inside">
+        <ul className="text-xs text-neutral-500 space-y-0.5 list-disc list-inside">
           <li>Campos obrigatórios: <strong>Nome</strong> + (<strong>Email</strong> ou <strong>Telefone</strong>)</li>
           <li>Duplicatas detectadas por email ou telefone</li>
           <li>Opções faltantes criadas automaticamente</li>

@@ -1,8 +1,8 @@
+import { Alert, AlertDialog, Badge, Button, Dialog, Input, Label, Select, Switch, Table, ToggleGroup } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, GripVertical, X, Search, AlertTriangle, Globe } from 'lucide-react';
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ToggleGroup, ToggleGroupItem } from "@/components/ui/ds";
 
 interface CustomField {
   id: string;
@@ -447,14 +447,14 @@ export function CustomFieldsManager() {
             <div className="flex-1 bg-white rounded-lg p-4 border border-neutral-200">
               <Label>Organização</Label>
               <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                <SelectTrigger className="bg-white border-neutral-300 min-h-[44px] focus:ring-primary-500 focus:ring-offset-0">
-                  <SelectValue placeholder="Selecione uma organização" />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {organizations.map(org => (
-                    <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
+                    <option key={org.id} value={org.id}>{org.name}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
           </div>
@@ -464,7 +464,7 @@ export function CustomFieldsManager() {
         {(isGlobalMode || selectedOrgId) && (
           <div className="flex items-end gap-3">
             <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
               <Input
                 placeholder="Buscar campos..."
                 value={searchTerm}
@@ -486,38 +486,28 @@ export function CustomFieldsManager() {
             <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         ) : filteredGlobalFields.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground text-sm">
+          <div className="text-center py-8 text-neutral-500 text-sm">
             {globalFields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Label</TableHead>
-                  <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead className="hidden md:table-cell">Orgs</TableHead>
-                  <TableHead className="w-20">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredGlobalFields.map((field) => (
-                  <TableRow key={field.field_name}>
-                    <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className="text-xs">
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Label</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Orgs</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                </tr>
+              </thead>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">{filteredGlobalFields.map((field) => (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\">{field.field_label}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_name}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
+                      </Badge></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
                         {field.org_count}/{totalOrgs}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
+                      </Badge></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -538,12 +528,11 @@ export function CustomFieldsManager() {
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                      </div></td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )
       )}
@@ -555,26 +544,23 @@ export function CustomFieldsManager() {
             <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         ) : filteredFields.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground text-sm">
+          <div className="text-center py-8 text-neutral-500 text-sm">
             {fields.length === 0 ? 'Nenhum campo customizado criado.' : 'Nenhum campo encontrado.'}
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-10">Op</TableHead>
-                  <TableHead>Label</TableHead>
-                  <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead className="hidden sm:table-cell">Obrigatório</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-20">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\"><table className="w-full border-collapse">Op</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Label</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nome interno</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tipo</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Obrigatório</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+                </tr>
+              </thead>
+              <table className="w-full border-collapse">
                 {filteredFields.map((field, index) => (
-                  <TableRow
+                  <tr className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
                     key={field.id}
                     draggable
                     onDragStart={() => handleDragStart(index)}
@@ -582,38 +568,29 @@ export function CustomFieldsManager() {
                     onDragEnd={handleDragEnd}
                     className={dragIndex === index ? 'opacity-50' : ''}
                   >
-                    <TableCell className="cursor-grab">
-                      <GripVertical className="h-4 w-4 text-muted-foreground" />
-                    </TableCell>
-                    <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className="text-xs">
+                    <table className="w-full border-collapse">
+                      <GripVertical className="h-4 w-4 text-neutral-500" /></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_label}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.field_name}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
+                      </Badge></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
                         {field.is_active ? 'Ativo' : 'Inativo'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
+                      </Badge></td>
+                    <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => setDeleteFieldId(field.id)} className="h-8 w-8 p-0 text-error-600">
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                      </div></td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )
       )}
@@ -628,19 +605,19 @@ export function CustomFieldsManager() {
           <div>
             <Label htmlFor="name">Nome do Campo (Internal Name)</Label>
             <Input id="name" value={fieldName} onChange={e => setFieldName(e.target.value)} disabled={!!editingField || !!editingGlobalField} placeholder="Ex: tamanho_camiseta" />
-            <p className="text-[10px] text-muted-foreground mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
+            <p className="text-[10px] text-neutral-500 mt-1 uppercase">USADO PARA INTEGRAÇÕES E CÁLCULOS. NÃO PODE SER ALTERADO APÓS CRIADO.</p>
           </div>
           <div>
             <Label htmlFor="type">Tipo de Campo</Label>
             <Select value={fieldType} onValueChange={setFieldType}>
-              <SelectTrigger id="type">
-                <SelectValue placeholder="Selecione o tipo" />
-              </SelectTrigger>
-              <SelectContent>
+              
+                
+              
+              
                 {FIELD_TYPES.map(t => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
-              </SelectContent>
+              
             </Select>
           </div>
 
@@ -658,7 +635,7 @@ export function CustomFieldsManager() {
                     <X className="h-3 w-3 cursor-pointer hover:text-error-600" onClick={() => removeOption(opt)} />
                   </Badge>
                 ))}
-                {fieldOptions.length === 0 && <p className="text-xs text-muted-foreground">Nenhuma opção adicionada.</p>}
+                {fieldOptions.length === 0 && <p className="text-xs text-neutral-500">Nenhuma opção adicionada.</p>}
               </div>
             </div>
           )}

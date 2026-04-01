@@ -1,9 +1,9 @@
+import { Button, Input, Label, Textarea } from "@/components/ui/ds";
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
 import { Save, RotateCcw, Loader2 } from 'lucide-react';
-import { Button, Input, Label, Textarea } from "@/components/ui/ds";
 
 interface EmailTemplateData {
   id?: string;
@@ -241,7 +241,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
       </div>
     );
   }
@@ -251,14 +251,14 @@ export default function EmailTemplateEditor({ templateType }: Props) {
       {/* Editor */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 mb-2">
-          <span className={`text-xs px-2 py-0.5 rounded-full ${isCustom ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
+          <span className={`text-xs px-2 py-0.5 rounded-full ${isCustom ? 'bg-primary/10 text-primary' : 'bg-muted text-neutral-500'}`}>
             {isCustom ? '✏️ Customizado' : '📋 Padrão'}
           </span>
         </div>
 
         {/* Variables reference */}
         <div className="bg-muted/50 rounded-lg p-3">
-          <p className="text-xs font-medium text-muted-foreground mb-2">Variáveis disponíveis:</p>
+          <p className="text-xs font-medium text-neutral-500 mb-2">Variáveis disponíveis:</p>
           <div className="flex flex-wrap gap-1.5">
             {VARIABLES.map(v => (
               <span key={v.key} className="text-xs bg-background border rounded px-2 py-0.5 font-mono" title={v.desc}>
@@ -278,7 +278,7 @@ export default function EmailTemplateEditor({ templateType }: Props) {
               maxLength={100}
               className="min-h-[44px]"
             />
-            <span className="text-xs text-muted-foreground">{form.subject.length}/100</span>
+            <span className="text-xs text-neutral-500">{form.subject.length}/100</span>
           </div>
 
           <div>

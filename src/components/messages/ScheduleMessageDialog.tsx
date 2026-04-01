@@ -1,9 +1,9 @@
+import { Alert, Button, Dialog, Input, Label, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useScheduledMessages, ScheduledMessage } from '@/hooks/useScheduledMessages';
-import { Alert, AlertDescription, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
 
 interface RecipientRef {
   id: string;
@@ -94,13 +94,13 @@ export const ScheduleMessageDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-md sm:w-full max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Agendar Mensagem WhatsApp</DialogTitle>
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Agendar Mensagem WhatsApp</h2>
           <DialogDescription>
             Para: {recipient?.name} ({recipient?.phone})
           </DialogDescription>
-        </DialogHeader>
+        </div>
 
         <div className="space-y-4">
           <div>
@@ -112,7 +112,7 @@ export const ScheduleMessageDialog = ({
               onChange={(e) => setMessageText(e.target.value)}
               className="mt-2 min-h-[120px]"
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-neutral-500 mt-1">
               {messageText.length} caracteres
             </p>
           </div>
@@ -143,13 +143,13 @@ export const ScheduleMessageDialog = ({
           {error && (
             <Alert variant="error">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <p className="text-sm">{error}</p>
             </Alert>
           )}
 
           <div className="bg-muted p-3 rounded text-sm">
             <p className="font-semibold mb-2">Preview:</p>
-            <p className="text-muted-foreground whitespace-pre-wrap">{messageText || '(vazio)'}</p>
+            <p className="text-neutral-500 whitespace-pre-wrap">{messageText || '(vazio)'}</p>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ export const ScheduleMessageDialog = ({
             {loading ? 'Agendando...' : 'Agendar'}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 };

@@ -1,8 +1,8 @@
+import { Badge, Button, Checkbox, Dialog, Label } from "@/components/ui/ds";
 import { useState } from 'react';
 import { FileDown, FileSpreadsheet, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { exportToCSV, exportToPDF, type ExportColumn } from '@/services/exportService';
-import { Badge, Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label } from "@/components/ui/ds";
 
 const LEAD_COLUMNS: ExportColumn[] = [
   { value: 'name', label: 'Nome' },
@@ -86,13 +86,13 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-display flex items-center gap-3">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             <FileDown className="h-5 w-5 text-primary" />
             Exportar {type === 'leads' ? 'Leads' : 'Clientes'}
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+        </div>
 
         <div className="space-y-6">
           {/* Format */}
@@ -105,10 +105,10 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   format === 'csv' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
                 }`}
               >
-                <FileSpreadsheet className={`h-5 w-5 ${format === 'csv' ? 'text-primary' : 'text-muted-foreground'}`} />
+                <FileSpreadsheet className={`h-5 w-5 ${format === 'csv' ? 'text-primary' : 'text-neutral-500'}`} />
                 <div className="text-left">
                   <p className="text-sm font-medium text-foreground">CSV</p>
-                  <p className="text-xs text-muted-foreground">Excel</p>
+                  <p className="text-xs text-neutral-500">Excel</p>
                 </div>
               </Button>
               <Button variant="secondary" size="sm"
@@ -117,10 +117,10 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                   format === 'pdf' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
                 }`}
               >
-                <FileText className={`h-5 w-5 ${format === 'pdf' ? 'text-primary' : 'text-muted-foreground'}`} />
+                <FileText className={`h-5 w-5 ${format === 'pdf' ? 'text-primary' : 'text-neutral-500'}`} />
                 <div className="text-left">
                   <p className="text-sm font-medium text-foreground">PDF</p>
-                  <p className="text-xs text-muted-foreground">Relatório</p>
+                  <p className="text-xs text-neutral-500">Relatório</p>
                 </div>
               </Button>
             </div>
@@ -133,7 +133,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
               <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('all')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
-                  dataScope === 'all' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
+                  dataScope === 'all' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-neutral-500 hover:border-primary/50'
                 }`}
               >
                 Todos ({allData.length})
@@ -141,7 +141,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
               <Button variant="secondary" size="sm"
                 onClick={() => setDataScope('filtered')}
                 className={`flex-1 p-2 rounded-lg border text-sm transition-colors ${
-                  dataScope === 'filtered' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground hover:border-primary/50'
+                  dataScope === 'filtered' ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-neutral-500 hover:border-primary/50'
                 }`}
               >
                 Filtrados ({filteredData.length})
@@ -168,7 +168,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
                 </div>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">{selectedColumns.length} colunas selecionadas</p>
+            <p className="text-xs text-neutral-500 mt-1">{selectedColumns.length} colunas selecionadas</p>
           </div>
         </div>
 
@@ -178,7 +178,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
             {loading ? 'Exportando...' : `Exportar ${format.toUpperCase()}`}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }

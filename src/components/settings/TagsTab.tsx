@@ -1,9 +1,9 @@
+import { Badge, Button, Card, Input } from "@/components/ui/ds";
 import { useState } from "react";
 import { useCRMStore, CRMTag } from "@/store/crmStore";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@/components/ui/ds";
 
 export default function TagsTab() {
   const { tags, addTag, updateTag, removeTag } = useCRMStore();
@@ -13,8 +13,8 @@ export default function TagsTab() {
 
   return (
     <Card>
-      <CardHeader><CardTitle className="text-lg">Tags Personalizadas</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Tags Personalizadas</h2></div>
+      <div>
         <ConfirmDeleteDialog
           isOpen={deleteConfirm.isOpen}
           itemName={deleteConfirm.name}
@@ -43,7 +43,7 @@ export default function TagsTab() {
           <Input placeholder="Nova tag..." value={newTag} onChange={e => setNewTag(e.target.value)} />
           <Button onClick={() => { if (newTag.trim()) { addTag({ id: crypto.randomUUID(), name: newTag.trim(), color: 'hsl(var(--primary))' }); setNewTag(''); toast.success("Tag adicionada"); } }} disabled={!newTag.trim()}><Plus className="h-4 w-4 mr-1" />Adicionar</Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

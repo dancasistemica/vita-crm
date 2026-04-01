@@ -1,10 +1,10 @@
+import { Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { X, Loader, ChevronRight, Check, Search, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 interface CreateSubscriptionModalProps {
   isOpen: boolean;

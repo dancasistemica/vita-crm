@@ -1,9 +1,9 @@
+import { Button, Textarea } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, Copy, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Lead, Interaction } from '@/types/crm';
-import { Button, Textarea } from "@/components/ui/ds";
 
 interface Props {
   lead: Lead;
@@ -59,7 +59,7 @@ Gere uma sugestão de mensagem acolhedora para enviar a esta lead.`;
             <span className="inline-flex items-center gap-1 text-xs font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-2 py-0.5 rounded-full">
               ✨ IA
             </span>
-            <span className="text-xs text-muted-foreground">Sugestão gerada por IA — revise antes de enviar</span>
+            <span className="text-xs text-neutral-500">Sugestão gerada por IA — revise antes de enviar</span>
           </div>
           <Textarea value={suggestion} onChange={e => setSuggestion(e.target.value)} rows={5} className="text-sm" />
           <div className="flex gap-3">

@@ -1,9 +1,9 @@
+import { Alert, Button, Card, Skeleton } from "@/components/ui/ds";
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { AlertCircle, Clock, ArrowRight } from 'lucide-react';
-import { Alert, Button, Card, CardContent, Skeleton } from "@/components/ui/ds";
 
 interface TaskPreview {
   id: string;
@@ -111,7 +111,7 @@ export default function TaskMetricsCards() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[1, 2].map(i => (
           <Card key={i} className="shadow-card border-border/60">
-            <CardContent className="pt-5 pb-4"><Skeleton className="h-32 w-full" /></CardContent>
+            <div><Skeleton className="h-32 w-full" /></div>
           </Card>
         ))}
       </div>
@@ -122,18 +122,18 @@ export default function TaskMetricsCards() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Overdue */}
       <Card className="shadow-card border-border/60 border-l-4 border-l-destructive">
-        <CardContent className="pt-5 pb-4 space-y-3">
+        <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-destructive/10 text-destructive">
               <AlertCircle className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Tarefas Vencidas</p>
+              <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Tarefas Vencidas</p>
               <p className="text-2xl font-bold text-destructive">{overdueCount}</p>
             </div>
           </div>
           {overdueCount === 0 ? (
-            <p className="text-sm text-muted-foreground">✅ Nenhuma tarefa vencida</p>
+            <p className="text-sm text-neutral-500">✅ Nenhuma tarefa vencida</p>
           ) : (
             <div className="space-y-1.5">
               {overdueTasks.map(t => (
@@ -149,23 +149,23 @@ export default function TaskMetricsCards() {
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       {/* Pending */}
       <Card className="shadow-card border-border/60 border-l-4 border-l-warning">
-        <CardContent className="pt-5 pb-4 space-y-3">
+        <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-warning/10 text-warning">
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Tarefas Pendentes</p>
+              <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Tarefas Pendentes</p>
               <p className="text-2xl font-bold text-warning">{pendingCount}</p>
             </div>
           </div>
           {pendingCount === 0 ? (
-            <p className="text-sm text-muted-foreground">✅ Nenhuma tarefa pendente</p>
+            <p className="text-sm text-neutral-500">✅ Nenhuma tarefa pendente</p>
           ) : (
             <div className="space-y-1.5">
               {pendingTasks.map(t => (
@@ -181,7 +181,7 @@ export default function TaskMetricsCards() {
               Ver todas <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

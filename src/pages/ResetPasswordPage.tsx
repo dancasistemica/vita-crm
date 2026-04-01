@@ -1,9 +1,9 @@
+import { Button, Card, Input, Label } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { getRecoveryContextFromUrl } from '@/utils/authRecovery';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -97,15 +97,15 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Link inválido</CardTitle>
-            <CardDescription>Este link de recuperação é inválido ou expirou.</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold mb-2">Link inválido</h2>
+            <p className="text-sm text-neutral-500 mb-4">Este link de recuperação é inválido ou expirou.</p>
+          </div>
+          <div>
             <Button onClick={() => navigate('/auth')} className="w-full min-h-[44px]">
               Voltar ao login
             </Button>
-          </CardContent>
+          </div>
         </Card>
       </div>
     );
@@ -114,11 +114,11 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Nova Senha</CardTitle>
-          <CardDescription>Defina sua nova senha abaixo</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Nova Senha</h2>
+          <p className="text-sm text-neutral-500 mb-4">Defina sua nova senha abaixo</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label htmlFor="new-password">Nova senha</Label>
             <Input
@@ -144,7 +144,7 @@ export default function ResetPasswordPage() {
           <Button onClick={handleResetPassword} disabled={isSubmitting} className="w-full min-h-[44px]">
             {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
           </Button>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

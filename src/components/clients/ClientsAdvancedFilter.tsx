@@ -1,7 +1,7 @@
+import { Badge, Button, Checkbox, Collapsible, Input, Label, Slider } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Search, X, RotateCcw, ChevronDown, ChevronRight, Filter } from 'lucide-react';
 import { ClientsFilterState } from '@/hooks/useClientsFilter';
-import { Badge, Button, Checkbox, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Label, Slider } from "@/components/ui/ds";
 interface SimpleProduct {
   id: string;
   name: string;
@@ -22,11 +22,11 @@ function LogicToggle({ value, onChange }: { value: 'AND' | 'OR'; onChange: (v: '
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted p-0.5 text-xs">
       <Button variant="secondary" size="sm"
-        className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+        className={`rounded px-2 py-0.5 transition-colors ${value === 'AND' ? 'bg-primary text-primary-foreground' : 'text-neutral-500 hover:text-foreground'}`}
         onClick={() => onChange('AND')}
       >E</Button>
       <Button variant="secondary" size="sm"
-        className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+        className={`rounded px-2 py-0.5 transition-colors ${value === 'OR' ? 'bg-primary text-primary-foreground' : 'text-neutral-500 hover:text-foreground'}`}
         onClick={() => onChange('OR')}
       >OU</Button>
     </div>
@@ -57,7 +57,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
 
       {/* Search */}
       <div className="relative mb-4">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
         <Input
           placeholder="Buscar cliente por nome..."
           value={filters.search}
@@ -66,7 +66,7 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
         />
         {filters.search && (
           <Button variant="secondary" size="sm" onClick={() => updateFilter('search', '')} className="absolute right-2.5 top-2.5">
-            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+            <X className="h-4 w-4 text-neutral-500 hover:text-foreground" />
           </Button>
         )}
       </div>
@@ -103,11 +103,11 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
             />
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-muted-foreground">De (R$)</Label>
+                <Label className="text-xs text-neutral-500">De (R$)</Label>
                 <Input type="number" value={filters.valueRange.min} onChange={e => updateFilter('valueRange', { ...filters.valueRange, min: Number(e.target.value) })} className="h-8 text-xs" />
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground">Até (R$)</Label>
+                <Label className="text-xs text-neutral-500">Até (R$)</Label>
                 <Input type="number" value={filters.valueRange.max} onChange={e => updateFilter('valueRange', { ...filters.valueRange, max: Number(e.target.value) })} className="h-8 text-xs" />
               </div>
             </div>
@@ -137,11 +137,11 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs text-muted-foreground">De</Label>
+              <Label className="text-xs text-neutral-500">De</Label>
               <Input type="date" value={filters.dateRange.from} onChange={e => updateFilter('dateRange', { ...filters.dateRange, from: e.target.value })} className="h-8 text-xs" />
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">Até</Label>
+              <Label className="text-xs text-neutral-500">Até</Label>
               <Input type="date" value={filters.dateRange.to} onChange={e => updateFilter('dateRange', { ...filters.dateRange, to: e.target.value })} className="h-8 text-xs" />
             </div>
           </div>
@@ -233,11 +233,11 @@ export default function ClientsAdvancedFilter({ filters, updateFilter, resetFilt
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs text-muted-foreground">De</Label>
+              <Label className="text-xs text-neutral-500">De</Label>
               <Input type="date" value={filters.lastInteraction.from} onChange={e => updateFilter('lastInteraction', { ...filters.lastInteraction, from: e.target.value, preset: '' })} className="h-8 text-xs" />
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">Até</Label>
+              <Label className="text-xs text-neutral-500">Até</Label>
               <Input type="date" value={filters.lastInteraction.to} onChange={e => updateFilter('lastInteraction', { ...filters.lastInteraction, to: e.target.value, preset: '' })} className="h-8 text-xs" />
             </div>
           </div>

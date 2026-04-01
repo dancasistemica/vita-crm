@@ -1,10 +1,10 @@
+import { Badge, Button, Card, Checkbox, ScrollArea, ScrollBar, Switch, Tabs } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Lock, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface PermissionModule {
   label: string;
@@ -231,11 +231,11 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
   if (!isAdmin) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
+        <div>
           <Lock className="h-12 w-12" />
           <p className="text-lg font-medium">Acesso Restrito</p>
           <p className="text-sm">Apenas administradores têm acesso a esta seção.</p>
-        </CardContent>
+        </div>
       </Card>
     );
   }
@@ -244,16 +244,16 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
     <div className="space-y-4">
       <Tabs value={selectedRole} onValueChange={setSelectedRole}>
         <ScrollArea className="w-full">
-          <TabsList className="inline-flex w-max min-w-full">
+          <div className="flex gap-2 border-b border-neutral-200 mb-4">
             {ROLES.map(r => (
-              <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">{r.label}</button>
             ))}
-          </TabsList>
+          </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
         {ROLES.map(r => (
-          <TabsContent key={r.value} value={r.value}>
+          <div>
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -264,24 +264,24 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                   const allEnabled = mod.permissions.every(p => permissions[p.key]);
                   return (
                     <Card key={mod.label}>
-                      <CardHeader className="pb-3">
+                      <div className="mb-4">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-sm flex items-center gap-3">
+                          <h2 className="text-2xl font-semibold mb-2">
                             <span>{mod.icon}</span> {mod.label}
                             <Badge variant="secondary" className="ml-1 text-xs">
                               {activeCount[mod.label]}/{mod.permissions.length}
                             </Badge>
-                          </CardTitle>
+                          </h2>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs text-muted-foreground">Tudo</span>
+                            <span className="text-xs text-neutral-500">Tudo</span>
                             <Switch
                               checked={allEnabled}
                               onCheckedChange={(checked) => toggleModule(mod, checked)}
                             />
                           </div>
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3.5">
+                      </div>
+                      <div>
                         {mod.permissions.map(perm => (
                           <label key={perm.key} className="flex items-center gap-3.5 cursor-pointer text-sm">
                             <Checkbox
@@ -291,13 +291,13 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                             <span className="text-foreground">{perm.label}</span>
                           </label>
                         ))}
-                      </CardContent>
+                      </div>
                     </Card>
                   );
                 })}
               </div>
             )}
-          </TabsContent>
+          </div>
         ))}
       </Tabs>
 

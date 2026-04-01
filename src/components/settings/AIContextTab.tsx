@@ -1,7 +1,7 @@
+import { Badge, Button, Card, Input, Label, Select, Separator, Textarea } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useAIContext, AIContextData } from '@/hooks/useAIContext';
 import { Brain, Target, Briefcase, Plus, X, Sparkles, Eye } from 'lucide-react';
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 const BUSINESS_MODELS = ['B2B', 'B2C', 'B2B2C', 'Marketplace', 'SaaS', 'Agência', 'Consultoria', 'Outro'];
 
@@ -45,20 +45,20 @@ export default function AIContextTab() {
     updateServices(key, current.filter(s => s !== value));
   };
 
-  if (loading) return <div className="flex items-center justify-center p-6 text-muted-foreground">Carregando...</div>;
+  if (loading) return <div className="flex items-center justify-center p-6 text-neutral-500">Carregando...</div>;
 
   return (
     <div className="space-y-6">
       {/* Descrição do Negócio */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Brain className="h-5 w-5 text-primary" />
             Descrição do Negócio
-          </CardTitle>
-          <CardDescription>Descreva brevemente o que sua organização faz para a IA personalizar sugestões.</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Descreva brevemente o que sua organização faz para a IA personalizar sugestões.</p>
+        </div>
+        <div>
           <Textarea
             placeholder="Ex: Agência de marketing digital especializada em e-commerce"
             maxLength={500}
@@ -66,20 +66,20 @@ export default function AIContextTab() {
             onChange={e => setForm(prev => ({ ...prev, ai_context: e.target.value }))}
             className="min-h-[100px]"
           />
-          <p className="text-xs text-muted-foreground mt-1">{form.ai_context.length}/500 caracteres</p>
-        </CardContent>
+          <p className="text-xs text-neutral-500 mt-1">{form.ai_context.length}/500 caracteres</p>
+        </div>
       </Card>
 
       {/* Serviços */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Briefcase className="h-5 w-5 text-primary" />
             Serviços
-          </CardTitle>
-          <CardDescription>Defina os serviços que sua organização oferece e os que NÃO oferece.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Defina os serviços que sua organização oferece e os que NÃO oferece.</p>
+        </div>
+        <div>
           {/* Serviços Oferecidos */}
           <div className="space-y-3">
             <Label>Serviços Oferecidos</Label>
@@ -117,7 +117,7 @@ export default function AIContextTab() {
 
           {/* Serviços NÃO Oferecidos */}
           <div className="space-y-3">
-            <Label>Serviços NÃO Oferecidos <span className="text-muted-foreground text-xs">(IA evitará sugerir)</span></Label>
+            <Label>Serviços NÃO Oferecidos <span className="text-neutral-500 text-xs">(IA evitará sugerir)</span></Label>
             <div className="flex gap-3">
               <Input
                 placeholder="Adicionar serviço a excluir..."
@@ -138,18 +138,18 @@ export default function AIContextTab() {
               ))}
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Público-Alvo e Modelo */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Target className="h-5 w-5 text-primary" />
             Público e Modelo de Negócio
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Público-Alvo</Label>
             <Textarea
@@ -158,30 +158,30 @@ export default function AIContextTab() {
               value={form.ai_target_audience}
               onChange={e => setForm(prev => ({ ...prev, ai_target_audience: e.target.value }))}
             />
-            <p className="text-xs text-muted-foreground">{form.ai_target_audience.length}/300 caracteres</p>
+            <p className="text-xs text-neutral-500">{form.ai_target_audience.length}/300 caracteres</p>
           </div>
           <div className="space-y-3">
             <Label>Modelo de Negócio</Label>
             <Select value={form.ai_business_model} onValueChange={v => setForm(prev => ({ ...prev, ai_business_model: v }))}>
-              <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-              <SelectContent>
-                {BUSINESS_MODELS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
-              </SelectContent>
+              
+              
+                {BUSINESS_MODELS.map(m => <option key={m} value={m}>{m}</option>)}
+              
             </Select>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Instruções Customizadas */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <Sparkles className="h-5 w-5 text-primary" />
             Instruções Customizadas para IA
-          </CardTitle>
-          <CardDescription>Adicione instruções específicas que a IA deve seguir ao gerar sugestões.</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Adicione instruções específicas que a IA deve seguir ao gerar sugestões.</p>
+        </div>
+        <div>
           <Textarea
             placeholder="Ex: Sempre sugira soluções escaláveis. Foque em ROI. Use tom informal."
             maxLength={1000}
@@ -192,25 +192,25 @@ export default function AIContextTab() {
             }))}
             className="min-h-[100px]"
           />
-          <p className="text-xs text-muted-foreground mt-1">{customInstructions.length}/1000 caracteres</p>
-        </CardContent>
+          <p className="text-xs text-neutral-500 mt-1">{customInstructions.length}/1000 caracteres</p>
+        </div>
       </Card>
 
       {/* Preview */}
       <Card>
-        <CardHeader className="cursor-pointer" onClick={() => setShowPreview(!showPreview)}>
-          <CardTitle className="flex items-center gap-3 text-lg">
+        <div className="mb-4 cursor-pointer p-2 hover:bg-neutral-50 rounded-lg transition-colors" onClick={() => setShowPreview(!showPreview)}>
+          <h2 className="text-2xl font-semibold mb-2">
             <Eye className="h-5 w-5 text-primary" />
             Preview do Contexto
-            <span className="text-xs text-muted-foreground">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>
-          </CardTitle>
-        </CardHeader>
+            <span className="text-xs text-neutral-500">(clique para {showPreview ? 'ocultar' : 'expandir'})</span>
+          </h2>
+        </div>
         {showPreview && (
-          <CardContent>
+          <div>
             <pre className="whitespace-pre-wrap text-xs bg-muted p-4 rounded-md max-h-60 overflow-auto">
               {getFormattedContext() || 'Preencha os campos acima para visualizar o contexto.'}
             </pre>
-          </CardContent>
+          </div>
         )}
       </Card>
 

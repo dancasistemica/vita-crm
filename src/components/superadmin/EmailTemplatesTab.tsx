@@ -1,7 +1,7 @@
+import { Card, Select } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import EmailTemplateEditor from './EmailTemplateEditor';
-import { Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ds";
 
 const TEMPLATE_OPTIONS = [
   { value: 'confirmation_email', label: '✉️ Confirmação de Email' },
@@ -15,31 +15,31 @@ export function EmailTemplatesTab() {
 
   return (
     <Card>
-      <CardHeader>
+      <div className="mb-4">
         <div className="flex items-center gap-3">
           <Mail className="h-5 w-5 text-primary" />
-          <CardTitle className="text-lg">Email Templates</CardTitle>
+          <h2 className="text-2xl font-semibold mb-2">Email Templates</h2>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-neutral-500">
           Customize os templates de email enviados pelo sistema.
         </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      </div>
+      <div>
         <div className="max-w-xs">
           <Select value={selectedType} onValueChange={(v) => setSelectedType(v as TemplateType)}>
-            <SelectTrigger className="min-h-[44px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
+            
+              
+            
+            
               {TEMPLATE_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </SelectContent>
+            
           </Select>
         </div>
 
         <EmailTemplateEditor key={selectedType} templateType={selectedType} />
-      </CardContent>
+      </div>
     </Card>
   );
 }

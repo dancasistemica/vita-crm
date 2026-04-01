@@ -1,7 +1,7 @@
+import { Badge, Skeleton } from "@/components/ui/ds";
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Badge, Skeleton } from "@/components/ui/ds";
 import {
   UserPlus, ArrowRight, MessageSquare, CheckSquare, CheckCircle, ShoppingCart, Clock
 } from 'lucide-react';
@@ -201,7 +201,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
 
   if (events.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-8">
+      <p className="text-sm text-neutral-500 text-center py-8">
         Nenhum evento registrado para este lead.
       </p>
     );
@@ -228,7 +228,7 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
         <div key={gi}>
           {/* Date group header */}
           <div className="relative z-10 flex items-center gap-3 mb-3 mt-4 first:mt-0">
-            <span className="text-xs font-bold text-muted-foreground bg-background pr-2 uppercase tracking-wider">
+            <span className="text-xs font-bold text-neutral-500 bg-background pr-2 uppercase tracking-wider">
               {group.label}
             </span>
             <div className="flex-1 h-px bg-border" />
@@ -248,13 +248,13 @@ export default function LeadTimeline({ leadId, leadCreatedAt }: LeadTimelineProp
                     <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                       {config.label}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-neutral-500">
                       {getRelativeTime(event.date)}
                     </span>
                   </div>
                   <p className="text-sm text-foreground mt-1">{event.title}</p>
                   {event.description && (
-                    <p className="text-xs text-muted-foreground mt-0.5">{event.description}</p>
+                    <p className="text-xs text-neutral-500 mt-0.5">{event.description}</p>
                   )}
                 </div>
               </div>

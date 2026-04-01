@@ -1,10 +1,10 @@
+import { Button, Input, SidebarProvider, useSidebar } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useBrand } from "@/contexts/BrandContext";
 import { useOrganizationSwitch } from "@/hooks/useOrganizationSwitch";
 import { useSearch } from "@/hooks/useSearch";
 import { Menu, Search } from "lucide-react";
-import { Button, Input, SidebarProvider, useSidebar } from "@/components/ui/ds";
 
 function HeaderMenu() {
   const { toggleSidebar } = useSidebar();

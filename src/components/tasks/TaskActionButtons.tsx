@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/ds";
 import { useState } from 'react';
 import { Edit2, Copy, Trash2 } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
-import { Button } from "@/components/ui/ds";
 
 interface TaskActionsProps {
   taskId: string;
@@ -43,7 +43,7 @@ export default function TaskActions({
         size="sm"
         onClick={() => onDuplicate(taskId)}
         title="Duplicar tarefa"
-        className="text-muted-foreground hover:text-foreground h-8 w-8 p-0"
+        className="text-neutral-500 hover:text-foreground h-8 w-8 p-0"
       >
         <Copy className="h-4 w-4" />
       </Button>

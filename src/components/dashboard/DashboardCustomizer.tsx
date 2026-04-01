@@ -1,3 +1,4 @@
+import { Badge, Button, Sheet, Switch } from "@/components/ui/ds";
 import { useState } from 'react';
 import {
   DndContext,
@@ -18,7 +19,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Settings2 } from 'lucide-react';
 import { DASHBOARD_CARDS, GROUP_LABELS } from '@/config/dashboardCards';
 import type { DashboardCardSetting } from '@/hooks/useDashboardSettings';
-import { Badge, Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, Switch } from "@/components/ui/ds";
 
 interface Props {
   settings: DashboardCardSetting[];
@@ -54,7 +54,7 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
         {...listeners}
         className="cursor-grab active:cursor-grabbing touch-none p-1"
       >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="h-4 w-4 text-neutral-500" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
             {groupLabel}
           </Badge>
         </div>
-        <p className="text-xs text-muted-foreground truncate">{config.description}</p>
+        <p className="text-xs text-neutral-500 truncate">{config.description}</p>
       </div>
       <Switch
         checked={setting.is_visible}
@@ -94,17 +94,17 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+      
         <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
           <Settings2 className="h-4 w-4" />
           Personalizar
         </Button>
-      </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="text-lg font-display">Personalizar Dashboard</SheetTitle>
-          <p className="text-sm text-muted-foreground">Arraste para reordenar e alterne a visibilidade dos cards.</p>
-        </SheetHeader>
+      
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Personalizar Dashboard</h2>
+          <p className="text-sm text-neutral-500">Arraste para reordenar e alterne a visibilidade dos cards.</p>
+        </div>
         <div className="mt-6 space-y-3">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={settings.map(s => s.card_id)} strategy={verticalListSortingStrategy}>
@@ -118,7 +118,7 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
             </SortableContext>
           </DndContext>
         </div>
-      </SheetContent>
+      
     </Sheet>
   );
 }

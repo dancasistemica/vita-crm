@@ -1,3 +1,4 @@
+import { Badge, Button, Sheet, Skeleton, Tabs } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from 'react';
 import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,7 +9,6 @@ import { ScheduleMessageDialog } from '@/components/messages/ScheduleMessageDial
 import { ScheduledMessagesList } from '@/components/messages/ScheduledMessagesList';
 import { DeleteConfirmationModal } from '@/components/common/DeleteConfirmationModal';
 import { toast } from 'sonner';
-import { Badge, Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface LeadDetailSheetProps {
   lead: LeadView | null;
@@ -135,37 +135,37 @@ export default function LeadDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto p-0">
+      
         <div className="p-6 pb-0">
-          <SheetHeader>
-            <SheetTitle className="text-lg font-display">{lead.name}</SheetTitle>
-            <SheetDescription className="flex items-center gap-3 flex-wrap">
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">{lead.name}</h2>
+            <p className="text-sm text-neutral-500">
               {stageName && <Badge variant="secondary" className="text-xs">{stageName}</Badge>}
               {interestLabel && <Badge variant="secondary" className="text-xs">{interestLabel}</Badge>}
               {lead.origin && <span className="text-xs">{lead.origin}</span>}
-            </SheetDescription>
-          </SheetHeader>
+            </p>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <div className="px-6">
-            <TabsList className="w-full grid grid-cols-5">
-              <TabsTrigger value="info" className="text-xs">Informações</TabsTrigger>
-              <TabsTrigger value="tasks" className="text-xs">
+            <div className="flex gap-2 border-b border-neutral-200 mb-4">
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Informações</button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
                 Tarefas
                 {tasks.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
-              </TabsTrigger>
-              <TabsTrigger value="interactions" className="text-xs">
+              </button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
                 Interações
                 {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
-              </TabsTrigger>
-              <TabsTrigger value="scheduled" className="text-xs">Agendamentos</TabsTrigger>
-              <TabsTrigger value="history" className="text-xs">Histórico</TabsTrigger>
-            </TabsList>
+              </button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Agendamentos</button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Histórico</button>
+            </div>
           </div>
 
           {/* INFO TAB */}
-          <TabsContent value="info" className="px-6 pb-6 mt-4 space-y-4">
+          <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <InfoField label="Email" value={lead.email} />
               <InfoField label="Telefone" value={lead.phone} />
@@ -181,7 +181,7 @@ export default function LeadDetailSheet({
 
             {lead.tags.length > 0 && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Tags</span>
+                <span className="text-xs text-neutral-500 font-medium">Tags</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {lead.tags.map(t => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
                 </div>
@@ -190,7 +190,7 @@ export default function LeadDetailSheet({
 
             {lead.notes && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Observações</span>
+                <span className="text-xs text-neutral-500 font-medium">Observações</span>
                 <p className="text-sm text-foreground mt-1 whitespace-pre-wrap">{lead.notes}</p>
               </div>
             )}
@@ -198,7 +198,7 @@ export default function LeadDetailSheet({
             {/* Custom data */}
             {lead.customData && Object.keys(lead.customData).length > 0 && (
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Campos Personalizados</span>
+                <span className="text-xs text-neutral-500 font-medium">Campos Personalizados</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {Object.entries(lead.customData).map(([key, value]) => (
                     <InfoField key={key} label={key} value={String(value ?? '')} />
@@ -249,16 +249,16 @@ export default function LeadDetailSheet({
                 <Trash2 className="h-4 w-4 mr-1" /> Excluir
               </Button>
             </div>
-          </TabsContent>
+          </div>
 
           {/* TASKS TAB */}
-          <TabsContent value="tasks" className="px-6 pb-6 mt-4 space-y-3">
+          <div>
             {loadingTasks ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : tasks.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">Nenhuma tarefa vinculada a este lead.</p>
+              <p className="text-sm text-neutral-500 text-center py-8">Nenhuma tarefa vinculada a este lead.</p>
             ) : (
               tasks.map(t => {
                 const status = getTaskStatus(t);
@@ -267,8 +267,8 @@ export default function LeadDetailSheet({
                   <div key={t.id} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card">
                     <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${status.color}`} />
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium ${t.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{t.title}</p>
-                      <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
+                      <p className={`text-sm font-medium ${t.completed ? 'line-through text-neutral-500' : 'text-foreground'}`}>{t.title}</p>
+                      <div className="flex items-center gap-3 mt-0.5 text-xs text-neutral-500">
                         <span className={status.color}>{status.label}</span>
                         {t.due_date && <span>Prazo: {formatDate(t.due_date)}</span>}
                       </div>
@@ -277,22 +277,22 @@ export default function LeadDetailSheet({
                 );
               })
             )}
-          </TabsContent>
+          </div>
 
           {/* INTERACTIONS TAB */}
-          <TabsContent value="interactions" className="px-6 pb-6 mt-4 space-y-3">
+          <div>
             {loadingInteractions ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : interactions.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">Nenhuma interação registrada para este lead.</p>
+              <p className="text-sm text-neutral-500 text-center py-8">Nenhuma interação registrada para este lead.</p>
             ) : (
               interactions.map(i => (
                 <div key={i.id} className="p-3 rounded-lg border border-border bg-card">
                   <div className="flex items-center justify-between">
                     <Badge variant="secondary" className="text-xs">{i.type}</Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-neutral-500">
                       {i.interaction_date ? formatDate(i.interaction_date) : formatDate(i.created_at)}
                     </span>
                   </div>
@@ -300,19 +300,19 @@ export default function LeadDetailSheet({
                 </div>
               ))
             )}
-          </TabsContent>
+          </div>
 
           {/* HISTORY TAB */}
-          <TabsContent value="history" className="px-6 pb-6 mt-4">
+          <div>
             <LeadTimeline leadId={lead.id} leadCreatedAt={lead.entryDate || undefined} />
-          </TabsContent>
+          </div>
 
           {/* SCHEDULED TAB */}
-          <TabsContent value="scheduled" className="px-6 pb-6 mt-4">
+          <div>
             <ScheduledMessagesList organizationId={organizationId} leadId={lead.id} />
-          </TabsContent>
+          </div>
         </Tabs>
-      </SheetContent>
+      
       <DeleteConfirmationModal
         isOpen={deleteModalOpen}
         title="Excluir lead"
@@ -337,8 +337,8 @@ export default function LeadDetailSheet({
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="text-xs text-muted-foreground font-medium">{label}</span>
-      <p className={`text-sm ${value ? 'text-foreground' : 'text-muted-foreground italic'}`}>
+      <span className="text-xs text-neutral-500 font-medium">{label}</span>
+      <p className={`text-sm ${value ? 'text-foreground' : 'text-neutral-500 italic'}`}>
         {value || 'Não informado'}
       </p>
     </div>

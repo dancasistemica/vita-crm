@@ -1,10 +1,10 @@
+import { Button, Card, Checkbox, Input } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
 import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
-import { Button, Card, Checkbox, Input } from "@/components/ui/ds";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';

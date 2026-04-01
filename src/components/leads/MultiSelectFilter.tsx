@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/ds";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/ds";
 
 interface MultiSelectFilterProps {
   label: string;
@@ -22,7 +22,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
 
   return (
     <div className="space-y-1.5">
-      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium text-neutral-500">{label}</span>
       <div className="flex flex-wrap gap-1.5">
         {options.map(opt => {
           const isActive = selected.includes(opt.value);
@@ -35,7 +35,7 @@ export default function MultiSelectFilter({ label, options, selected, onChange }
                 "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors border",
                 isActive
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-muted/50 text-muted-foreground border-border hover:bg-muted"
+                  : "bg-muted/50 text-neutral-500 border-border hover:bg-muted"
               )}
             >
               {opt.label}

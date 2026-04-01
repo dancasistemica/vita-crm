@@ -1,3 +1,4 @@
+import { Button, Card, Input } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { TagsManagement } from "@/components/settings/TagsManagement";
@@ -7,7 +8,6 @@ import { useValidateUniqueField } from "@/hooks/useValidateUniqueField";
 import { Plus, Edit, Trash2, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/components/common/ConfirmDeleteDialog";
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input } from "@/components/ui/ds";
 
 interface DBPipelineStage {
   id: string;
@@ -482,8 +482,8 @@ export default function CRMFieldsTab() {
     if (loading) {
       return (
         <div className="flex items-center justify-center py-6">
-          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-sm text-muted-foreground">Carregando...</span>
+          <Loader2 className="h-5 w-5 animate-spin text-neutral-500" />
+          <span className="ml-2 text-sm text-neutral-500">Carregando...</span>
         </div>
       );
     }
@@ -508,24 +508,24 @@ export default function CRMFieldsTab() {
                 : 'border-transparent bg-muted/50 hover:border-primary/20'
             }`}
           >
-            <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="text-sm font-medium text-muted-foreground w-6">{i + 1}.</span>
+            <GripVertical className="h-4 w-4 text-neutral-500 flex-shrink-0" />
+            <span className="text-sm font-medium text-neutral-500 w-6">{i + 1}.</span>
             {renderItem(item, i)}
           </div>
         ))}
         {items.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">{emptyMessage}</p>
+          <p className="text-sm text-neutral-500 text-center py-4">{emptyMessage}</p>
         )}
-        {saving && <p className="text-xs text-muted-foreground mt-2">💾 Salvando...</p>}
-        <p className="text-xs text-muted-foreground mt-2">💡 {hint}</p>
+        {saving && <p className="text-xs text-neutral-500 mt-2">💾 Salvando...</p>}
+        <p className="text-xs text-neutral-500 mt-2">💡 {hint}</p>
       </>
     );
   };
 
   const renderOriginSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">🌐 Origem do Lead</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">🌐 Origem do Lead</h2></div>
+      <div>
         {renderDraggableList(
           origins,
           originsLoading,
@@ -560,14 +560,14 @@ export default function CRMFieldsTab() {
             Adicionar
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 
   const renderInterestLevelSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">⭐ Nível de Interesse</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">⭐ Nível de Interesse</h2></div>
+      <div>
         {renderDraggableList(
           levels,
           levelsLoading,
@@ -605,14 +605,14 @@ export default function CRMFieldsTab() {
             {levelsSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 
   const renderFunnelStagesSection = () => (
     <Card>
-      <CardHeader><CardTitle className="text-lg">📈 Etapas do Funil de Vendas</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+      <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">📈 Etapas do Funil de Vendas</h2></div>
+      <div>
         {renderDraggableList(
           stages,
           stagesLoading,
@@ -647,7 +647,7 @@ export default function CRMFieldsTab() {
             Adicionar
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 
@@ -661,8 +661,8 @@ export default function CRMFieldsTab() {
   if (orderLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-sm text-muted-foreground">Carregando campos...</span>
+        <Loader2 className="h-5 w-5 animate-spin text-neutral-500" />
+        <span className="ml-2 text-sm text-neutral-500">Carregando campos...</span>
       </div>
     );
   }
@@ -698,10 +698,10 @@ export default function CRMFieldsTab() {
               className={`flex items-center gap-3 px-4 py-3 border-b-2 cursor-grab select-none transition-all whitespace-nowrap text-sm ${
                 activeTab === field.key
                   ? 'border-primary text-primary font-semibold'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                  : 'border-transparent text-neutral-500 hover:text-foreground'
               } ${draggedField === field.key ? 'opacity-40' : ''}`}
             >
-              <GripVertical className="h-3.5 w-3.5 text-muted-foreground/50" />
+              <GripVertical className="h-3.5 w-3.5 text-neutral-500/50" />
               <span>{field.icon}</span>
               <span>{field.label}</span>
             </div>

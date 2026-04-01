@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/ds";
 import { Check } from 'lucide-react';
 import { ImportModalState } from '@/hooks/useImportModal';
-import { Button } from "@/components/ui/ds";
 
 interface Props {
   state: ImportModalState;
@@ -23,7 +23,7 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
 
       <div>
         <p className="text-xl font-display text-foreground">Importação Concluída!</p>
-        <p className="text-sm text-muted-foreground mt-1">{total} leads processados</p>
+        <p className="text-sm text-neutral-500 mt-1">{total} leads processados</p>
         {result.dateConversions > 0 && (
           <p className="text-xs text-blue-600 mt-1">ℹ {result.dateConversions} datas convertidas do formato Excel</p>
         )}
@@ -33,25 +33,25 @@ export default function Step6Results({ state, onImportMore, onClose }: Props) {
         {result.created > 0 && (
           <div className="text-center">
             <p className="text-2xl font-bold text-success">{result.created}</p>
-            <p className="text-xs text-muted-foreground">criados</p>
+            <p className="text-xs text-neutral-500">criados</p>
           </div>
         )}
         {result.updated > 0 && (
           <div className="text-center">
             <p className="text-2xl font-bold text-primary">{result.updated}</p>
-            <p className="text-xs text-muted-foreground">atualizados</p>
+            <p className="text-xs text-neutral-500">atualizados</p>
           </div>
         )}
         {result.converted > 0 && (
           <div className="text-center">
             <p className="text-2xl font-bold text-success">{result.converted}</p>
-            <p className="text-xs text-muted-foreground">convertidos</p>
+            <p className="text-xs text-neutral-500">convertidos</p>
           </div>
         )}
         {errorCount > 0 && (
           <div className="text-center">
             <p className="text-2xl font-bold text-destructive">{errorCount}</p>
-            <p className="text-xs text-muted-foreground">erros</p>
+            <p className="text-xs text-neutral-500">erros</p>
           </div>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { Badge, Button, Calendar, Dialog, Input, Label, Popover, Select, Textarea } from "@/components/ui/ds";
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { CalendarIcon, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -6,7 +7,6 @@ import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useDataAccess } from '@/hooks/useDataAccess';
 import { useLeadsData, LeadView } from '@/hooks/useLeadsData';
-import { Badge, Button, Calendar, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@/components/ui/ds";
 
 const SALE_STATUSES = ['ativo', 'concluído', 'cancelado', 'pendência'];
 
@@ -195,10 +195,10 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Nova Venda</DialogTitle>
-        </DialogHeader>
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Nova Venda</h2>
+        </div>
 
         <div className="space-y-6 py-2">
           {/* Section 1: Lead/Client search */}
@@ -209,7 +209,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 <div className="flex items-center gap-3">
                   <div>
                     <p className="text-sm font-medium text-foreground">{selectedLead.name}</p>
-                    <p className="text-xs text-muted-foreground">{selectedLead.email}</p>
+                    <p className="text-xs text-neutral-500">{selectedLead.email}</p>
                   </div>
                   <Badge variant={isClient(selectedLead.id) ? 'default' : 'secondary'} className="text-[10px]">
                     {isClient(selectedLead.id) ? 'Cliente' : 'Lead'}
@@ -221,7 +221,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               </div>
             ) : (
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
                 <Input
                   value={searchQuery}
                   onChange={e => { setSearchQuery(e.target.value); setShowResults(true); }}
@@ -239,7 +239,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                       >
                         <div>
                           <p className="text-sm font-medium text-foreground">{lead.name}</p>
-                          <p className="text-xs text-muted-foreground">{lead.email} • {lead.phone}</p>
+                          <p className="text-xs text-neutral-500">{lead.email} • {lead.phone}</p>
                         </div>
                         <Badge variant={isClient(lead.id) ? 'default' : 'secondary'} className="text-[10px] shrink-0">
                           {isClient(lead.id) ? 'Cliente' : 'Lead'}
@@ -262,14 +262,14 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                 setSelectedStageId('');
                 // Don't auto-fill value here, let stage selection do it
               }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um produto" />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {products.map(p => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                    <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
 
@@ -286,16 +286,16 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     setValue(formatted);
                   }
                 }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma fase..." />
-                  </SelectTrigger>
-                  <SelectContent>
+                  
+                    
+                  
+                  
                     {products.find(p => p.id === productId)?.stages.map(s => (
-                      <SelectItem key={s.id} value={s.id}>
+                      <option key={s.id} value={s.id}>
                         {s.name} — R$ {s.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </SelectItem>
+                      </option>
                     ))}
-                  </SelectContent>
+                  
                 </Select>
               </div>
             )}
@@ -304,7 +304,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Valor (R$) *</Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">R$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-neutral-500">R$</span>
                 <Input
                   value={value}
                   onChange={handleValueChange}
@@ -318,13 +318,13 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Data da Venda *</Label>
               <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-muted-foreground')}>
+                
+                  <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-neutral-500')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                
+                <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
                   <Calendar
                     mode="single"
                     selected={saleDate}
@@ -333,7 +333,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                     locale={ptBR}
                     className="p-3 pointer-events-auto"
                   />
-                </PopoverContent>
+                </div>
               </Popover>
             </div>
 
@@ -341,14 +341,14 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Forma de Pagamento *</Label>
               <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {paymentMethods.map(m => (
-                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                    <option key={m} value={m}>{m}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
               {paymentMethod === 'Outro' && (
                 <Input
@@ -364,14 +364,14 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Status da Venda *</Label>
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {SALE_STATUSES.map(s => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <option key={s} value={s}>{s}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
 
@@ -398,7 +398,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             </Button>
           </div>
         </div>
-      </DialogContent>
+      
     </Dialog>
   );
 }

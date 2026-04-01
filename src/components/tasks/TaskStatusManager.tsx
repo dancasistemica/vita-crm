@@ -1,7 +1,7 @@
+import { Button, Card, Input, Label } from "@/components/ui/ds";
 import { useState } from "react";
 import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
 import { toast } from "sonner";
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 interface TaskStatus {
   id: string;
@@ -63,17 +63,17 @@ export default function TaskStatusManager({
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <div className="mb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-3">
+          <h2 className="text-2xl font-semibold mb-2">
             <Settings className="h-4 w-4" /> Gerenciar Status
-          </CardTitle>
+          </h2>
           <Button size="sm" variant="secondary" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </Button>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </div>
+      <div>
         {showForm && (
           <div className="flex items-end gap-3 p-3 rounded-lg border bg-muted/30">
             <div className="flex-1">
@@ -90,7 +90,7 @@ export default function TaskStatusManager({
           </div>
         )}
         {statuses.length === 0 && !showForm && (
-          <p className="text-sm text-muted-foreground text-center py-2">Nenhum status criado. Clique em + para adicionar.</p>
+          <p className="text-sm text-neutral-500 text-center py-2">Nenhum status criado. Clique em + para adicionar.</p>
         )}
         {statuses.map(s => (
           <div key={s.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition">
@@ -108,7 +108,7 @@ export default function TaskStatusManager({
             </div>
           </div>
         ))}
-      </CardContent>
+      </div>
     </Card>
   );
 }

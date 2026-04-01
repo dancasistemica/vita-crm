@@ -1,10 +1,10 @@
+import { Alert, AlertDialog, Badge, Button, Input, Select, Table } from "@/components/ui/ds";
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
 import { CreateOrganizationModal } from './CreateOrganizationModal';
 import { EditOrganizationModal } from './EditOrganizationModal';
 import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface Org {
   id: string;
@@ -135,13 +135,13 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
     };
 
     if (loading) {
-      return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+      return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
     }
 
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-muted-foreground text-sm">
+          <div className="flex items-center gap-3 text-neutral-500 text-sm">
             <Building2 className="h-4 w-4" />
             <span>
               {hasActiveFilters
@@ -157,7 +157,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         {/* Filter bar */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Buscar por nome ou email..."
               value={searchTerm}
@@ -166,25 +166,25 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             />
           </div>
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="active">Ativa</SelectItem>
-              <SelectItem value="suspended">Suspensa</SelectItem>
-            </SelectContent>
+            
+              
+            
+            
+              <option value="all">Todas</option>
+              <option value="active">Ativa</option>
+              <option value="suspended">Suspensa</option>
+            
           </Select>
           <Select value={planFilter} onValueChange={setPlanFilter}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Plano" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os planos</SelectItem>
+            
+              
+            
+            
+              <option value="all">Todos os planos</option>
               {plans.map((p) => (
-                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
-            </SelectContent>
+            
           </Select>
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
@@ -194,63 +194,48 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         </div>
 
         {filteredOrgs.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-neutral-500">
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Plano Atual</TableHead>
-              <TableHead>Alterar Plano</TableHead>
-              <TableHead>Usuários</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Criada em</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredOrgs.map((org) => (
-              <TableRow key={org.id}>
-                <TableCell className="font-medium">{org.name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
-                <TableCell>
-                  <Badge variant="secondary">{org.plan}</Badge>
-                </TableCell>
-                <TableCell>
-                  <Select
+        <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Plano Atual</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Alterar Plano</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Usuários</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criada em</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+            </tr>
+          </thead>
+          <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{filteredOrgs.map((org) => (
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">{org.name}</td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{org.contact_email || '—'}</td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary">{org.plan}</Badge></td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Select
                     value={org.plan_id || 'none'}
                     onValueChange={(v) => handlePlanChange(org.id, v)}
                   >
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="Selecionar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Nenhum</SelectItem>
+                    
+                      
+                    
+                    
+                      <option value="none">Nenhum</option>
                       {plans.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                        <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
+                    
+                  </Select></td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
                     {org.organization_members?.length || 0}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={org.active ? 'primary' : 'error'}>
+                  </div></td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {new Date(org.created_at).toLocaleDateString('pt-BR')}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
+                  </Badge></td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(org.created_at).toLocaleDateString('pt-BR')}</td>
+                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -263,12 +248,11 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                     >
                       {org.active ? 'Suspender' : 'Ativar'}
                     </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                  </div></td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
         )}
         <CreateOrganizationModal
           open={createOpen}

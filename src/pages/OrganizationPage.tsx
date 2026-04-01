@@ -1,3 +1,4 @@
+import { Button, Card, Input, Label } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useOrganization } from '@/contexts/OrganizationContext';
@@ -6,7 +7,6 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { formatCNPJ, validateCNPJ } from '@/utils/cnpjValidator';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 export default function OrganizationPage() {
   const { user } = useAuth();
@@ -165,7 +165,7 @@ export default function OrganizationPage() {
   if (!organizationId) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-muted-foreground">Nenhuma organização vinculada à sua conta.</p>
+        <p className="text-neutral-500">Nenhuma organização vinculada à sua conta.</p>
       </div>
     );
   }
@@ -184,15 +184,15 @@ export default function OrganizationPage() {
         <h1 className="text-4xl font-bold text-neutral-900">
           <Building2 className="h-6 w-6" /> Dados da Organização
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">Edite as informações da sua empresa</p>
+        <p className="text-neutral-500 text-sm mt-1">Edite as informações da sua empresa</p>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Informações Gerais</CardTitle>
-          <CardDescription>Nome, contato e documentação</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">Informações Gerais</h2>
+          <p className="text-sm text-neutral-500 mb-4">Nome, contato e documentação</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>Nome da Empresa *</Label>
             <Input
@@ -253,17 +253,17 @@ export default function OrganizationPage() {
               placeholder="https://www.empresa.com"
             />
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-3">
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold mb-2">
             <MapPin className="h-5 w-5" /> Endereço
-          </CardTitle>
-          <CardDescription>Preencha o CEP para busca automática</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">Preencha o CEP para busca automática</p>
+        </div>
+        <div>
           <div className="space-y-3">
             <Label>CEP</Label>
             <div className="flex items-center gap-3">
@@ -319,7 +319,7 @@ export default function OrganizationPage() {
               <Input value={formData.estado} disabled className="bg-muted" />
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">

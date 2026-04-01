@@ -1,9 +1,9 @@
+import { Button, Dialog, Input, Label, Table } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { getSuperadmins, addSuperadminByEmail, removeSuperadmin } from '@/services/superadminService';
 import { Plus, Trash2, ShieldCheck } from 'lucide-react';
 import ConfirmDeleteDialog from '@/components/common/ConfirmDeleteDialog';
-import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface SuperadminUser {
   id: string;
@@ -68,7 +68,7 @@ export function UsersManagementTab() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center py-12 text-muted-foreground">Carregando...</div>;
+    return <div className="flex items-center justify-center py-12 text-neutral-500">Carregando...</div>;
   }
 
   return (
@@ -81,7 +81,7 @@ export function UsersManagementTab() {
         onCancel={() => setRemoveConfirm({ isOpen: false, id: '', name: '' })}
       />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-muted-foreground text-sm">
+        <div className="flex items-center gap-3 text-neutral-500 text-sm">
           <ShieldCheck className="h-4 w-4" />
           <span>{users.length} superadmin(s)</span>
         </div>
@@ -90,38 +90,30 @@ export function UsersManagementTab() {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Adicionado em</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((u) => (
-            <TableRow key={u.id}>
-              <TableCell className="font-medium">{u.full_name || '—'}</TableCell>
-              <TableCell>{u.email || '—'}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">
-                {new Date(u.created_at).toLocaleDateString('pt-BR')}
-              </TableCell>
-              <TableCell>
-                <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
+      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Adicionado em</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
+          </tr>
+        </thead>
+        <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{users.map((u) => (
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">{u.full_name || '—'}</td>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{u.email || '—'}</td>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
+              <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
-                </Button>
-              </TableCell>
-            </TableRow>
+                </Button></td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Adicionar Superadmin</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">Adicionar Superadmin</h2>
+          </div>
           <div className="space-y-4">
             <div className="space-y-3">
               <Label>Email do usuário existente</Label>
@@ -131,7 +123,7 @@ export function UsersManagementTab() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="usuario@email.com"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-neutral-500">
                 O usuário já deve estar cadastrado no sistema.
               </p>
             </div>
@@ -142,7 +134,7 @@ export function UsersManagementTab() {
               {submitting ? 'Adicionando...' : 'Adicionar'}
             </Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
     </div>
   );

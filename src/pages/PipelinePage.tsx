@@ -1,9 +1,9 @@
+import { Badge, Card, ScrollArea, ScrollBar } from "@/components/ui/ds";
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";
-import { Badge, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ScrollArea, ScrollBar } from "@/components/ui/ds";
 
 const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 
@@ -49,7 +49,7 @@ export default function PipelinePage() {
                   <Badge variant="secondary" className="text-xs">{stageLeads.length}</Badge>
                 </div>
                 {totalDealValue > 0 && (
-                  <p className="text-xs text-muted-foreground mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
+                  <p className="text-xs text-neutral-500 mb-3">R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} em negócios</p>
                 )}
                 <div className="space-y-3 min-h-[100px]">
                   {stageLeads.map(lead => (
@@ -60,7 +60,7 @@ export default function PipelinePage() {
                       className={`p-3 cursor-grab active:cursor-grabbing border-l-4 ${interestColors[lead.interestLevel]} transition-all hover:shadow-md ${dragging === lead.id ? 'opacity-50' : ''}`}
                     >
                       <p className="font-medium text-sm text-foreground cursor-pointer hover:underline hover:text-primary" onClick={() => setDetailLead(lead)}>{lead.name}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{lead.origin}</p>
+                      <p className="text-xs text-neutral-500 mt-1">{lead.origin}</p>
                       {lead.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
                           {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>)}
@@ -70,7 +70,7 @@ export default function PipelinePage() {
                         <p className="text-xs font-medium text-success mt-1">💰 R$ {lead.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-muted-foreground">Última: —</span>
+                        <span className="text-xs text-neutral-500">Última: —</span>
                         <div className="flex items-center gap-1">
                           <AIPipelineTip lead={lead} stageName={stage.name} />
                           {lead.responsible && <span className="text-xs text-primary">{lead.responsible}</span>}

@@ -1,3 +1,4 @@
+import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
@@ -5,7 +6,6 @@ import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import EditSaleModal from '@/components/sales/EditSaleModal';
-import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 export function VendasPage() {
   const { organization } = useOrganization();

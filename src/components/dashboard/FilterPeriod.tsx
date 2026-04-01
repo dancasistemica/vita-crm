@@ -1,6 +1,6 @@
+import { Button, Calendar, Card, Input, Label } from "@/components/ui/ds";
 import { useState } from 'react';
 import { CalendarDays } from 'lucide-react';
-import { Button, Calendar, Card, CardContent, Input, Label } from "@/components/ui/ds";
 
 export interface DateRange {
   start: Date;
@@ -57,10 +57,10 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
 
   return (
     <Card className="shadow-card border-border/60">
-      <CardContent className="pt-4 pb-4">
+      <div>
         <div className="flex flex-wrap items-center gap-3">
-          <CalendarDays className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground mr-1">Período:</span>
+          <CalendarDays className="h-4 w-4 text-neutral-500" />
+          <span className="text-sm font-medium text-neutral-500 mr-1">Período:</span>
           {PRESET_PERIODS.map(preset => (
             <Button
               key={preset.label}
@@ -97,7 +97,7 @@ export default function FilterPeriod({ onPeriodChange, selectedLabel = '30 dias'
             </Button>
           </div>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }
