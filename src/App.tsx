@@ -32,6 +32,8 @@ import { VendasPage } from "@/pages/VendasPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
+import { useEffect } from "react";
+import { validateSession } from "@/lib/supabase";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
 if (typeof window !== "undefined") {
