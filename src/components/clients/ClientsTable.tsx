@@ -187,9 +187,9 @@ export default function ClientsTable({
             </div>
             <div className="flex flex-wrap gap-1 mb-2">
               {clientSales.slice(0, 2).map(s => (
-                <Badge key={s.id} variant="neutral" className="text-[10px]">{getProductName(s.productId)}</Badge>
+                <Badge key={s.id} variant="secondary" className="text-[10px]">{getProductName(s.productId)}</Badge>
               ))}
-              {clientSales.length > 2 && <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>}
+              {clientSales.length > 2 && <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
@@ -280,12 +280,12 @@ export default function ClientsTable({
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {clientSales.slice(0, 2).map(s => (
-                      <Badge key={s.id} variant="neutral" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
+                      <Badge key={s.id} variant="secondary" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
                     ))}
                     {clientSales.length > 2 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Badge variant="neutral" className="text-[10px]">+{clientSales.length - 2}</Badge>
+                          <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>
                         </TooltipTrigger>
                         <TooltipContent>
                           {clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}

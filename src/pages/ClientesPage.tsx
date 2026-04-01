@@ -84,7 +84,7 @@ export default function ClientesPage() {
         </Alert>
       )}
 
-      <Card variant="default" padding="md">
+      <Card variant="primary" padding="md">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <Input

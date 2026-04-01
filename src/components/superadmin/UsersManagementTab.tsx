@@ -141,7 +141,7 @@ export function UsersManagementTab() {
             </div>
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => setOpen(false)}>Cancelar</>
+            < variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
             < onClick={handleAdd} disabled={submitting}>
               {submitting ? 'Adicionando...' : 'Adicionar'}
             </>

@@ -103,7 +103,7 @@ export default function AIContextTab() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {services.map(s => (
-                <Badge key={s} variant="neutral" className="gap-1">
+                <Badge key={s} variant="secondary" className="gap-1">
                   {s}
                   <Button variant="secondary" size="sm" onClick={() => removeTag('services', s)} className="ml-1 hover:text-destructive"><X className="h-3 w-3" /></Button>
                 </Badge>
@@ -112,7 +112,7 @@ export default function AIContextTab() {
             {services.length === 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {SUGGESTED_SERVICES.map(s => (
-                  <Badge key={s} variant="neutral" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
+                  <Badge key={s} variant="secondary" className="cursor-pointer hover:bg-accent" onClick={() => updateServices('services', [...services, s])}>
                     + {s}
                   </Badge>
                 ))}

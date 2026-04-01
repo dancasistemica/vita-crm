@@ -475,7 +475,7 @@ export default function OrganizationSettingsPage() {
                 className="font-mono"
               />
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                < variant="neutral" onClick={handleCopy} disabled={!token || loading}>
+                < variant="secondary" onClick={handleCopy} disabled={!token || loading}>
                   Copy
                 </>
                 <

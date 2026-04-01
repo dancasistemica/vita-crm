@@ -71,7 +71,7 @@ export default function TaskStatusManager({
           <CardTitle className="text-base font-semibold flex items-center gap-3">
             <Settings className="h-4 w-4" /> Gerenciar Status
           </CardTitle>
-          < size="sm" variant="neutral" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
+          < size="sm" variant="secondary" onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: "", color: "#6B7280" }); }}>
             {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </>
         </div>

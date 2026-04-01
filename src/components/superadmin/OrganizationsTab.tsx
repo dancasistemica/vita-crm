@@ -222,7 +222,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                 <TableCell className="font-medium">{org.name}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{org.contact_email || '—'}</TableCell>
                 <TableCell>
-                  <Badge variant="neutral">{org.plan}</Badge>
+                  <Badge variant="secondary">{org.plan}</Badge>
                 </TableCell>
                 <TableCell>
                   <Select

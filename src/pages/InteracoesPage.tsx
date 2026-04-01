@@ -66,7 +66,7 @@ export default function InteracoesPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-medium text-sm">{getLeadName(interaction.leadId)}</span>
-                  <Badge variant="neutral" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
+                  <Badge variant="secondary" className="text-xs">{getTypeLabel(interaction.type)}</Badge>
                   <span className="text-xs text-muted-foreground">{interaction.date}</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">{interaction.note}</p>

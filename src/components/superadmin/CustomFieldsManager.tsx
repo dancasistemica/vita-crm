@@ -516,7 +516,7 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
@@ -601,12 +601,12 @@ export function CustomFieldsManager() {
                     <TableCell className="font-medium">{field.field_label}</TableCell>
                     <TableCell className="hidden sm:table-cell text-xs text-muted-foreground font-mono">{field.field_name}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {field.is_required ? <Badge variant="default" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
+                      {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-muted-foreground">Não</span>}
                     </TableCell>
                     <TableCell>
                       <Badge variant={field.is_active ? 'default' : 'secondary'} className="text-xs">
@@ -638,7 +638,7 @@ export function CustomFieldsManager() {
             <DialogTitle>
               {editingField || editingGlobalField ? 'Editar Campo' : 'Novo Campo Customizado'}
               {isGlobalMode && (
-                <Badge variant="neutral" className="ml-2 text-xs">Global</Badge>
+                <Badge variant="secondary" className="ml-2 text-xs">Global</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -673,11 +673,11 @@ export function CustomFieldsManager() {
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOption(); } }}
                     placeholder="Adicionar opção"
                   />
-                  < type="button" variant="neutral" size="sm" onClick={addOption}>+</>
+                  < type="button" variant="secondary" size="sm" onClick={addOption}>+</>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {fieldOptions.map(opt => (
-                    <Badge key={opt} variant="neutral" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
+                    <Badge key={opt} variant="secondary" className="gap-1 cursor-pointer" onClick={() => removeOption(opt)}>
                       {opt} <X className="h-3 w-3" />
                     </Badge>
                   ))}
@@ -696,7 +696,7 @@ export function CustomFieldsManager() {
             )}
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
+            < variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>Cancelar</>
             < onClick={handleSave} disabled={saving || !fieldLabel.trim() || !fieldName.trim()}>
               {saving ? 'Salvando...' : editingField || editingGlobalField ? 'Atualizar' : 'Criar'}
             </>

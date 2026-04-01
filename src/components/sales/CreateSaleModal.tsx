@@ -273,7 +273,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
                   }}
                 />
                 {formData.stage_value > 0 && (
-                  <Card variant="default" padding="md" className="bg-primary-50 border-primary-100">
+                  <Card variant="primary" padding="md" className="bg-primary-50 border-primary-100">
                     <p className="text-sm text-primary-700 font-semibold text-center">
                       Valor Previsto: R$ {formData.stage_value.toFixed(2)}
                     </p>

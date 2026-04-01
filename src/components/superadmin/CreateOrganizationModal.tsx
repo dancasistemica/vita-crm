@@ -230,7 +230,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
                 < variant="ghost" size="sm" onClick={copyPassword}><Copy className="h-4 w-4" /></>
               </div>
             </div>
-            <Badge variant="neutral" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
+            <Badge variant="secondary" className="text-xs">O admin deve trocar a senha no primeiro acesso</Badge>
           </div>
         )}
 
@@ -238,7 +238,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
         <div className="flex justify-between pt-2">
           {step <= 3 ? (
             <>
-              < variant="neutral" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
+              < variant="secondary" onClick={step === 1 ? resetAndClose : handlePrev} disabled={loading}>
                 {step === 1 ? 'Cancelar' : '← Anterior'}
               </>
               {step < 3 ? (

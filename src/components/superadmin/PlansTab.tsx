@@ -111,7 +111,7 @@ export function PlansTab() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{plan.name}</CardTitle>
-                <Badge variant="neutral">
+                <Badge variant="secondary">
                   {plan.period === 'monthly' ? 'Mensal' : 'Anual'}
                 </Badge>
               </div>
@@ -198,7 +198,7 @@ export function PlansTab() {
             </div>
           </div>
           <DialogFooter>
-            < variant="neutral" onClick={() => setOpen(false)}>Cancelar</>
+            < variant="secondary" onClick={() => setOpen(false)}>Cancelar</>
             < onClick={handleCreate}>Criar Plano</>
           </DialogFooter>
         </DialogContent>

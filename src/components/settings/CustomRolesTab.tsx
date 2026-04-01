@@ -198,7 +198,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
                           {r.name}
-                          {r.is_default && <Badge variant="neutral" className="text-xs">Padrão</Badge>}
+                          {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">{r.description || '—'}</TableCell>

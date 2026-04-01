@@ -117,7 +117,7 @@ export const BotconversaSettings = ({
 
           <div className="flex gap-3">
             <
-              variant="neutral"
+              variant="secondary"
               onClick={() => setIsEditing(true)}
               disabled={isSaving}
             >
@@ -148,7 +148,7 @@ export const BotconversaSettings = ({
             </>
             {config && (
               <
-                variant="neutral"
+                variant="secondary"
                 onClick={() => {
                   setIsEditing(false);
                   setApiKey(config.api_key || '');

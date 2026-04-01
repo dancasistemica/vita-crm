@@ -62,7 +62,7 @@ function SortableItem({ setting, onToggle }: { setting: DashboardCardSetting; on
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3">
           <p className="text-sm font-medium text-foreground truncate">{config.title}</p>
-          <Badge variant="neutral" className="text-[10px] px-1.5 py-0 shrink-0">
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
             {groupLabel}
           </Badge>
         </div>

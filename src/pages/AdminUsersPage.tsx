@@ -344,7 +344,7 @@ export default function AdminUsersPage() {
       <div className="flex items-center gap-3">
         <Users className="h-6 w-6 text-primary-600" />
         <h1 className="text-4xl font-bold text-neutral-900">Todos os Usuários</h1>
-        <Badge variant="neutral" className="ml-auto">{filtered.length} usuários</Badge>
+        <Badge variant="secondary" className="ml-auto">{filtered.length} usuários</Badge>
       </div>
 
       <Card padding="md">
@@ -429,7 +429,7 @@ export default function AdminUsersPage() {
                     </TableCell>
                     <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
                     <TableCell>
-                      <Badge variant="neutral">{roleLabels[u.role] || u.role}</Badge>
+                      <Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
                       {new Date(u.created_at).toLocaleDateString("pt-BR")}

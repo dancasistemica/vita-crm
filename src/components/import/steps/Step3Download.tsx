@@ -31,7 +31,7 @@ export default function Step3Download({ onNext, onBack }: Props) {
             <FileSpreadsheet className="h-8 w-8 text-primary mx-auto" />
             <div>
               <p className="text-sm font-semibold text-foreground">XLSX</p>
-              <Badge variant="neutral" className="text-[10px] mt-1">Recomendado</Badge>
+              <Badge variant="secondary" className="text-[10px] mt-1">Recomendado</Badge>
             </div>
             <p className="text-xs text-muted-foreground">Formato nativo do Excel</p>
             <Button size="sm" className="w-full mt-2">

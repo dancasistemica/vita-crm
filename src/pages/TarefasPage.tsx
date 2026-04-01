@@ -412,10 +412,10 @@ export default function TarefasPage() {
             <p className={`text-sm font-medium ${task.completed ? 'line-through' : ''}`}>{task.title}</p>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground">{getLeadName(task.lead_id)}</span>
-              <Badge variant="neutral" className="text-xs">{getTypeLabel(task.type)}</Badge>
+              <Badge variant="secondary" className="text-xs">{getTypeLabel(task.type)}</Badge>
               {task.due_date && <span className="text-xs text-muted-foreground">{formatDateToBR(task.due_date)}</span>}
               {assignedName && (
-                <Badge variant="neutral" className="text-xs gap-1">
+                <Badge variant="secondary" className="text-xs gap-1">
                   <UserCircle className="h-3 w-3" />
                   {assignedName}
                 </Badge>
@@ -483,7 +483,7 @@ export default function TarefasPage() {
             onMarkAsRead={handleMarkNotificationRead}
             onMarkAllAsRead={handleMarkAllRead}
           />
-          < variant="neutral" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
+          < variant="secondary" size="sm" onClick={() => setShowStatusManager(!showStatusManager)}>
             <Settings className="h-4 w-4 mr-1" /> Status
           </>
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>

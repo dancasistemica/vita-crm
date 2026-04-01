@@ -182,15 +182,15 @@ export default function ClientDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Total em Vendas</p>
               <p className="text-2xl font-bold text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</p>
             </Card>
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Compras</p>
               <p className="text-2xl font-bold text-neutral-900">{sales.length}</p>
             </Card>
-            <Card variant="default" padding="md" className="text-center">
+            <Card variant="primary" padding="md" className="text-center">
               <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider">Interações</p>
               <p className="text-2xl font-bold text-neutral-900">{interactions.length}</p>
             </Card>
@@ -283,7 +283,7 @@ export default function ClientDetailPage() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
-                          <Badge variant="neutral" size="sm">{typeLabel}</Badge>
+                          <Badge variant="secondary" size="sm">{typeLabel}</Badge>
                           <span className="text-xs text-neutral-500">{int.date}</span>
                         </div>
                         <p className="text-sm text-neutral-800">{int.note}</p>

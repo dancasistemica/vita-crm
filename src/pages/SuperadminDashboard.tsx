@@ -170,7 +170,7 @@ export default function SuperadminDashboard() {
           </TabsList>
         </div>
 
-        <Card variant="default" padding="lg">
+        <Card variant="primary" padding="lg">
           <TabsContent value="organizations">
             <OrganizationsTab ref={orgsTabRef} onStatsChange={fetchStats} />
           </TabsContent>

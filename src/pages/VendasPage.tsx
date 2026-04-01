@@ -110,7 +110,7 @@ export function VendasPage() {
       )}
 
       {/* FILTER BAR */}
-      <Card variant="default" padding="md">
+      <Card variant="primary" padding="md">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Input
             placeholder="Buscar por cliente ou etapa..."

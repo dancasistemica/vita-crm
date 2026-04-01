@@ -426,7 +426,7 @@ export default function UsersTab() {
                 </span>
                 <div className="flex gap-1">
                   <
-                    variant="neutral"
+                    variant="secondary"
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
@@ -434,7 +434,7 @@ export default function UsersTab() {
                     Anterior
                   </>
                   <
-                    variant="neutral"
+                    variant="secondary"
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
@@ -482,7 +482,7 @@ export default function UsersTab() {
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
                     <PopoverTrigger asChild>
                       <
-                        variant="neutral"
+                        variant="secondary"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
                         className="w-full justify-between font-normal"
@@ -557,7 +557,7 @@ export default function UsersTab() {
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background z-10 p-6 border-t">
-              < variant="neutral" onClick={() => setFormOpen(false)}>Cancelar</>
+              < variant="secondary" onClick={() => setFormOpen(false)}>Cancelar</>
               < onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
                 {saving ? "Salvando..." : "Salvar"}
