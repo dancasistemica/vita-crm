@@ -140,10 +140,8 @@ export class DataAccessService {
 
   // ── TASKS ──────────────────────────────────────────────
   async getTasks(filters?: { completed?: boolean }) {
-    let query = supabase
-      .from('tasks')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('tasks').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.completed !== undefined) {
       query = query.eq('completed', filters.completed);
