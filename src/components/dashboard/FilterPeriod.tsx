@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CalendarDays } from 'lucide-react';
-import { Button, Card, CardContent, Input, Label } from "@/components/ui/ds";
+import { Button, Calendar, Card, CardContent, Input, Label } from "@/components/ui/ds";
 
 export interface DateRange {
   start: Date;

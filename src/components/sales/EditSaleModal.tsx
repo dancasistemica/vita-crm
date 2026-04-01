@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { getSaleById, updateSale, deleteSale } from '@/services/saleService';
 import { toast } from 'sonner';
-import { Button } from "@/components/ui/ds";
+import { Alert, Button } from "@/components/ui/ds";
 
 interface Sale {
   id: string;

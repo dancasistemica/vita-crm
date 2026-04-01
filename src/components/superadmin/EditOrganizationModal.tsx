@@ -6,7 +6,7 @@ import { fetchAddressByCEP, formatCEP } from '@/services/cepService';
 import { validateCNPJWithResult, formatCNPJ, type CNPJValidationResult } from '@/utils/cnpjValidator';
 import { generatePassword, evaluatePasswordStrength, type PasswordStrength } from '@/utils/passwordGenerator';
 import { Eye, EyeOff, RefreshCw, Loader2, XCircle } from 'lucide-react';
-import { Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
+import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, Textarea } from "@/components/ui/ds";
 
 interface EditOrganizationModalProps {
   open: boolean;

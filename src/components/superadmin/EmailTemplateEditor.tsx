@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import EmailPreview from './EmailPreview';
 import { Save, RotateCcw, Loader2 } from 'lucide-react';
-import { Input, Label, Textarea } from "@/components/ui/ds";
+import { Button, Input, Label, Textarea } from "@/components/ui/ds";
 
 interface EmailTemplateData {
   id?: string;

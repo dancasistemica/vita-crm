@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { } from "@/components/ui/ds/";
-import { Input } from "@/components/ui/ds/Input";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import { Plus, Edit2, Trash2, X, Settings } from "lucide-react";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/ds";
+import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input, Label } from "@/components/ui/ds";
 
 interface TaskStatus {
   id: string;

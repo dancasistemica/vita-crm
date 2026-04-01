@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog } from './Dialog';
 import { } from './';
+import { Button, Dialog } from "@/components/ui/ds";
 
 interface AlertDialogProps {
   isOpen?: boolean;

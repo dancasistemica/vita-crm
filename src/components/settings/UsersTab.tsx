@@ -2,15 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { useSuperadmin } from "@/hooks/useSuperadmin";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
-import { } from "@/components/ui/ds/";
-import { Input } from "@/components/ui/ds/Input";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Select } from "@/components/ui/ds/Select";
 import { Plus, Edit, Trash2, RotateCcw, Search, Users, Loader2, Building2, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label, Popover, PopoverContent, PopoverTrigger, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Popover, PopoverContent, PopoverTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface OrgUser {
   member_id: string;

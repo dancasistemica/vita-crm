@@ -28,7 +28,7 @@ import AdminUsersPage from "@/pages/AdminUsersPage";
 import { VendasPage } from "@/pages/VendasPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
-import { Toaster, Toaster as Sonner, TooltipProvider } from "@/components/ui/ds";
+import { Toaster, Toaster as Sonner, Tooltip, TooltipProvider } from "@/components/ui/ds";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
 if (typeof window !== "undefined") {

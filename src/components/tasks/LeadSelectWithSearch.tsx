@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Lead } from "@/types/crm";
 import { cn } from "@/lib/utils";
 import { Search, X, ChevronDown } from "lucide-react";
-import { Avatar, AvatarFallback, ScrollArea, Skeleton } from "@/components/ui/ds";
+import { Avatar, AvatarFallback, Button, ScrollArea, Skeleton } from "@/components/ui/ds";
 
 interface LeadSelectWithSearchProps {
   value: string;

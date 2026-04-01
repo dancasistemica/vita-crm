@@ -4,7 +4,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Lock, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { Badge, Card, CardContent, CardHeader, CardTitle, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Checkbox, ScrollArea, ScrollBar, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/ds";
 
 interface PermissionModule {
   label: string;

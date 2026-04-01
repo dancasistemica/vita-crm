@@ -4,7 +4,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Plus, Edit, Trash2, Shield, Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from "@/components/ui/ds";
 
 interface CustomRole {
   id: string;

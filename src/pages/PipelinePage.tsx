@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useLeadsData, LeadView } from "@/hooks/useLeadsData";
-import { Badge } from "@/components/ui/ds/Badge";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/ds/Card";
 import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";
-import { ScrollArea, ScrollBar } from "@/components/ui/ds";
+import { Badge, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ScrollArea, ScrollBar } from "@/components/ui/ds";
 
 const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 

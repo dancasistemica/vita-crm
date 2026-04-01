@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { createOrganization } from '@/services/organizationService';
 import { Building2, Users, FileText, Check, Copy } from 'lucide-react';
-import { Badge, Card, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
+import { Badge, Button, Card, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Input, Label, Textarea } from "@/components/ui/ds";
 
 interface Plan {
   id: string;

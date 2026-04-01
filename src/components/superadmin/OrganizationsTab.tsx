@@ -4,7 +4,7 @@ import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, delet
 import { CreateOrganizationModal } from './CreateOrganizationModal';
 import { EditOrganizationModal } from './EditOrganizationModal';
 import { Building2, Users, Plus, Pencil, Trash2, Search, X } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/ds";
 
 interface Org {
   id: string;

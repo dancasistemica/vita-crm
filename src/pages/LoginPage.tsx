@@ -3,11 +3,8 @@ import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
-import { Card } from '@/components/ui/ds/Card';
-import { Input } from '@/components/ui/ds/Input';
-import { } from '@/components/ui/ds/';
 import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
-import { Checkbox } from "@/components/ui/ds";
+import { Button, Card, Checkbox, Input } from "@/components/ui/ds";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';

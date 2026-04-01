@@ -4,12 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/ds/';
-import { Input } from '@/components/ui/ds/Input';
-import { Card } from '@/components/ui/ds/Card';
-import { Select } from '@/components/ui/ds/Select';
-import { Badge } from '@/components/ui/ds/Badge';
-import { Button } from "@/components/ui/ds";
+import { Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 
 interface CreateSubscriptionModalProps {
   isOpen: boolean;
