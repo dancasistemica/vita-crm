@@ -403,7 +403,7 @@ export default function AdminUsersPage() {
           <p className="text-center text-neutral-500 py-12">Nenhum usuário encontrado.</p>
         ) : (
           <>
-            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className=\"px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider\"><td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">Nome</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Organização</th>
