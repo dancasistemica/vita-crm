@@ -1,13 +1,11 @@
 import React from 'react';
-import { Menu, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut, PanelLeftOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/ds';
+import { Button, SidebarTrigger } from '@/components/ui/ds';
 
 interface HeaderProps {
   title?: string;
-  onMenuClick: () => void;
-  menuOpen: boolean;
 }
 
 export function Header({ title, onMenuClick, menuOpen }: HeaderProps) {
