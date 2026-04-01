@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/ds';
 
 interface HeaderProps {
-  onOpenSidebar: () => void;
+  onOpenSidebar?: () => void;
   sidebarOpen?: boolean;
   title?: string;
 }
