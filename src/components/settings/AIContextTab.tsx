@@ -198,7 +198,7 @@ export default function AIContextTab() {
 
       {/* Preview */}
       <Card>
-        <div className="mb-4"> setShowPreview(!showPreview)}>
+        <div className=\"mb-4 cursor-pointer p-2 hover:bg-neutral-50 rounded-lg transition-colors\" onClick={() => setShowPreview(!showPreview)}>
           <h2 className="text-2xl font-semibold mb-2">
             <Eye className="h-5 w-5 text-primary" />
             Preview do Contexto
