@@ -9,11 +9,12 @@ interface SearchResultsProps {
   onSelect: (result: SearchResult) => void;
 }
 
-const typeLabels: Record<GlobalSearchResultType, string> = {
+const typeLabels: Record<SearchResultType | 'sale', string> = {
   lead: "Leads",
   client: "Clientes",
   task: "Tarefas",
   product: "Produtos",
+  sale: "Vendas",
 };
 
 const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
