@@ -19,9 +19,11 @@ export function Header({ onOpenSidebar, sidebarOpen, title }: HeaderProps) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('[Header] Buscando:', searchQuery);
-    // Global search logic implementation placeholder
-    // navigate(`/search?q=${searchQuery}`);
+    if (searchQuery.trim()) {
+      console.log('[Header] Navegando para busca:', searchQuery);
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery('');
+    }
   };
 
   const handleLogout = async () => {

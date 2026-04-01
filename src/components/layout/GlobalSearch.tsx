@@ -111,7 +111,7 @@ export function GlobalSearch() {
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SearchResults
-          results={results}
+          results={[...results.leads, ...results.clientes, ...results.tarefas, ...results.vendas, ...results.produtos]}
           loading={loading}
           query={query}
           onSelect={handleSelectResult}
