@@ -3,53 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { Search, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/ds';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 interface HeaderProps {
-  onOpenSidebar: () => void;
-  sidebarOpen: boolean;
+  onOpenSidebar?: () => void;
+  sidebarOpen?: boolean;
   title?: string;
 }
 
 export function Header({ onOpenSidebar, sidebarOpen, title }: HeaderProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [organizationName, setOrganizationName] = useState('Dança Sistêmica');
-
-  React.useEffect(() => {
-    const loadOrganization = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { data: userData } = await supabase
-          .from('users')
-          .select('organization_id')
-          .eq('id', user.id)
-          .single();
-
-        if (userData?.organization_id) {
-          const { data: org } = await supabase
-            .from('organizations')
-            .select('name')
-            .eq('id', userData.organization_id)
-            .single();
-
-          if (org) {
-            setOrganizationName(org.name);
-          }
-        }
-      } catch (err) {
-        console.error('[Header] Erro ao carregar organização:', err);
-      }
-    };
-
-    loadOrganization();
-  }, []);
+  const { organization } = useOrganization();
+  const organizationName = organization?.name || 'Dança Sistêmica';
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('[Header] Buscando:', searchQuery);
-    // Implementar lógica de busca global
+    // Global search logic implementation placeholder
     // navigate(`/search?q=${searchQuery}`);
   };
 
