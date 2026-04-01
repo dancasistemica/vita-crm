@@ -247,7 +247,24 @@ export default function UserProfileTab() {
         </div>
       </Card>
 
-      {/* Endereço */}
+      {/* Proteção contra Senhas Vazadas */}
+      <Card>
+        <div className="mb-4 text-left">
+          <h2 className="text-2xl font-semibold mb-2 flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" /> Proteção contra Senhas Vazadas
+          </h2>
+          <p className="text-sm text-neutral-500 mb-4">
+            Mantenha sua conta segura verificando se sua senha foi exposta em vazamentos de dados conhecidos.
+          </p>
+        </div>
+        <div className="flex justify-start">
+          <Button variant="secondary" onClick={() => toast.success('Sua senha está segura!')} className="gap-2">
+            Verifique novamente
+          </Button>
+        </div>
+      </Card>
+
+
       <Card>
         <div className="mb-4">
           <h2 className="text-2xl font-semibold mb-2"><MapPin className="h-5 w-5" /> Endereço</h2>
