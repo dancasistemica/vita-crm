@@ -365,7 +365,7 @@ export function useClientsFilter() {
 
   return {
     filters, updateFilter, resetFilters, activeFilterCount,
-    filteredClients: paginatedClients, totalFiltered: filteredClients.length,
+    filteredClients: paginatedClients, totalFiltered: filteredClients.length, totalCount: clients.length,
     page, setPage, perPage, setPerPage, totalPages,
     sortField, sortDir, toggleSort,
     selectedIds, toggleSelect, toggleSelectAll,
