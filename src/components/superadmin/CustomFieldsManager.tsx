@@ -574,7 +574,7 @@ export function CustomFieldsManager() {
               </thead>
               <table className="w-full border-collapse">
                 {filteredFields.map((field, index) => (
-                  <TableRow
+                  <tr className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
                     key={field.id}
                     draggable
                     onDragStart={() => handleDragStart(index)}

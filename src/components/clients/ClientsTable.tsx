@@ -234,7 +234,7 @@ export default function ClientsTable({
             const lastInt = getLastInteraction(client.id);
 
             return (
-              <TableRow
+              <tr className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
                 key={client.id}
                 className="cursor-pointer hover:bg-muted/40 transition-colors group"
                 onClick={() => {
