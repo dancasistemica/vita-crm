@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import {
   useGlobalSearch,
-  type GlobalSearchResult,
+  type SearchResult,
 } from "@/hooks/useGlobalSearch";
 import { SearchResults } from "@/components/search/SearchResults";
 
@@ -17,7 +17,7 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
 
   const { query, setQuery, results, loading, search, clearResults } =
-    useGlobalSearch(organizationId);
+    useGlobalSearch();
 
   useEffect(() => {
     return () => {
@@ -50,7 +50,7 @@ export function GlobalSearch() {
     }
   };
 
-  const handleSelectResult = (result: GlobalSearchResult) => {
+  const handleSelectResult = (result: SearchResult) => {
     if (result.type === "lead") {
       navigate("/leads", { state: { leadId: result.id } });
     } else if (result.type === "client") {
@@ -111,7 +111,7 @@ export function GlobalSearch() {
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SearchResults
-          results={results}
+          results={[...results.leads, ...results.clientes, ...results.tarefas, ...results.vendas, ...results.produtos]}
           loading={loading}
           query={query}
           onSelect={handleSelectResult}

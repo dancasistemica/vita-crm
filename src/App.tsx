@@ -29,6 +29,7 @@ import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
 import CustomizePage from "@/pages/CustomizePage";
 import AdminUsersPage from "@/pages/AdminUsersPage";
 import { VendasPage } from "@/pages/VendasPage";
+import SearchResultsPage from "@/pages/SearchResultsPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
@@ -84,6 +85,7 @@ const App = () => (
                   <Route path="/configuracoes" element={<ConfiguracoesPage />} />
                   <Route path="/personalizar" element={<CustomizePage />} />
                   <Route path="/perfil" element={<ProfilePage />} />
+                  <Route path="/search" element={<SearchResultsPage />} />
                 </Route>
               </Route>
 

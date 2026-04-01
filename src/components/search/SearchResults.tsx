@@ -1,26 +1,28 @@
 import { Button } from "@/components/ui/ds";
 import { CheckSquare, Package, User, UserPlus } from "lucide-react";
-import type { GlobalSearchResult, GlobalSearchResultType } from "@/hooks/useGlobalSearch";
+import type { SearchResult, SearchResultType } from "@/hooks/useGlobalSearch";
 
 interface SearchResultsProps {
-  results: GlobalSearchResult[];
+  results: SearchResult[];
   loading: boolean;
   query: string;
-  onSelect: (result: GlobalSearchResult) => void;
+  onSelect: (result: SearchResult) => void;
 }
 
-const typeLabels: Record<GlobalSearchResultType, string> = {
+const typeLabels: Record<SearchResultType | 'sale', string> = {
   lead: "Leads",
   client: "Clientes",
   task: "Tarefas",
   product: "Produtos",
+  sale: "Vendas",
 };
 
-const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
+const typeIcons: Record<SearchResultType | 'sale', JSX.Element> = {
   lead: <UserPlus className="h-4 w-4 text-neutral-500" />,
   client: <User className="h-4 w-4 text-neutral-500" />,
   task: <CheckSquare className="h-4 w-4 text-neutral-500" />,
   product: <Package className="h-4 w-4 text-neutral-500" />,
+  sale: <Package className="h-4 w-4 text-neutral-500" />,
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
@@ -46,7 +48,7 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
 
   return (
     <div className="divide-y max-h-[60vh] overflow-y-auto">
-      {(["lead", "client", "task", "product"] as GlobalSearchResultType[]).map((type) => {
+      {(["lead", "client", "task", "product", "sale"] as SearchResultType[]).map((type) => {
         const typeResults = results.filter((result) => result.type === type);
         if (typeResults.length === 0) return null;
 
@@ -73,9 +75,9 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
                   <div className="font-medium text-sm text-foreground">
                     {result.title}
                   </div>
-                  {result.subtitle && (
+                  {(result.description || result.email || result.phone) && (
                     <div className="text-xs text-neutral-500">
-                      {result.subtitle}
+                      {result.description || result.email || result.phone}
                     </div>
                   )}
                 </div>
