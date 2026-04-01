@@ -162,6 +162,11 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     }
 
     console.log('[SalesService] ✅ Venda com parcelamento criada com sucesso');
+
+    // ✨ NOVO: Converter lead em cliente
+    console.log('[SalesService] Convertendo lead em cliente...');
+    await convertLeadToClient(saleData.client_id, organizationId);
+
     return { sale, installments: installmentRecords };
   } catch (error) {
     console.error('[SalesService] ❌ Erro crítico ao criar venda com parcelamento:', error);
