@@ -1,4 +1,4 @@
-import { Input, Popover } from "@/components/ui/ds";
+import { Input, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/ds";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -20,7 +20,6 @@ export function GlobalSearch() {
     useGlobalSearch(organizationId);
 
   useEffect(() => {
-    console.log("[GlobalSearch] Barra de busca inicializada");
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
@@ -42,31 +41,23 @@ export function GlobalSearch() {
 
   const handleSearchChange = (value: string) => {
     setQuery(value);
-    console.log("[GlobalSearch] Query:", value);
-
     if (value.trim().length >= 2) {
       debouncedSearch(value);
       setOpen(true);
     } else {
       clearResults();
+      setOpen(false);
     }
   };
 
   const handleSelectResult = (result: GlobalSearchResult) => {
-    console.log("[GlobalSearch] Resultado selecionado:", result.type, result.id);
-
     if (result.type === "lead") {
-      console.log("[GlobalSearch] Navegando para:", "/leads");
       navigate("/leads", { state: { leadId: result.id } });
     } else if (result.type === "client") {
-      const url = `/clientes/${result.id}`;
-      console.log("[GlobalSearch] Navegando para:", url);
-      navigate(url);
+      navigate(`/clientes/${result.id}`);
     } else if (result.type === "task") {
-      console.log("[GlobalSearch] Navegando para:", "/tarefas");
       navigate("/tarefas", { state: { taskId: result.id } });
     } else if (result.type === "product") {
-      console.log("[GlobalSearch] Navegando para:", "/produtos");
       navigate("/produtos", { state: { productId: result.id } });
     }
 
@@ -100,28 +91,32 @@ export function GlobalSearch() {
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      
+      <PopoverTrigger asChild>
         <div className="relative flex-1 w-full sm:max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
           <Input
             ref={inputRef}
-            placeholder="Buscar leads, clientes, tarefas, produtos..."
+            placeholder="Buscar leads, clientes, tarefas, produtos... (Ctrl+K)"
             value={query}
             onChange={(event) => handleSearchChange(event.target.value)}
-            onFocus={() => setOpen(true)}
+            onFocus={() => { if (query.trim().length >= 2) setOpen(true); }}
             className="pl-9"
           />
         </div>
+      </PopoverTrigger>
       
-      {open && (
-        <div className="absolute z-50 mt-2 p-0 bg-white border border-neutral-200 rounded-lg shadow-lg w-full max-w-[90vw] overflow-hidden">
+      <PopoverContent 
+        className="p-0 w-[400px] sm:w-[500px]" 
+        align="start"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <SearchResults
           results={results}
           loading={loading}
           query={query}
           onSelect={handleSelectResult}
         />
-      </div>
+      </PopoverContent>
     </Popover>
   );
 }
