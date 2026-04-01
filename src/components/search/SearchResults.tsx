@@ -17,11 +17,12 @@ const typeLabels: Record<SearchResultType | 'sale', string> = {
   sale: "Vendas",
 };
 
-const typeIcons: Record<GlobalSearchResultType, JSX.Element> = {
+const typeIcons: Record<SearchResultType | 'sale', JSX.Element> = {
   lead: <UserPlus className="h-4 w-4 text-neutral-500" />,
   client: <User className="h-4 w-4 text-neutral-500" />,
   task: <CheckSquare className="h-4 w-4 text-neutral-500" />,
   product: <Package className="h-4 w-4 text-neutral-500" />,
+  sale: <Package className="h-4 w-4 text-neutral-500" />,
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
