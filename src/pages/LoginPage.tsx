@@ -20,6 +20,19 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar email
+    if (!validateEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    // Rate Limiting
+    if (!authRateLimiter.isAllowed(email)) {
+      setError('Muitas tentativas. Tente novamente em 1 minuto.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -48,6 +61,25 @@ export default function LoginPage() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validar email
+    if (!validateEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    // Validar senha
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    // Rate Limiting
+    if (!authRateLimiter.isAllowed(email)) {
+      setError('Muitas tentativas. Tente novamente em 1 minuto.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
