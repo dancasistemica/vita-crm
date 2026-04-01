@@ -79,18 +79,11 @@ export default function ProdutosPage() {
          <h1 className="text-4xl font-bold text-neutral-900">Produtos</h1>
          <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>Arraste para ordenar</span>
-          <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
-            
-              <Button onClick={() => setEditing(null)} variant="primary">
-                <Plus className="h-4 w-4 mr-1" /> Novo Produto
-              </Button>
-            
-            
-              <div className="mb-4">
-                <h2 className="text-2xl font-semibold">{editing ? 'Editar Produto' : 'Novo Produto'}</h2>
-              </div>
-              <ProductForm product={editing} onSave={handleSave} />
-            
+          <Button onClick={() => { setEditing(null); setDialogOpen(true); }} icon={<Plus className="h-4 w-4" />}>
+            Novo Produto
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }} title={editing ? 'Editar Produto' : 'Novo Produto'}>
+            <ProductForm product={editing} onSave={handleSave} />
           </Dialog>
         </div>
       </div>
