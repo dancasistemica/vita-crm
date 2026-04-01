@@ -12,7 +12,6 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
 import { 
-import { Avatar, AvatarFallback, AvatarImage, Button, Separator } from "@/components/ui/ds";
   Avatar, 
   AvatarFallback, 
   AvatarImage, 
