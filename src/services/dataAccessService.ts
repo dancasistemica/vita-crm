@@ -289,11 +289,10 @@ export class DataAccessService {
 
   // ── TAGS ───────────────────────────────────────────────
   async getTags() {
-    const { data, error } = await supabase
-      .from('tags')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('name');
+    let query = supabase.from('tags').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('name');
     if (error) { console.error('[DataAccessService] getTags error:', error); throw error; }
     return data || [];
   }
