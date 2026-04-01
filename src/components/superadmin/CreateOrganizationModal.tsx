@@ -102,15 +102,15 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
 
   return (
     <Dialog open={open} onOpenChange={resetAndClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             <Building2 className="h-5 w-5" /> Nova Organização
-          </DialogTitle>
+          </h2>
           <DialogDescription>
             {step <= 3 ? `Passo ${step} de 3` : 'Concluído'}
           </DialogDescription>
-        </DialogHeader>
+        </div>
 
         {/* Progress bar */}
         {step <= 3 && (
@@ -247,7 +247,7 @@ export function CreateOrganizationModal({ open, onOpenChange, onSuccess, plans }
             <Button className="w-full" onClick={resetAndClose}>Fechar</Button>
           )}
         </div>
-      </DialogContent>
+      
     </Dialog>
   );
 }

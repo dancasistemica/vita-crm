@@ -350,14 +350,14 @@ export default function CustomizePage() {
             <div>
               <Label>Fonte do CRM</Label>
               <Select value={brand.font_family} onValueChange={v => updateLocalBrand({ font_family: v })}>
-                <SelectTrigger className="w-full max-w-xs mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
+                    <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
           </Card>

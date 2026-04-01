@@ -144,48 +144,48 @@ export default function SuperadminDashboard() {
       {/* MAIN TABS */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="flex w-max min-w-full">
-            <TabsTrigger value="organizations" className="gap-3">
+          <div className="flex gap-2 border-b border-neutral-200 mb-4">
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Building2 className="h-4 w-4" /> Organizações
-            </TabsTrigger>
-            <TabsTrigger value="plans" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <CreditCard className="h-4 w-4" /> Planos
-            </TabsTrigger>
-            <TabsTrigger value="users" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Users className="h-4 w-4" /> Superadmins
-            </TabsTrigger>
-            <TabsTrigger value="emails" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Mail className="h-4 w-4" /> Email Templates
-            </TabsTrigger>
-            <TabsTrigger value="custom-fields" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Settings2 className="h-4 w-4" /> Campos Custom
-            </TabsTrigger>
-            <TabsTrigger value="botconversa" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Bot className="h-4 w-4" /> Botconversa
-            </TabsTrigger>
-            <TabsTrigger value="system-settings" className="gap-3">
+            </button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
               <Cog className="h-4 w-4" /> Sistema
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
         </div>
 
         <Card variant="primary" padding="lg">
-          <TabsContent value="organizations">
+          <div>
             <OrganizationsTab ref={orgsTabRef} onStatsChange={fetchStats} />
-          </TabsContent>
-          <TabsContent value="plans">
+          </div>
+          <div>
             <PlansTab />
-          </TabsContent>
-          <TabsContent value="users">
+          </div>
+          <div>
             <UsersManagementTab />
-          </TabsContent>
-          <TabsContent value="emails">
+          </div>
+          <div>
             <EmailTemplatesTab />
-          </TabsContent>
-          <TabsContent value="custom-fields">
+          </div>
+          <div>
             <CustomFieldsManager />
-          </TabsContent>
-          <TabsContent value="botconversa" className="space-y-6">
+          </div>
+          <div>
             <div>
               <Select
                 label="Selecione uma organização"
@@ -206,10 +206,10 @@ export default function SuperadminDashboard() {
                 organizationName={selectedBotconversaOrg.name}
               />
             )}
-          </TabsContent>
-          <TabsContent value="system-settings">
+          </div>
+          <div>
             <SystemSettings />
-          </TabsContent>
+          </div>
         </Card>
       </Tabs>
     </div>

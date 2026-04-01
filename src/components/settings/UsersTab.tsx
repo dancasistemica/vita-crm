@@ -320,16 +320,16 @@ export default function UsersTab() {
             />
           </div>
           <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Filtrar por função" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas as funções</SelectItem>
-              <SelectItem value="owner">Proprietário</SelectItem>
-              <SelectItem value="admin">Administrador</SelectItem>
-              <SelectItem value="vendedor">Vendedor</SelectItem>
-              <SelectItem value="member">Usuário</SelectItem>
-            </SelectContent>
+            
+              
+            
+            
+              <option value="all">Todas as funções</option>
+              <option value="owner">Proprietário</option>
+              <option value="admin">Administrador</option>
+              <option value="vendedor">Vendedor</option>
+              <option value="member">Usuário</option>
+            
           </Select>
         </div>
 
@@ -342,34 +342,34 @@ export default function UsersTab() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead className="hidden sm:table-cell">Telefone</TableHead>
-                    <TableHead>Função</TableHead>
-                    <TableHead className="hidden md:table-cell">Criado em</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">
+                  <table className="w-full border-collapse">
+                    <table className="w-full border-collapse">Nome</th>
+                    <table className="w-full border-collapse">Email</th>
+                    <table className="w-full border-collapse">Telefone</th>
+                    <table className="w-full border-collapse">Função</th>
+                    <table className="w-full border-collapse">Criado em</th>
+                    <table className="w-full border-collapse">Ações</th>
+                  </tr>
+                </thead>
+                <table className="w-full border-collapse">
                   {paginated.map((u) => (
-                    <TableRow key={u.member_id}>
-                      <TableCell className="font-medium">{u.full_name}</TableCell>
-                      <TableCell className="text-sm">{u.email}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-neutral-500">
+                    <table className="w-full border-collapse">
+                      <table className="w-full border-collapse">{u.full_name}</td>
+                      <table className="w-full border-collapse">{u.email}</td>
+                      <table className="w-full border-collapse">
                         {u.phone || "—"}
-                      </TableCell>
-                      <TableCell>
+                      </td>
+                      <table className="w-full border-collapse">
                         <Badge variant={roleBadgeVariant(u.role)}>
                           {roleLabels[u.role] || u.role}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-sm text-neutral-500">
+                      </td>
+                      <table className="w-full border-collapse">
                         {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                      </TableCell>
-                      <TableCell className="text-right">
+                      </td>
+                      <table className="w-full border-collapse">
                         <div className="flex items-center justify-end gap-1">
                           <Button variant="ghost"
                             size="sm"
@@ -398,11 +398,11 @@ export default function UsersTab() {
                             </Button>
                           )}
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
 
             {/* Pagination */}
@@ -434,10 +434,10 @@ export default function UsersTab() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-          <DialogContent className="max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scroll-smooth p-0">
-            <DialogHeader className="sticky top-0 bg-background z-10 p-6 border-b">
-              <DialogTitle>{editing ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
-            </DialogHeader>
+          
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold">{editing ? "Editar Usuário" : "Novo Usuário"}</h2>
+            </div>
             <div className="p-6 space-y-4">
               <div className="space-y-1">
                 <Label>Nome *</Label>
@@ -465,7 +465,7 @@ export default function UsersTab() {
                 <div className="space-y-1">
                   <Label>Organização *</Label>
                   <Popover open={orgSelectOpen} onOpenChange={setOrgSelectOpen}>
-                    <PopoverTrigger asChild>
+                    
                       <Button variant="secondary"
                         role="combobox"
                         aria-expanded={orgSelectOpen}
@@ -476,8 +476,8 @@ export default function UsersTab() {
                           : "Selecione uma organização"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[300px] overflow-y-auto" align="start">
+                    
+                    <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
                       <Command>
                         <CommandInput placeholder="Buscar organização..." className="h-10" />
                         <CommandList>
@@ -508,7 +508,7 @@ export default function UsersTab() {
                           </CommandGroup>
                         </CommandList>
                       </Command>
-                    </PopoverContent>
+                    </div>
                   </Popover>
                   {orgsLoading && (
                     <div className="text-sm text-neutral-500">Carregando organizações...</div>
@@ -521,22 +521,22 @@ export default function UsersTab() {
               <div className="space-y-1">
                 <Label>Função</Label>
                 <Select value={formRole} onValueChange={setFormRole}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="vendedor">Vendedor</SelectItem>
-                    <SelectItem value="member">Usuário</SelectItem>
+                  
+                    
+                  
+                  
+                    <option value="admin">Administrador</option>
+                    <option value="vendedor">Vendedor</option>
+                    <option value="member">Usuário</option>
                     {customRoleOptions.length > 0 && (
                       <>
                         <div className="px-2 py-1.5 text-xs font-medium text-neutral-500 border-t mt-1 pt-1">Roles Customizadas</div>
                         {customRoleOptions.map(cr => (
-                          <SelectItem key={cr} value={cr}>{cr}</SelectItem>
+                          <option key={cr} value={cr}>{cr}</option>
                         ))}
                       </>
                     )}
-                  </SelectContent>
+                  
                 </Select>
               </div>
             </div>
@@ -547,7 +547,7 @@ export default function UsersTab() {
                 {saving ? "Salvando..." : "Salvar"}
               </Button>
             </DialogFooter>
-          </DialogContent>
+          
         </Dialog>
 
         {/* Delete Confirmation */}

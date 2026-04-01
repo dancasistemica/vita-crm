@@ -457,14 +457,14 @@ export function SystemSettings() {
             <div>
               <Label>Fonte do Sistema</Label>
               <Select value={settings.font_family} onValueChange={v => updateSetting('font_family', v)}>
-                <SelectTrigger className="w-full max-w-xs mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {FONTS.map(f => (
-                    <SelectItem key={f} value={f} style={{ fontFamily: f }}>{f}</SelectItem>
+                    <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
           </Card>

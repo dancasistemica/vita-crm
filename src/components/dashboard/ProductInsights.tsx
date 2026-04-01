@@ -49,7 +49,7 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis yAxisId="left" allowDecimals={false} />
                   {isSuperadmin && <YAxis yAxisId="right" orientation="right" />}
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))' }} />
+                  <div className="relative group">
                   <Legend />
                   <Bar yAxisId="left" dataKey="sales" fill="hsl(210,70%,55%)" name="Vendas" radius={[4, 4, 0, 0]} />
                   {isSuperadmin && (

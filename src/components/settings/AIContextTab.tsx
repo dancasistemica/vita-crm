@@ -163,10 +163,10 @@ export default function AIContextTab() {
           <div className="space-y-3">
             <Label>Modelo de Negócio</Label>
             <Select value={form.ai_business_model} onValueChange={v => setForm(prev => ({ ...prev, ai_business_model: v }))}>
-              <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-              <SelectContent>
-                {BUSINESS_MODELS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
-              </SelectContent>
+              
+              
+                {BUSINESS_MODELS.map(m => <option key={m} value={m}>{m}</option>)}
+              
             </Select>
           </div>
         </div>

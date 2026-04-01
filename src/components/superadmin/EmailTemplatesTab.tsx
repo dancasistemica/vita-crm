@@ -27,14 +27,14 @@ export function EmailTemplatesTab() {
       <div>
         <div className="max-w-xs">
           <Select value={selectedType} onValueChange={(v) => setSelectedType(v as TemplateType)}>
-            <SelectTrigger className="min-h-[44px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
+            
+              
+            
+            
               {TEMPLATE_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </SelectContent>
+            
           </Select>
         </div>
 

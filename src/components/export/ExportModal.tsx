@@ -86,13 +86,13 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-display flex items-center gap-3">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             <FileDown className="h-5 w-5 text-primary" />
             Exportar {type === 'leads' ? 'Leads' : 'Clientes'}
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+        </div>
 
         <div className="space-y-6">
           {/* Format */}
@@ -178,7 +178,7 @@ export default function ExportModal({ open, onOpenChange, type, allData, filtere
             {loading ? 'Exportando...' : `Exportar ${format.toUpperCase()}`}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }

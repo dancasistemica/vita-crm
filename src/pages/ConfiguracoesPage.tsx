@@ -30,25 +30,25 @@ export default function ConfiguracoesPage() {
 
       <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); if (v !== "permissoes") setPreselectedRole(null); }} className="w-full space-y-4">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="flex w-max min-w-full">
-            <TabsTrigger value="usuarios" className="gap-3"><Users className="w-4 h-4" /> Usuários</TabsTrigger>
-            <TabsTrigger value="campos" className="gap-3"><ClipboardList className="w-4 h-4" /> Campos do CRM</TabsTrigger>
-            <TabsTrigger value="pagamento" className="gap-3"><CreditCard className="w-4 h-4" /> Pagamento</TabsTrigger>
-            {canAccessSettings && <TabsTrigger value="roles" className="gap-3"><Shield className="w-4 h-4" /> Roles</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="permissoes" className="gap-3"><Lock className="w-4 h-4" /> Permissões</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="organizacao" className="gap-3"><Building2 className="w-4 h-4" /> Organização</TabsTrigger>}
-            {canAccessSettings && <TabsTrigger value="ia" className="gap-3"><Brain className="w-4 h-4" /> Contexto IA</TabsTrigger>}
-          </TabsList>
+          <div className="flex gap-2 border-b border-neutral-200 mb-4">
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Users className="w-4 h-4" /> Usuários</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><ClipboardList className="w-4 h-4" /> Campos do CRM</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><CreditCard className="w-4 h-4" /> Pagamento</button>
+            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Shield className="w-4 h-4" /> Roles</button>}
+            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Lock className="w-4 h-4" /> Permissões</button>}
+            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Building2 className="w-4 h-4" /> Organização</button>}
+            {canAccessSettings && <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Brain className="w-4 h-4" /> Contexto IA</button>}
+          </div>
         </div>
 
         <Card variant="elevated" padding="lg">
-          <TabsContent value="usuarios"><UsersTab /></TabsContent>
-          <TabsContent value="campos"><CRMFieldsTab /></TabsContent>
-          <TabsContent value="pagamento"><PaymentMethodsTab /></TabsContent>
-          {canAccessSettings && <TabsContent value="roles"><CustomRolesTab onRoleCreated={handleRoleCreated} /></TabsContent>}
-          {canAccessSettings && <TabsContent value="permissoes"><UserRolesManager preselectedRole={preselectedRole} /></TabsContent>}
-          {canAccessSettings && <TabsContent value="organizacao"><OrganizationPage /></TabsContent>}
-          {canAccessSettings && <TabsContent value="ia"><AIContextTab /></TabsContent>}
+          <div><UsersTab /></div>
+          <div><CRMFieldsTab /></div>
+          <div><PaymentMethodsTab /></div>
+          {canAccessSettings && <div><CustomRolesTab onRoleCreated={handleRoleCreated} /></div>}
+          {canAccessSettings && <div><UserRolesManager preselectedRole={preselectedRole} /></div>}
+          {canAccessSettings && <div><OrganizationPage /></div>}
+          {canAccessSettings && <div><AIContextTab /></div>}
         </Card>
       </Tabs>
     </div>

@@ -90,38 +90,38 @@ export function UsersManagementTab() {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Adicionado em</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <table className="w-full border-collapse">
+        <table className="w-full border-collapse">
+          <table className="w-full border-collapse">
+            <table className="w-full border-collapse">Nome</th>
+            <table className="w-full border-collapse">Email</th>
+            <table className="w-full border-collapse">Adicionado em</th>
+            <table className="w-full border-collapse">Ações</th>
+          </tr>
+        </thead>
+        <table className="w-full border-collapse">
           {users.map((u) => (
-            <TableRow key={u.id}>
-              <TableCell className="font-medium">{u.full_name || '—'}</TableCell>
-              <TableCell>{u.email || '—'}</TableCell>
-              <TableCell className="text-sm text-neutral-500">
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">{u.full_name || '—'}</td>
+              <table className="w-full border-collapse">{u.email || '—'}</td>
+              <table className="w-full border-collapse">
                 {new Date(u.created_at).toLocaleDateString('pt-BR')}
-              </TableCell>
-              <TableCell>
+              </td>
+              <table className="w-full border-collapse">
                 <Button variant="error" size="sm" onClick={() => setRemoveConfirm({ isOpen: true, id: u.id, name: u.full_name || u.email })}>
                   <Trash2 className="h-4 w-4 mr-1" /> Remover
                 </Button>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Adicionar Superadmin</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">Adicionar Superadmin</h2>
+          </div>
           <div className="space-y-4">
             <div className="space-y-3">
               <Label>Email do usuário existente</Label>
@@ -142,7 +142,7 @@ export function UsersManagementTab() {
               {submitting ? 'Adicionando...' : 'Adicionar'}
             </Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
     </div>
   );

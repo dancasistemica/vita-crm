@@ -209,19 +209,19 @@ export default function ClientDetailPage() {
       {/* Tabs */}
       <Tabs defaultValue="vendas" className="space-y-4">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="flex w-max min-w-full">
-            <TabsTrigger value="vendas" className="gap-1"><ShoppingCart className="h-4 w-4" /> Vendas</TabsTrigger>
-            <TabsTrigger value="interacoes" className="gap-1"><MessageSquare className="h-4 w-4" /> Interações</TabsTrigger>
-            <TabsTrigger value="tarefas" className="gap-1"><CheckSquare className="h-4 w-4" /> Tarefas</TabsTrigger>
-            <TabsTrigger value="agendamentos" className="gap-1"><Clock className="h-4 w-4" /> Agendamentos</TabsTrigger>
-            <TabsTrigger value="notas" className="gap-1"><StickyNote className="h-4 w-4" /> Notas</TabsTrigger>
-            <TabsTrigger value="historico" className="gap-1"><Clock className="h-4 w-4" /> Histórico</TabsTrigger>
-          </TabsList>
+          <div className="flex gap-2 border-b border-neutral-200 mb-4">
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><ShoppingCart className="h-4 w-4" /> Vendas</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><MessageSquare className="h-4 w-4" /> Interações</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><CheckSquare className="h-4 w-4" /> Tarefas</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Clock className="h-4 w-4" /> Agendamentos</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><StickyNote className="h-4 w-4" /> Notas</button>
+            <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600"><Clock className="h-4 w-4" /> Histórico</button>
+          </div>
         </div>
 
         <Card variant="elevated" padding="lg">
           {/* Vendas */}
-          <TabsContent value="vendas" className="space-y-4">
+          <div>
             {sales.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma venda registrada.</p>
@@ -260,10 +260,10 @@ export default function ClientDetailPage() {
                 ))}
               </div>
             )}
-          </TabsContent>
+          </div>
 
           {/* Interações */}
-          <TabsContent value="interacoes" className="space-y-4">
+          <div>
             {interactions.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma interação registrada.</p>
@@ -289,10 +289,10 @@ export default function ClientDetailPage() {
                 })}
               </div>
             )}
-          </TabsContent>
+          </div>
 
           {/* Tarefas */}
-          <TabsContent value="tarefas" className="space-y-4">
+          <div>
             {tasks.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-neutral-600">Nenhuma tarefa vinculada.</p>
@@ -313,10 +313,10 @@ export default function ClientDetailPage() {
                 ))}
               </div>
             )}
-          </TabsContent>
+          </div>
 
           {/* Notas */}
-          <TabsContent value="notas" className="space-y-4">
+          <div>
             <Textarea
               placeholder="Notas internas sobre este cliente..."
               value={notesValue}
@@ -324,17 +324,17 @@ export default function ClientDetailPage() {
               onBlur={handleNotesBlur}
               className="min-h-[200px] w-full p-4 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
             />
-          </TabsContent>
+          </div>
 
           {/* Agendamentos */}
-          <TabsContent value="agendamentos" className="space-y-4">
+          <div>
             <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
-          </TabsContent>
+          </div>
 
           {/* Histórico */}
-          <TabsContent value="historico" className="space-y-4">
+          <div>
             <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
-          </TabsContent>
+          </div>
         </Card>
       </Tabs>
 

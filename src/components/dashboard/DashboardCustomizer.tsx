@@ -94,17 +94,17 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+      
         <Button variant="secondary" size="sm" className="min-h-[44px] gap-3">
           <Settings2 className="h-4 w-4" />
           Personalizar
         </Button>
-      </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="text-lg font-display">Personalizar Dashboard</SheetTitle>
+      
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Personalizar Dashboard</h2>
           <p className="text-sm text-neutral-500">Arraste para reordenar e alterne a visibilidade dos cards.</p>
-        </SheetHeader>
+        </div>
         <div className="mt-6 space-y-3">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={settings.map(s => s.card_id)} strategy={verticalListSortingStrategy}>
@@ -118,7 +118,7 @@ export default function DashboardCustomizer({ settings, onToggleVisibility, onRe
             </SortableContext>
           </DndContext>
         </div>
-      </SheetContent>
+      
     </Sheet>
   );
 }

@@ -80,17 +80,17 @@ export default function ProdutosPage() {
          <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>Arraste para ordenar</span>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) setEditing(null); }}>
-            <DialogTrigger asChild>
+            
               <Button onClick={() => setEditing(null)} variant="primary">
                 <Plus className="h-4 w-4 mr-1" /> Novo Produto
               </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>{editing ? 'Editar Produto' : 'Novo Produto'}</DialogTitle>
-              </DialogHeader>
+            
+            
+              <div className="mb-4">
+                <h2 className="text-2xl font-semibold">{editing ? 'Editar Produto' : 'Novo Produto'}</h2>
+              </div>
               <ProductForm product={editing} onSave={handleSave} />
-            </DialogContent>
+            
           </Dialog>
         </div>
       </div>

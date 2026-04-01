@@ -34,20 +34,20 @@ export default function InteracoesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold text-neutral-900">Interações</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild><><Plus className="h-4 w-4 mr-1" /> Nova Interação</></DialogTrigger>
-          <DialogContent>
-            <DialogHeader><DialogTitle className="font-display">Nova Interação</DialogTitle></DialogHeader>
+          <><Plus className="h-4 w-4 mr-1" /> Nova Interação</>
+          
+            <div className="mb-4"><h2 className="text-2xl font-semibold">Nova Interação</h2></div>
             <InteractionForm leads={leads} onSave={handleAdd} />
-          </DialogContent>
+          
         </Dialog>
       </div>
 
       <Select value={filterLead} onValueChange={setFilterLead}>
-        <SelectTrigger className="w-[250px]"><SelectValue placeholder="Filtrar por lead" /></SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Todos os leads</SelectItem>
-          {leads.map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
-        </SelectContent>
+        
+        
+          <option value="all">Todos os leads</option>
+          {leads.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+        
       </Select>
 
       <div className="space-y-3">
@@ -86,16 +86,16 @@ function InteractionForm({ leads, onSave }: { leads: any[]; onSave: (data: Parti
       <div>
         <Label>Lead</Label>
         <Select value={form.leadId || ''} onValueChange={v => set('leadId', v)}>
-          <SelectTrigger><SelectValue placeholder="Selecionar lead" /></SelectTrigger>
-          <SelectContent>{leads.map((l: any) => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
+          
+          {leads.map((l: any) => <option key={l.id} value={l.id}>{l.name}</option>)}
         </Select>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label>Tipo</Label>
           <Select value={form.type || 'mensagem'} onValueChange={v => set('type', v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{INTERACTION_TYPES.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+            
+            {INTERACTION_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
           </Select>
         </div>
         <div><Label>Data</Label><Input type="date" value={form.date || ''} onChange={e => set('date', e.target.value)} /></div>

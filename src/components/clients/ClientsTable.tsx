@@ -197,36 +197,36 @@ export default function ClientsTable({
   // Desktop table view
   const desktopView = (
     <div className="hidden md:block rounded-xl border border-border/60 overflow-hidden shadow-card bg-card">
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-muted/30 hover:bg-muted/30">
-            <TableHead className="w-10">
+      <table className="w-full border-collapse">
+        <table className="w-full border-collapse">
+          <table className="w-full border-collapse">
+            <table className="w-full border-collapse">
               <Checkbox
                 checked={selectedIds.length === clients.length && clients.length > 0}
                 onCheckedChange={toggleSelectAll}
               />
-            </TableHead>
-            <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('name')}>
+            </th>
+            <table className="w-full border-collapse"> toggleSort('name')}>
               <div className="flex items-center">Nome <SortIcon field="name" current={sortField} dir={sortDir} /></div>
-            </TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead>Produto</TableHead>
-            <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('value')}>
+            </th>
+            <table className="w-full border-collapse">Telefone</th>
+            <table className="w-full border-collapse">Produto</th>
+            <table className="w-full border-collapse"> toggleSort('value')}>
               <div className="flex items-center">Valor <SortIcon field="value" current={sortField} dir={sortDir} /></div>
-            </TableHead>
-            <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('date')}>
+            </th>
+            <table className="w-full border-collapse"> toggleSort('date')}>
               <div className="flex items-center">Data Compra <SortIcon field="date" current={sortField} dir={sortDir} /></div>
-            </TableHead>
-            <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('status')}>
+            </th>
+            <table className="w-full border-collapse"> toggleSort('status')}>
               <div className="flex items-center">Status <SortIcon field="status" current={sortField} dir={sortDir} /></div>
-            </TableHead>
-            <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('lastInteraction')}>
+            </th>
+            <table className="w-full border-collapse"> toggleSort('lastInteraction')}>
               <div className="flex items-center">Última Interação <SortIcon field="lastInteraction" current={sortField} dir={sortDir} /></div>
-            </TableHead>
-            <TableHead className="w-24 text-right">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+            </th>
+            <table className="w-full border-collapse">Ações</th>
+          </tr>
+        </thead>
+        <table className="w-full border-collapse">
           {clients.map(client => {
             const clientSales = getClientSales(client.id);
             const totalValue = clientSales.reduce((s, x) => s + x.value, 0);
@@ -242,10 +242,10 @@ export default function ClientsTable({
                   else navigate(`/clientes/${client.id}`);
                 }}
               >
-                <TableCell onClick={e => e.stopPropagation()}>
+                <table className="w-full border-collapse"> e.stopPropagation()}>
                   <Checkbox checked={selectedIds.includes(client.id)} onCheckedChange={() => toggleSelect(client.id)} />
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <div className="flex items-center gap-3">
                     <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${getInitialColor(client.name)}`}>
                       {getInitials(client.name)}
@@ -261,59 +261,59 @@ export default function ClientsTable({
                        )}
                     </div>
                   </div>
-                </TableCell>
-                <TableCell onClick={e => e.stopPropagation()}>
+                </td>
+                <table className="w-full border-collapse"> e.stopPropagation()}>
                   {client.phone ? (
                     <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-success hover:underline">
                       <ExternalLink className="h-3 w-3" />
                       {client.phone.replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 ($2) $3-$4')}
                     </a>
                   ) : '—'}
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <div className="flex flex-wrap gap-1">
                     {clientSales.slice(0, 2).map(s => (
                       <Badge key={s.id} variant="secondary" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
                     ))}
                     {clientSales.length > 2 && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
+                      <div className="relative group">
+                        
                           <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
+                        
+                        <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">
                           {clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}
-                        </TooltipContent>
-                      </Tooltip>
+                        </div>
+                      </div>
                     )}
                   </div>
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <span className="font-semibold text-sm text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   {lastSale ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
+                    <div className="relative group">
+                      
                         <span className="text-sm text-foreground">{formatDate(lastSale.date)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent>{relativeDate(lastSale.date)}</TooltipContent>
-                    </Tooltip>
+                      
+                      <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">{relativeDate(lastSale.date)}</div>
+                    </div>
                   ) : '—'}
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   {lastSale ? <Badge className={`text-[10px] ${statusColors[lastSale.status] || ''}`}>{lastSale.status}</Badge> : '—'}
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   {lastInt ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
+                    <div className="relative group">
+                      
                         <span className="text-sm text-neutral-500">{relativeDate(lastInt.date)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent>{lastInt.date}</TooltipContent>
-                    </Tooltip>
+                      
+                      <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">{lastInt.date}</div>
+                    </div>
                   ) : <span className="text-sm text-neutral-500">—</span>}
-                </TableCell>
-                <TableCell onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                </td>
+                <table className="w-full border-collapse"> e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
                       <Edit2 className="h-3.5 w-3.5" />
@@ -331,12 +331,12 @@ export default function ClientsTable({
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             );
           })}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 
@@ -359,15 +359,15 @@ export default function ClientsTable({
         <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>{totalFiltered} clientes</span>
           <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
-            <SelectTrigger className="h-8 w-20 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
+            
+              
+            
+            
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            
           </Select>
           <span>por página</span>
         </div>

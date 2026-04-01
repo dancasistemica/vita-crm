@@ -175,29 +175,29 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead className="hidden sm:table-cell">Criado em</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">
+                  <table className="w-full border-collapse">
+                    <table className="w-full border-collapse">Nome</th>
+                    <table className="w-full border-collapse">Descrição</th>
+                    <table className="w-full border-collapse">Criado em</th>
+                    <table className="w-full border-collapse">Ações</th>
+                  </tr>
+                </thead>
+                <table className="w-full border-collapse">
                   {roles.map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell className="font-medium">
+                    <table className="w-full border-collapse">
+                      <table className="w-full border-collapse">
                         <div className="flex items-center gap-3">
                           {r.name}
                           {r.is_default && <Badge variant="secondary" className="text-xs">Padrão</Badge>}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-sm text-neutral-500">{r.description || '—'}</TableCell>
-                      <TableCell className="hidden sm:table-cell text-sm text-neutral-500">
+                      </td>
+                      <table className="w-full border-collapse">{r.description || '—'}</td>
+                      <table className="w-full border-collapse">
                         {new Date(r.created_at).toLocaleDateString('pt-BR')}
-                      </TableCell>
-                      <TableCell className="text-right">
+                      </td>
+                      <table className="w-full border-collapse">
                         <div className="flex items-center justify-end gap-1">
                           <Button variant="ghost" size="sm" className="h-8 w-8" title="Editar" onClick={() => openEdit(r)}>
                             <Edit className="h-4 w-4" />
@@ -208,11 +208,11 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
                             </Button>
                           )}
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -220,10 +220,10 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
 
       {/* Create/Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(o) => { setFormOpen(o); if (!o) setEditing(null); }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{editing ? 'Editar Role' : 'Nova Role'}</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">{editing ? 'Editar Role' : 'Nova Role'}</h2>
+          </div>
           <div className="space-y-4">
             <div className="space-y-1">
               <Label>Nome *</Label>
@@ -241,7 +241,7 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
               {editing ? 'Salvar' : 'Criar'}
             </Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
 
       {/* Delete Confirmation */}

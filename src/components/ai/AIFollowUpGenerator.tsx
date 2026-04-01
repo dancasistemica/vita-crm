@@ -55,10 +55,10 @@ export default function AIFollowUpGenerator({ lead, stageName }: Props) {
         <div className="flex-1">
           <Label className="text-xs">Canal</Label>
           <Select value={channel} onValueChange={setChannel}>
-            <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {CHANNELS.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
-            </SelectContent>
+            
+            
+              {CHANNELS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            
           </Select>
         </div>
         <Button size="sm" onClick={handleGenerate} disabled={loading}>

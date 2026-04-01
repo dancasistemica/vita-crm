@@ -82,25 +82,25 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             Editar em massa ({selectedIds.length} registros)
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+        </div>
 
         <div className="space-y-4">
           <div>
             <Label className="text-sm">Qual campo deseja alterar?</Label>
             <Select value={selectedField} onValueChange={v => { setSelectedField(v); setValue(''); setSelectedTags([]); }}>
-              <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Selecione um campo" />
-              </SelectTrigger>
-              <SelectContent>
+              
+                
+              
+              
                 {fields.map(f => (
-                  <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                  <option key={f.value} value={f.value}>{f.label}</option>
                 ))}
-              </SelectContent>
+              
             </Select>
           </div>
 
@@ -112,34 +112,34 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'origin' && (
                 <Select value={value} onValueChange={setValue}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-                  <SelectContent>
-                    {origins.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
-                  </SelectContent>
+                  
+                  
+                    {origins.map(o => <option key={o} value={o}>{o}</option>)}
+                  
                 </Select>
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'interestLevel' && (
                 <Select value={value} onValueChange={setValue}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-                  <SelectContent>
-                    {interestLevels.map(l => <SelectItem key={l.id} value={l.value}>{l.label}</SelectItem>)}
-                  </SelectContent>
+                  
+                  
+                    {interestLevels.map(l => <option key={l.id} value={l.value}>{l.label}</option>)}
+                  
                 </Select>
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'pipelineStage' && (
                 <Select value={value} onValueChange={setValue}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-                  <SelectContent>
-                    {pipelineStages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
-                  </SelectContent>
+                  
+                  
+                    {pipelineStages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  
                 </Select>
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'responsible' && (
                 <Select value={value} onValueChange={setValue}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecionar" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={value || 'none'}>{value || 'Selecionar'}</SelectItem>
-                  </SelectContent>
+                  
+                  
+                    <option value={value || 'none'}>{value || 'Selecionar'}</option>
+                  
                 </Select>
               )}
               {currentFieldDef.inputType === 'multi' && selectedField === 'tags' && (
@@ -178,7 +178,7 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
             {loading ? 'Atualizando...' : 'Aplicar'}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }

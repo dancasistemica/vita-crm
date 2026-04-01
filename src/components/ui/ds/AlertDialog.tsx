@@ -62,15 +62,15 @@ export const AlertDialog = ({
 
 // Shims for compound components
 export const AlertDialogContent = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <DialogContent className={className}>{children}</DialogContent>
+  {children}
 );
 
 export const AlertDialogHeader = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <DialogHeader className={className}>{children}</DialogHeader>
+  <div className="mb-4">{children}</div>
 );
 
 export const AlertDialogTitle = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <DialogTitle className={className}>{children}</DialogTitle>
+  <h2 className="text-2xl font-semibold">{children}</h2>
 );
 
 export const AlertDialogDescription = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (

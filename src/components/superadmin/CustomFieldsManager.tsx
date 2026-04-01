@@ -447,14 +447,14 @@ export function CustomFieldsManager() {
             <div className="flex-1 bg-white rounded-lg p-4 border border-neutral-200">
               <Label>Organização</Label>
               <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                <SelectTrigger className="bg-white border-neutral-300 min-h-[44px] focus:ring-primary-500 focus:ring-offset-0">
-                  <SelectValue placeholder="Selecione uma organização" />
-                </SelectTrigger>
-                <SelectContent>
+                
+                  
+                
+                
                   {organizations.map(org => (
-                    <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
+                    <option key={org.id} value={org.id}>{org.name}</option>
                   ))}
-                </SelectContent>
+                
               </Select>
             </div>
           </div>
@@ -491,32 +491,32 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Label</TableHead>
-                  <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead className="hidden md:table-cell">Orgs</TableHead>
-                  <TableHead className="w-20">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">
+                  <table className="w-full border-collapse">Label</th>
+                  <table className="w-full border-collapse">Nome interno</th>
+                  <table className="w-full border-collapse">Tipo</th>
+                  <table className="w-full border-collapse">Orgs</th>
+                  <table className="w-full border-collapse">Ações</th>
+                </tr>
+              </thead>
+              <table className="w-full border-collapse">
                 {filteredGlobalFields.map((field) => (
-                  <TableRow key={field.field_name}>
-                    <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-neutral-500 font-mono">{field.field_name}</TableCell>
-                    <TableCell>
+                  <table className="w-full border-collapse">
+                    <table className="w-full border-collapse">{field.field_label}</td>
+                    <table className="w-full border-collapse">{field.field_name}</td>
+                    <table className="w-full border-collapse">
                       <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    </td>
+                    <table className="w-full border-collapse">
                       <Badge variant={field.org_count === totalOrgs ? 'primary' : 'secondary'} className="text-xs">
                         {field.org_count}/{totalOrgs}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
+                    </td>
+                    <table className="w-full border-collapse">
                       <div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditGlobalModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
@@ -539,11 +539,11 @@ export function CustomFieldsManager() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )
       )}
@@ -560,19 +560,19 @@ export function CustomFieldsManager() {
           </div>
         ) : (
           <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-10">Op</TableHead>
-                  <TableHead>Label</TableHead>
-                  <TableHead className="hidden sm:table-cell">Nome interno</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead className="hidden sm:table-cell">Obrigatório</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-20">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">
+                  <table className="w-full border-collapse">Op</th>
+                  <table className="w-full border-collapse">Label</th>
+                  <table className="w-full border-collapse">Nome interno</th>
+                  <table className="w-full border-collapse">Tipo</th>
+                  <table className="w-full border-collapse">Obrigatório</th>
+                  <table className="w-full border-collapse">Status</th>
+                  <table className="w-full border-collapse">Ações</th>
+                </tr>
+              </thead>
+              <table className="w-full border-collapse">
                 {filteredFields.map((field, index) => (
                   <TableRow
                     key={field.id}
@@ -582,25 +582,25 @@ export function CustomFieldsManager() {
                     onDragEnd={handleDragEnd}
                     className={dragIndex === index ? 'opacity-50' : ''}
                   >
-                    <TableCell className="cursor-grab">
+                    <table className="w-full border-collapse">
                       <GripVertical className="h-4 w-4 text-neutral-500" />
-                    </TableCell>
-                    <TableCell className="font-medium">{field.field_label}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-xs text-neutral-500 font-mono">{field.field_name}</TableCell>
-                    <TableCell>
+                    </td>
+                    <table className="w-full border-collapse">{field.field_label}</td>
+                    <table className="w-full border-collapse">{field.field_name}</td>
+                    <table className="w-full border-collapse">
                       <Badge variant="secondary" className="text-xs">
                         {FIELD_TYPES.find(t => t.value === field.field_type)?.label || field.field_type}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    </td>
+                    <table className="w-full border-collapse">
                       {field.is_required ? <Badge variant="primary" className="text-xs">Sim</Badge> : <span className="text-xs text-neutral-500">Não</span>}
-                    </TableCell>
-                    <TableCell>
+                    </td>
+                    <table className="w-full border-collapse">
                       <Badge variant={field.is_active ? 'primary' : 'secondary'} className="text-xs">
                         {field.is_active ? 'Ativo' : 'Inativo'}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
+                    </td>
+                    <table className="w-full border-collapse">
                       <div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => openEditModal(field)} className="h-8 w-8 p-0">
                           <Pencil className="h-4 w-4" />
@@ -609,11 +609,11 @@ export function CustomFieldsManager() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )
       )}
@@ -633,14 +633,14 @@ export function CustomFieldsManager() {
           <div>
             <Label htmlFor="type">Tipo de Campo</Label>
             <Select value={fieldType} onValueChange={setFieldType}>
-              <SelectTrigger id="type">
-                <SelectValue placeholder="Selecione o tipo" />
-              </SelectTrigger>
-              <SelectContent>
+              
+                
+              
+              
                 {FIELD_TYPES.map(t => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
-              </SelectContent>
+              
             </Select>
           </div>
 

@@ -255,14 +255,14 @@ export default function Step5Import({ state, update, onNext, onBack }: Props) {
                   </p>
                 </div>
                 <Select value={dup.action} onValueChange={v => updateDuplicateAction(i, v as DuplicateMatch['action'])}>
-                  <SelectTrigger className="w-[110px] h-7 text-[11px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="skip">Ignorar</SelectItem>
-                    <SelectItem value="update">Atualizar</SelectItem>
-                    <SelectItem value="duplicate">Duplicar</SelectItem>
-                  </SelectContent>
+                  
+                    
+                  
+                  
+                    <option value="skip">Ignorar</option>
+                    <option value="update">Atualizar</option>
+                    <option value="duplicate">Duplicar</option>
+                  
                 </Select>
               </div>
             ))}

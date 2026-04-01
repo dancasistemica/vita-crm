@@ -341,17 +341,17 @@ export default function LeadsPage() {
           </Button>
           {userCanCreate && (
             <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} modal={false}>
-              <DialogTrigger asChild>
+              
                 <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>Novo Lead</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>
+              
+              
+                <div className="mb-4">
+                  <h2 className="text-2xl font-semibold">
                     <h2 className="text-2xl font-semibold text-neutral-900">{editingLead ? 'Editar Lead' : 'Novo Lead'}</h2>
-                  </DialogTitle>
-                </DialogHeader>
+                  </h2>
+                </div>
                 <LeadForm lead={editingLead} onSave={handleSave} />
-              </DialogContent>
+              
             </Dialog>
           )}
         </div>

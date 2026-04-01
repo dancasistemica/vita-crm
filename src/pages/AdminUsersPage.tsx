@@ -403,39 +403,39 @@ export default function AdminUsersPage() {
           <p className="text-center text-neutral-500 py-12">Nenhum usuário encontrado.</p>
         ) : (
           <>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead className="hidden md:table-cell">Telefone</TableHead>
-                  <TableHead>Organização</TableHead>
-                  <TableHead>Função</TableHead>
-                  <TableHead className="hidden lg:table-cell">Criado em</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">
+                  <table className="w-full border-collapse">Nome</th>
+                  <table className="w-full border-collapse">Email</th>
+                  <table className="w-full border-collapse">Telefone</th>
+                  <table className="w-full border-collapse">Organização</th>
+                  <table className="w-full border-collapse">Função</th>
+                  <table className="w-full border-collapse">Criado em</th>
+                  <table className="w-full border-collapse">Ações</th>
+                </tr>
+              </thead>
+              <table className="w-full border-collapse">
                 {paginated.map((u, idx) => (
-                  <TableRow key={`${u.user_id}-${u.org_id}-${idx}`}>
-                    <TableCell className="font-medium">
+                  <table className="w-full border-collapse">
+                    <table className="w-full border-collapse">
                       {u.full_name}
                       {u.is_owner && (
                         <Badge variant="error" size="sm" className="ml-2">Owner</Badge>
                       )}
-                    </TableCell>
-                    <TableCell className="text-sm">{u.email}</TableCell>
-                    <TableCell className="hidden md:table-cell text-sm text-neutral-600">
+                    </td>
+                    <table className="w-full border-collapse">{u.email}</td>
+                    <table className="w-full border-collapse">
                       {u.phone || "—"}
-                    </TableCell>
-                    <TableCell className="text-sm">{u.org_name || "Sem org"}</TableCell>
-                    <TableCell>
+                    </td>
+                    <table className="w-full border-collapse">{u.org_name || "Sem org"}</td>
+                    <table className="w-full border-collapse">
                       <Badge variant="secondary">{roleLabels[u.role] || u.role}</Badge>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell text-sm text-neutral-600">
+                    </td>
+                    <table className="w-full border-collapse">
                       {new Date(u.created_at).toLocaleDateString("pt-BR")}
-                    </TableCell>
-                    <TableCell className="text-right">
+                    </td>
+                    <table className="w-full border-collapse">
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" title="Editar" onClick={() => openEdit(u)} className="p-1 h-8 w-8">
                           <Edit className="h-4 w-4" />
@@ -454,11 +454,11 @@ export default function AdminUsersPage() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
 
             {totalPages > 1 && (
               <div className="flex items-center justify-between text-sm text-neutral-600 p-4 border-t border-neutral-100">

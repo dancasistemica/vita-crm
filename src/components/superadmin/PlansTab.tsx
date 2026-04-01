@@ -144,10 +144,10 @@ export function PlansTab() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Novo Plano</DialogTitle>
-          </DialogHeader>
+        
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">Novo Plano</h2>
+          </div>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -163,11 +163,11 @@ export function PlansTab() {
               <div className="space-y-3">
                 <Label>Período *</Label>
                 <Select value={form.period} onValueChange={(v) => setForm({ ...form, period: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="monthly">Mensal</SelectItem>
-                    <SelectItem value="annual">Anual</SelectItem>
-                  </SelectContent>
+                  
+                  
+                    <option value="monthly">Mensal</option>
+                    <option value="annual">Anual</option>
+                  
                 </Select>
               </div>
               <div className="space-y-3">
@@ -194,7 +194,7 @@ export function PlansTab() {
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button onClick={handleCreate}>Criar Plano</Button>
           </DialogFooter>
-        </DialogContent>
+        
       </Dialog>
     </div>
   );

@@ -184,14 +184,14 @@ export default function Step4Upload({ state, update, onNext, onBack }: Props) {
                     onValueChange={v => update({ mapping: { ...state.mapping, [header]: v === '_ignore' ? '' : v } })}
                     key={`${header}-${state.mapping[header] || '_ignore'}`}
                   >
-                    <SelectTrigger className="w-[160px] h-8 text-xs">
-                      <SelectValue placeholder="Selecionar" />
-                    </SelectTrigger>
-                    <SelectContent>
+                    
+                      
+                    
+                    
                       {crmFields.map(f => (
-                        <SelectItem key={f.value || '_ignore'} value={f.value || '_ignore'}>{f.label}</SelectItem>
+                        <option key={f.value || '_ignore'} value={f.value || '_ignore'}>{f.label}</option>
                       ))}
-                    </SelectContent>
+                    
                   </Select>
                 </div>
               ))}

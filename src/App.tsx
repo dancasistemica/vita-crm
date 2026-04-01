@@ -47,7 +47,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <OrganizationProvider>
       <BrandProvider>
-        <TooltipProvider>
+        
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -87,7 +87,7 @@ const App = () => (
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
-        </TooltipProvider>
+        
       </BrandProvider>
     </OrganizationProvider>
   </QueryClientProvider>

@@ -29,7 +29,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={leadsByMonth}>
-                <XAxis dataKey="month" /><YAxis allowDecimals={false} /><Tooltip />
+                <XAxis dataKey="month" /><YAxis allowDecimals={false} /><div className="relative group">
                 <Line type="monotone" dataKey="value" stroke="hsl(350,35%,55%)" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
@@ -41,7 +41,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesByMonth}>
-                <XAxis dataKey="month" /><YAxis /><Tooltip formatter={(v: number) => `R$ ${v}`} />
+                <XAxis dataKey="month" /><YAxis /><div className="relative group"> `R$ ${v}`} />
                 <Bar dataKey="value" fill="hsl(18,50%,58%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -56,7 +56,7 @@ export default function RelatoriosPage() {
                 <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                   {leadsByOrigin.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip />
+                <div className="relative group">
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -67,7 +67,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByProduct} layout="vertical">
-                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><Tooltip formatter={(v: number) => `R$ ${v}`} />
+                <XAxis type="number" /><YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11 }} /><div className="relative group"> `R$ ${v}`} />
                 <Bar dataKey="value" fill="hsl(152,55%,45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -79,7 +79,7 @@ export default function RelatoriosPage() {
           <div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={conversionByStage}>
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><Tooltip />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} /><div className="relative group">
                 <Bar dataKey="value" fill="hsl(350,35%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

@@ -120,7 +120,7 @@ export default function ConsolidatedDashboardPage() {
               <BarChart data={leadsByStage}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
                 <YAxis allowDecimals={false} />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)', boxShadow: '0 4px 12px -2px rgb(0 0 0 / 0.06)' }} />
+                <div className="relative group">
                 <Bar dataKey="value" fill="hsl(270,50%,55%)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -135,7 +135,7 @@ export default function ConsolidatedDashboardPage() {
                 <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                   {(consolidatedData ? consolidatedData.topOrganizations : leadsByOrigin).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+                <div className="relative group">
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -149,7 +149,7 @@ export default function ConsolidatedDashboardPage() {
                 <BarChart data={revenueByProduct}>
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis />
-                  <Tooltip formatter={(v: number) => `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
+                  <div className="relative group"> `R$ ${(v ?? 0).toLocaleString('pt-BR')}`} contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 13% 91%)' }} />
                   <Bar dataKey="value" fill="hsl(16,50%,56%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>

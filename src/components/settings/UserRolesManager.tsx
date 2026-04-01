@@ -244,16 +244,16 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
     <div className="space-y-4">
       <Tabs value={selectedRole} onValueChange={setSelectedRole}>
         <ScrollArea className="w-full">
-          <TabsList className="inline-flex w-max min-w-full">
+          <div className="flex gap-2 border-b border-neutral-200 mb-4">
             {ROLES.map(r => (
-              <TabsTrigger key={r.value} value={r.value}>{r.label}</TabsTrigger>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">{r.label}</button>
             ))}
-          </TabsList>
+          </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
         {ROLES.map(r => (
-          <TabsContent key={r.value} value={r.value}>
+          <div>
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -297,7 +297,7 @@ export default function UserRolesManager({ preselectedRole }: UserRolesManagerPr
                 })}
               </div>
             )}
-          </TabsContent>
+          </div>
         ))}
       </Tabs>
 

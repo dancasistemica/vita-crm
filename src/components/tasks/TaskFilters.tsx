@@ -65,29 +65,29 @@ export default function TaskFilters({
           <div>
             <Label className="text-xs text-neutral-500">Tipo</Label>
             <Select value={typeFilter} onValueChange={onTypeChange}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os tipos</SelectItem>
+              
+              
+                <option value="all">Todos os tipos</option>
                 {TASK_TYPES.map(t => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
-              </SelectContent>
+              
             </Select>
           </div>
 
           <div>
             <Label className="text-xs text-neutral-500">Responsável</Label>
             <Select value={assignedFilter} onValueChange={onAssignedChange}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="unassigned">Sem responsável</SelectItem>
+              
+              
+                <option value="all">Todos</option>
+                <option value="unassigned">Sem responsável</option>
                 {orgMembers.map(m => (
-                  <SelectItem key={m.user_id} value={m.user_id}>
+                  <option key={m.user_id} value={m.user_id}>
                     {m.profiles?.full_name || m.profiles?.email || m.user_id.slice(0, 8)}
-                  </SelectItem>
+                  </option>
                 ))}
-              </SelectContent>
+              
             </Select>
           </div>
 

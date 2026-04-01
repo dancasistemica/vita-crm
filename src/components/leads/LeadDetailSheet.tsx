@@ -135,37 +135,37 @@ export default function LeadDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto p-0">
+      
         <div className="p-6 pb-0">
-          <SheetHeader>
-            <SheetTitle className="text-lg font-display">{lead.name}</SheetTitle>
-            <SheetDescription className="flex items-center gap-3 flex-wrap">
+          <div className="mb-4">
+            <h2 className="text-2xl font-semibold">{lead.name}</h2>
+            <p className="text-sm text-neutral-500">
               {stageName && <Badge variant="secondary" className="text-xs">{stageName}</Badge>}
               {interestLabel && <Badge variant="secondary" className="text-xs">{interestLabel}</Badge>}
               {lead.origin && <span className="text-xs">{lead.origin}</span>}
-            </SheetDescription>
-          </SheetHeader>
+            </p>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <div className="px-6">
-            <TabsList className="w-full grid grid-cols-5">
-              <TabsTrigger value="info" className="text-xs">Informações</TabsTrigger>
-              <TabsTrigger value="tasks" className="text-xs">
+            <div className="flex gap-2 border-b border-neutral-200 mb-4">
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Informações</button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
                 Tarefas
                 {tasks.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{tasks.length}</Badge>}
-              </TabsTrigger>
-              <TabsTrigger value="interactions" className="text-xs">
+              </button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">
                 Interações
                 {interactions.length > 0 && <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0">{interactions.length}</Badge>}
-              </TabsTrigger>
-              <TabsTrigger value="scheduled" className="text-xs">Agendamentos</TabsTrigger>
-              <TabsTrigger value="history" className="text-xs">Histórico</TabsTrigger>
-            </TabsList>
+              </button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Agendamentos</button>
+              <button className="px-4 py-2 font-medium transition-colors border-b-2 border-transparent hover:text-primary-600">Histórico</button>
+            </div>
           </div>
 
           {/* INFO TAB */}
-          <TabsContent value="info" className="px-6 pb-6 mt-4 space-y-4">
+          <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <InfoField label="Email" value={lead.email} />
               <InfoField label="Telefone" value={lead.phone} />
@@ -249,10 +249,10 @@ export default function LeadDetailSheet({
                 <Trash2 className="h-4 w-4 mr-1" /> Excluir
               </Button>
             </div>
-          </TabsContent>
+          </div>
 
           {/* TASKS TAB */}
-          <TabsContent value="tasks" className="px-6 pb-6 mt-4 space-y-3">
+          <div>
             {loadingTasks ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
@@ -277,10 +277,10 @@ export default function LeadDetailSheet({
                 );
               })
             )}
-          </TabsContent>
+          </div>
 
           {/* INTERACTIONS TAB */}
-          <TabsContent value="interactions" className="px-6 pb-6 mt-4 space-y-3">
+          <div>
             {loadingInteractions ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
@@ -300,19 +300,19 @@ export default function LeadDetailSheet({
                 </div>
               ))
             )}
-          </TabsContent>
+          </div>
 
           {/* HISTORY TAB */}
-          <TabsContent value="history" className="px-6 pb-6 mt-4">
+          <div>
             <LeadTimeline leadId={lead.id} leadCreatedAt={lead.entryDate || undefined} />
-          </TabsContent>
+          </div>
 
           {/* SCHEDULED TAB */}
-          <TabsContent value="scheduled" className="px-6 pb-6 mt-4">
+          <div>
             <ScheduledMessagesList organizationId={organizationId} leadId={lead.id} />
-          </TabsContent>
+          </div>
         </Tabs>
-      </SheetContent>
+      
       <DeleteConfirmationModal
         isOpen={deleteModalOpen}
         title="Excluir lead"

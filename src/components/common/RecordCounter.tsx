@@ -27,15 +27,15 @@ export default function RecordCounter({ totalCount, filteredCount, perPage, onPe
       <div className="flex items-center gap-3">
         <span className="text-sm text-neutral-500">Exibir por página:</span>
         <Select value={String(perPage)} onValueChange={v => onPerPageChange(Number(v))}>
-          <SelectTrigger className="h-8 w-20 text-xs">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="25">25</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-            <SelectItem value="1000">1000</SelectItem>
-          </SelectContent>
+          
+            
+          
+          
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="1000">1000</option>
+          
         </Select>
       </div>
     </div>

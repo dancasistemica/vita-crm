@@ -166,25 +166,25 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             />
           </div>
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="active">Ativa</SelectItem>
-              <SelectItem value="suspended">Suspensa</SelectItem>
-            </SelectContent>
+            
+              
+            
+            
+              <option value="all">Todas</option>
+              <option value="active">Ativa</option>
+              <option value="suspended">Suspensa</option>
+            
           </Select>
           <Select value={planFilter} onValueChange={setPlanFilter}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Plano" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os planos</SelectItem>
+            
+              
+            
+            
+              <option value="all">Todos os planos</option>
               {plans.map((p) => (
-                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
-            </SelectContent>
+            
           </Select>
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
@@ -198,58 +198,58 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Plano Atual</TableHead>
-              <TableHead>Alterar Plano</TableHead>
-              <TableHead>Usuários</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Criada em</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table className="w-full border-collapse">
+          <table className="w-full border-collapse">
+            <table className="w-full border-collapse">
+              <table className="w-full border-collapse">Nome</th>
+              <table className="w-full border-collapse">Email</th>
+              <table className="w-full border-collapse">Plano Atual</th>
+              <table className="w-full border-collapse">Alterar Plano</th>
+              <table className="w-full border-collapse">Usuários</th>
+              <table className="w-full border-collapse">Status</th>
+              <table className="w-full border-collapse">Criada em</th>
+              <table className="w-full border-collapse">Ações</th>
+            </tr>
+          </thead>
+          <table className="w-full border-collapse">
             {filteredOrgs.map((org) => (
-              <TableRow key={org.id}>
-                <TableCell className="font-medium">{org.name}</TableCell>
-                <TableCell className="text-sm text-neutral-500">{org.contact_email || '—'}</TableCell>
-                <TableCell>
+              <table className="w-full border-collapse">
+                <table className="w-full border-collapse">{org.name}</td>
+                <table className="w-full border-collapse">{org.contact_email || '—'}</td>
+                <table className="w-full border-collapse">
                   <Badge variant="secondary">{org.plan}</Badge>
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <Select
                     value={org.plan_id || 'none'}
                     onValueChange={(v) => handlePlanChange(org.id, v)}
                   >
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="Selecionar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Nenhum</SelectItem>
+                    
+                      
+                    
+                    
+                      <option value="none">Nenhum</option>
                       {plans.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                        <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
-                    </SelectContent>
+                    
                   </Select>
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
                     {org.organization_members?.length || 0}
                   </div>
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <Badge variant={org.active ? 'primary' : 'error'}>
                     {org.active ? 'Ativa' : 'Suspensa'}
                   </Badge>
-                </TableCell>
-                <TableCell className="text-sm text-neutral-500">
+                </td>
+                <table className="w-full border-collapse">
                   {new Date(org.created_at).toLocaleDateString('pt-BR')}
-                </TableCell>
-                <TableCell>
+                </td>
+                <table className="w-full border-collapse">
                   <div className="flex items-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
                       <Pencil className="h-4 w-4" />
@@ -264,11 +264,11 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
                       {org.active ? 'Suspender' : 'Ativar'}
                     </Button>
                   </div>
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
         )}
         <CreateOrganizationModal
           open={createOpen}

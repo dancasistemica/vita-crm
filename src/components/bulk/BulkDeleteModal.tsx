@@ -52,13 +52,13 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!deleting) { onOpenChange(o); setConfirmed(false); } }}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 text-destructive">
+      
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">
             <AlertTriangle className="h-5 w-5" />
             Deletar {type === 'leads' ? 'Leads' : 'Clientes'}
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+        </div>
 
         <div className="space-y-4">
           <p className="text-sm text-neutral-500">
@@ -102,7 +102,7 @@ export default function BulkDeleteModal({ open, onOpenChange, selectedIds, type,
             {deleting ? 'Deletando...' : 'Deletar Permanentemente'}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      
     </Dialog>
   );
 }
