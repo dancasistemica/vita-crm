@@ -505,7 +505,7 @@ export default function AdminUsersPage() {
               icon={
                 <Button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} type="button" className="text-neutral-500">
                   {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                </button>
+                </Button>
               }
             />
           </div>
