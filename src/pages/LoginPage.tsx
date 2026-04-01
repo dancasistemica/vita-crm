@@ -4,7 +4,8 @@ import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { loginUser, checkRateLimit } from '@/services/loginService';
 import { toast } from 'sonner';
-import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, XCircle, CheckCircle2, Loader2, Lock, Mail, ArrowLeft } from 'lucide-react';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REMEMBER_KEY = 'login_remember_email';
