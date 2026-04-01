@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, LogOut } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, secureLogout } from '@/lib/supabase';
+import { sanitizeInput } from '@/lib/security';
 import { Button } from '@/components/ui/ds';
 
 interface HeaderProps {
@@ -49,16 +50,22 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      console.log('[Header] Buscando:', searchQuery);
-      // Global search logic implementation placeholder
-      // navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    const sanitized = sanitizeInput(searchQuery.trim());
+    if (sanitized) {
+      console.log('[Header] Buscando:', sanitized);
+      // Global search logic
+      navigate(`/search?q=${encodeURIComponent(sanitized)}`);
     }
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
+    try {
+      await secureLogout();
+    } catch (err) {
+      console.error('[Header] Erro ao sair:', err);
+      // Fallback redirect if secureLogout fails
+      navigate('/login');
+    }
   };
 
   return (

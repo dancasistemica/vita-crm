@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useOrganization } from '@/contexts/OrganizationContext';
+import { sanitizeInput, validateStringLength, RateLimiter } from '@/lib/security';
 
 export type SearchResultType = 'lead' | 'client' | 'task' | 'sale' | 'product';
 
 export interface SearchResult {
   id: string;
-  type: SearchResultType;
+  type: SearchResultType | 'cliente' | 'tarefa' | 'venda' | 'produto';
   title: string;
   description?: string;
   email?: string;
@@ -25,6 +26,9 @@ interface SearchResults {
   produtos: SearchResult[];
   total: number;
 }
+
+// Rate limiter para busca (máximo 10 buscas por minuto)
+const searchRateLimiter = new RateLimiter(10, 60000);
 
 export function useGlobalSearch() {
   const { organizationId } = useOrganization();
@@ -53,7 +57,10 @@ export function useGlobalSearch() {
   }, []);
 
   const search = useCallback(async (searchTerm: string) => {
-    if (!searchTerm.trim() || !organizationId) {
+    // Validar e sanitizar input
+    const sanitizedQuery = sanitizeInput(searchTerm.trim());
+
+    if (!sanitizedQuery || !organizationId) {
       setResults({
         leads: [],
         clientes: [],
@@ -65,14 +72,26 @@ export function useGlobalSearch() {
       return;
     }
 
-    setQuery(searchTerm);
+    // Validar comprimento (mínimo 2, máximo 100 caracteres)
+    if (!validateStringLength(sanitizedQuery, 2, 100)) {
+      console.warn('[useGlobalSearch] Termo de busca muito curto ou longo');
+      return;
+    }
+
+    // Aplicar Rate Limiting
+    if (!searchRateLimiter.isAllowed('global-search')) {
+      setError('Muitas buscas em pouco tempo. Tente novamente em 1 minuto.');
+      return;
+    }
+
+    setQuery(sanitizedQuery);
     setLoading(true);
     setError(null);
 
     try {
-      console.log('[useGlobalSearch] Buscando:', searchTerm);
+      console.log('[useGlobalSearch] Buscando:', sanitizedQuery);
 
-      const ilikeTerm = `%${searchTerm}%`;
+      const ilikeTerm = `%${sanitizedQuery}%`;
 
       // Parallelized search across tables
       const [leadsRes, clientsRes, tasksRes, salesRes, productsRes] = await Promise.all([

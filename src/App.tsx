@@ -32,6 +32,8 @@ import { VendasPage } from "@/pages/VendasPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 
 import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
+import { useEffect } from "react";
+import { validateSession } from "@/lib/supabase";
 
 // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
 if (typeof window !== "undefined") {
@@ -46,7 +48,19 @@ if (typeof window !== "undefined") {
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    // Validar sessão periodicamente ou no mount
+    const checkSession = async () => {
+      const isValid = await validateSession();
+      if (!isValid && window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
+        console.warn('[App] Sessão inválida detectada no mount');
+      }
+    };
+    checkSession();
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <OrganizationProvider>
       <BrandProvider>
@@ -97,6 +111,7 @@ const App = () => (
       </BrandProvider>
     </OrganizationProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

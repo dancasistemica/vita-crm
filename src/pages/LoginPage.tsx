@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
+import { validateEmail, RateLimiter } from '@/lib/security';
 import { Card } from '@/components/ui/ds';
 import { Button } from '@/components/ui/ds';
 import { Eye, EyeOff } from 'lucide-react';
+
+// Rate limiter para tentativas de login (máximo 5 em 1 minuto)
+const authRateLimiter = new RateLimiter(5, 60000);
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -16,6 +20,19 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar email
+    if (!validateEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    // Rate Limiting
+    if (!authRateLimiter.isAllowed(email)) {
+      setError('Muitas tentativas. Tente novamente em 1 minuto.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -44,6 +61,25 @@ export default function LoginPage() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validar email
+    if (!validateEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    // Validar senha
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    // Rate Limiting
+    if (!authRateLimiter.isAllowed(email)) {
+      setError('Muitas tentativas. Tente novamente em 1 minuto.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
