@@ -13,18 +13,26 @@ export class DataAccessService {
     return this._orgId;
   }
 
+  get isConsolidated(): boolean {
+    return this._orgId === 'consolidado';
+  }
+
   constructor(options: DataAccessOptions) {
     this._orgId = options.organizationId;
     this.userId = options.userId;
-    console.log('[DataAccessService] Inicializado para org:', this.orgId);
+    console.log('[DataAccessService] Inicializado para org:', this.orgId, 'consolidado:', this.isConsolidated);
+  }
+
+  // ── HELPER ──────────────────────────────────────────
+  private applyOrgFilter(query: any) {
+    if (this.isConsolidated) return query;
+    return query.eq('organization_id', this.orgId);
   }
 
   // ── LEADS ──────────────────────────────────────────────
   async getLeads(filters?: { search?: string; interestLevel?: string; pipelineStage?: string }) {
-    let query = supabase
-      .from('leads')
-      .select('*')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('leads').select('*');
+    query = this.applyOrgFilter(query);
 
     if (filters?.search) {
       query = query.or(`name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,phone.ilike.%${filters.search}%`);
@@ -86,10 +94,8 @@ export class DataAccessService {
 
   // ── SALES ──────────────────────────────────────────────
   async getSales(filters?: { status?: string }) {
-    let query = supabase
-      .from('sales')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('sales').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.status) {
       query = query.eq('status', filters.status);
@@ -134,10 +140,8 @@ export class DataAccessService {
 
   // ── TASKS ──────────────────────────────────────────────
   async getTasks(filters?: { completed?: boolean }) {
-    let query = supabase
-      .from('tasks')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('tasks').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.completed !== undefined) {
       query = query.eq('completed', filters.completed);
@@ -182,10 +186,8 @@ export class DataAccessService {
 
   // ── INTERACTIONS ───────────────────────────────────────
   async getInteractions(filters?: { leadId?: string }) {
-    let query = supabase
-      .from('interactions')
-      .select('*, leads(name)')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('interactions').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
 
     if (filters?.leadId) {
       query = query.eq('lead_id', filters.leadId);
@@ -218,11 +220,10 @@ export class DataAccessService {
 
   // ── PRODUCTS ───────────────────────────────────────────
   async getProducts() {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*, product_sales_stages(*)')
-      .eq('organization_id', this.orgId)
-      .order('created_at', { ascending: false });
+    let query = supabase.from('products').select('*, product_sales_stages(*)');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
     if (error) { console.error('[DataAccessService] getProducts error:', error); throw error; }
     return data || [];
   }
@@ -288,11 +289,10 @@ export class DataAccessService {
 
   // ── TAGS ───────────────────────────────────────────────
   async getTags() {
-    const { data, error } = await supabase
-      .from('tags')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('name');
+    let query = supabase.from('tags').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('name');
     if (error) { console.error('[DataAccessService] getTags error:', error); throw error; }
     return data || [];
   }
@@ -331,11 +331,10 @@ export class DataAccessService {
 
   // ── TASK STATUSES ───────────────────────────────────────
   async getTaskStatuses() {
-    const { data, error } = await supabase
-      .from('task_statuses')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('order_index');
+    let query = supabase.from('task_statuses').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('order_index');
     if (error) { console.error('[DataAccessService] getTaskStatuses error:', error); throw error; }
     return data || [];
   }
@@ -374,11 +373,10 @@ export class DataAccessService {
 
 
   async getPipelineStages() {
-    const { data, error } = await supabase
-      .from('pipeline_stages')
-      .select('*')
-      .eq('organization_id', this.orgId)
-      .order('sort_order');
+    let query = supabase.from('pipeline_stages').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('sort_order');
     if (error) { console.error('[DataAccessService] getPipelineStages error:', error); throw error; }
     return data || [];
   }
@@ -433,10 +431,10 @@ export class DataAccessService {
   }
 
   async getInterestLevels() {
-    const { data, error } = await supabase
-      .from('interest_levels')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('interest_levels').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getInterestLevels error:', error); throw error; }
@@ -444,10 +442,10 @@ export class DataAccessService {
   }
 
   async getLeadOrigins() {
-    const { data, error } = await supabase
-      .from('lead_origins')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('lead_origins').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getLeadOrigins error:', error); throw error; }
@@ -546,10 +544,10 @@ export class DataAccessService {
   }
 
   async getPaymentMethods() {
-    const { data, error } = await supabase
-      .from('payment_methods')
-      .select('*')
-      .eq('organization_id', this.orgId)
+    let query = supabase.from('payment_methods').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .eq('active', true)
       .order('name');
     if (error) { console.error('[DataAccessService] getPaymentMethods error:', error); throw error; }
@@ -557,10 +555,10 @@ export class DataAccessService {
   }
 
   async getOrgMembers() {
-    const { data: members, error } = await supabase
-      .from('organization_members')
-      .select('id, user_id, organization_id, role, created_at')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('organization_members').select('id, user_id, organization_id, role, created_at');
+    query = this.applyOrgFilter(query);
+
+    const { data: members, error } = await query;
     if (error) { console.error('[DataAccessService] getOrgMembers error:', error); throw error; }
     if (!members || members.length === 0) return [];
 
@@ -580,21 +578,20 @@ export class DataAccessService {
   }
 
   async getRolePermissions() {
-    const { data, error } = await supabase
-      .from('role_permissions')
-      .select('*')
-      .eq('organization_id', this.orgId);
+    let query = supabase.from('role_permissions').select('*');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query;
     if (error) { console.error('[DataAccessService] getRolePermissions error:', error); throw error; }
     return data || [];
   }
 
   // ── CRM FIELD ORDER ──────────────────────────────────────
   async getCRMFieldOrder() {
-    const { data, error } = await supabase
-      .from('crm_field_order')
-      .select('field_name, sort_order')
-      .eq('organization_id', this.orgId)
-      .order('sort_order', { ascending: true });
+    let query = supabase.from('crm_field_order').select('field_name, sort_order');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getCRMFieldOrder error:', error); throw error; }
     return data || [];
   }
