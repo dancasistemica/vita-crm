@@ -49,8 +49,8 @@ export default function ProductInsights({ insights, isSuperadmin }: ProductInsig
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis yAxisId="left" allowDecimals={false} />
                   {isSuperadmin && <YAxis yAxisId="right" orientation="right" />}
-                  <div className="relative group">
                   <Legend />
+                  <Tooltip />
                   <Bar yAxisId="left" dataKey="sales" fill="hsl(210,70%,55%)" name="Vendas" radius={[4, 4, 0, 0]} />
                   {isSuperadmin && (
                     <Bar yAxisId="right" dataKey="revenue" fill="hsl(38,92%,50%)" name="Receita (R$)" radius={[4, 4, 0, 0]} />
