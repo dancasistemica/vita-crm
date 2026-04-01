@@ -257,6 +257,11 @@ export default function LoginPage() {
             </p>
           </div>
         </Card>
+        <ForgotPasswordModal
+          isOpen={showForgotPassword}
+          onClose={() => setShowForgotPassword(false)}
+          onBackToLogin={() => setShowForgotPassword(false)}
+        />
       </div>
     </div>
   );
