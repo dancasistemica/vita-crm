@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { Card, Input, Badge, Alert } from '@/components/ui/ds';
-import { Plus, Search, Filter, FileDown, Pencil, Trash2, ArrowLeft, Loader } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button, Card, Input, Badge, Alert } from '@/components/ui/ds';
+import { Plus, Search, Filter, FileDown, Pencil, Trash2 } from 'lucide-react';
 import { useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
@@ -33,12 +32,10 @@ export default function ClientesPage() {
 
   const handleSelectClient = (client: any) => {
     setSelectedClient(client);
-    // Note: Detail view should probably be a separate page or a more complex component
   };
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      {/* PAGE HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold text-neutral-900">Clientes</h1>
@@ -47,48 +44,46 @@ export default function ClientesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          < 
-            variant="neutral" 
+          <Button 
+            variant="secondary" 
             size="md" 
             icon={<FileDown className="w-4 h-4" />}
             onClick={() => setExportOpen(true)}
           >
             Exportar
-          </>
-          < 
-            variant="neutral" 
+          </Button>
+          <Button 
+            variant="secondary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowSubscriptionModal(true)}
           >
             Nova Mensalidade
-          </>
-          < 
+          </Button>
+          <Button 
             variant="primary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowCreateModal(true)}
           >
             Nova Venda
-          </>
+          </Button>
         </div>
       </div>
 
-      {/* BULK ACTIONS */}
       {hook.selectedIds.length > 0 && (
         <Alert variant="info" title={`${hook.selectedIds.length} clientes selecionados`}>
           <div className="flex gap-3 mt-2">
-            < variant="neutral" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
+            <Button variant="secondary" size="sm" icon={<Pencil className="w-4 h-4" />} onClick={() => setBulkEditOpen(true)}>
               Editar em Massa
-            </>
-            < variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
+            </Button>
+            <Button variant="error" size="sm" icon={<Trash2 className="w-4 h-4" />} onClick={() => setBulkDeleteOpen(true)}>
               Deletar Selecionados
-            </>
+            </Button>
           </div>
         </Alert>
       )}
 
-      {/* FILTER BAR */}
       <Card variant="default" padding="md">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
@@ -99,18 +94,17 @@ export default function ClientesPage() {
               onChange={(e) => hook.updateFilter('search', e.target.value)}
             />
           </div>
-          < 
+          <Button 
             variant={showFilters ? 'primary' : 'secondary'} 
             size="md" 
             icon={<Filter className="w-4 h-4" />}
             onClick={() => setShowFilters(!showFilters)}
           >
             {showFilters ? 'Ocultar Filtros' : 'Filtros Avançados'}
-          </>
+          </Button>
         </div>
       </Card>
 
-      {/* MAIN CONTENT */}
       <div className="grid grid-cols-1 gap-6">
         <Card variant="elevated" padding="none">
           <ClientsTable
@@ -137,7 +131,6 @@ export default function ClientesPage() {
         </Card>
       </div>
 
-      {/* MODAIS */}
       <ExportModal
         open={exportOpen}
         onOpenChange={setExportOpen}
