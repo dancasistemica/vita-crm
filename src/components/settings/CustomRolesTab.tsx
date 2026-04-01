@@ -245,22 +245,22 @@ export default function CustomRolesTab({ onRoleCreated }: CustomRolesTabProps) {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
-        <AlertDialogContent>
-          <DialogHeader>
-            <DialogTitle>Remover role "{deleteTarget?.name}"?</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-neutral-500 py-4">
-            Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
-          </p>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
-            <Button onClick={handleDelete} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {saving ? 'Removendo...' : 'Remover'}
-            </Button>
-          </DialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+          <Card variant="default" padding="lg" className="w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-2">Remover role "{deleteTarget?.name}"?</h2>
+            <p className="text-sm text-neutral-600 mb-6">
+              Todas as permissões associadas a esta role serão removidas. Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex gap-3">
+              <Button variant="secondary" className="flex-1" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+              <Button variant="error" className="flex-1" onClick={handleDelete} disabled={saving}>
+                {saving ? 'Removendo...' : 'Remover'}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
