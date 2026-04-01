@@ -1,7 +1,8 @@
-import { Badge, Button, Checkbox, DropdownMenu, Select, Skeleton, Table, Tooltip } from "@/components/ui/ds";
+import { Badge, Button, Checkbox, Select, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, ArrowUp, ArrowDown, Edit2, Clock, MoreVertical, ExternalLink, CheckCircle } from 'lucide-react';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
+import { useState } from 'react';
 
 interface ClientLead {
   id: string;
@@ -108,6 +109,7 @@ export default function ClientsTable({
 }: Props) {
   const navigate = useNavigate();
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || '—';
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -143,7 +145,7 @@ export default function ClientsTable({
         return (
           <div
             key={client.id}
-            className="rounded-xl border border-border/60 bg-card p-4 cursor-pointer hover-lift shadow-card transition-all"
+            className="rounded-xl border border-neutral-200 bg-white p-4 cursor-pointer hover:shadow-md transition-all"
             onClick={() => {
               if (onSelectClient) onSelectClient(client as any);
               else navigate(`/clientes/${client.id}`);
@@ -155,7 +157,7 @@ export default function ClientsTable({
                   {getInitials(client.name)}
                 </div>
                 <div>
-                  <p className="font-medium text-foreground text-sm">{client.name}</p>
+                  <p className="font-medium text-neutral-900 text-sm">{client.name}</p>
                    <p className="text-xs text-neutral-500">{client.email}</p>
                    {client.is_client && client.became_client_at && (
                      <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
@@ -165,18 +167,22 @@ export default function ClientsTable({
                    )}
                 </div>
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8" onClick={e => e.stopPropagation()}>
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); }}>Ver detalhes</DropdownMenuItem>
-                  <DropdownMenuItem onClick={e => { e.stopPropagation(); onNewSale?.(client.id); }}>Nova venda</DropdownMenuItem>
-                  <DropdownMenuItem>Registrar interação</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 w-8" 
+                  onClick={e => { e.stopPropagation(); setOpenMenu(openMenu === client.id ? null : client.id); }}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+                {openMenu === client.id && (
+                  <div className="absolute right-0 z-50 mt-2 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg py-1">
+                    <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={e => { e.stopPropagation(); navigate(`/clientes/${client.id}`); setOpenMenu(null); }}>Ver detalhes</button>
+                    <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={e => { e.stopPropagation(); onNewSale?.(client.id); setOpenMenu(null); }}>Nova venda</button>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex flex-wrap gap-1 mb-2">
               {clientSales.slice(0, 2).map(s => (
@@ -185,7 +191,7 @@ export default function ClientsTable({
               {clientSales.length > 2 && <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
+              <span className="text-sm font-semibold text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</span>
               {lastSale && <Badge className={`text-[10px] ${statusColors[lastSale.status] || ''}`}>{lastSale.status}</Badge>}
             </div>
           </div>
@@ -196,37 +202,37 @@ export default function ClientsTable({
 
   // Desktop table view
   const desktopView = (
-    <div className="hidden md:block rounded-xl border border-border/60 overflow-hidden shadow-card bg-card">
+    <div className="hidden md:block rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm">
       <table className="w-full border-collapse">
-        <table className="w-full border-collapse">
-          <table className="w-full border-collapse">
-            <table className="w-full border-collapse">
+        <thead className="bg-neutral-50 border-b border-neutral-200">
+          <tr>
+            <th className="px-4 py-3 text-left w-10">
               <Checkbox
                 checked={selectedIds.length === clients.length && clients.length > 0}
                 onCheckedChange={toggleSelectAll}
               />
             </th>
-            <table className="w-full border-collapse"> toggleSort('name')}>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('name')}>
               <div className="flex items-center">Nome <SortIcon field="name" current={sortField} dir={sortDir} /></div>
             </th>
-            <table className="w-full border-collapse">Telefone</th>
-            <table className="w-full border-collapse">Produto</th>
-            <table className="w-full border-collapse"> toggleSort('value')}>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Telefone</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Produto</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('value')}>
               <div className="flex items-center">Valor <SortIcon field="value" current={sortField} dir={sortDir} /></div>
             </th>
-            <table className="w-full border-collapse"> toggleSort('date')}>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('date')}>
               <div className="flex items-center">Data Compra <SortIcon field="date" current={sortField} dir={sortDir} /></div>
             </th>
-            <table className="w-full border-collapse"> toggleSort('status')}>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('status')}>
               <div className="flex items-center">Status <SortIcon field="status" current={sortField} dir={sortDir} /></div>
             </th>
-            <table className="w-full border-collapse"> toggleSort('lastInteraction')}>
+            <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider cursor-pointer" onClick={() => toggleSort('lastInteraction')}>
               <div className="flex items-center">Última Interação <SortIcon field="lastInteraction" current={sortField} dir={sortDir} /></div>
             </th>
-            <table className="w-full border-collapse">Ações</th>
+            <th className="px-4 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
           </tr>
         </thead>
-        <table className="w-full border-collapse">
+        <tbody className="divide-y divide-neutral-100">
           {clients.map(client => {
             const clientSales = getClientSales(client.id);
             const totalValue = clientSales.reduce((s, x) => s + x.value, 0);
@@ -234,102 +240,76 @@ export default function ClientsTable({
             const lastInt = getLastInteraction(client.id);
 
             return (
-              <tr className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors"
+              <tr 
                 key={client.id}
-                className="cursor-pointer hover:bg-muted/40 transition-colors group"
+                className="hover:bg-neutral-50 transition-colors group cursor-pointer"
                 onClick={() => {
                   if (onSelectClient) onSelectClient(client as any);
                   else navigate(`/clientes/${client.id}`);
                 }}
               >
-                <table className="w-full border-collapse"> e.stopPropagation()}>
+                <td className="px-4 py-4" onClick={e => e.stopPropagation()}>
                   <Checkbox checked={selectedIds.includes(client.id)} onCheckedChange={() => toggleSelect(client.id)} />
                 </td>
-                <table className="w-full border-collapse">
+                <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
                     <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${getInitialColor(client.name)}`}>
                       {getInitials(client.name)}
                     </div>
                     <div>
-                      <p className="font-medium text-foreground text-sm">{client.name}</p>
-                       <p className="text-xs text-neutral-500">{client.email}</p>
-                       {client.is_client && client.became_client_at && (
-                         <div className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 rounded w-fit">
-                           <CheckCircle className="w-2.5 h-2.5" />
-                           <span>Cliente desde {new Date(client.became_client_at).toLocaleDateString('pt-BR')}</span>
-                         </div>
-                       )}
+                      <p className="font-medium text-neutral-900 text-sm">{client.name}</p>
+                      <p className="text-xs text-neutral-500">{client.email}</p>
                     </div>
                   </div>
                 </td>
-                <table className="w-full border-collapse"> e.stopPropagation()}>
+                <td className="px-4 py-4" onClick={e => e.stopPropagation()}>
                   {client.phone ? (
-                    <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-success hover:underline">
+                    <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-success-600 hover:underline">
                       <ExternalLink className="h-3 w-3" />
-                      {client.phone.replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 ($2) $3-$4')}
+                      {client.phone}
                     </a>
                   ) : '—'}
                 </td>
-                <table className="w-full border-collapse">
+                <td className="px-4 py-4">
                   <div className="flex flex-wrap gap-1">
                     {clientSales.slice(0, 2).map(s => (
                       <Badge key={s.id} variant="secondary" className="text-[10px] whitespace-nowrap">{getProductName(s.productId)}</Badge>
                     ))}
                     {clientSales.length > 2 && (
-                      <div className="relative group">
-                        
-                          <Badge variant="secondary" className="text-[10px]">+{clientSales.length - 2}</Badge>
-                        
-                        <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">
-                          {clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}
-                        </div>
-                      </div>
+                      <Badge variant="secondary" className="text-[10px]" title={clientSales.slice(2).map(s => getProductName(s.productId)).join(', ')}>
+                        +{clientSales.length - 2}
+                      </Badge>
                     )}
                   </div>
                 </td>
-                <table className="w-full border-collapse">
-                  <span className="font-semibold text-sm text-success">R$ {totalValue.toLocaleString('pt-BR')}</span>
+                <td className="px-4 py-4">
+                  <span className="font-semibold text-sm text-success-600">R$ {totalValue.toLocaleString('pt-BR')}</span>
                 </td>
-                <table className="w-full border-collapse">
-                  {lastSale ? (
-                    <div className="relative group">
-                      
-                        <span className="text-sm text-foreground">{formatDate(lastSale.date)}</span>
-                      
-                      <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">{relativeDate(lastSale.date)}</div>
-                    </div>
-                  ) : '—'}
+                <td className="px-4 py-4">
+                  {lastSale ? <span className="text-sm text-neutral-900" title={relativeDate(lastSale.date)}>{formatDate(lastSale.date)}</span> : '—'}
                 </td>
-                <table className="w-full border-collapse">
+                <td className="px-4 py-4">
                   {lastSale ? <Badge className={`text-[10px] ${statusColors[lastSale.status] || ''}`}>{lastSale.status}</Badge> : '—'}
                 </td>
-                <table className="w-full border-collapse">
-                  {lastInt ? (
-                    <div className="relative group">
-                      
-                        <span className="text-sm text-neutral-500">{relativeDate(lastInt.date)}</span>
-                      
-                      <div className="absolute z-50 p-2 text-xs text-white bg-neutral-900 rounded shadow-lg">{lastInt.date}</div>
-                    </div>
-                  ) : <span className="text-sm text-neutral-500">—</span>}
+                <td className="px-4 py-4">
+                  <span className="text-sm text-neutral-500">{lastInt ? relativeDate(lastInt.date) : '—'}</span>
                 </td>
-                <table className="w-full border-collapse"> e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="sm" className="h-7 w-7" onClick={() => navigate(`/clientes/${client.id}`)}>
-                      <Edit2 className="h-3.5 w-3.5" />
+                <td className="px-4 py-4 text-right" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => navigate(`/clientes/${client.id}`)}>
+                      <Edit2 className="h-4 w-4" />
                     </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-7 w-7">
-                          <MoreVertical className="h-3.5 w-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigate(`/clientes/${client.id}`)}>Ver detalhes</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onNewSale?.(client.id)}>Nova venda</DropdownMenuItem>
-                        <DropdownMenuItem>Registrar interação</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="relative">
+                      <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => setOpenMenu(openMenu === `row-${client.id}` ? null : `row-${client.id}`)}>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                      {openMenu === `row-${client.id}` && (
+                        <div className="absolute right-0 z-50 mt-2 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 text-left">
+                          <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={() => { navigate(`/clientes/${client.id}`); setOpenMenu(null); }}>Ver detalhes</button>
+                          <button className="w-full text-left px-4 py-2 text-sm hover:bg-neutral-50" onClick={() => { onNewSale?.(client.id); setOpenMenu(null); }}>Nova venda</button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -342,39 +322,33 @@ export default function ClientsTable({
 
   return (
     <div className="space-y-4">
-      {/* Bulk actions */}
       {selectedIds.length >= 2 && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
-          <span className="text-sm font-medium text-foreground">{selectedIds.length} selecionados</span>
-          <Button variant="secondary" size="sm" className="h-7 text-xs">Exportar selecionados</Button>
-          <Button variant="secondary" size="sm" className="h-7 text-xs">Atribuir responsável</Button>
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary-50 border border-primary-100">
+          <span className="text-sm font-medium text-neutral-900">{selectedIds.length} selecionados</span>
+          <Button variant="secondary" size="sm" className="h-8 text-xs">Exportar selecionados</Button>
+          <Button variant="secondary" size="sm" className="h-8 text-xs">Atribuir responsável</Button>
         </div>
       )}
 
       {mobileView}
       {desktopView}
 
-      {/* Pagination */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-100">
         <div className="flex items-center gap-3 text-sm text-neutral-500">
           <span>{totalFiltered} clientes</span>
           <Select value={String(perPage)} onValueChange={v => setPerPage(Number(v))}>
-            
-              
-            
-            
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            
+            <option value="10">10 por página</option>
+            <option value="25">25 por página</option>
+            <option value="50">50 por página</option>
+            <option value="100">100 por página</option>
           </Select>
-          <span>por página</span>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-          <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
-          <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+          <Button variant="secondary" size="sm" className="h-8 px-3" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+          <div className="flex items-center px-4 h-8 text-sm font-medium text-neutral-900">
+            {page} de {totalPages}
+          </div>
+          <Button variant="secondary" size="sm" className="h-8 px-3" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
         </div>
       </div>
     </div>
