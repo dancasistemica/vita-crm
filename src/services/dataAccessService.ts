@@ -588,11 +588,10 @@ export class DataAccessService {
 
   // ── CRM FIELD ORDER ──────────────────────────────────────
   async getCRMFieldOrder() {
-    const { data, error } = await supabase
-      .from('crm_field_order')
-      .select('field_name, sort_order')
-      .eq('organization_id', this.orgId)
-      .order('sort_order', { ascending: true });
+    let query = supabase.from('crm_field_order').select('field_name, sort_order');
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.order('sort_order', { ascending: true });
     if (error) { console.error('[DataAccessService] getCRMFieldOrder error:', error); throw error; }
     return data || [];
   }
