@@ -472,7 +472,94 @@ export default function LeadsPage() {
       </div>
 
       {/* ... existing table code ... */}
-// ... keep existing code
+      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-neutral-100 bg-neutral-50/50">
+                <th className="px-6 py-4">
+                  <Checkbox checked={selectedIds.length === paginated.length && paginated.length > 0} onCheckedChange={toggleSelectAll} />
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-100">
+              {paginated.map((lead) => (
+                <tr key={lead.id} className="group hover:bg-neutral-50/50 transition-colors">
+                  <td className="px-6 py-4">
+                    <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <button onClick={() => setDetailLead(lead)} className="text-sm font-bold text-neutral-900 hover:text-primary-600 transition-colors text-left">
+                        {lead.name}
+                      </button>
+                      <span className="text-[10px] text-neutral-400 font-medium">Cadastrado em {new Date(lead.entryDate).toLocaleDateString()}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Badge variant="secondary" className="font-medium">{getStageName(lead.pipelineStage)}</Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
+                        <span className={interestColors[lead.interestLevel]?.split(' ')[1]}>{getInterestLabel(lead.interestLevel)}</span>
+                        <span className="text-neutral-400">
+                          {lead.interestLevel === 'frio' ? '30%' : lead.interestLevel === 'morno' ? '60%' : '90%'}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-24 bg-neutral-100 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 ${interestBarColors[lead.interestLevel] || 'bg-neutral-300'}`} 
+                          style={{ width: lead.interestLevel === 'frio' ? '30%' : lead.interestLevel === 'morno' ? '60%' : '90%' }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {lead.phone && (
+                        <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-neutral-100 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
+                          <Phone className="w-4 h-4" />
+                        </a>
+                      )}
+                      {lead.instagram && (
+                        <a href={`https://instagram.com/${lead.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-neutral-100 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition-colors">
+                          <Instagram className="w-4 h-4" />
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                      {lead.tags?.slice(0, 2).map((tag, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-[10px] py-0 h-5 border-neutral-200">{tag}</Badge>
+                      ))}
+                      {lead.tags?.length > 2 && <span className="text-[10px] text-neutral-400 font-medium">+{lead.tags.length - 2}</span>}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button variant="secondary" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
+                        <Edit className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="secondary" size="sm" className="h-8 w-8 p-0 text-error-600 hover:bg-error-50" onClick={() => handleDeleteClick(lead)}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
 
       {filtered.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
