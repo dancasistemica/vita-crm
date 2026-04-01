@@ -1,4 +1,4 @@
-import { Alert, AlertDialog, Badge, Button, Input, Select, Table } from "@/components/ui/ds";
+import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Badge, Button, Input, Select, Table } from "@/components/ui/ds";
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'sonner';
 import { getAllOrganizations, updateOrgStatus, updateOrgPlan, getAllPlans, deleteOrganization } from '@/services/superadminService';
@@ -166,25 +166,15 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             />
           </div>
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-            
-              
-            
-            
-              <option value="all">Todas</option>
-              <option value="active">Ativa</option>
-              <option value="suspended">Suspensa</option>
-            
+            <option value="all">Todas</option>
+            <option value="active">Ativa</option>
+            <option value="suspended">Suspensa</option>
           </Select>
           <Select value={planFilter} onValueChange={setPlanFilter}>
-            
-              
-            
-            
-              <option value="all">Todos os planos</option>
-              {plans.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            
+            <option value="all">Todos os planos</option>
+            {plans.map((p) => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
           </Select>
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
@@ -194,66 +184,82 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
         </div>
 
         {filteredOrgs.length === 0 ? (
-          <div className="text-center py-12 text-neutral-500">
+          <div className="text-center py-12 text-neutral-500 border border-dashed rounded-lg">
             {orgs.length === 0 ? 'Nenhuma organização cadastrada' : 'Nenhuma organização encontrada com os filtros aplicados'}
           </div>
         ) : (
-        <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"><td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">Nome</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Plano Atual</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Alterar Plano</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Usuários</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Criada em</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Ações</th>
-            </tr>
-          </thead>
-          <td className=\"px-4 py-4 text-sm text-neutral-900 whitespace-nowrap\">{filteredOrgs.map((org) => (
-              <table className="w-full border-collapse">
-                <table className="w-full border-collapse">{org.name}</td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{org.contact_email || '—'}</td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant="secondary">{org.plan}</Badge></td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Select
-                    value={org.plan_id || 'none'}
-                    onValueChange={(v) => handlePlanChange(org.id, v)}
-                  >
-                    
-                      
-                    
-                    
-                      <option value="none">Nenhum</option>
-                      {plans.map((p) => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                      ))}
-                    
-                  </Select></td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
-                    <Users className="h-3 w-3" />
-                    {org.organization_members?.length || 0}
-                  </div></td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><Badge variant={org.active ? 'primary' : 'error'}>
-                    {org.active ? 'Ativa' : 'Suspensa'}
-                  </Badge></td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap">{new Date(org.created_at).toLocaleDateString('pt-BR')}</td>
-                <td className="px-4 py-4 text-sm text-neutral-900 whitespace-nowrap"><div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => setEditOrgId(org.id)} title="Editar">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                    <Button variant={org.active ? 'error' : 'primary'}
-                      size="sm"
-                      onClick={() => handleToggleStatus(org)}
-                    >
-                      {org.active ? 'Suspender' : 'Ativar'}
-                    </Button>
-                  </div></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <div className="rounded-lg border border-neutral-200 overflow-x-auto bg-white shadow-sm">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-neutral-50 border-b border-neutral-200">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Nome</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Plano Atual</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Alterar Plano</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider">Usuários</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider">Criada em</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100">
+                {filteredOrgs.map((org) => (
+                  <tr key={org.id} className="hover:bg-neutral-50 transition-colors">
+                    <td className="px-4 py-4 text-sm font-medium text-neutral-900">{org.name}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-500">{org.contact_email || '—'}</td>
+                    <td className="px-4 py-4 text-sm text-neutral-500">
+                      <Badge variant="secondary">{org.plan}</Badge>
+                    </td>
+                    <td className="px-4 py-4 text-sm">
+                      <Select
+                        value={org.plan_id || 'none'}
+                        onValueChange={(v) => handlePlanChange(org.id, v)}
+                      >
+                        <option value="none">Nenhum</option>
+                        {plans.map((p) => (
+                          <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </Select>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-center">
+                      <div className="flex items-center justify-center gap-1 text-neutral-500">
+                        <Users className="h-3 w-3" />
+                        {org.organization_members?.length || 0}
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <Badge variant={org.active ? 'primary' : 'error'}>
+                        {org.active ? 'Ativa' : 'Suspensa'}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-neutral-500">
+                      {new Date(org.created_at).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setEditOrgId(org.id)} title="Editar">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive" onClick={() => setDeleteConfirmOrg(org)} title="Deletar">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant={org.active ? 'error' : 'primary'}
+                          size="sm"
+                          className="text-xs h-8"
+                          onClick={() => handleToggleStatus(org)}
+                        >
+                          {org.active ? 'Suspender' : 'Ativar'}
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
+
         <CreateOrganizationModal
           open={createOpen}
           onOpenChange={setCreateOpen}
@@ -273,7 +279,7 @@ export const OrganizationsTab = forwardRef<{ openCreateModal?: () => void }, Org
             <AlertDialogHeader>
               <AlertDialogTitle>Deletar organização</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja deletar "{deleteConfirmOrg?.name}"? Esta ação não pode ser desfeita.
+                Tem certeza que deseja deletar "{deleteConfirmOrg?.name}"? Esta ação não pode ser desfeita e removerá todos os dados vinculados a esta organização.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
