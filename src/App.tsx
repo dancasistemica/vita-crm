@@ -21,6 +21,7 @@ import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
 import SuperadminDashboard from "@/pages/SuperadminDashboard";
 import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
@@ -56,6 +57,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/setup" element={<FirstSuperadminSetup />} />
 
               {/* Protected routes */}
