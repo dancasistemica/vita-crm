@@ -284,6 +284,28 @@ export default function TarefasPage() {
     }
   };
 
+  const handleStatusChange = async (taskId: string, statusId: string | null) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.updateTask(taskId, { status_id: statusId });
+      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status_id: statusId } : t));
+      const task = tasks.find(t => t.id === taskId);
+      const newStatus = taskStatuses.find(s => s.id === statusId);
+      if (task?.assigned_to && user?.id && task.assigned_to !== user.id && newStatus) {
+        await supabase.from('task_notifications').insert({
+          organization_id: task.organization_id,
+          task_id: taskId,
+          user_id: task.assigned_to,
+          type: 'status_changed',
+          message: `Tarefa "${task.title}" foi movida para "${newStatus.name}"`,
+        } as any);
+      }
+    } catch (err) {
+      console.error('[TarefasPage] Erro ao alterar status:', err);
+      toast.error("Erro ao alterar status");
+    }
+  };
+
   const handleMarkNotificationRead = async (id: string) => {
     try {
       const { error } = await supabase
