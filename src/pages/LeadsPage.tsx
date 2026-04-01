@@ -324,96 +324,94 @@ export default function LeadsPage() {
   const activeFiltersCount = getActiveFiltersCount();
 
   return (
-    <DashboardLayout title="Leads">
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-1">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Leads</h1>
-            <p className="text-xs sm:text-sm text-neutral-600 font-medium">Gerencie seus contatos e oportunidades</p>
-          </div>
-          <div className="flex items-center gap-3 flex-wrap">
-            {userCanCreate && (
-              <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
-                <Upload className="h-4 w-4 mr-2" /> Importar Leads
-              </Button>
-            )}
-            <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
-              <FileDown className="h-4 w-4 mr-2" /> Exportar
+    <div className="space-y-6 px-1 py-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-1">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Leads</h1>
+          <p className="text-xs sm:text-sm text-neutral-600 font-medium">Gerencie seus contatos e oportunidades</p>
+        </div>
+        <div className="flex items-center gap-3 flex-wrap">
+          {userCanCreate && (
+            <Button variant="secondary" size="sm" onClick={() => navigate('/import-wizard')}>
+              <Upload className="h-4 w-4 mr-2" /> Importar Leads
             </Button>
-            {userCanCreate && (
-              <>
-                <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>
-                  Novo Lead
-                </Button>
-                <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} title={editingLead ? 'Editar Lead' : 'Novo Lead'}>
-                  <LeadForm lead={editingLead} onSave={handleSave} />
-                </Dialog>
-              </>
-            )}
-          </div>
+          )}
+          <Button variant="secondary" size="sm" onClick={() => setExportOpen(true)}>
+            <FileDown className="h-4 w-4 mr-2" /> Exportar
+          </Button>
+          {userCanCreate && (
+            <>
+              <Button size="sm" onClick={handleNewLead} icon={<Plus className="h-4 w-4" />}>
+                Novo Lead
+              </Button>
+              <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange} title={editingLead ? 'Editar Lead' : 'Novo Lead'}>
+                <LeadForm lead={editingLead} onSave={handleSave} />
+              </Dialog>
+            </>
+          )}
         </div>
-
-        <div className="space-y-4">
-          <Input
-            placeholder="Buscar por nome, email ou telefone..."
-            value={search}
-            onChange={e => { setSearch(e.target.value); resetPage(); }}
-            icon={<Search className="h-4 w-4" />}
-          />
-
-          {/* ... existing filter code ... */}
-// ... keep existing code
-        </div>
-
-        {/* ... existing table code ... */}
-// ... keep existing code
-
-        {filtered.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-            <span className="text-sm text-neutral-500">{filtered.length} leads</span>
-            <div className="flex items-center gap-1">
-              <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-              <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
-              <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
-            </div>
-          </div>
-        )}
-
-        <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
-        <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
-        <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
-        <LeadDetailSheet
-          lead={detailLead}
-          open={!!detailLead}
-          onClose={() => setDetailLead(null)}
-          stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
-          interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
-          onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
-          onDelete={async (id) => {
-            if (!userCanDelete) {
-              console.warn('[LeadsPage] Usuario sem permissao para excluir lead');
-              toast.error('Voce nao tem permissao para excluir leads');
-              return;
-            }
-            await deleteLead(id);
-            toast.success('Lead removido');
-            navigate('/leads');
-          }}
-          canDelete={userCanDelete}
-        />
-        <DeleteConfirmationModal
-          isOpen={deleteModalOpen}
-          title="Excluir lead"
-          message="Esta acao e permanente"
-          itemName={deleteTarget?.name || 'Lead'}
-          isLoading={deleteLoading}
-          onConfirm={handleConfirmDelete}
-          onCancel={() => {
-            setDeleteModalOpen(false);
-            setDeleteTarget(null);
-          }}
-        />
       </div>
-    </DashboardLayout>
+
+      <div className="space-y-4">
+        <Input
+          placeholder="Buscar por nome, email ou telefone..."
+          value={search}
+          onChange={e => { setSearch(e.target.value); resetPage(); }}
+          icon={<Search className="h-4 w-4" />}
+        />
+
+        {/* ... existing filter code ... */}
+// ... keep existing code
+      </div>
+
+      {/* ... existing table code ... */}
+// ... keep existing code
+
+      {filtered.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <span className="text-sm text-neutral-500">{filtered.length} leads</span>
+          <div className="flex items-center gap-1">
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
+            <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
+            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+          </div>
+        </div>
+      )}
+
+      <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
+      <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
+      <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
+      <LeadDetailSheet
+        lead={detailLead}
+        open={!!detailLead}
+        onClose={() => setDetailLead(null)}
+        stageName={detailLead ? getStageName(detailLead.pipelineStage) : ''}
+        interestLabel={detailLead ? getInterestLabel(detailLead.interestLevel) : ''}
+        onEdit={(l) => { setDetailLead(null); handleEditLead(l); }}
+        onDelete={async (id) => {
+          if (!userCanDelete) {
+            console.warn('[LeadsPage] Usuario sem permissao para excluir lead');
+            toast.error('Voce nao tem permissao para excluir leads');
+            return;
+          }
+          await deleteLead(id);
+          toast.success('Lead removido');
+          navigate('/leads');
+        }}
+        canDelete={userCanDelete}
+      />
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        title="Excluir lead"
+        message="Esta acao e permanente"
+        itemName={deleteTarget?.name || 'Lead'}
+        isLoading={deleteLoading}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+          setDeleteTarget(null);
+        }}
+      />
+    </div>
   );
 }
