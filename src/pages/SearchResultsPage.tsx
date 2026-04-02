@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
-  const { results, loading, error, search } = useGlobalSearch();
+  const { results, loading, error, search, clearResults } = useGlobalSearch();
   const navigate = useNavigate();
   const [localQuery, setLocalQuery] = useState(queryParam);
 
