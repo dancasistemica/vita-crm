@@ -34,7 +34,7 @@ export function GlobalSearch() {
       }
       debounceRef.current = setTimeout(() => {
         search(value);
-      }, 200); // Reduzido para 200ms para uma busca mais "em tempo real"
+      }, 150); // Reduzido para 150ms para uma busca em tempo real mais fluida
     },
     [search],
   );
