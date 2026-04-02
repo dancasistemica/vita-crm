@@ -9,9 +9,8 @@ import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
 import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
 import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog, Loader } from 'lucide-react';
+import { ShieldCheck, Building2, CreditCard, Users, Plus, Mail, Settings2, Cog, Loader } from 'lucide-react';
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
-import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
 import { getAllOrganizations } from '@/services/superadminService';
 
 export default function SuperadminDashboard() {
