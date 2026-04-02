@@ -1,6 +1,7 @@
 import { Badge, Button, Card, Checkbox, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
-import { Clock, MoreVertical, ExternalLink, Phone, Edit2, Calendar, ShoppingBag, DollarSign, Plus } from 'lucide-react';
+import { Clock, MoreVertical, ExternalLink, Phone, Edit2, Calendar, ShoppingBag, DollarSign, Plus, MessageCircle } from 'lucide-react';
+import { generateWhatsAppLink, isValidPhone, formatPhone } from '@/lib/whatsappUtils';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
 import { useState } from 'react';
 
@@ -178,11 +179,16 @@ export default function ClientsTable({
                     </div>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-3 text-xs text-neutral-500">
-                      {client.phone && (
+                      {isValidPhone(client.phone) && (
                         <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
-                          <Phone className="h-3.5 w-3.5 text-success-600" />
-                          <a href={`https://wa.me/${client.phone}`} target="_blank" rel="noopener noreferrer" className="hover:underline text-success-700 font-medium">
-                            {client.phone}
+                          <MessageCircle className="h-3.5 w-3.5 text-success-600" />
+                          <a 
+                            href={generateWhatsAppLink(client.phone, `Olá ${client.name}! Como posso ajudá-lo?`)} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:underline text-success-700 font-medium"
+                          >
+                            {formatPhone(client.phone)}
                           </a>
                         </div>
                       )}
