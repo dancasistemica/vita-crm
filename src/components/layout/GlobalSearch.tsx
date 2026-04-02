@@ -99,20 +99,18 @@ export function GlobalSearch() {
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        <div className="relative flex-1 w-full sm:max-w-md">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-          <Input
-            ref={inputRef}
-            placeholder="Buscar leads, clientes, tarefas, produtos... (Ctrl+K)"
-            value={query}
-            onChange={(event) => handleSearchChange(event.target.value)}
-            onKeyDown={handleKeyDown}
-            onFocus={() => { if (query.trim().length >= 2) setOpen(true); }}
-            className="pl-9"
-          />
-        </div>
-      </PopoverTrigger>
+      <div className="relative flex-1 w-full sm:max-w-md">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+        <Input
+          ref={inputRef}
+          placeholder="Buscar leads, clientes, tarefas, produtos... (Ctrl+K)"
+          value={query}
+          onChange={(event) => handleSearchChange(event.target.value)}
+          onKeyDown={handleKeyDown}
+          onFocus={() => { if (query.trim().length >= 2) setOpen(true); }}
+          className="pl-9"
+        />
+      </div>
       
       <PopoverContent 
         className="p-0 w-[400px] sm:w-[500px]" 
