@@ -54,7 +54,6 @@ export function useGlobalSearch() {
       produtos: [],
       total: 0,
     });
-    setQuery('');
   }, []);
 
   const search = useCallback(async (searchTerm: string) => {
