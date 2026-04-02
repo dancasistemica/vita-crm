@@ -137,9 +137,6 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="custom-fields" className="flex items-center gap-2">
               <Settings2 className="h-4 w-4" /> Campos Custom
             </TabsTrigger>
-            <TabsTrigger value="botconversa" className="flex items-center gap-2">
-              <Bot className="h-4 w-4" /> Botconversa
-            </TabsTrigger>
             <TabsTrigger value="system" className="flex items-center gap-2">
               <Cog className="h-4 w-4" /> Sistema
             </TabsTrigger>
