@@ -525,9 +525,15 @@ export default function LeadsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      {lead.phone && (
-                        <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-neutral-100 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
-                          <Phone className="w-4 h-4" />
+                      {isValidPhone(lead.phone) && (
+                        <a 
+                          href={generateWhatsAppLink(lead.phone, `Olá ${lead.name}! Gostaria de conversar sobre nossos serviços.`)} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="p-2 bg-neutral-100 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
+                          title="Conversar no WhatsApp"
+                        >
+                          <MessageCircle className="w-4 h-4" />
                         </a>
                       )}
                       {lead.instagram && (

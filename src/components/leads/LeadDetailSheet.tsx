@@ -210,9 +210,15 @@ export default function LeadDetailSheet({
 
             {/* Quick actions */}
             <div className="flex items-center gap-3 flex-wrap pt-4 mt-4 border-t border-border">
-              {lead.phone && (
-                <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noreferrer">
-                  <Button variant="secondary" size="sm"><Phone className="h-4 w-4 mr-1" /> WhatsApp</Button>
+              {isValidPhone(lead.phone) && (
+                <a 
+                  href={generateWhatsAppLink(lead.phone, `Olá ${lead.name}! Gostaria de conversar sobre nossos serviços.`)} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="secondary" size="sm">
+                    <MessageCircle className="h-4 w-4 mr-1" /> WhatsApp
+                  </Button>
                 </a>
               )}
               <Button
