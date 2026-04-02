@@ -14,17 +14,19 @@ const SearchResultsPage = () => {
   const [localQuery, setLocalQuery] = useState(queryParam);
 
   useEffect(() => {
-    if (queryParam) {
-      search(queryParam);
-      setLocalQuery(queryParam);
+    if (localQuery.trim()) {
+      const timer = setTimeout(() => {
+        search(localQuery);
+        // Opcionalmente atualiza a URL, mas cuidado com o loop de efeito
+        // navigate(`/search?q=${encodeURIComponent(localQuery)}`, { replace: true });
+      }, 300);
+      return () => clearTimeout(timer);
     }
-  }, [queryParam, search]);
+  }, [localQuery, search]);
 
   const handleLocalSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (localQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(localQuery)}`);
-    }
+    search(localQuery);
   };
 
   const combinedResults = [
