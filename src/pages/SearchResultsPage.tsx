@@ -9,22 +9,32 @@ import { useNavigate } from 'react-router-dom';
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
-  const { results, loading, error, search } = useGlobalSearch();
+  const { results, loading, error, search, clearResults } = useGlobalSearch();
   const navigate = useNavigate();
   const [localQuery, setLocalQuery] = useState(queryParam);
 
   useEffect(() => {
-    if (queryParam) {
-      search(queryParam);
+    // Sincroniza localQuery com queryParam apenas na primeira carga ou se o queryParam mudar externamente
+    if (queryParam && !localQuery) {
       setLocalQuery(queryParam);
     }
-  }, [queryParam, search]);
+  }, [queryParam]);
+
+  useEffect(() => {
+    if (localQuery.trim()) {
+      const timer = setTimeout(() => {
+        console.log('[SearchResultsPage] Real-time search for:', localQuery);
+        search(localQuery);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      clearResults();
+    }
+  }, [localQuery, search, clearResults]);
 
   const handleLocalSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (localQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(localQuery)}`);
-    }
+    search(localQuery);
   };
 
   const combinedResults = [
@@ -78,7 +88,7 @@ const SearchResultsPage = () => {
         <div className="space-y-8">
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <p className="text-neutral-600">
-              Encontramos <span className="font-bold text-neutral-900">{results.total}</span> resultados para "<span className="font-bold text-neutral-900">{queryParam}</span>"
+              Encontramos <span className="font-bold text-neutral-900">{results.total}</span> resultados para "<span className="font-bold text-neutral-900">{localQuery}</span>"
             </p>
           </div>
 

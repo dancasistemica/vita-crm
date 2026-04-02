@@ -34,7 +34,7 @@ export function GlobalSearch() {
       }
       debounceRef.current = setTimeout(() => {
         search(value);
-      }, 200); // Reduzido para 200ms para uma busca mais "em tempo real"
+      }, 150); // Reduzido para 150ms para uma busca em tempo real mais fluida
     },
     [search],
   );
@@ -89,6 +89,14 @@ export function GlobalSearch() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && query.trim()) {
+      e.preventDefault();
+      setOpen(false);
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
@@ -99,6 +107,7 @@ export function GlobalSearch() {
             placeholder="Buscar leads, clientes, tarefas, produtos... (Ctrl+K)"
             value={query}
             onChange={(event) => handleSearchChange(event.target.value)}
+            onKeyDown={handleKeyDown}
             onFocus={() => { if (query.trim().length >= 2) setOpen(true); }}
             className="pl-9"
           />

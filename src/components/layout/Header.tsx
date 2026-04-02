@@ -4,6 +4,7 @@ import { Search, LogOut } from 'lucide-react';
 import { supabase, secureLogout } from '@/lib/supabase';
 import { sanitizeInput } from '@/lib/security';
 import { Button } from '@/components/ui/ds';
+import { GlobalSearch } from './GlobalSearch';
 
 interface HeaderProps {
   onOpenSidebar?: () => void;
@@ -104,21 +105,9 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
         </div>
 
         {/* SEÇÃO 2: Campo de Busca Global (Centro) */}
-        <form 
-          onSubmit={handleSearch}
-          className="flex-1 max-w-md hidden sm:block"
-        >
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 flex-shrink-0" />
-            <input
-              type="text"
-              placeholder="Buscar leads, clientes, tarefas..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 lg:py-3 text-sm lg:text-base border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-[44px]"
-            />
-          </div>
-        </form>
+        <div className="flex-1 max-w-md hidden sm:block">
+          <GlobalSearch />
+        </div>
 
         {/* SEÇÃO 3: Logo VITA + Logout (Direita) */}
         <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
@@ -154,21 +143,9 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
       </div>
 
       {/* Busca Global - Mobile */}
-      <form 
-        onSubmit={handleSearch}
-        className="sm:hidden px-4 py-3 border-t border-neutral-200"
-      >
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-[44px]"
-          />
-        </div>
-      </form>
+      <div className="sm:hidden px-4 py-3 border-t border-neutral-200">
+        <GlobalSearch />
+      </div>
     </header>
   );
 }

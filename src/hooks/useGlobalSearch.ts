@@ -28,7 +28,7 @@ interface SearchResults {
 }
 
 // Rate limiter para busca (máximo 10 buscas por minuto)
-const searchRateLimiter = new RateLimiter(30, 60000); // Aumentado para 30 buscas por minuto para melhor "tempo real"
+const searchRateLimiter = new RateLimiter(120, 60000); // Aumentado para 120 buscas por minuto para suportar busca em tempo real durante a digitação
 
 export function useGlobalSearch() {
   const { organizationId } = useOrganization();
