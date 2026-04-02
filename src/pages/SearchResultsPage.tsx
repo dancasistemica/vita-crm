@@ -86,7 +86,7 @@ const SearchResultsPage = () => {
         <div className="space-y-8">
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <p className="text-neutral-600">
-              Encontramos <span className="font-bold text-neutral-900">{results.total}</span> resultados para "<span className="font-bold text-neutral-900">{queryParam}</span>"
+              Encontramos <span className="font-bold text-neutral-900">{results.total}</span> resultados para "<span className="font-bold text-neutral-900">{localQuery}</span>"
             </p>
           </div>
 
