@@ -84,7 +84,7 @@ export function useGlobalSearch() {
       return;
     }
 
-    setQuery(sanitizedQuery);
+    // setQuery(sanitizedQuery); // Removido para evitar sobrescrever a digitação do usuário durante a busca debounced
     setLoading(true);
     setError(null);
 
