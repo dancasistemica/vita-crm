@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { sanitizeInput, validateStringLength, RateLimiter } from '@/lib/security';
@@ -28,7 +28,7 @@ interface SearchResults {
 }
 
 // Rate limiter para busca (máximo 10 buscas por minuto)
-const searchRateLimiter = new RateLimiter(10, 60000);
+const searchRateLimiter = new RateLimiter(30, 60000); // Aumentado para 30 buscas por minuto para melhor "tempo real"
 
 export function useGlobalSearch() {
   const { organizationId } = useOrganization();
@@ -43,6 +43,7 @@ export function useGlobalSearch() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchIdRef = useRef<number>(0);
 
   const clearResults = useCallback(() => {
     setResults({
@@ -88,8 +89,10 @@ export function useGlobalSearch() {
     setLoading(true);
     setError(null);
 
+    const currentSearchId = ++searchIdRef.current;
+
     try {
-      console.log('[useGlobalSearch] Buscando:', sanitizedQuery);
+      console.log(`[useGlobalSearch] Buscando (#${currentSearchId}):`, sanitizedQuery);
 
       const ilikeTerm = `%${sanitizedQuery}%`;
 
@@ -183,6 +186,11 @@ export function useGlobalSearch() {
         tarefasResults.length +
         vendasResults.length +
         produtosResults.length;
+
+      if (currentSearchId !== searchIdRef.current) {
+        console.log(`[useGlobalSearch] Ignorando resultado da busca anterior (#${currentSearchId})`);
+        return;
+      }
 
       setResults({
         leads: leadsResults,

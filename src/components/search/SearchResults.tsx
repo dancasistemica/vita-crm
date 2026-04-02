@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/ds";
+import { cn } from "@/lib/utils";
 import { CheckSquare, Package, User, UserPlus } from "lucide-react";
 import type { SearchResult, SearchResultType } from "@/hooks/useGlobalSearch";
 
@@ -26,9 +27,10 @@ const typeIcons: Record<SearchResultType | 'sale', JSX.Element> = {
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
-  if (loading) {
+  if (loading && results.length === 0) {
     return (
-      <div className="p-4 text-center text-sm text-neutral-500">
+      <div className="p-4 text-center text-sm text-neutral-500 flex items-center justify-center gap-2">
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         Buscando...
       </div>
     );
@@ -47,7 +49,12 @@ export function SearchResults({ results, loading, query, onSelect }: SearchResul
   }
 
   return (
-    <div className="divide-y max-h-[60vh] overflow-y-auto">
+    <div className={cn("divide-y max-h-[60vh] overflow-y-auto relative", loading && "opacity-60 pointer-events-none")}>
+      {loading && (
+        <div className="absolute top-2 right-2 z-10">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      )}
       {(["lead", "client", "task", "product", "sale"] as SearchResultType[]).map((type) => {
         const typeResults = results.filter((result) => result.type === type);
         if (typeResults.length === 0) return null;
