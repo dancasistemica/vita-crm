@@ -52,7 +52,7 @@ export default function SuperadminDashboard() {
     if (!isSuperadmin) return;
   }, [isSuperadmin]);
 
-  const selectedBotconversaOrg = botconversaOrgs.find((org) => org.id === selectedBotconversaOrgId) || null;
+  
 
   if (loading) {
     return (
