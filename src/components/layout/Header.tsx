@@ -4,6 +4,7 @@ import { Search, LogOut } from 'lucide-react';
 import { supabase, secureLogout } from '@/lib/supabase';
 import { sanitizeInput } from '@/lib/security';
 import { Button } from '@/components/ui/ds';
+import { GlobalSearch } from './GlobalSearch';
 
 interface HeaderProps {
   onOpenSidebar?: () => void;
