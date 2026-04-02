@@ -26,9 +26,10 @@ const typeIcons: Record<SearchResultType | 'sale', JSX.Element> = {
 };
 
 export function SearchResults({ results, loading, query, onSelect }: SearchResultsProps) {
-  if (loading) {
+  if (loading && results.length === 0) {
     return (
-      <div className="p-4 text-center text-sm text-neutral-500">
+      <div className="p-4 text-center text-sm text-neutral-500 flex items-center justify-center gap-2">
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         Buscando...
       </div>
     );
