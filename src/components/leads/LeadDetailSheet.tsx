@@ -1,6 +1,7 @@
 import { Badge, Button, Sheet, Skeleton, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/ds";
 import { useState, useEffect, useCallback } from 'react';
-import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Phone, Mail, Instagram, Edit, Trash2, Plus, CheckCircle, Clock, AlertTriangle, MessageCircle } from 'lucide-react';
+import { generateWhatsAppLink, isValidPhone } from '@/lib/whatsappUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import LeadTimeline from '@/components/leads/LeadTimeline';

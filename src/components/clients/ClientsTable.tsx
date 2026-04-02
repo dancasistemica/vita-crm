@@ -1,6 +1,7 @@
 import { Badge, Button, Card, Checkbox, Skeleton } from "@/components/ui/ds";
 import { useNavigate } from 'react-router-dom';
-import { Clock, MoreVertical, ExternalLink, Phone, Edit2, Calendar, ShoppingBag, DollarSign, Plus } from 'lucide-react';
+import { Clock, MoreVertical, ExternalLink, Phone, Edit2, Calendar, ShoppingBag, DollarSign, Plus, MessageCircle } from 'lucide-react';
+import { generateWhatsAppLink, isValidPhone, formatPhone } from '@/lib/whatsappUtils';
 import { SortField, SortDir } from '@/hooks/useClientsFilter';
 import { useState } from 'react';
 
