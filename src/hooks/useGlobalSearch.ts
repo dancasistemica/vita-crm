@@ -43,6 +43,7 @@ export function useGlobalSearch() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchIdRef = useRef<number>(0);
 
   const clearResults = useCallback(() => {
     setResults({
