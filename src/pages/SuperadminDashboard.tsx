@@ -18,9 +18,6 @@ export default function SuperadminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('organizations');
   const [stats, setStats] = useState({ orgs: 0, plans: 0, superadmins: 0 });
-  const [botconversaOrgs, setBotconversaOrgs] = useState<{ id: string; name: string }[]>([]);
-  const [botconversaLoading, setBotconversaLoading] = useState(false);
-  const [selectedBotconversaOrgId, setSelectedBotconversaOrgId] = useState('');
   const orgsTabRef = useRef<{ openCreateModal?: () => void }>(null);
 
   useEffect(() => {
