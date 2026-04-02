@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/ds";
+import { cn } from "@/lib/utils";
 import { CheckSquare, Package, User, UserPlus } from "lucide-react";
 import type { SearchResult, SearchResultType } from "@/hooks/useGlobalSearch";
 
