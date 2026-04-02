@@ -159,28 +159,6 @@ export default function SuperadminDashboard() {
           <TabsContent value="custom-fields">
             <CustomFieldsManager />
           </TabsContent>
-          <TabsContent value="botconversa">
-            <div>
-              <Select
-                label="Selecione uma organização"
-                options={botconversaOrgs.map(org => ({ value: org.id, label: org.name }))}
-                value={selectedBotconversaOrgId}
-                onChange={(e) => setSelectedBotconversaOrgId(e.target.value)}
-              />
-              {botconversaLoading && (
-                <div className="flex items-center gap-3 mt-2 text-sm text-neutral-600">
-                  <Loader className="w-3 h-3 animate-spin" /> Carregando organizações...
-                </div>
-              )}
-            </div>
-
-            {selectedBotconversaOrg && (
-              <BotconversaSettings
-                organizationId={selectedBotconversaOrg.id}
-                organizationName={selectedBotconversaOrg.name}
-              />
-            )}
-          </TabsContent>
           <TabsContent value="system">
             <SystemSettings />
           </TabsContent>
