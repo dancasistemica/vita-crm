@@ -143,21 +143,9 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
       </div>
 
       {/* Busca Global - Mobile */}
-      <form 
-        onSubmit={handleSearch}
-        className="sm:hidden px-4 py-3 border-t border-neutral-200"
-      >
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors min-h-[44px]"
-          />
-        </div>
-      </form>
+      <div className="sm:hidden px-4 py-3 border-t border-neutral-200">
+        <GlobalSearch />
+      </div>
     </header>
   );
 }
