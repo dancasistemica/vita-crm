@@ -89,8 +89,10 @@ export function useGlobalSearch() {
     setLoading(true);
     setError(null);
 
+    const currentSearchId = ++searchIdRef.current;
+
     try {
-      console.log('[useGlobalSearch] Buscando:', sanitizedQuery);
+      console.log(`[useGlobalSearch] Buscando (#${currentSearchId}):`, sanitizedQuery);
 
       const ilikeTerm = `%${sanitizedQuery}%`;
 
