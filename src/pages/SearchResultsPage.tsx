@@ -14,11 +14,17 @@ const SearchResultsPage = () => {
   const [localQuery, setLocalQuery] = useState(queryParam);
 
   useEffect(() => {
+    // Sincroniza localQuery com queryParam apenas na primeira carga ou se o queryParam mudar externamente
+    if (queryParam && !localQuery) {
+      setLocalQuery(queryParam);
+    }
+  }, [queryParam]);
+
+  useEffect(() => {
     if (localQuery.trim()) {
       const timer = setTimeout(() => {
+        console.log('[SearchResultsPage] Real-time search for:', localQuery);
         search(localQuery);
-        // Opcionalmente atualiza a URL, mas cuidado com o loop de efeito
-        // navigate(`/search?q=${encodeURIComponent(localQuery)}`, { replace: true });
       }, 300);
       return () => clearTimeout(timer);
     }
