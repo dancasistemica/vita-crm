@@ -50,25 +50,6 @@ export default function SuperadminDashboard() {
 
   useEffect(() => {
     if (!isSuperadmin) return;
-    const fetchOrganizations = async () => {
-      setBotconversaLoading(true);
-      try {
-        const orgs = await getAllOrganizations();
-        setBotconversaOrgs(
-          (orgs || []).map((org: any) => ({
-            id: org.id,
-            name: org.name,
-          }))
-        );
-      } catch (err) {
-        console.error('[SuperadminDashboard] Botconversa orgs error:', err);
-        setBotconversaOrgs([]);
-      } finally {
-        setBotconversaLoading(false);
-      }
-    };
-
-    fetchOrganizations();
   }, [isSuperadmin]);
 
   const selectedBotconversaOrg = botconversaOrgs.find((org) => org.id === selectedBotconversaOrgId) || null;
