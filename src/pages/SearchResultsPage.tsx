@@ -27,8 +27,10 @@ const SearchResultsPage = () => {
         search(localQuery);
       }, 300);
       return () => clearTimeout(timer);
+    } else {
+      clearResults();
     }
-  }, [localQuery, search]);
+  }, [localQuery, search, clearResults]);
 
   const handleLocalSearch = (e: React.FormEvent) => {
     e.preventDefault();
