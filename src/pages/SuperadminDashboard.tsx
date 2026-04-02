@@ -9,9 +9,8 @@ import { UsersManagementTab } from '@/components/superadmin/UsersManagementTab';
 import { QuickAccessCard } from '@/components/superadmin/QuickAccessCard';
 import { EmailTemplatesTab } from '@/components/superadmin/EmailTemplatesTab';
 import { CustomFieldsManager } from '@/components/superadmin/CustomFieldsManager';
-import { Bot, ShieldCheck, Building2, CreditCard, Users, Plus, BarChart3, Mail, Settings2, Cog, Loader } from 'lucide-react';
+import { ShieldCheck, Building2, CreditCard, Users, Plus, Mail, Settings2, Cog, Loader } from 'lucide-react';
 import { SystemSettings } from '@/components/superadmin/SystemSettings';
-import { BotconversaSettings } from '@/components/superadmin/BotconversaSettings';
 import { getAllOrganizations } from '@/services/superadminService';
 
 export default function SuperadminDashboard() {
@@ -19,9 +18,6 @@ export default function SuperadminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('organizations');
   const [stats, setStats] = useState({ orgs: 0, plans: 0, superadmins: 0 });
-  const [botconversaOrgs, setBotconversaOrgs] = useState<{ id: string; name: string }[]>([]);
-  const [botconversaLoading, setBotconversaLoading] = useState(false);
-  const [selectedBotconversaOrgId, setSelectedBotconversaOrgId] = useState('');
   const orgsTabRef = useRef<{ openCreateModal?: () => void }>(null);
 
   useEffect(() => {
@@ -54,28 +50,9 @@ export default function SuperadminDashboard() {
 
   useEffect(() => {
     if (!isSuperadmin) return;
-    const fetchOrganizations = async () => {
-      setBotconversaLoading(true);
-      try {
-        const orgs = await getAllOrganizations();
-        setBotconversaOrgs(
-          (orgs || []).map((org: any) => ({
-            id: org.id,
-            name: org.name,
-          }))
-        );
-      } catch (err) {
-        console.error('[SuperadminDashboard] Botconversa orgs error:', err);
-        setBotconversaOrgs([]);
-      } finally {
-        setBotconversaLoading(false);
-      }
-    };
-
-    fetchOrganizations();
   }, [isSuperadmin]);
 
-  const selectedBotconversaOrg = botconversaOrgs.find((org) => org.id === selectedBotconversaOrgId) || null;
+  
 
   if (loading) {
     return (
@@ -160,9 +137,6 @@ export default function SuperadminDashboard() {
             <TabsTrigger value="custom-fields" className="flex items-center gap-2">
               <Settings2 className="h-4 w-4" /> Campos Custom
             </TabsTrigger>
-            <TabsTrigger value="botconversa" className="flex items-center gap-2">
-              <Bot className="h-4 w-4" /> Botconversa
-            </TabsTrigger>
             <TabsTrigger value="system" className="flex items-center gap-2">
               <Cog className="h-4 w-4" /> Sistema
             </TabsTrigger>
@@ -184,28 +158,6 @@ export default function SuperadminDashboard() {
           </TabsContent>
           <TabsContent value="custom-fields">
             <CustomFieldsManager />
-          </TabsContent>
-          <TabsContent value="botconversa">
-            <div>
-              <Select
-                label="Selecione uma organização"
-                options={botconversaOrgs.map(org => ({ value: org.id, label: org.name }))}
-                value={selectedBotconversaOrgId}
-                onChange={(e) => setSelectedBotconversaOrgId(e.target.value)}
-              />
-              {botconversaLoading && (
-                <div className="flex items-center gap-3 mt-2 text-sm text-neutral-600">
-                  <Loader className="w-3 h-3 animate-spin" /> Carregando organizações...
-                </div>
-              )}
-            </div>
-
-            {selectedBotconversaOrg && (
-              <BotconversaSettings
-                organizationId={selectedBotconversaOrg.id}
-                organizationName={selectedBotconversaOrg.name}
-              />
-            )}
           </TabsContent>
           <TabsContent value="system">
             <SystemSettings />

@@ -49,44 +49,6 @@ export type Database = {
           },
         ]
       }
-      botconversa_config: {
-        Row: {
-          api_key: string
-          created_at: string | null
-          created_by: string
-          id: string
-          is_active: boolean | null
-          organization_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          api_key: string
-          created_at?: string | null
-          created_by: string
-          id?: string
-          is_active?: boolean | null
-          organization_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          api_key?: string
-          created_at?: string | null
-          created_by?: string
-          id?: string
-          is_active?: boolean | null
-          organization_id?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "botconversa_config_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: true
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       brand_settings: {
         Row: {
           accent_color: string
@@ -1195,7 +1157,6 @@ export type Database = {
       }
       scheduled_messages: {
         Row: {
-          botconversa_message_id: string | null
           client_id: string | null
           created_at: string | null
           created_by: string
@@ -1211,7 +1172,6 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          botconversa_message_id?: string | null
           client_id?: string | null
           created_at?: string | null
           created_by: string
@@ -1227,7 +1187,6 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          botconversa_message_id?: string | null
           client_id?: string | null
           created_at?: string | null
           created_by?: string

@@ -11,7 +11,7 @@ export interface ScheduledMessage {
   scheduled_at: string
   sent_at?: string
   status: 'pending' | 'scheduled' | 'sent' | 'failed' | 'cancelled'
-  botconversa_message_id?: string
+  
   error_message?: string
   created_by: string
   created_at: string
