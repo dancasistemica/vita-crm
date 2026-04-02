@@ -187,6 +187,11 @@ export function useGlobalSearch() {
         vendasResults.length +
         produtosResults.length;
 
+      if (currentSearchId !== searchIdRef.current) {
+        console.log(`[useGlobalSearch] Ignorando resultado da busca anterior (#${currentSearchId})`);
+        return;
+      }
+
       setResults({
         leads: leadsResults,
         clientes: clientesResults,
