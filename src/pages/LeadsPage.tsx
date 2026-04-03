@@ -496,7 +496,7 @@ export default function LeadsPage() {
                   <td className="px-3 sm:px-6 py-4">
                     <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex flex-col">
                       <button onClick={() => setDetailLead(lead)} className="text-sm font-bold text-neutral-900 hover:text-primary-600 transition-colors text-left">
                         {lead.name}
