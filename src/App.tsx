@@ -4,53 +4,41 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import CRMLayout from "@/components/CRMLayout";
-import DashboardPage from "@/pages/DashboardPage";
-import ConsolidatedDashboardPage from "@/pages/ConsolidatedDashboardPage";
-import LeadsPage from "@/pages/LeadsPage";
-import PipelinePage from "@/pages/PipelinePage";
-import ClientesPage from "@/pages/ClientesPage";
-import ClientDetailPage from "@/components/clients/ClientDetailPage";
-import InteracoesPage from "@/pages/InteracoesPage";
-import TarefasPage from "@/pages/TarefasPage";
-import ProdutosPage from "@/pages/ProdutosPage";
-import RelatoriosPage from "@/pages/RelatoriosPage";
-import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
-import ProfilePage from "@/pages/ProfilePage";
-import ImportLeadsWizard from "@/pages/ImportLeadsWizard";
-import AuthPage from "@/pages/AuthPage";
-import LoginPage from "@/pages/LoginPage";
-import SignUpPage from "@/pages/SignUpPage";
-import ResetPasswordPage from "@/pages/ResetPasswordPage";
-import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
-import FirstSuperadminSetup from "@/components/auth/FirstSuperadminSetup";
-import SuperadminDashboard from "@/pages/SuperadminDashboard";
-import DebugMultiTenantPage from "@/pages/DebugMultiTenantPage";
-import CustomizePage from "@/pages/CustomizePage";
-import AdminUsersPage from "@/pages/AdminUsersPage";
-import { VendasPage } from "@/pages/VendasPage";
-import SearchResultsPage from "@/pages/SearchResultsPage";
-
-import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { validateSession } from "@/lib/supabase";
 
-// // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
-// if (typeof window !== "undefined") {
-//   const recoveryRoute = getNormalizedRecoveryRoute(window.location);
-//   if (recoveryRoute) {
-//     console.log("[App] Recovery URL detected, redirecting to:", recoveryRoute);
-//     // Full page redirect so BrowserRouter picks up the correct pathname
-//     window.location.replace(recoveryRoute);
-//   }
-// }
-
+// Lazy load pages to improve startup performance and avoid build-time crashes
+const CRMLayout = lazy(() => import("@/components/CRMLayout"));
+const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
+const ConsolidatedDashboardPage = lazy(() => import("@/pages/ConsolidatedDashboardPage"));
+const LeadsPage = lazy(() => import("@/pages/LeadsPage"));
+const PipelinePage = lazy(() => import("@/pages/PipelinePage"));
+const ClientesPage = lazy(() => import("@/pages/ClientesPage"));
+const ClientDetailPage = lazy(() => import("@/components/clients/ClientDetailPage"));
+const InteracoesPage = lazy(() => import("@/pages/InteracoesPage"));
+const TarefasPage = lazy(() => import("@/pages/TarefasPage"));
+const ProdutosPage = lazy(() => import("@/pages/ProdutosPage"));
+const RelatoriosPage = lazy(() => import("@/pages/RelatoriosPage"));
+const ConfiguracoesPage = lazy(() => import("@/pages/ConfiguracoesPage"));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const ImportLeadsWizard = lazy(() => import("@/pages/ImportLeadsWizard"));
+const AuthPage = lazy(() => import("@/pages/AuthPage"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const SignUpPage = lazy(() => import("@/pages/SignUpPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
+const ForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage"));
+const FirstSuperadminSetup = lazy(() => import("@/components/auth/FirstSuperadminSetup"));
+const SuperadminDashboard = lazy(() => import("@/pages/SuperadminDashboard"));
+const DebugMultiTenantPage = lazy(() => import("@/pages/DebugMultiTenantPage"));
+const CustomizePage = lazy(() => import("@/pages/CustomizePage"));
+const AdminUsersPage = lazy(() => import("@/pages/AdminUsersPage"));
+const VendasPage = lazy(() => import("@/pages/VendasPage").then(module => ({ default: module.VendasPage })));
+const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
 
 const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    // Validar sessão periodicamente ou no mount
     const checkSession = async () => {
       const isValid = await validateSession();
       if (!isValid && window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
@@ -61,56 +49,61 @@ const App = () => {
   }, []);
 
   return (
-  <QueryClientProvider client={queryClient}>
-    <OrganizationProvider>
-      <BrandProvider>
-        
+    <QueryClientProvider client={queryClient}>
+      <OrganizationProvider>
+        <BrandProvider>
           <Toaster />
-          
           <BrowserRouter>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/setup" element={<FirstSuperadminSetup />} />
+            <Suspense fallback={
+              <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                  <p className="text-sm text-neutral-500">Carregando...</p>
+                </div>
+              </div>
+            }>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/setup" element={<FirstSuperadminSetup />} />
 
-              {/* Protected routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route element={<CRMLayout />}>
-                  <Route path="/superadmin" element={<SuperadminDashboard />} />
-                  <Route path="/admin/users" element={<AdminUsersPage />} />
-                  <Route path="/debug" element={<DebugMultiTenantPage />} />
-                  <Route path="/" element={<DashboardPage />} />
-                  <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
-                  <Route path="/leads" element={<LeadsPage />} />
-                  <Route path="/import-wizard" element={<ImportLeadsWizard />} />
-                  <Route path="/pipeline" element={<PipelinePage />} />
-                  <Route path="/vendas" element={<VendasPage />} />
+                {/* Protected routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<CRMLayout />}>
+                    <Route path="/superadmin" element={<SuperadminDashboard />} />
+                    <Route path="/admin/users" element={<AdminUsersPage />} />
+                    <Route path="/debug" element={<DebugMultiTenantPage />} />
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
+                    <Route path="/leads" element={<LeadsPage />} />
+                    <Route path="/import-wizard" element={<ImportLeadsWizard />} />
+                    <Route path="/pipeline" element={<PipelinePage />} />
+                    <Route path="/vendas" element={<VendasPage />} />
 
-                  <Route path="/clientes" element={<ClientesPage />} />
-                  <Route path="/clientes/:id" element={<ClientDetailPage />} />
-                  <Route path="/interacoes" element={<InteracoesPage />} />
-                  <Route path="/tarefas" element={<TarefasPage />} />
-                  <Route path="/produtos" element={<ProdutosPage />} />
-                  <Route path="/relatorios" element={<RelatoriosPage />} />
-                  <Route path="/configuracoes" element={<ConfiguracoesPage />} />
-                  <Route path="/personalizar" element={<CustomizePage />} />
-                  <Route path="/perfil" element={<ProfilePage />} />
-                  <Route path="/search" element={<SearchResultsPage />} />
+                    <Route path="/clientes" element={<ClientesPage />} />
+                    <Route path="/clientes/:id" element={<ClientDetailPage />} />
+                    <Route path="/interacoes" element={<InteracoesPage />} />
+                    <Route path="/tarefas" element={<TarefasPage />} />
+                    <Route path="/produtos" element={<ProdutosPage />} />
+                    <Route path="/relatorios" element={<RelatoriosPage />} />
+                    <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+                    <Route path="/personalizar" element={<CustomizePage />} />
+                    <Route path="/perfil" element={<ProfilePage />} />
+                    <Route path="/search" element={<SearchResultsPage />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Fallback - DEVE ser a última rota */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
-        
-      </BrandProvider>
-    </OrganizationProvider>
-  </QueryClientProvider>
+        </BrandProvider>
+      </OrganizationProvider>
+    </QueryClientProvider>
   );
 };
 
