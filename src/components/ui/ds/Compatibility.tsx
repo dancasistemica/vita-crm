@@ -37,9 +37,18 @@ export const DropdownMenuItem = ({ children, onClick, className = '' }: any) => 
 export const DropdownMenuLabel = ({ children }: any) => <div className="px-4 py-2 text-xs font-semibold text-neutral-500 uppercase">{children}</div>;
 export const DropdownMenuSeparator = () => <div className="h-px bg-neutral-100 my-1" />;
 
-export const Slider = (props: any) => (
-  <input type="range" className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600" {...props} />
-)
+export const Slider = ({ value, onValueChange, ...props }: any) => {
+  const v = Array.isArray(value) ? value[0] : (value || 0);
+  return (
+    <input 
+      type="range" 
+      className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600" 
+      value={v}
+      onChange={(e) => onValueChange?.([Number(e.target.value)])}
+      {...props} 
+    />
+  );
+}
 
 export const Collapsible = ({ children }: any) => <div>{children}</div>;
 export const CollapsibleTrigger = ({ children }: any) => <div className="cursor-pointer">{children}</div>;
