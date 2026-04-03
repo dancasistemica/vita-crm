@@ -129,7 +129,7 @@ export default function ConsolidatedDashboardPage() {
 
         <Card className="shadow-card border-border/60">
           <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Organização</h2></div>
-          <div>
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
