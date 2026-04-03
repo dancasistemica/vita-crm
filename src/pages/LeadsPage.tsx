@@ -479,15 +479,15 @@ export default function LeadsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-neutral-100 bg-neutral-50/50">
-                <th className="px-6 py-4">
+                <th className="px-3 sm:px-6 py-4">
                   <Checkbox checked={selectedIds.length === paginated.length && paginated.length > 0} onCheckedChange={toggleSelectAll} />
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
+                <th className="px-3 sm:px-6 py-4 text-right text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
