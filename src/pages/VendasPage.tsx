@@ -199,7 +199,7 @@ export function VendasPage() {
                         {sale.status === 'ativa' ? '✅ Ativa' : '❌ Cancelada'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-2 sm:px-4">
                       <div className="flex gap-3">
                         <Button 
                           variant="ghost" 
