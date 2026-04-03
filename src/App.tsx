@@ -66,7 +66,7 @@ const App = () => {
       <BrandProvider>
         
           <Toaster />
-          <Sonner />
+          
           <BrowserRouter>
             <Routes>
               {/* Public routes */}
