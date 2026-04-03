@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
 
@@ -9,9 +9,17 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar_collapsed');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebar_collapsed', sidebarCollapsed.toString());
+  }, [sidebarCollapsed]);
 
   return (
-    <div className="flex h-screen bg-neutral-50">
+    <div className="flex h-screen bg-neutral-50 overflow-hidden">
       {/* Overlay Mobile */}
       {sidebarOpen && (
         <div
@@ -22,11 +30,15 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
 
       {/* Sidebar - Desktop Fixed, Mobile Overlay */}
       <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-neutral-200 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 bg-white border-r border-neutral-200 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'} w-64`}
       >
-        <Sidebar onClose={() => setSidebarOpen(false)} />
+        <Sidebar 
+          onClose={() => setSidebarOpen(false)} 
+          collapsed={sidebarCollapsed} 
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
       </div>
 
       {/* Main Content */}
@@ -36,8 +48,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           title={title}
           onOpenSidebar={() => setSidebarOpen(true)}
           sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+          sidebarCollapsed={sidebarCollapsed}
         />
-
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto">

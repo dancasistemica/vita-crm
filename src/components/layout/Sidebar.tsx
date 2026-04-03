@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBrand } from '@/contexts/BrandContext';
+import { cn } from '@/lib/utils';
 
 interface SidebarProps {
   onClose: () => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 interface Organization {
@@ -27,7 +30,7 @@ const menuItems = [
   { icon: Settings, label: 'Configurações', path: '/configuracoes' },
 ];
 
-export function Sidebar({ onClose }: SidebarProps) {
+export function Sidebar({ onClose, collapsed = false, onToggleCollapse }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { brand } = useBrand();
@@ -163,7 +166,7 @@ export function Sidebar({ onClose }: SidebarProps) {
     : userProfile?.email?.charAt(0).toUpperCase() || 'U';
 
   return (
-    <div className="flex flex-col h-full bg-sidebar">
+    <div className={cn("flex flex-col h-full bg-sidebar transition-all duration-300", collapsed ? "w-20" : "w-64")}>
       {/* Header Mobile Only */}
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border lg:hidden">
         <h2 className="text-lg font-bold text-sidebar-foreground">Menu</h2>
@@ -177,33 +180,33 @@ export function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Logo/Brand - Desktop Only */}
-      <div className="hidden lg:flex items-center justify-center p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-2">
+      <div className={cn("hidden lg:flex items-center p-6 border-b border-sidebar-border h-20 shrink-0 transition-all", collapsed ? "justify-center px-4" : "justify-between")}>
+        <div className="flex items-center gap-3 overflow-hidden">
           {brand.logo_url ? (
             <img 
               src={brand.logo_url} 
               alt={brand.org_display_name || 'Logo'} 
-              className="brand-logo object-contain"
-              style={{ height: 'var(--logo-h-desktop, 40px)' }}
+              className="brand-logo object-contain shrink-0"
+              style={{ height: 'var(--logo-h-desktop, 32px)' }}
             />
           ) : (
-            <>
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-base">
-                  {(brand.org_display_name || 'V').charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-xl font-bold text-sidebar-foreground truncate">
-                {brand.org_display_name || 'VITA CRM'}
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-primary-foreground font-bold text-sm">
+                {(brand.org_display_name || 'V').charAt(0).toUpperCase()}
               </span>
-            </>
+            </div>
+          )}
+          {!collapsed && (
+            <span className="text-lg font-bold text-sidebar-foreground truncate animate-in fade-in duration-300">
+              {brand.org_display_name || 'VITA CRM'}
+            </span>
           )}
         </div>
       </div>
 
       {/* Select Organizações - SuperAdmin Only */}
-      {isSuperAdmin && organizations.length > 0 && (
-        <div className="p-4 sm:p-6 border-b border-sidebar-border">
+      {isSuperAdmin && organizations.length > 0 && !collapsed && (
+        <div className="p-4 sm:p-6 border-b border-sidebar-border animate-in fade-in duration-300">
           <label className="block text-xs sm:text-sm font-medium text-sidebar-foreground/70 mb-2">
             Organização
           </label>
@@ -248,62 +251,81 @@ export function Sidebar({ onClose }: SidebarProps) {
       )}
 
       {/* Menu Items */}
-      <nav className="flex-1 overflow-y-auto p-4 sm:p-6">
-        <ul className="space-y-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+      <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
 
-            return (
-              <li key={item.path}>
-                <button
-                  onClick={() => handleNavigate(item.path)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors min-h-[44px] text-sm sm:text-base font-medium ${
-                    isActive
-                      ? 'bg-sidebar-accent text-sidebar-foreground'
-                      : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
-                  <span>{item.label}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+          return (
+            <button
+              key={item.path}
+              onClick={() => handleNavigate(item.path)}
+              title={collapsed ? item.label : undefined}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group min-h-[44px]",
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-foreground'
+                  : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+                collapsed && "justify-center px-0"
+              )}
+            >
+              <Icon className={cn("w-5 h-5 sm:w-6 sm:h-6 shrink-0 transition-transform group-hover:scale-110", isActive && "text-primary")} />
+              {!collapsed && (
+                <span className="text-sm sm:text-base font-medium truncate animate-in fade-in slide-in-from-left-2 duration-300">
+                  {item.label}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Perfil do Usuário */}
-      <div className="p-4 sm:p-6 border-t border-sidebar-border">
+      <div className={cn("p-4 border-t border-sidebar-border transition-all", collapsed && "p-2")}>
         {!loading && userProfile && (
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center text-sidebar-foreground font-bold overflow-hidden shrink-0">
+          <div className={cn("flex items-center gap-3 mb-4", collapsed && "flex-col items-center mb-0 gap-2")}>
+            <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center text-sidebar-foreground font-bold overflow-hidden shrink-0 border border-sidebar-border">
               {userProfile.avatar_url ? (
                 <img src={userProfile.avatar_url} alt={userProfile.full_name} className="w-full h-full object-cover" />
               ) : (
                 userInitials
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">
-                {userProfile.full_name || 'Usuário'}
-              </p>
-              <p className="text-xs text-sidebar-foreground/50 truncate">
-                {userProfile.email}
-              </p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 hover:bg-sidebar-accent rounded-lg transition-colors shrink-0"
-              aria-label="Sair"
-            >
-              <LogOut className="w-5 h-5 text-sidebar-foreground" />
-            </button>
+            {!collapsed ? (
+              <>
+                <div className="flex-1 min-w-0 animate-in fade-in duration-300">
+                  <p className="text-sm font-semibold text-sidebar-foreground truncate">
+                    {userProfile.full_name || 'Usuário'}
+                  </p>
+                  <p className="text-xs text-sidebar-foreground/50 truncate">
+                    {userProfile.email}
+                  </p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 hover:bg-sidebar-accent rounded-lg transition-colors shrink-0 text-sidebar-foreground/70 hover:text-sidebar-foreground"
+                  aria-label="Sair"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="p-2 hover:bg-sidebar-accent rounded-lg transition-colors text-sidebar-foreground/70 hover:text-sidebar-foreground"
+                aria-label="Sair"
+                title="Sair"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            )}
           </div>
         )}
-        <p className="text-xs text-sidebar-foreground/30 text-center">
-          © 2026 {brand.org_display_name || 'VITA CRM'}
-        </p>
+        {!collapsed && (
+          <p className="text-[10px] text-sidebar-foreground/30 text-center uppercase tracking-widest mt-2">
+            © 2026 {brand.org_display_name || 'VITA CRM'}
+          </p>
+        )}
       </div>
     </div>
   );

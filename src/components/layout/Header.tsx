@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Menu } from 'lucide-react';
-import { supabase, secureLogout } from '@/lib/supabase';
+import { LogOut, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { secureLogout } from '@/lib/supabase';
 import { Button } from '@/components/ui/ds';
 import { GlobalSearch } from './GlobalSearch';
 import { useBrand } from '@/contexts/BrandContext';
@@ -10,13 +10,20 @@ import { useSidebar } from '@/components/ui/ds';
 interface HeaderProps {
   onOpenSidebar?: () => void;
   sidebarOpen?: boolean;
+  onToggleSidebar?: () => void;
+  sidebarCollapsed?: boolean;
   title?: string;
 }
 
-export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, title }: HeaderProps) {
+export function Header({ 
+  onOpenSidebar: onMenuClick, 
+  sidebarOpen: menuOpen, 
+  onToggleSidebar, 
+  sidebarCollapsed, 
+  title 
+}: HeaderProps) {
   const navigate = useNavigate();
   const { brand } = useBrand();
-  const [searchQuery, setSearchQuery] = useState('');
   
   // Try to get sidebar context if available (used in CRMLayout)
   let sidebarContext;
@@ -50,15 +57,24 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, titl
           {/* Hamburger Menu - Mobile Only */}
           <button
             onClick={finalMenuClick}
-            className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
+            className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             aria-label="Menu"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
           </button>
 
+          {/* Desktop Sidebar Toggle */}
+          <button
+            onClick={onToggleSidebar}
+            className="hidden lg:flex p-2 hover:bg-muted rounded-lg transition-colors min-h-[40px] min-w-[40px] items-center justify-center flex-shrink-0 text-muted-foreground hover:text-foreground"
+            title={sidebarCollapsed ? "Expandir menu" : "Recolher menu"}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+          </button>
+
           {/* Nome da Organização / Título da Página */}
           <div className="hidden sm:block min-w-0">
-            <h1 className="text-sm lg:text-base font-bold text-foreground truncate">
+            <h1 className="text-sm lg:text-lg font-bold text-foreground truncate">
               {title || 'CRM'}
             </h1>
             <p className="text-[10px] lg:text-xs font-medium text-muted-foreground truncate uppercase tracking-wider">
@@ -97,7 +113,7 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, titl
                 </span>
               </div>
             )}
-            <span className="text-sm lg:text-base font-bold text-primary hidden lg:inline">
+            <span className="text-sm lg:text-base font-bold text-primary hidden xl:inline">
               {brand.org_display_name?.split(' ')[0] || 'VITA'}
             </span>
           </div>

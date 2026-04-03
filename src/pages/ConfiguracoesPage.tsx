@@ -24,8 +24,7 @@ export default function ConfiguracoesPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* HEADER */}
       <div>
-        <h1 className="text-4xl font-bold text-neutral-900">Configurações</h1>
-        <p className="text-sm text-neutral-600 mt-1">Gerencie usuários, permissões e parâmetros do sistema</p>
+        <p className="text-sm text-neutral-600">Gerencie usuários, permissões e parâmetros do sistema</p>
       </div>
 
       <div className="w-full space-y-4">
