@@ -49,7 +49,7 @@ export function Header({
   });
 
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-20 w-full overflow-hidden">
+    <header className="bg-background border-b border-border sticky top-0 z-20 w-full">
       <div className="h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         
         {/* SEÇÃO 1: Hamburger + Nome da Organização (Esquerda) */}
