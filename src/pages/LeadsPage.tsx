@@ -479,24 +479,24 @@ export default function LeadsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-neutral-100 bg-neutral-50/50">
-                <th className="px-6 py-4">
+                <th className="px-3 sm:px-6 py-4">
                   <Checkbox checked={selectedIds.length === paginated.length && paginated.length > 0} onCheckedChange={toggleSelectAll} />
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
-                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Lead</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Etapa</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Interesse</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Contato</th>
+                <th className="px-3 sm:px-6 py-4 text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Tags</th>
+                <th className="px-3 sm:px-6 py-4 text-right text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-wider">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {paginated.map((lead) => (
                 <tr key={lead.id} className="group hover:bg-neutral-50/50 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex flex-col">
                       <button onClick={() => setDetailLead(lead)} className="text-sm font-bold text-neutral-900 hover:text-primary-600 transition-colors text-left">
                         {lead.name}
@@ -504,10 +504,10 @@ export default function LeadsPage() {
                       <span className="text-[10px] text-neutral-400 font-medium">Cadastrado em {new Date(lead.entryDate).toLocaleDateString()}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <Badge variant="secondary" className="font-medium">{getStageName(lead.pipelineStage)}</Badge>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
                         <span className={interestColors[lead.interestLevel]?.split(' ')[1]}>{getInterestLabel(lead.interestLevel)}</span>
@@ -523,7 +523,7 @@ export default function LeadsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex items-center gap-2">
                       {isValidPhone(lead.phone) && (
                         <a 
@@ -543,7 +543,7 @@ export default function LeadsPage() {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex flex-wrap gap-1 max-w-[200px]">
                       {lead.tags?.slice(0, 2).map((tag, idx) => (
                         <Badge key={idx} variant="secondary" className="text-[10px] py-0 h-5 border-neutral-200">{tag}</Badge>
@@ -551,8 +551,8 @@ export default function LeadsPage() {
                       {lead.tags?.length > 2 && <span className="text-[10px] text-neutral-400 font-medium">+{lead.tags.length - 2}</span>}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <td className="px-3 sm:px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                       <Button variant="secondary" size="sm" className="h-8 w-8 p-0" onClick={() => handleEditLead(lead)}>
                         <Edit className="w-3.5 h-3.5" />
                       </Button>

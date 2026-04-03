@@ -103,7 +103,7 @@ export default function DashboardPage() {
     leads_por_estagio: () => (
       <Card className="shadow-card border-border/60">
         <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Etapa do Funil</h2></div>
-        <div>
+        <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={leadsByStage}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
@@ -197,7 +197,7 @@ export default function DashboardPage() {
   const sortedVisible = settings.filter(s => s.is_visible).sort((a, b) => a.position - b.position);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 py-4 sm:p-6">
       <div className="flex items-center justify-between flex-wrap gap-4 px-1">
         <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">

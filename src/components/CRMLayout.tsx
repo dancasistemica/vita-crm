@@ -32,9 +32,9 @@ export default function CRMLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
+      <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden min-w-0">
         <Header title={getPageTitle()} />
-        <main className="flex-1 overflow-auto bg-neutral-50 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-auto bg-neutral-50 p-3 sm:p-5 lg:p-8">
           <Outlet />
         </main>
       </div>

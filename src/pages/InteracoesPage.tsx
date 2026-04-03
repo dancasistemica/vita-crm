@@ -30,9 +30,9 @@ export default function InteracoesPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">Interações</h1>
+    <div className="space-y-4 px-2 py-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-1">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Interações</h1>
         <Button onClick={() => setDialogOpen(true)} icon={<Plus className="h-4 w-4" />} className="w-full sm:w-auto">
           Nova Interação
         </Button>

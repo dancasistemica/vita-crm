@@ -53,7 +53,7 @@ export default function ConsolidatedDashboardPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 py-4 sm:p-6">
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">📊 Dashboard Consolidado</h1>
@@ -115,7 +115,7 @@ export default function ConsolidatedDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-card border-border/60">
           <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Etapa do Funil</h2></div>
-          <div>
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadsByStage}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
@@ -129,7 +129,7 @@ export default function ConsolidatedDashboardPage() {
 
         <Card className="shadow-card border-border/60">
           <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Organização</h2></div>
-          <div>
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={consolidatedData ? consolidatedData.topOrganizations.map(o => ({ name: o.name, value: o.leads })) : leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
@@ -144,7 +144,7 @@ export default function ConsolidatedDashboardPage() {
         {revenueByProduct.length > 0 && (
           <Card className="shadow-card border-border/60">
             <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
-            <div>
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueByProduct}>
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />

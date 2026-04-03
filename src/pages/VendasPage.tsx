@@ -77,11 +77,11 @@ export function VendasPage() {
   });
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className="px-2 py-4 sm:p-6 space-y-6">
       {/* PAGE HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900">Vendas</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Vendas</h1>
           <p className="text-sm text-neutral-600 mt-1">
             {filteredSales.length} {filteredSales.length === 1 ? 'venda' : 'vendas'}
           </p>
@@ -170,28 +170,28 @@ export function VendasPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-neutral-200">
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Cliente</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Etapa</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Tipo</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Valor</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Ações</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Cliente</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Etapa</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Tipo</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSales.map((sale) => (
                   <tr key={sale.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors">
-                    <td className="py-3 px-4 text-neutral-900">{sale.client_name}</td>
-                    <td className="py-3 px-4 text-neutral-900">{sale.stage_name}</td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.client_name}</td>
+                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.stage_name}</td>
+                    <td className="py-3 px-2 sm:px-4">
                       <Badge variant={sale.sale_type === 'unica' ? 'default' : 'warning'} size="sm">
                         {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-neutral-900 font-semibold">
+                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900 font-semibold">
                       R$ {Number(sale.stage_value).toFixed(2)}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-2 sm:px-4">
                       <Badge 
                         variant={sale.status === 'ativa' ? 'success' : 'error'} 
                         size="sm"
@@ -199,7 +199,7 @@ export function VendasPage() {
                         {sale.status === 'ativa' ? '✅ Ativa' : '❌ Cancelada'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-2 sm:px-4">
                       <div className="flex gap-3">
                         <Button 
                           variant="ghost" 
