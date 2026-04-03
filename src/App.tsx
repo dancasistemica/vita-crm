@@ -1,4 +1,4 @@
-import { Toaster, Toaster as Sonner, Tooltip } from "@/components/ui/ds";
+import { Toaster, Tooltip } from "@/components/ui/ds";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
