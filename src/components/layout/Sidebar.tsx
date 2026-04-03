@@ -30,6 +30,7 @@ const menuItems = [
 export function Sidebar({ onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { brand } = useBrand();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrg, setSelectedOrg] = useState<string>('');
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -93,7 +94,10 @@ export function Sidebar({ onClose }: SidebarProps) {
             console.error('[Sidebar] Erro ao carregar organizações:', error);
           } else {
             setOrganizations(orgs || []);
-            if (orgs && orgs.length > 0) {
+            const lastOrg = localStorage.getItem('superadmin_current_org');
+            if (lastOrg && orgs?.some(o => o.id === lastOrg)) {
+              setSelectedOrg(lastOrg);
+            } else if (orgs && orgs.length > 0) {
               setSelectedOrg(orgs[0].id);
             }
           }
@@ -137,7 +141,9 @@ export function Sidebar({ onClose }: SidebarProps) {
   const handleOrgChange = (orgId: string) => {
     console.log('[Sidebar] Mudando organização para:', orgId);
     setSelectedOrg(orgId);
+    localStorage.setItem('superadmin_current_org', orgId);
     setShowOrgDropdown(false);
+    window.location.reload(); // Refresh to apply brand context
   };
 
   const handleLogout = async () => {
@@ -157,21 +163,21 @@ export function Sidebar({ onClose }: SidebarProps) {
     : userProfile?.email?.charAt(0).toUpperCase() || 'U';
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-sidebar">
       {/* Header Mobile Only */}
-      <div className="flex items-center justify-between p-4 border-b border-neutral-200 lg:hidden">
-        <h2 className="text-lg font-bold text-neutral-900">Menu</h2>
+      <div className="flex items-center justify-between p-4 border-b border-sidebar-border lg:hidden">
+        <h2 className="text-lg font-bold text-sidebar-foreground">Menu</h2>
         <button
           onClick={onClose}
-          className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-sidebar-accent rounded-lg transition-colors"
           aria-label="Fechar menu"
         >
-          <X className="w-5 h-5 text-neutral-600" />
+          <X className="w-5 h-5 text-sidebar-foreground" />
         </button>
       </div>
 
       {/* Logo/Brand - Desktop Only */}
-      <div className="hidden lg:flex items-center justify-center p-6 border-b border-neutral-200">
+      <div className="hidden lg:flex items-center justify-center p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
           {brand.logo_url ? (
             <img 
@@ -184,11 +190,11 @@ export function Sidebar({ onClose }: SidebarProps) {
             <>
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-base">
-                  {(brand.org_display_name || 'DS').slice(0, 2).toUpperCase()}
+                  {(brand.org_display_name || 'V').charAt(0).toUpperCase()}
                 </span>
               </div>
-              <span className="text-xl font-bold text-neutral-900 truncate">
-                {brand.org_display_name || 'Dança Sistêmica'}
+              <span className="text-xl font-bold text-sidebar-foreground truncate">
+                {brand.org_display_name || 'VITA CRM'}
               </span>
             </>
           )}
@@ -197,20 +203,20 @@ export function Sidebar({ onClose }: SidebarProps) {
 
       {/* Select Organizações - SuperAdmin Only */}
       {isSuperAdmin && organizations.length > 0 && (
-        <div className="p-4 sm:p-6 border-b border-neutral-200">
-          <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-2">
+        <div className="p-4 sm:p-6 border-b border-sidebar-border">
+          <label className="block text-xs sm:text-sm font-medium text-sidebar-foreground/70 mb-2">
             Organização
           </label>
           <div className="relative">
             <button
               onClick={() => setShowOrgDropdown(!showOrgDropdown)}
-              className="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors min-h-[44px] text-sm"
+              className="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border border-sidebar-border rounded-lg hover:bg-sidebar-accent transition-colors min-h-[44px] text-sm text-sidebar-foreground"
             >
-              <span className="text-neutral-900 font-medium truncate">
+              <span className="font-medium truncate">
                 {selectedOrgName}
               </span>
               <ChevronDown
-                className={`w-4 h-4 text-neutral-600 flex-shrink-0 transition-transform ${
+                className={`w-4 h-4 text-sidebar-foreground/70 flex-shrink-0 transition-transform ${
                   showOrgDropdown ? 'rotate-180' : ''
                 }`}
               />
@@ -218,16 +224,16 @@ export function Sidebar({ onClose }: SidebarProps) {
 
             {/* Dropdown Menu */}
             {showOrgDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-neutral-300 rounded-lg shadow-lg z-50">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-50 overflow-hidden">
                 <ul className="max-h-48 overflow-y-auto">
                   {organizations.map((org) => (
                     <li key={org.id}>
                       <button
                         onClick={() => handleOrgChange(org.id)}
-                        className={`w-full text-left px-4 py-3 text-sm hover:bg-neutral-100 transition-colors ${
+                        className={`w-full text-left px-4 py-3 text-sm hover:bg-sidebar-accent transition-colors ${
                           selectedOrg === org.id
-                            ? 'bg-primary-50 text-primary-600 font-medium'
-                            : 'text-neutral-900'
+                            ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                            : 'text-sidebar-foreground'
                         }`}
                       >
                         {org.name}
@@ -254,8 +260,8 @@ export function Sidebar({ onClose }: SidebarProps) {
                   onClick={() => handleNavigate(item.path)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors min-h-[44px] text-sm sm:text-base font-medium ${
                     isActive
-                      ? 'bg-primary-100 text-primary-600'
-                      : 'text-neutral-600 hover:bg-neutral-100'
+                      ? 'bg-sidebar-accent text-sidebar-foreground'
+                      : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                   }`}
                 >
                   <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
@@ -268,10 +274,10 @@ export function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Perfil do Usuário */}
-      <div className="p-4 sm:p-6 border-t border-neutral-200">
+      <div className="p-4 sm:p-6 border-t border-sidebar-border">
         {!loading && userProfile && (
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold overflow-hidden shrink-0">
+            <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center text-sidebar-foreground font-bold overflow-hidden shrink-0">
               {userProfile.avatar_url ? (
                 <img src={userProfile.avatar_url} alt={userProfile.full_name} className="w-full h-full object-cover" />
               ) : (
@@ -279,24 +285,24 @@ export function Sidebar({ onClose }: SidebarProps) {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-neutral-900 truncate">
+              <p className="text-sm font-medium text-sidebar-foreground truncate">
                 {userProfile.full_name || 'Usuário'}
               </p>
-              <p className="text-xs text-neutral-500 truncate">
+              <p className="text-xs text-sidebar-foreground/50 truncate">
                 {userProfile.email}
               </p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors shrink-0"
+              className="p-2 hover:bg-sidebar-accent rounded-lg transition-colors shrink-0"
               aria-label="Sair"
             >
-              <LogOut className="w-5 h-5 text-neutral-600" />
+              <LogOut className="w-5 h-5 text-sidebar-foreground" />
             </button>
           </div>
         )}
-        <p className="text-xs text-neutral-500 text-center">
-          © 2026 Dança Sistêmica
+        <p className="text-xs text-sidebar-foreground/30 text-center">
+          © 2026 {brand.org_display_name || 'VITA CRM'}
         </p>
       </div>
     </div>
