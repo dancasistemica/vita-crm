@@ -191,7 +191,7 @@ export function VendasPage() {
                     <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900 font-semibold">
                       R$ {Number(sale.stage_value).toFixed(2)}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-2 sm:px-4">
                       <Badge 
                         variant={sale.status === 'ativa' ? 'success' : 'error'} 
                         size="sm"
