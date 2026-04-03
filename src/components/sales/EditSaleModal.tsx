@@ -300,13 +300,13 @@ export const EditSaleModal = ({
                 />
               </div>
 
-              <div className="flex gap-3 pt-4 border-t mt-4">
-                {/* Botão Excluir à esquerda */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-4">
+                {/* Botão Excluir */}
                 <Button variant="secondary" size="sm"
                   type="button"
                   onClick={handleDeleteSale}
                   disabled={loading || deleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 font-medium flex items-center justify-center gap-3 order-3 sm:order-1"
                   title="Excluir esta venda"
                 >
                   {deleting && <Loader className="w-4 h-4 animate-spin" />}
@@ -314,8 +314,8 @@ export const EditSaleModal = ({
                   <span>Excluir</span>
                 </Button>
 
-                {/* Botões Cancelar e Salvar à direita */}
-                <div className="flex gap-3 flex-1">
+                {/* Botões Cancelar e Salvar */}
+                <div className="flex gap-3 flex-1 order-1 sm:order-2">
                   <Button variant="secondary" size="sm"
                     type="button"
                     onClick={onClose}
