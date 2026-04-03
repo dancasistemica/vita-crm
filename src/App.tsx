@@ -40,6 +40,16 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
+    // Intercept recovery URLs — must use full navigation, not replaceState
+    if (typeof window !== "undefined") {
+      const recoveryRoute = getNormalizedRecoveryRoute(window.location);
+      if (recoveryRoute) {
+        console.log("[App] Recovery URL detected, redirecting to:", recoveryRoute);
+        window.location.replace(recoveryRoute);
+        return;
+      }
+    }
+
     const checkSession = async () => {
       const isValid = await validateSession();
       if (!isValid && window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
