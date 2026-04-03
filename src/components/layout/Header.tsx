@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { supabase, secureLogout } from '@/lib/supabase';
 import { Button } from '@/components/ui/ds';
 import { GlobalSearch } from './GlobalSearch';
 import { useBrand } from '@/contexts/BrandContext';
+import { useSidebar } from '@/components/ui/ds/Sidebar';
 
 interface HeaderProps {
   onOpenSidebar?: () => void;
