@@ -170,12 +170,12 @@ export function VendasPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-neutral-200">
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Cliente</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Etapa</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Tipo</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Valor</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold text-neutral-900">Ações</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Cliente</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Etapa</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Tipo</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
+                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Ações</th>
                 </tr>
               </thead>
               <tbody>
