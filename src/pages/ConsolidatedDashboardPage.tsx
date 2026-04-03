@@ -53,7 +53,7 @@ export default function ConsolidatedDashboardPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 py-4 sm:p-6">
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">📊 Dashboard Consolidado</h1>
