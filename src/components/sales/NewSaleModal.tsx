@@ -165,7 +165,9 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
         lead_id: selectedLead.id,
         product_id: productId,
         value: parseValue(value),
-        sale_date: format(saleDate, 'yyyy-MM-dd'),
+        sale_date: saleDate && saleDate instanceof Date && !isNaN(saleDate.getTime()) 
+          ? format(saleDate, 'yyyy-MM-dd') 
+          : format(new Date(), 'yyyy-MM-dd'),
         payment_method: paymentMethod === 'Outro' ? customPayment || 'Outro' : paymentMethod,
         status,
         notes: observations || '',
