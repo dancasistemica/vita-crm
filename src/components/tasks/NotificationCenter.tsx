@@ -1,4 +1,4 @@
-import { Button, Popover, ScrollArea } from "@/components/ui/ds";
+import { Button, Popover, PopoverContent, PopoverTrigger, ScrollArea } from "@/components/ui/ds";
 import { useState } from "react";
 import { Bell, CheckCircle } from "lucide-react";
 
