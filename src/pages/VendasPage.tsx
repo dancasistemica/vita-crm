@@ -188,7 +188,7 @@ export function VendasPage() {
                         {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-neutral-900 font-semibold">
+                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900 font-semibold">
                       R$ {Number(sale.stage_value).toFixed(2)}
                     </td>
                     <td className="py-3 px-4">
