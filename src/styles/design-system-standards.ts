@@ -9,42 +9,42 @@ export const designSystemStandards = {
   typography: {
     // TÍTULOS DE PÁGINA (h1)
     pageTitle: {
-      className: 'text-4xl font-bold text-neutral-900',
+      className: 'text-4xl font-bold text-foreground',
       description: 'Título principal da página (ex: "Vendas", "Clientes", "SuperAdmin")',
       usage: 'Sempre no topo da página, antes de qualquer conteúdo',
     },
 
     // TÍTULOS DE SEÇÃO (h2)
     sectionTitle: {
-      className: 'text-2xl font-semibold text-neutral-900',
+      className: 'text-2xl font-semibold text-foreground',
       description: 'Título de seção dentro da página',
       usage: 'Agrupa conteúdo relacionado (ex: "Informações do Cliente", "Vendas")',
     },
 
     // SUBTÍTULOS (h3)
     subtitle: {
-      className: 'text-lg font-semibold text-neutral-700',
+      className: 'text-lg font-semibold text-muted-foreground',
       description: 'Subtítulo ou título de subsseção',
       usage: 'Dentro de cards ou seções menores',
     },
 
     // LABELS DE FORMULÁRIO
     label: {
-      className: 'text-sm font-medium text-neutral-700',
+      className: 'text-sm font-medium text-muted-foreground',
       description: 'Label de input, select, textarea',
       usage: 'Sempre acima do campo, com asterisco se obrigatório',
     },
 
     // TEXTO DO CORPO
     body: {
-      className: 'text-base text-neutral-900',
+      className: 'text-base text-foreground',
       description: 'Texto padrão de corpo',
       usage: 'Descrições, conteúdo principal',
     },
 
     // TEXTO PEQUENO
     bodySmall: {
-      className: 'text-sm text-neutral-600',
+      className: 'text-sm text-muted-foreground',
       description: 'Texto pequeno, helper text, captions',
       usage: 'Dicas, mensagens de ajuda, datas',
     },
@@ -64,7 +64,7 @@ export const designSystemStandards = {
   buttons: {
     // BOTÃO PRIMÁRIO (Ação principal)
     primary: {
-      className: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800',
+      className: 'bg-primary text-primary-foreground hover:opacity-90 active:opacity-80',
       usage: 'Ação principal da página (ex: "Criar Venda", "Salvar", "Confirmar")',
       sizes: {
         sm: 'px-3 py-2 text-sm font-medium rounded-md',
@@ -75,7 +75,7 @@ export const designSystemStandards = {
 
     // BOTÃO SECUNDÁRIO (Ação alternativa)
     secondary: {
-      className: 'bg-neutral-200 text-neutral-900 hover:bg-neutral-300 active:bg-neutral-400',
+      className: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70',
       usage: 'Ação secundária (ex: "Cancelar", "Voltar")',
       sizes: {
         sm: 'px-3 py-2 text-sm font-medium rounded-md',
@@ -86,7 +86,7 @@ export const designSystemStandards = {
 
     // BOTÃO DE SUCESSO
     success: {
-      className: 'bg-success-600 text-white hover:bg-success-700 active:bg-success-800',
+      className: 'bg-success text-success-foreground hover:opacity-90 active:opacity-80',
       usage: 'Ação de confirmação/sucesso (ex: "Confirmar", "Aprovar")',
       sizes: {
         sm: 'px-3 py-2 text-sm font-medium rounded-md',
@@ -97,7 +97,7 @@ export const designSystemStandards = {
 
     // BOTÃO DE ERRO/PERIGO
     error: {
-      className: 'bg-error-600 text-white hover:bg-error-700 active:bg-error-800',
+      className: 'bg-destructive text-destructive-foreground hover:opacity-90 active:opacity-80',
       usage: 'Ação destrutiva (ex: "Deletar", "Remover", "Cancelar Venda")',
       sizes: {
         sm: 'px-3 py-2 text-sm font-medium rounded-md',
@@ -108,7 +108,7 @@ export const designSystemStandards = {
 
     // BOTÃO GHOST (Apenas texto/ícone)
     ghost: {
-      className: 'bg-transparent text-primary-600 hover:bg-primary-50 active:bg-primary-100',
+      className: 'bg-transparent text-primary hover:bg-primary/10 active:bg-primary/20',
       usage: 'Ação terciária (ex: "Editar", "Ver Mais")',
       sizes: {
         sm: 'px-3 py-2 text-sm font-medium rounded-md',
@@ -182,10 +182,10 @@ export const designSystemStandards = {
       structure: `
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-neutral-900">Título da Página</h1>
-            <p className="text-sm text-neutral-600 mt-1">Descrição opcional</p>
+            <h1 className="text-4xl font-bold text-foreground">Título da Página</h1>
+            <p className="text-sm text-muted-foreground mt-1">Descrição opcional</p>
           </div>
-          <button className="bg-primary-600 text-white px-6 py-3 rounded-lg">
+          <button className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90">
             + Ação Principal
           </button>
         </div>
@@ -197,7 +197,7 @@ export const designSystemStandards = {
     // FILTROS E BUSCA
     filterBar: {
       structure: `
-        <div className="bg-white rounded-lg border border-neutral-200 p-4 mb-6">
+        <div className="bg-card rounded-lg border border-border p-4 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input placeholder="Buscar..." />
             <Select label="Filtro 1" options={[...]} />
@@ -226,7 +226,7 @@ export const designSystemStandards = {
     // MODAL/FORMULÁRIO
     modalLayout: {
       structure: `
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <Card className="w-full max-w-md">
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold">Título do Modal</h2>
@@ -252,23 +252,23 @@ export const designSystemStandards = {
     // TEXTO
     text: {
       primary: {
-        className: 'text-neutral-900',
+        className: 'text-foreground',
         usage: 'Texto principal, títulos e corpo',
       },
       secondary: {
-        className: 'text-neutral-700',
+        className: 'text-muted-foreground',
         usage: 'Subtítulos, labels e conteúdo de apoio',
       },
       muted: {
-        className: 'text-neutral-600',
+        className: 'text-muted-foreground/80',
         usage: 'Metadados, descrições curtas, placeholders',
       },
       subtle: {
-        className: 'text-neutral-500',
+        className: 'text-muted-foreground/60',
         usage: 'Notas discretas, timestamps',
       },
       inverse: {
-        className: 'text-white',
+        className: 'text-primary-foreground',
         usage: 'Texto sobre backgrounds escuros ou primários',
       },
     },
@@ -276,31 +276,31 @@ export const designSystemStandards = {
     // BACKGROUNDS
     background: {
       page: {
-        className: 'bg-neutral-50',
+        className: 'bg-background',
         usage: 'Background global de páginas',
       },
       card: {
-        className: 'bg-white',
+        className: 'bg-card',
         usage: 'Cards, filtros e áreas elevadas',
       },
       muted: {
-        className: 'bg-neutral-100',
+        className: 'bg-muted',
         usage: 'Blocos secundários e painéis de apoio',
       },
       primarySoft: {
-        className: 'bg-primary-50',
+        className: 'bg-primary/10',
         usage: 'Destaques suaves e callouts informativos',
       },
       successSoft: {
-        className: 'bg-success-50',
+        className: 'bg-success/10',
         usage: 'Mensagens de sucesso e confirmações',
       },
       warningSoft: {
-        className: 'bg-warning-50',
+        className: 'bg-warning/10',
         usage: 'Avisos e alertas não críticos',
       },
       errorSoft: {
-        className: 'bg-error-50',
+        className: 'bg-destructive/10',
         usage: 'Erros e estados destrutivos',
       },
     },
@@ -308,19 +308,19 @@ export const designSystemStandards = {
     // BORDAS E DIVISORES
     border: {
       default: {
-        className: 'border border-neutral-200',
+        className: 'border border-border',
         usage: 'Borda padrão de inputs, cards e tabelas',
       },
       strong: {
-        className: 'border border-neutral-300',
+        className: 'border border-border/80',
         usage: 'Borda de destaque e componentes ativos',
       },
       subtle: {
-        className: 'border border-neutral-100',
+        className: 'border border-border/40',
         usage: 'Divisores leves em listas e seções',
       },
       error: {
-        className: 'border border-error-500',
+        className: 'border border-destructive',
         usage: 'Inputs e cards em estado de erro',
       },
     },
@@ -328,19 +328,19 @@ export const designSystemStandards = {
     // ESTADOS DE INTERAÇÃO
     state: {
       hover: {
-        className: 'hover:bg-neutral-50',
+        className: 'hover:bg-muted/50',
         usage: 'Hover em linhas de tabela e listas',
       },
       active: {
-        className: 'active:bg-neutral-100',
+        className: 'active:bg-muted',
         usage: 'Press state de botões e itens interativos',
       },
       focus: {
-        className: 'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
+        className: 'focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent',
         usage: 'Focus visível em inputs e botões',
       },
       disabled: {
-        className: 'bg-neutral-100 text-neutral-500',
+        className: 'bg-muted/50 text-muted-foreground/50 cursor-not-allowed',
         usage: 'Componentes desabilitados',
       },
     },
@@ -348,19 +348,19 @@ export const designSystemStandards = {
     // STATUS/FEEDBACK
     status: {
       info: {
-        className: 'bg-primary-50 text-primary-700 border border-primary-200',
+        className: 'bg-info/10 text-info border border-info/20',
         usage: 'Mensagens informativas e dicas',
       },
       success: {
-        className: 'bg-success-50 text-success-700 border border-success-200',
+        className: 'bg-success/10 text-success border border-success/20',
         usage: 'Feedback positivo e confirmações',
       },
       warning: {
-        className: 'bg-warning-50 text-warning-700 border border-warning-200',
+        className: 'bg-warning/10 text-warning border border-warning/20',
         usage: 'Avisos e alertas moderados',
       },
       error: {
-        className: 'bg-error-50 text-error-700 border border-error-200',
+        className: 'bg-destructive/10 text-destructive border border-destructive/20',
         usage: 'Erros e ações destrutivas',
       },
     },

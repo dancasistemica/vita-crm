@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { supabase, secureLogout } from '@/lib/supabase';
-import { sanitizeInput } from '@/lib/security';
 import { Button } from '@/components/ui/ds';
 import { GlobalSearch } from './GlobalSearch';
+import { useBrand } from '@/contexts/BrandContext';
 
 interface HeaderProps {
   onOpenSidebar?: () => void;
@@ -14,63 +14,20 @@ interface HeaderProps {
 
 export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: HeaderProps) {
   const navigate = useNavigate();
+  const { brand } = useBrand();
   const [searchQuery, setSearchQuery] = useState('');
-  const [organizationName, setOrganizationName] = useState('Dança Sistêmica');
-
-  React.useEffect(() => {
-    const loadOrganization = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Using organization_members to match project schema
-        const { data: membership } = await supabase
-          .from('organization_members')
-          .select('organization_id')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (membership?.organization_id) {
-          const { data: org } = await supabase
-            .from('organizations')
-            .select('name')
-            .eq('id', membership.organization_id)
-            .single();
-
-          if (org) {
-            setOrganizationName(org.name);
-          }
-        }
-      } catch (err) {
-        console.error('[Header] Erro ao carregar organização:', err);
-      }
-    };
-
-    loadOrganization();
-  }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const sanitized = sanitizeInput(searchQuery.trim());
-    if (sanitized) {
-      console.log('[Header] Buscando:', sanitized);
-      // Global search logic
-      navigate(`/search?q=${encodeURIComponent(sanitized)}`);
-    }
-  };
 
   const handleLogout = async () => {
     try {
       await secureLogout();
     } catch (err) {
       console.error('[Header] Erro ao sair:', err);
-      // Fallback redirect if secureLogout fails
       navigate('/login');
     }
   };
 
   return (
-    <header className="bg-white border-b border-neutral-200 sticky top-0 z-20">
+    <header className="bg-background border-b border-border sticky top-0 z-20">
       <div className="h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         
         {/* SEÇÃO 1: Hamburger + Nome da Organização (Esquerda) */}
@@ -78,28 +35,28 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
           {/* Hamburger Menu - Mobile Only */}
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
+            className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             aria-label="Menu"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
 
           {/* Nome da Organização */}
           <div className="hidden sm:block min-w-0">
-            <p className="text-xs lg:text-sm font-medium text-neutral-500 truncate">
+            <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">
               ORGANIZAÇÃO
             </p>
-            <p className="text-sm lg:text-base font-bold text-neutral-900 truncate">
-              {organizationName}
+            <p className="text-sm lg:text-base font-bold text-foreground truncate">
+              {brand.org_display_name || 'Sistema'}
             </p>
           </div>
 
           {/* Nome da Organização - Mobile */}
           <div className="sm:hidden min-w-0">
-            <p className="text-xs font-bold text-neutral-900 truncate">
-              {organizationName.split(' ')[0]}
+            <p className="text-xs font-bold text-foreground truncate">
+              {(brand.org_display_name || 'Sistema').split(' ')[0]}
             </p>
           </div>
         </div>
@@ -109,15 +66,26 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
           <GlobalSearch />
         </div>
 
-        {/* SEÇÃO 3: Logo VITA + Logout (Direita) */}
+        {/* SEÇÃO 3: Logo + Logout (Direita) */}
         <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
-          {/* Logo VITA - Desktop */}
+          {/* Logo - Desktop */}
           <div className="hidden sm:flex items-center gap-2">
-            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm lg:text-base">V</span>
-            </div>
-            <span className="text-sm lg:text-base font-bold text-primary-600 hidden lg:inline">
-              VITA
+            {brand.logo_url ? (
+              <img 
+                src={brand.logo_url} 
+                alt="Logo" 
+                className="brand-logo object-contain"
+                style={{ height: 'var(--logo-h-desktop, 40px)' }}
+              />
+            ) : (
+              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-primary-foreground font-bold text-sm lg:text-base">
+                  {(brand.org_display_name || 'V').charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span className="text-sm lg:text-base font-bold text-primary hidden lg:inline">
+              {brand.org_display_name?.split(' ')[0] || 'VITA'}
             </span>
           </div>
 
@@ -134,16 +102,16 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
           {/* Logout Button - Mobile */}
           <button
             onClick={handleLogout}
-            className="sm:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="sm:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Sair"
           >
-            <LogOut className="w-5 h-5 text-neutral-600" />
+            <LogOut className="w-5 h-5 text-foreground" />
           </button>
         </div>
       </div>
 
       {/* Busca Global - Mobile */}
-      <div className="sm:hidden px-4 py-3 border-t border-neutral-200">
+      <div className="sm:hidden px-4 py-3 border-t border-border">
         <GlobalSearch />
       </div>
     </header>
