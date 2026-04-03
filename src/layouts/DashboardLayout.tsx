@@ -30,7 +30,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Header */}
         <Header
           title={title}
