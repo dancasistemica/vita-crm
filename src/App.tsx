@@ -35,15 +35,15 @@ import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 import { useEffect } from "react";
 import { validateSession } from "@/lib/supabase";
 
-// Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
-if (typeof window !== "undefined") {
-  const recoveryRoute = getNormalizedRecoveryRoute(window.location);
-  if (recoveryRoute) {
-    console.log("[App] Recovery URL detected, redirecting to:", recoveryRoute);
-    // Full page redirect so BrowserRouter picks up the correct pathname
-    window.location.replace(recoveryRoute);
-  }
-}
+// // Intercept recovery URLs BEFORE React renders — must use full navigation, not replaceState
+// if (typeof window !== "undefined") {
+//   const recoveryRoute = getNormalizedRecoveryRoute(window.location);
+//   if (recoveryRoute) {
+//     console.log("[App] Recovery URL detected, redirecting to:", recoveryRoute);
+//     // Full page redirect so BrowserRouter picks up the correct pathname
+//     window.location.replace(recoveryRoute);
+//   }
+// }
 
 
 const queryClient = new QueryClient();
