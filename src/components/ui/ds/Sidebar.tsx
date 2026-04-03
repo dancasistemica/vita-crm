@@ -54,7 +54,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
       <aside className={`
         bg-white border-r border-neutral-200 transition-all duration-300 z-[101]
         ${isMobile ? 'fixed inset-y-0 left-0 shadow-2xl' : 'relative'}
-        ${open ? 'translate-x-0 w-64' : (isMobile ? '-translate-x-full' : 'w-20')}
+        ${open ? 'translate-x-0 w-64' : (isMobile ? '-translate-x-full w-64' : 'w-20')}
         ${!open && isMobile ? 'invisible pointer-events-none' : 'visible'}
       `}>
         <div className={isMobile ? 'w-64 h-full bg-white' : 'w-full h-full'}>
