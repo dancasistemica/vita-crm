@@ -111,13 +111,23 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
 
         {/* SEÇÃO 3: Logo VITA + Logout (Direita) */}
         <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
-          {/* Logo VITA - Desktop */}
           <div className="hidden sm:flex items-center gap-2">
-            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm lg:text-base">V</span>
-            </div>
-            <span className="text-sm lg:text-base font-bold text-primary-600 hidden lg:inline">
-              VITA
+            {brand.logo_url ? (
+              <img 
+                src={brand.logo_url} 
+                alt="Logo" 
+                className="brand-logo object-contain"
+                style={{ height: 'var(--logo-h-desktop, 40px)' }}
+              />
+            ) : (
+              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-primary-foreground font-bold text-sm lg:text-base">
+                  {(brand.org_display_name || 'V').charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span className="text-sm lg:text-base font-bold text-primary hidden lg:inline">
+              {brand.org_display_name?.split(' ')[0] || 'VITA'}
             </span>
           </div>
 

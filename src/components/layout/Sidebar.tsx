@@ -173,10 +173,25 @@ export function Sidebar({ onClose }: SidebarProps) {
       {/* Logo/Brand - Desktop Only */}
       <div className="hidden lg:flex items-center justify-center p-6 border-b border-neutral-200">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-base">DS</span>
-          </div>
-          <span className="text-xl font-bold text-neutral-900">Dança Sistêmica</span>
+          {brand.logo_url ? (
+            <img 
+              src={brand.logo_url} 
+              alt={brand.org_display_name || 'Logo'} 
+              className="brand-logo object-contain"
+              style={{ height: 'var(--logo-h-desktop, 40px)' }}
+            />
+          ) : (
+            <>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-base">
+                  {(brand.org_display_name || 'DS').slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-xl font-bold text-neutral-900 truncate">
+                {brand.org_display_name || 'Dança Sistêmica'}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
