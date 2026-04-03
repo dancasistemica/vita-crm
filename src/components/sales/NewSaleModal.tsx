@@ -336,7 +336,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                         if (d?.target?.value) {
                           const [y, m, day] = d.target.value.split('-');
                           const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(day), 12, 0, 0);
-                          setSaleDate(date);
+                          setSaleDate(d);
                         } else if (d instanceof Date) {
                           // For a real Calendar component
                           setSaleDate(d);
