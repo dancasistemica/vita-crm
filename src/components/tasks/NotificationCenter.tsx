@@ -63,7 +63,8 @@ export default function NotificationCenter({ notifications, onMarkAsRead, onMark
             ))
           )}
         </ScrollArea>
-      </div>
+        </div>
+      </PopoverContent>
     </Popover>
   );
 }
