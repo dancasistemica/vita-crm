@@ -181,7 +181,7 @@ export function VendasPage() {
               <tbody>
                 {filteredSales.map((sale) => (
                   <tr key={sale.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors">
-                    <td className="py-3 px-4 text-neutral-900">{sale.client_name}</td>
+                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.client_name}</td>
                     <td className="py-3 px-4 text-neutral-900">{sale.stage_name}</td>
                     <td className="py-3 px-4">
                       <Badge variant={sale.sale_type === 'unica' ? 'default' : 'warning'} size="sm">
