@@ -65,11 +65,11 @@ export function Header({
 
           {/* Desktop Sidebar Toggle */}
           <button
-            onClick={onToggleSidebar}
+            onClick={onToggleSidebar || sidebarContext?.toggleSidebar}
             className="hidden lg:flex p-2 hover:bg-muted rounded-lg transition-colors min-h-[40px] min-w-[40px] items-center justify-center flex-shrink-0 text-muted-foreground hover:text-foreground"
-            title={sidebarCollapsed ? "Expandir menu" : "Recolher menu"}
+            title={sidebarCollapsed ?? !sidebarContext?.open ? "Expandir menu" : "Recolher menu"}
           >
-            {sidebarCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            {(sidebarCollapsed ?? !sidebarContext?.open) ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
           </button>
 
           {/* Nome da Organização / Título da Página */}
