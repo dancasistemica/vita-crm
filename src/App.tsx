@@ -6,6 +6,7 @@ import { BrandProvider } from "@/contexts/BrandContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Suspense, lazy, useEffect } from "react";
 import { validateSession } from "@/lib/supabase";
+import { getNormalizedRecoveryRoute } from "@/utils/authRecovery";
 
 // Lazy load pages to improve startup performance and avoid build-time crashes
 const CRMLayout = lazy(() => import("@/components/CRMLayout"));
