@@ -2,30 +2,21 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
 
 // Validar que variáveis de ambiente existem
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('[Supabase] Variáveis de ambiente não configuradas');
-  throw new Error(
-    'Supabase URL e ANON_KEY são obrigatórios. Verifique seu arquivo .env'
-  );
-}
-
-// Validar formato da URL
-if (!supabaseUrl.startsWith('https://')) {
-  console.error('[Supabase] URL deve usar HTTPS');
-  throw new Error('Supabase URL deve usar HTTPS');
+  console.warn('[Supabase] Variáveis de ambiente não configuradas. Verifique seu arquivo .env');
 }
 
 // Criar cliente Supabase com configurações de segurança
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+// Fallback para strings vazias se as variáveis estiverem ausentes para evitar crash no top-level
+export const supabase = createClient<Database>(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder', {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
   },
-  // Não expor dados sensíveis em logs
   global: {
     headers: {
       'X-Client-Info': 'supabase-js/web',
@@ -39,15 +30,10 @@ export async function secureLogout(): Promise<void> {
     console.log('[Supabase] Fazendo logout seguro...');
     
     // Fazer logout no Supabase primeiro
-    const { error } = await supabase.auth.signOut();
+    await supabase.auth.signOut();
     
     // Limpar localStorage depois para garantir que tudo seja removido
     localStorage.clear();
-    
-    if (error) {
-      console.error('[Supabase] Erro ao fazer logout:', error);
-      throw error;
-    }
     
     console.log('[Supabase] Logout realizado com sucesso');
     window.location.href = '/auth'; // Redirecionar para login
@@ -60,6 +46,7 @@ export async function secureLogout(): Promise<void> {
 // Função para validar sessão
 export async function validateSession(): Promise<boolean> {
   try {
+    if (!supabaseUrl || !supabaseAnonKey) return false;
     const { data: { session }, error } = await supabase.auth.getSession();
     
     if (error) {
