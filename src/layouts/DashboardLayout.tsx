@@ -30,7 +30,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
 
       {/* Sidebar - Desktop Fixed, Mobile Overlay */}
       <div
-        className={`fixed inset-y-0 left-0 z-40 bg-white border-r border-neutral-200 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 bg-white border-r border-neutral-200 transform transition-all duration-300 ease-in-out lg:relative lg:z-10 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'} w-64`}
       >
