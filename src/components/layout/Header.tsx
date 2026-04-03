@@ -17,37 +17,7 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
   const { brand } = useBrand();
   const [searchQuery, setSearchQuery] = useState('');
 
-  React.useEffect(() => {
-    const loadOrganization = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Using organization_members to match project schema
-        const { data: membership } = await supabase
-          .from('organization_members')
-          .select('organization_id')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (membership?.organization_id) {
-          const { data: org } = await supabase
-            .from('organizations')
-            .select('name')
-            .eq('id', membership.organization_id)
-            .single();
-
-          if (org) {
-            setOrganizationName(org.name);
-          }
-        }
-      } catch (err) {
-        console.error('[Header] Erro ao carregar organização:', err);
-      }
-    };
-
-    loadOrganization();
-  }, []);
+  // Organization name is now provided by useBrand() context
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
