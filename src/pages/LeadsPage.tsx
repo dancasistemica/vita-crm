@@ -507,7 +507,7 @@ export default function LeadsPage() {
                   <td className="px-3 sm:px-6 py-4">
                     <Badge variant="secondary" className="font-medium">{getStageName(lead.pipelineStage)}</Badge>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
                         <span className={interestColors[lead.interestLevel]?.split(' ')[1]}>{getInterestLabel(lead.interestLevel)}</span>
