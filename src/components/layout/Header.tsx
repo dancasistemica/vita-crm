@@ -14,8 +14,8 @@ interface HeaderProps {
 
 export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: HeaderProps) {
   const navigate = useNavigate();
+  const { brand } = useBrand();
   const [searchQuery, setSearchQuery] = useState('');
-  const [organizationName, setOrganizationName] = useState('Dança Sistêmica');
 
   React.useEffect(() => {
     const loadOrganization = async () => {
