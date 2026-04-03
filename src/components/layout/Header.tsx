@@ -13,7 +13,7 @@ interface HeaderProps {
   title?: string;
 }
 
-export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: HeaderProps) {
+export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, title }: HeaderProps) {
   const navigate = useNavigate();
   const { brand } = useBrand();
   const [searchQuery, setSearchQuery] = useState('');
