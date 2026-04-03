@@ -81,7 +81,7 @@ export function VendasPage() {
       {/* PAGE HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-neutral-900">Vendas</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Vendas</h1>
           <p className="text-sm text-neutral-600 mt-1">
             {filteredSales.length} {filteredSales.length === 1 ? 'venda' : 'vendas'}
           </p>
