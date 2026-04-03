@@ -50,7 +50,7 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, titl
           {/* Hamburger Menu - Mobile Only */}
           <button
             onClick={finalMenuClick}
-            className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
+            className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             aria-label="Menu"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
