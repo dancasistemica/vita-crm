@@ -5,7 +5,7 @@ import { supabase, secureLogout } from '@/lib/supabase';
 import { Button } from '@/components/ui/ds';
 import { GlobalSearch } from './GlobalSearch';
 import { useBrand } from '@/contexts/BrandContext';
-import { useSidebar } from '@/components/ui/ds/Sidebar';
+import { useSidebar } from '@/components/ui/ds';
 
 interface HeaderProps {
   onOpenSidebar?: () => void;
