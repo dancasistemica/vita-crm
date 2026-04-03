@@ -56,12 +56,12 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, titl
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
           </button>
 
-          {/* Nome da Organização */}
+          {/* Nome da Organização / Título da Página */}
           <div className="hidden sm:block min-w-0">
-            <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">
-              ORGANIZAÇÃO
-            </p>
-            <p className="text-sm lg:text-base font-bold text-foreground truncate">
+            <h1 className="text-sm lg:text-base font-bold text-foreground truncate">
+              {title || 'CRM'}
+            </h1>
+            <p className="text-[10px] lg:text-xs font-medium text-muted-foreground truncate uppercase tracking-wider">
               {brand.org_display_name || 'Sistema'}
             </p>
           </div>
@@ -69,7 +69,7 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen, titl
           {/* Nome da Organização - Mobile */}
           <div className="sm:hidden min-w-0">
             <p className="text-xs font-bold text-foreground truncate">
-              {(brand.org_display_name || 'Sistema').split(' ')[0]}
+              {title || (brand.org_display_name || 'Sistema').split(' ')[0]}
             </p>
           </div>
         </div>
