@@ -543,7 +543,7 @@ export default function LeadsPage() {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex flex-wrap gap-1 max-w-[200px]">
                       {lead.tags?.slice(0, 2).map((tag, idx) => (
                         <Badge key={idx} variant="secondary" className="text-[10px] py-0 h-5 border-neutral-200">{tag}</Badge>
