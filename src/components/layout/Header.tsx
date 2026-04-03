@@ -17,6 +17,14 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
   const navigate = useNavigate();
   const { brand } = useBrand();
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Try to get sidebar context if available (used in CRMLayout)
+  let sidebarContext;
+  try {
+    sidebarContext = useSidebar();
+  } catch (e) {
+    // Not in a SidebarProvider context
+  }
 
   const handleLogout = async () => {
     try {
@@ -27,21 +35,25 @@ export function Header({ onOpenSidebar: onMenuClick, sidebarOpen: menuOpen }: He
     }
   };
 
+  const finalMenuClick = onMenuClick || (() => {
+    if (sidebarContext) {
+      sidebarContext.setOpen(true);
+    }
+  });
+
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-20">
+    <header className="bg-background border-b border-border sticky top-0 z-20 w-full overflow-hidden">
       <div className="h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         
         {/* SEÇÃO 1: Hamburger + Nome da Organização (Esquerda) */}
         <div className="flex items-center gap-4 min-w-0">
           {/* Hamburger Menu - Mobile Only */}
           <button
-            onClick={onMenuClick}
+            onClick={finalMenuClick}
             className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             aria-label="Menu"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
           </button>
 
           {/* Nome da Organização */}
