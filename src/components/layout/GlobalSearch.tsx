@@ -113,7 +113,7 @@ export function GlobalSearch() {
       </div>
       
       <PopoverContent 
-        className="p-0 w-[400px] sm:w-[500px]" 
+        className="p-0 w-[calc(100vw-32px)] sm:w-[500px] z-50 shadow-2xl" 
         align="start"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
