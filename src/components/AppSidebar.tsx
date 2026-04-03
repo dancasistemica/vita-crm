@@ -102,13 +102,16 @@ export function AppSidebar() {
 
         {/* User & Organization Info */}
         {!collapsed && (
-          <div className="px-4 pt-4 pb-1">
-            <div className="flex items-center gap-3.5">
+          <div className="pt-2 pb-1">
+            <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9 shrink-0">
-                <AvatarImage src={avatarUrl || undefined} alt={profileName || "Usuário"} />
-                <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
-                  {initials}
-                </AvatarFallback>
+                {avatarUrl ? (
+                  <AvatarImage src={avatarUrl} alt={profileName || "Usuário"} />
+                ) : (
+                  <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
+                    {initials}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="min-w-0 flex-1">
                 {profileName ? (
@@ -120,7 +123,7 @@ export function AppSidebar() {
                 )}
               </div>
             </div>
-            <Separator className="mt-3" />
+            <Separator className="mt-4 mb-2" />
           </div>
         )}
 
