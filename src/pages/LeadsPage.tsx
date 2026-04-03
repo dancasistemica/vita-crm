@@ -504,7 +504,7 @@ export default function LeadsPage() {
                       <span className="text-[10px] text-neutral-400 font-medium">Cadastrado em {new Date(lead.entryDate).toLocaleDateString()}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <Badge variant="secondary" className="font-medium">{getStageName(lead.pipelineStage)}</Badge>
                   </td>
                   <td className="px-6 py-4">
