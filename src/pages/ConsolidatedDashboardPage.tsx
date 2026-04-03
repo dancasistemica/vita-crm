@@ -144,7 +144,7 @@ export default function ConsolidatedDashboardPage() {
         {revenueByProduct.length > 0 && (
           <Card className="shadow-card border-border/60">
             <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
-            <div>
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueByProduct}>
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
