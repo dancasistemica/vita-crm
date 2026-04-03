@@ -523,7 +523,7 @@ export default function LeadsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-4">
                     <div className="flex items-center gap-2">
                       {isValidPhone(lead.phone) && (
                         <a 
