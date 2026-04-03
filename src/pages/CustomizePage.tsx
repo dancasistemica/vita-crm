@@ -165,13 +165,23 @@ export default function CustomizePage() {
                     <div className="space-y-3">
                       <div className="flex justify-center gap-4">
                         <div className="p-4 rounded-lg bg-card border">
-                          <img src={brand.logo_url} alt="Logo claro" className="h-10 object-contain" />
+                          <img 
+                            src={brand.logo_url} 
+                            alt="Logo claro" 
+                            className="brand-logo object-contain" 
+                            style={{ height: 'var(--logo-h-desktop, 40px)' }}
+                          />
                         </div>
                         <div className="p-4 rounded-lg bg-sidebar border">
-                          <img src={brand.logo_url} alt="Logo escuro" className="h-10 object-contain" />
+                          <img 
+                            src={brand.logo_url} 
+                            alt="Logo escuro" 
+                            className="brand-logo object-contain"
+                            style={{ height: 'var(--logo-h-desktop, 40px)' }}
+                          />
                         </div>
                       </div>
-                      <p className="text-xs text-neutral-500">Clique ou arraste para trocar</p>
+                      <p className="text-xs text-neutral-500 text-center">Visualização do tamanho em Desktop</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
