@@ -318,22 +318,42 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
             <div className="space-y-3">
               <Label>Data da Venda *</Label>
               <Popover>
-                
+                <PopoverTrigger>
                   <Button variant="secondary" className={cn('w-full justify-start text-left font-normal', !saleDate && 'text-neutral-500')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {saleDate ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
+                    {saleDate && saleDate instanceof Date && !isNaN(saleDate.getTime()) ? format(saleDate, 'dd/MM/yyyy') : 'Selecione'}
                   </Button>
-                
-                <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
-                  <Calendar
-                    mode="single"
-                    selected={saleDate}
-                    onSelect={d => d && setSaleDate(d)}
-                    disabled={date => date > new Date()}
-                    locale={ptBR}
-                    className="p-3 pointer-events-auto"
-                  />
-                </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 border-none shadow-none bg-transparent">
+                  <div className="p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
+                    <Calendar
+                      mode="single"
+                      selected={saleDate}
+                      onSelect={(d: any) => {
+                        // For the shim Calendar (input type=date)
+                        if (d?.target?.value) {
+                          const [y, m, day] = d.target.value.split('-');
+                          const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(day), 12, 0, 0);
+                          setSaleDate(date);
+                        } else if (d instanceof Date) {
+                          // For a real Calendar component
+                          setSaleDate(d);
+                        }
+                      }}
+                      onChange={(e: any) => {
+                        if (e?.target?.value) {
+                          const [y, m, day] = e.target.value.split('-');
+                          const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(day), 12, 0, 0);
+                          setSaleDate(date);
+                        }
+                      }}
+                      value={saleDate && saleDate instanceof Date && !isNaN(saleDate.getTime()) ? format(saleDate, 'yyyy-MM-dd') : ''}
+                      disabled={date => date > new Date()}
+                      locale={ptBR}
+                      className="p-3 pointer-events-auto"
+                    />
+                  </div>
+                </PopoverContent>
               </Popover>
             </div>
 
