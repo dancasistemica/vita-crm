@@ -200,9 +200,9 @@ export default function DashboardPage() {
     <div className="space-y-6 px-2 py-4 sm:p-6">
       <div className="flex items-center justify-between flex-wrap gap-4 px-1">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
-            📊 Dashboard
-          </h1>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+          </div>
           <p className="text-xs sm:text-sm text-neutral-500 font-medium">
             Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
           </p>
