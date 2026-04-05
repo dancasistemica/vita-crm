@@ -319,7 +319,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
 
     // PASSO 3: Buscar mensalidades
-    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+    let subscriptionsQuery = supabase
       .from('subscriptions')
       .select(`
         id,
@@ -332,8 +332,13 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         status,
         created_at,
         updated_at
-      `)
-      .eq('organization_id', organizationId)
+      `);
+    
+    if (organizationId !== 'consolidado') {
+      subscriptionsQuery = subscriptionsQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: subscriptionsData, error: subscriptionsError } = await subscriptionsQuery
       .order('created_at', { ascending: false });
 
     if (subscriptionsError) {
