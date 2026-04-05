@@ -201,7 +201,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between flex-wrap gap-4 px-1">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">📊</span>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">📊 Dashboard</h1>
           </div>
           <p className="text-xs sm:text-sm text-neutral-500 font-medium">
             Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
