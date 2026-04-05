@@ -71,10 +71,15 @@ export default function UsersTab() {
     if (!organizationId) return;
     setLoading(true);
     try {
-      const { data: members, error } = await supabase
+      let query = supabase
         .from("organization_members")
-        .select("id, user_id, role, created_at")
-        .eq("organization_id", organizationId);
+        .select("id, user_id, role, created_at");
+
+      if (organizationId !== 'consolidado') {
+        query = query.eq("organization_id", organizationId);
+      }
+
+      const { data: members, error } = await query;
 
       if (error) throw error;
       if (!members || members.length === 0) {

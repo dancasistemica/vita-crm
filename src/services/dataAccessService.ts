@@ -392,11 +392,14 @@ export class DataAccessService {
   }
 
   async updatePipelineStage(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('pipeline_stages')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updatePipelineStage error:', error); throw error; }
@@ -404,11 +407,14 @@ export class DataAccessService {
   }
 
   async deletePipelineStage(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('pipeline_stages')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deletePipelineStage error:', error); throw error; }
     return true;
   }
@@ -509,11 +515,14 @@ export class DataAccessService {
   }
 
   async updateInterestLevel(id: string, updates: { value?: string; label?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('interest_levels')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateInterestLevel error:', error); throw error; }
@@ -521,11 +530,14 @@ export class DataAccessService {
   }
 
   async deleteInterestLevel(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('interest_levels')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteInterestLevel error:', error); throw error; }
     return true;
   }
