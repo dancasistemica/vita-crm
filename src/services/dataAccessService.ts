@@ -27,6 +27,7 @@ export class DataAccessService {
   private applyOrgFilter(query: any) {
     if (this.isConsolidated) return query;
     return query.eq('organization_id', this.orgId);
+  }
 
   private checkConsolidated() {
     if (this.isConsolidated) {
@@ -122,6 +123,7 @@ export class DataAccessService {
   }
 
   async createSale(saleData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('sales')
       .insert({ ...saleData, organization_id: this.orgId } as any)
@@ -132,11 +134,14 @@ export class DataAccessService {
   }
 
   async updateSale(saleId: string, saleData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sales')
       .update({ ...saleData, updated_at: new Date().toISOString() })
-      .eq('id', saleId)
-      .eq('organization_id', this.orgId)
+      .eq('id', saleId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateSale error:', error); throw error; }
@@ -144,11 +149,14 @@ export class DataAccessService {
   }
 
   async deleteSale(saleId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('sales')
       .delete()
-      .eq('id', saleId)
-      .eq('organization_id', this.orgId);
+      .eq('id', saleId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteSale error:', error); throw error; }
     return true;
   }
@@ -168,6 +176,7 @@ export class DataAccessService {
   }
 
   async createTask(taskData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('tasks')
       .insert({ ...taskData, organization_id: this.orgId } as any)
@@ -178,11 +187,14 @@ export class DataAccessService {
   }
 
   async updateTask(taskId: string, taskData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('tasks')
       .update(taskData)
-      .eq('id', taskId)
-      .eq('organization_id', this.orgId)
+      .eq('id', taskId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateTask error:', error); throw error; }
@@ -190,11 +202,14 @@ export class DataAccessService {
   }
 
   async deleteTask(taskId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('tasks')
       .delete()
-      .eq('id', taskId)
-      .eq('organization_id', this.orgId);
+      .eq('id', taskId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteTask error:', error); throw error; }
     return true;
   }
