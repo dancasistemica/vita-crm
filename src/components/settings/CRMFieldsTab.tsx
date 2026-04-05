@@ -343,7 +343,11 @@ export default function CRMFieldsTab() {
     try {
       setStagesLoading(true);
       const data = await dataAccess.getPipelineStages();
-      setStages(data as DBPipelineStage[]);
+      const mapped = (data as DBPipelineStage[]);
+      const finalData = organizationId === 'consolidado' 
+        ? mapped.filter((s, i, a) => a.findIndex(t => t.name === s.name) === i)
+        : mapped;
+      setStages(finalData);
     } catch (err) {
       console.error('[CRMFieldsTab] Erro ao carregar stages:', err);
     } finally {
