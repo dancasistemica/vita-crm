@@ -29,6 +29,13 @@ export class DataAccessService {
     return query.eq('organization_id', this.orgId);
   }
 
+  private checkConsolidated() {
+    if (this.isConsolidated) {
+      throw new Error("Não é possível realizar esta operação no modo consolidado. Selecione uma organização específica.");
+    }
+  }
+
+
   // ── LEADS ──────────────────────────────────────────────
   async getLeads(filters?: { search?: string; interestLevel?: string; pipelineStage?: string }) {
     let query = supabase.from('leads').select('*');
@@ -50,17 +57,20 @@ export class DataAccessService {
   }
 
   async getLeadById(leadId: string) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
       .select('*')
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId)
-      .single();
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.single();
     if (error) { console.error('[DataAccessService] getLeadById error:', error); throw error; }
     return data;
   }
 
   async createLead(leadData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('leads')
       .insert({ ...leadData, organization_id: this.orgId } as any)
@@ -71,11 +81,14 @@ export class DataAccessService {
   }
 
   async updateLead(leadId: string, leadData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
       .update({ ...leadData, updated_at: new Date().toISOString() })
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId)
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateLead error:', error); throw error; }
@@ -83,11 +96,14 @@ export class DataAccessService {
   }
 
   async deleteLead(leadId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('leads')
       .delete()
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId);
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteLead error:', error); throw error; }
     return true;
   }
@@ -107,6 +123,7 @@ export class DataAccessService {
   }
 
   async createSale(saleData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('sales')
       .insert({ ...saleData, organization_id: this.orgId } as any)
@@ -117,11 +134,14 @@ export class DataAccessService {
   }
 
   async updateSale(saleId: string, saleData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sales')
       .update({ ...saleData, updated_at: new Date().toISOString() })
-      .eq('id', saleId)
-      .eq('organization_id', this.orgId)
+      .eq('id', saleId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateSale error:', error); throw error; }
@@ -129,11 +149,14 @@ export class DataAccessService {
   }
 
   async deleteSale(saleId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('sales')
       .delete()
-      .eq('id', saleId)
-      .eq('organization_id', this.orgId);
+      .eq('id', saleId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteSale error:', error); throw error; }
     return true;
   }
@@ -153,6 +176,7 @@ export class DataAccessService {
   }
 
   async createTask(taskData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('tasks')
       .insert({ ...taskData, organization_id: this.orgId } as any)
@@ -163,11 +187,14 @@ export class DataAccessService {
   }
 
   async updateTask(taskId: string, taskData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('tasks')
       .update(taskData)
-      .eq('id', taskId)
-      .eq('organization_id', this.orgId)
+      .eq('id', taskId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateTask error:', error); throw error; }
@@ -175,11 +202,14 @@ export class DataAccessService {
   }
 
   async deleteTask(taskId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('tasks')
       .delete()
-      .eq('id', taskId)
-      .eq('organization_id', this.orgId);
+      .eq('id', taskId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteTask error:', error); throw error; }
     return true;
   }
@@ -199,6 +229,7 @@ export class DataAccessService {
   }
 
   async createInteraction(interactionData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('interactions')
       .insert({ ...interactionData, organization_id: this.orgId } as any)
@@ -209,11 +240,14 @@ export class DataAccessService {
   }
 
   async deleteInteraction(interactionId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('interactions')
       .delete()
-      .eq('id', interactionId)
-      .eq('organization_id', this.orgId);
+      .eq('id', interactionId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteInteraction error:', error); throw error; }
     return true;
   }
@@ -229,6 +263,7 @@ export class DataAccessService {
   }
 
   async createProduct(productData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('products')
       .insert({ ...productData, organization_id: this.orgId } as any)
@@ -239,11 +274,14 @@ export class DataAccessService {
   }
 
   async updateProduct(productId: string, productData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('products')
       .update(productData)
-      .eq('id', productId)
-      .eq('organization_id', this.orgId)
+      .eq('id', productId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateProduct error:', error); throw error; }
@@ -251,11 +289,14 @@ export class DataAccessService {
   }
 
   async deleteProduct(productId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('products')
       .delete()
-      .eq('id', productId)
-      .eq('organization_id', this.orgId);
+      .eq('id', productId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteProduct error:', error); throw error; }
     return true;
   }
@@ -298,6 +339,7 @@ export class DataAccessService {
   }
 
   async createTag(tagData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('tags')
       .insert({ ...tagData, organization_id: this.orgId } as any)
@@ -308,11 +350,14 @@ export class DataAccessService {
   }
 
   async updateTag(tagId: string, tagData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('tags')
       .update(tagData)
-      .eq('id', tagId)
-      .eq('organization_id', this.orgId)
+      .eq('id', tagId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateTag error:', error); throw error; }
@@ -320,11 +365,14 @@ export class DataAccessService {
   }
 
   async deleteTag(tagId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('tags')
       .delete()
-      .eq('id', tagId)
-      .eq('organization_id', this.orgId);
+      .eq('id', tagId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteTag error:', error); throw error; }
     return true;
   }
@@ -340,6 +388,7 @@ export class DataAccessService {
   }
 
   async createTaskStatus(statusData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('task_statuses')
       .insert({ ...statusData, organization_id: this.orgId } as any)
@@ -350,11 +399,14 @@ export class DataAccessService {
   }
 
   async updateTaskStatus(statusId: string, statusData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('task_statuses')
       .update(statusData)
-      .eq('id', statusId)
-      .eq('organization_id', this.orgId)
+      .eq('id', statusId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateTaskStatus error:', error); throw error; }
@@ -362,11 +414,14 @@ export class DataAccessService {
   }
 
   async deleteTaskStatus(statusId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('task_statuses')
       .delete()
-      .eq('id', statusId)
-      .eq('organization_id', this.orgId);
+      .eq('id', statusId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteTaskStatus error:', error); throw error; }
     return true;
   }
@@ -382,6 +437,7 @@ export class DataAccessService {
   }
 
   async createPipelineStage(name: string, sortOrder: number) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('pipeline_stages')
       .insert({ name, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
@@ -392,11 +448,14 @@ export class DataAccessService {
   }
 
   async updatePipelineStage(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('pipeline_stages')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updatePipelineStage error:', error); throw error; }
@@ -404,22 +463,26 @@ export class DataAccessService {
   }
 
   async deletePipelineStage(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('pipeline_stages')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deletePipelineStage error:', error); throw error; }
     return true;
   }
 
   async reorderPipelineStages(stages: Array<{ id: string; sort_order: number }>) {
     const promises = stages.map(s =>
-      supabase
-        .from('pipeline_stages')
-        .update({ sort_order: s.sort_order })
-        .eq('id', s.id)
-        .eq('organization_id', this.orgId)
+      this.applyOrgFilter(
+        supabase
+          .from('pipeline_stages')
+          .update({ sort_order: s.sort_order })
+          .eq('id', s.id)
+      )
     );
     const results = await Promise.all(promises);
     const errors = results.filter(r => r.error);
@@ -453,6 +516,7 @@ export class DataAccessService {
   }
 
   async createLeadOrigin(name: string, sortOrder: number) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('lead_origins')
       .insert({ name, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
@@ -463,11 +527,14 @@ export class DataAccessService {
   }
 
   async updateLeadOrigin(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('lead_origins')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateLeadOrigin error:', error); throw error; }
@@ -475,22 +542,26 @@ export class DataAccessService {
   }
 
   async deleteLeadOrigin(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('lead_origins')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteLeadOrigin error:', error); throw error; }
     return true;
   }
 
   async reorderLeadOrigins(origins: Array<{ id: string; sort_order: number }>) {
     const promises = origins.map(o =>
-      supabase
-        .from('lead_origins')
-        .update({ sort_order: o.sort_order })
-        .eq('id', o.id)
-        .eq('organization_id', this.orgId)
+      this.applyOrgFilter(
+        supabase
+          .from('lead_origins')
+          .update({ sort_order: o.sort_order })
+          .eq('id', o.id)
+      )
     );
     const results = await Promise.all(promises);
     const errors = results.filter(r => r.error);
@@ -499,6 +570,7 @@ export class DataAccessService {
 
   // ── INTEREST LEVELS CRUD ──────────────────────────────────
   async createInterestLevel(value: string, label: string, sortOrder: number) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('interest_levels')
       .insert({ value, label, sort_order: sortOrder, organization_id: this.orgId, active: true } as any)
@@ -509,11 +581,14 @@ export class DataAccessService {
   }
 
   async updateInterestLevel(id: string, updates: { value?: string; label?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('interest_levels')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateInterestLevel error:', error); throw error; }
@@ -521,22 +596,26 @@ export class DataAccessService {
   }
 
   async deleteInterestLevel(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('interest_levels')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteInterestLevel error:', error); throw error; }
     return true;
   }
 
   async reorderInterestLevels(levels: Array<{ id: string; sort_order: number }>) {
     const promises = levels.map(l =>
-      supabase
-        .from('interest_levels')
-        .update({ sort_order: l.sort_order })
-        .eq('id', l.id)
-        .eq('organization_id', this.orgId)
+      this.applyOrgFilter(
+        supabase
+          .from('interest_levels')
+          .update({ sort_order: l.sort_order })
+          .eq('id', l.id)
+      )
     );
     const results = await Promise.all(promises);
     const errors = results.filter(r => r.error);
