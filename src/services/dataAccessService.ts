@@ -27,7 +27,13 @@ export class DataAccessService {
   private applyOrgFilter(query: any) {
     if (this.isConsolidated) return query;
     return query.eq('organization_id', this.orgId);
+
+  private checkConsolidated() {
+    if (this.isConsolidated) {
+      throw new Error("Não é possível realizar esta operação no modo consolidado. Selecione uma organização específica.");
+    }
   }
+
 
   // ── LEADS ──────────────────────────────────────────────
   async getLeads(filters?: { search?: string; interestLevel?: string; pipelineStage?: string }) {
@@ -50,17 +56,20 @@ export class DataAccessService {
   }
 
   async getLeadById(leadId: string) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
       .select('*')
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId)
-      .single();
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query.single();
     if (error) { console.error('[DataAccessService] getLeadById error:', error); throw error; }
     return data;
   }
 
   async createLead(leadData: Record<string, unknown>) {
+    this.checkConsolidated();
     const { data, error } = await supabase
       .from('leads')
       .insert({ ...leadData, organization_id: this.orgId } as any)
@@ -71,11 +80,14 @@ export class DataAccessService {
   }
 
   async updateLead(leadId: string, leadData: Record<string, unknown>) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
       .update({ ...leadData, updated_at: new Date().toISOString() })
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId)
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateLead error:', error); throw error; }
@@ -83,11 +95,14 @@ export class DataAccessService {
   }
 
   async deleteLead(leadId: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('leads')
       .delete()
-      .eq('id', leadId)
-      .eq('organization_id', this.orgId);
+      .eq('id', leadId);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteLead error:', error); throw error; }
     return true;
   }
@@ -469,11 +484,14 @@ export class DataAccessService {
   }
 
   async updateLeadOrigin(id: string, updates: { name?: string; sort_order?: number; active?: boolean }) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('lead_origins')
       .update(updates)
-      .eq('id', id)
-      .eq('organization_id', this.orgId)
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { data, error } = await query
       .select()
       .single();
     if (error) { console.error('[DataAccessService] updateLeadOrigin error:', error); throw error; }
@@ -481,11 +499,14 @@ export class DataAccessService {
   }
 
   async deleteLeadOrigin(id: string) {
-    const { error } = await supabase
+    let query = supabase
       .from('lead_origins')
       .delete()
-      .eq('id', id)
-      .eq('organization_id', this.orgId);
+      .eq('id', id);
+    
+    query = this.applyOrgFilter(query);
+
+    const { error } = await query;
     if (error) { console.error('[DataAccessService] deleteLeadOrigin error:', error); throw error; }
     return true;
   }
