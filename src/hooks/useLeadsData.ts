@@ -191,7 +191,23 @@ export function useLeadsData() {
 
       const dbUpdates: Record<string, unknown> = {};
       if (updates.name !== undefined) dbUpdates.name = updates.name;
-...
+      if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
+      if (updates.email !== undefined) dbUpdates.email = updates.email;
+      if (updates.instagram !== undefined) dbUpdates.instagram = updates.instagram;
+      if (updates.city !== undefined) dbUpdates.city = updates.city;
+      if (updates.rg !== undefined) dbUpdates.rg = updates.rg;
+      if (updates.cpf !== undefined) dbUpdates.cpf = updates.cpf;
+      if (updates.entryDate !== undefined) dbUpdates.entry_date = updates.entryDate;
+      if (updates.origin !== undefined) dbUpdates.origin = updates.origin;
+      if (updates.interestLevel !== undefined) dbUpdates.interest_level = updates.interestLevel;
+      if (updates.mainInterest !== undefined) dbUpdates.main_interest = updates.mainInterest;
+      if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
+      if (updates.customData !== undefined) dbUpdates.custom_data = updates.customData;
+      if (updates.pipelineStage !== undefined) dbUpdates.pipeline_stage = updates.pipelineStage;
+      if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
+      if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.dealValue !== undefined) dbUpdates.deal_value = updates.dealValue;
+
       const result = await dataAccess.updateLead(leadId, dbUpdates);
       console.log('[useLeadsData] Lead atualizado no banco:', result);
 
