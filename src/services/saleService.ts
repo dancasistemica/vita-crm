@@ -278,8 +278,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] Buscando vendas e mensalidades para org:', organizationId);
 
     // PASSO 1: Buscar vendas únicas com relacionamentos corretos
-    // Em 'sales', client_id mapeia para 'lead_id' e sales_stage_id para 'product_id'
-    const { data: salesData, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
       .select(`
         id,
@@ -290,8 +289,13 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         status,
         created_at,
         updated_at
-      `)
-      .eq('organization_id', organizationId)
+      `);
+    
+    if (organizationId !== 'consolidado') {
+      salesQuery = salesQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: salesData, error: salesError } = await salesQuery
       .order('created_at', { ascending: false });
 
     if (salesError) {
