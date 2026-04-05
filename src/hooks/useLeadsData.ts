@@ -129,8 +129,14 @@ export function useLeadsData() {
           name: s.name,
           order: s.sort_order ?? 0,
         }));
-        console.log('[useLeadsData] Stages carregados:', mappedStages.length);
-        setPipelineStages(mappedStages);
+        
+        // Deduplicate stages by name in consolidated mode
+        const uniqueStages = organizationId === 'consolidado'
+          ? mappedStages.filter((s, i, a) => a.findIndex(t => t.name === s.name) === i)
+          : mappedStages;
+
+        console.log('[useLeadsData] Stages carregados:', uniqueStages.length);
+        setPipelineStages(uniqueStages);
       }
       if (tagsData.status === 'fulfilled') {
         setTags((tagsData.value as any[]).map(t => ({
