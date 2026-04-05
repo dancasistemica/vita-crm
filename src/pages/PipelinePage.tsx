@@ -42,7 +42,10 @@ export default function PipelinePage() {
   };
 
   return (
-    <div className="space-y-4 px-2 py-4 sm:p-6 pt-0 sm:pt-0">
+    <div className="space-y-4 px-2 py-4 sm:p-6">
+      <div className="px-1 mb-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">Funil de Vendas</h1>
+      </div>
       <ScrollArea className="w-full">
         <div className="flex gap-4 pb-4 min-w-max">
           {sortedStages.map((stage, index) => {

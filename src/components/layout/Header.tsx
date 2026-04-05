@@ -72,20 +72,17 @@ export function Header({
             {(sidebarCollapsed ?? !sidebarContext?.open) ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
           </button>
 
-          {/* Nome da Organização / Título da Página */}
+          {/* Nome da Organização */}
           <div className="hidden sm:block min-w-0">
             <h1 className="text-sm lg:text-lg font-bold text-foreground truncate">
-              {title || 'CRM'}
+              {brand.org_display_name || 'CRM'}
             </h1>
-            <p className="text-[10px] lg:text-xs font-medium text-muted-foreground truncate uppercase tracking-wider">
-              {brand.org_display_name || 'Sistema'}
-            </p>
           </div>
 
           {/* Nome da Organização - Mobile */}
           <div className="sm:hidden min-w-0">
             <p className="text-xs font-bold text-foreground truncate">
-              {title || (brand.org_display_name || 'Sistema').split(' ')[0]}
+              {brand.org_display_name || 'CRM'}
             </p>
           </div>
         </div>
