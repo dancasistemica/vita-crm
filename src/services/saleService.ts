@@ -416,8 +416,7 @@ export const getClientSales = async (
     });
 
     // PASSO 1: Buscar vendas únicas do cliente
-    // Corrigido: lead_id e product_id para a tabela 'sales'
-    const { data: salesData, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
       .select(`
         id,
@@ -428,8 +427,13 @@ export const getClientSales = async (
         created_at,
         updated_at
       `)
-      .eq('organization_id', organizationId)
-      .eq('lead_id', clientId)
+      .eq('lead_id', clientId);
+    
+    if (organizationId !== 'consolidado') {
+      salesQuery = salesQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: salesData, error: salesError } = await salesQuery
       .order('created_at', { ascending: false });
 
     if (salesError) {
