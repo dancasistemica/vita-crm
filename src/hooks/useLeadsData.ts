@@ -129,8 +129,14 @@ export function useLeadsData() {
           name: s.name,
           order: s.sort_order ?? 0,
         }));
-        console.log('[useLeadsData] Stages carregados:', mappedStages.length);
-        setPipelineStages(mappedStages);
+        
+        // Deduplicate stages by name in consolidated mode
+        const uniqueStages = organizationId === 'consolidado'
+          ? mappedStages.filter((s, i, a) => a.findIndex(t => t.name === s.name) === i)
+          : mappedStages;
+
+        console.log('[useLeadsData] Stages carregados:', uniqueStages.length);
+        setPipelineStages(uniqueStages);
       }
       if (tagsData.status === 'fulfilled') {
         setTags((tagsData.value as any[]).map(t => ({
@@ -180,6 +186,9 @@ export function useLeadsData() {
     try {
       console.log('[useLeadsData] updateLead chamado:', { leadId, updates });
 
+      // Optimistic update
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, ...updates } : l));
+
       const dbUpdates: Record<string, unknown> = {};
       if (updates.name !== undefined) dbUpdates.name = updates.name;
       if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
@@ -198,8 +207,6 @@ export function useLeadsData() {
       if (updates.responsible !== undefined) dbUpdates.responsible = updates.responsible;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
       if (updates.dealValue !== undefined) dbUpdates.deal_value = updates.dealValue;
-
-      console.log('[useLeadsData] Payload para update no banco:', { leadId, dbUpdates });
 
       const result = await dataAccess.updateLead(leadId, dbUpdates);
       console.log('[useLeadsData] Lead atualizado no banco:', result);

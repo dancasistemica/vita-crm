@@ -278,8 +278,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] Buscando vendas e mensalidades para org:', organizationId);
 
     // PASSO 1: Buscar vendas únicas com relacionamentos corretos
-    // Em 'sales', client_id mapeia para 'lead_id' e sales_stage_id para 'product_id'
-    const { data: salesData, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
       .select(`
         id,
@@ -290,8 +289,13 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         status,
         created_at,
         updated_at
-      `)
-      .eq('organization_id', organizationId)
+      `);
+    
+    if (organizationId !== 'consolidado') {
+      salesQuery = salesQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: salesData, error: salesError } = await salesQuery
       .order('created_at', { ascending: false });
 
     if (salesError) {
@@ -315,7 +319,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
     console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
 
     // PASSO 3: Buscar mensalidades
-    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+    let subscriptionsQuery = supabase
       .from('subscriptions')
       .select(`
         id,
@@ -328,8 +332,13 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         status,
         created_at,
         updated_at
-      `)
-      .eq('organization_id', organizationId)
+      `);
+    
+    if (organizationId !== 'consolidado') {
+      subscriptionsQuery = subscriptionsQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: subscriptionsData, error: subscriptionsError } = await subscriptionsQuery
       .order('created_at', { ascending: false });
 
     if (subscriptionsError) {
@@ -407,8 +416,7 @@ export const getClientSales = async (
     });
 
     // PASSO 1: Buscar vendas únicas do cliente
-    // Corrigido: lead_id e product_id para a tabela 'sales'
-    const { data: salesData, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
       .select(`
         id,
@@ -419,8 +427,13 @@ export const getClientSales = async (
         created_at,
         updated_at
       `)
-      .eq('organization_id', organizationId)
-      .eq('lead_id', clientId)
+      .eq('lead_id', clientId);
+    
+    if (organizationId !== 'consolidado') {
+      salesQuery = salesQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: salesData, error: salesError } = await salesQuery
       .order('created_at', { ascending: false });
 
     if (salesError) {
@@ -444,7 +457,7 @@ export const getClientSales = async (
     console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
 
     // PASSO 3: Buscar mensalidades do cliente
-    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+    let subscriptionsQuery = supabase
       .from('subscriptions')
       .select(`
         id,
@@ -457,8 +470,13 @@ export const getClientSales = async (
         created_at,
         updated_at
       `)
-      .eq('organization_id', organizationId)
-      .eq('client_id', clientId)
+      .eq('client_id', clientId);
+    
+    if (organizationId !== 'consolidado') {
+      subscriptionsQuery = subscriptionsQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: subscriptionsData, error: subscriptionsError } = await subscriptionsQuery
       .order('created_at', { ascending: false });
 
     if (subscriptionsError) {
