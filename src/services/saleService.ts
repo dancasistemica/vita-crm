@@ -457,7 +457,7 @@ export const getClientSales = async (
     console.log('[SaleService] ✅ Etapas carregadas:', stagesData?.length || 0);
 
     // PASSO 3: Buscar mensalidades do cliente
-    const { data: subscriptionsData, error: subscriptionsError } = await supabase
+    let subscriptionsQuery = supabase
       .from('subscriptions')
       .select(`
         id,
@@ -470,8 +470,13 @@ export const getClientSales = async (
         created_at,
         updated_at
       `)
-      .eq('organization_id', organizationId)
-      .eq('client_id', clientId)
+      .eq('client_id', clientId);
+    
+    if (organizationId !== 'consolidado') {
+      subscriptionsQuery = subscriptionsQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: subscriptionsData, error: subscriptionsError } = await subscriptionsQuery
       .order('created_at', { ascending: false });
 
     if (subscriptionsError) {
