@@ -191,7 +191,7 @@ export class DataAccessService {
     type TaskUpdate = Database['public']['Tables']['tasks']['Update'];
     const taskUpdates: TaskUpdate = {};
     if (taskData.title) taskUpdates.title = taskData.title as string;
-    if (taskData.description) taskUpdates.description = taskData.description as string;
+    // description is not in the tasks table schema
     if (taskData.status_id) taskUpdates.status_id = taskData.status_id as string;
     if (taskData.due_date) taskUpdates.due_date = taskData.due_date as string;
     if (taskData.assigned_to) taskUpdates.assigned_to = taskData.assigned_to as string;
