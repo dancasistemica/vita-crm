@@ -1,5 +1,6 @@
 import { Lead } from '@/types/crm';
 import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/types/supabase';
 
 export interface CSVRow {
   [key: string]: string;
@@ -595,15 +596,17 @@ export const transitionLeadToClient = async (
       return false;
     }
 
+    type ClientInsert = Database['public']['Tables']['clients']['Insert'];
+    const clientToInsert: ClientInsert = {
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      organization_id: organizationId,
+    };
+
     const { data: client, error: createError } = await supabase
       .from('clients')
-      .insert({
-        organization_id: organizationId,
-        name: lead.name,
-        email: lead.email,
-        phone: lead.phone,
-        lead_id: leadId,
-      })
+      .insert([clientToInsert])
       .select()
       .single();
 
@@ -612,12 +615,16 @@ export const transitionLeadToClient = async (
       return false;
     }
 
+    type LeadUpdate = Database['public']['Tables']['leads']['Update'];
+    const leadUpdate: LeadUpdate = {
+      is_client: true,
+      became_client_at: new Date().toISOString(),
+      pipeline_stage: 'cliente',
+    };
+
     const { error: updateError } = await supabase
       .from('leads')
-      .update({
-        client_id: client.id,
-        pipeline_stage: 'cliente',
-      })
+      .update(leadUpdate)
       .eq('id', leadId);
 
     if (updateError) {
