@@ -355,12 +355,29 @@ export default function LeadsPage() {
       </div>
 
       <div className="space-y-4">
-        <Input
-          placeholder="Buscar por nome, email ou telefone..."
-          value={search}
-          onChange={e => { setSearch(e.target.value); resetPage(); }}
-          icon={<Search className="h-4 w-4" />}
-        />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              placeholder="Buscar por nome, email ou telefone..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); resetPage(); }}
+              className="pl-10"
+            />
+          </div>
+          <div className="flex items-center gap-2 bg-white border border-neutral-200 rounded-lg px-3 py-1 shrink-0">
+            <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider whitespace-nowrap">Exibir:</label>
+            <select
+              value={perPage}
+              onChange={(e) => setPerPage(Number(e.target.value))}
+              className="bg-transparent text-sm font-bold text-neutral-700 focus:outline-none cursor-pointer hover:text-primary-600 transition-colors"
+            >
+              {[10, 25, 50, 100].map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {/* ... existing filter code ... */}
         <div className="flex flex-wrap items-center gap-2 pt-1" ref={filterRef}>
