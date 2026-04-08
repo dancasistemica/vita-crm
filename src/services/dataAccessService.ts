@@ -188,11 +188,20 @@ export class DataAccessService {
   }
 
   async updateTask(taskId: string, taskData: Record<string, unknown>) {
+    type TaskUpdate = Database['public']['Tables']['tasks']['Update'];
+    const taskUpdates: TaskUpdate = {};
+    if (taskData.title) taskUpdates.title = taskData.title as string;
+    if (taskData.description) taskUpdates.description = taskData.description as string;
+    if (taskData.status_id) taskUpdates.status_id = taskData.status_id as string;
+    if (taskData.due_date) taskUpdates.due_date = taskData.due_date as string;
+    if (taskData.assigned_to) taskUpdates.assigned_to = taskData.assigned_to as string;
+    if (taskData.completed !== undefined) taskUpdates.completed = taskData.completed as boolean;
+
     let query = supabase
       .from('tasks')
-      .update(taskData)
+      .update(taskUpdates)
       .eq('id', taskId);
-    
+
     query = this.applyOrgFilter(query);
 
     const { data, error } = await query
@@ -275,11 +284,18 @@ export class DataAccessService {
   }
 
   async updateProduct(productId: string, productData: Record<string, unknown>) {
+    type ProductUpdate = Database['public']['Tables']['products']['Update'];
+    const productUpdates: ProductUpdate = {};
+    if (productData.name) productUpdates.name = productData.name as string;
+    if (productData.description) productUpdates.description = productData.description as string;
+    if (productData.type) productUpdates.type = productData.type as string;
+    if (productData.notes) productUpdates.notes = productData.notes as string;
+
     let query = supabase
       .from('products')
-      .update(productData)
+      .update(productUpdates)
       .eq('id', productId);
-    
+
     query = this.applyOrgFilter(query);
 
     const { data, error } = await query
@@ -351,11 +367,16 @@ export class DataAccessService {
   }
 
   async updateTag(tagId: string, tagData: Record<string, unknown>) {
+    type TagUpdate = Database['public']['Tables']['tags']['Update'];
+    const tagUpdates: TagUpdate = {};
+    if (tagData.name) tagUpdates.name = tagData.name as string;
+    if (tagData.color) tagUpdates.color = tagData.color as string;
+
     let query = supabase
       .from('tags')
-      .update(tagData)
+      .update(tagUpdates)
       .eq('id', tagId);
-    
+
     query = this.applyOrgFilter(query);
 
     const { data, error } = await query
@@ -400,11 +421,17 @@ export class DataAccessService {
   }
 
   async updateTaskStatus(statusId: string, statusData: Record<string, unknown>) {
+    type TaskStatusUpdate = Database['public']['Tables']['task_statuses']['Update'];
+    const statusUpdates: TaskStatusUpdate = {};
+    if (statusData.name) statusUpdates.name = statusData.name as string;
+    if (statusData.color) statusUpdates.color = statusData.color as string;
+    if (statusData.order_index !== undefined) statusUpdates.order_index = statusData.order_index as number;
+
     let query = supabase
       .from('task_statuses')
-      .update(statusData)
+      .update(statusUpdates)
       .eq('id', statusId);
-    
+
     query = this.applyOrgFilter(query);
 
     const { data, error } = await query
