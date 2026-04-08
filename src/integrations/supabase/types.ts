@@ -174,6 +174,7 @@ export type Database = {
           payment_status: string
           plan_type: string | null
           product_id: string
+          risk_of_churn: boolean | null
           start_date: string | null
           updated_at: string
         }
@@ -187,6 +188,7 @@ export type Database = {
           payment_status?: string
           plan_type?: string | null
           product_id: string
+          risk_of_churn?: boolean | null
           start_date?: string | null
           updated_at?: string
         }
@@ -200,6 +202,7 @@ export type Database = {
           payment_status?: string
           plan_type?: string | null
           product_id?: string
+          risk_of_churn?: boolean | null
           start_date?: string | null
           updated_at?: string
         }
