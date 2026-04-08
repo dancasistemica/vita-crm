@@ -580,7 +580,27 @@ export default function LeadsPage() {
         </div>
       )}
 
-      <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
+      {bulkEditOpen && (
+        <MassEditModal 
+          selectedLeadsCount={selectedIds.length} 
+          onClose={() => setBulkEditOpen(false)} 
+          onSave={async (updates) => {
+            console.log('[LeadsPage] Aplicando edicao em massa:', updates);
+            try {
+              for (const id of selectedIds) {
+                await updateLead(id, updates);
+              }
+              toast.success(`${selectedIds.length} leads atualizados!`);
+              setSelectedIds([]);
+              setBulkEditOpen(false);
+              refetch();
+            } catch (err) {
+              console.error('[LeadsPage] Erro ao atualizar leads em massa:', err);
+              toast.error('Erro ao atualizar alguns leads');
+            }
+          }} 
+        />
+      )}
       <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
       <LeadDetailSheet
