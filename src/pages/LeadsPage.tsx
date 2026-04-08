@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
-import BulkEditModal from "@/components/bulk/BulkEditModal";
+import MassEditModal from "@/components/leads/MassEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
