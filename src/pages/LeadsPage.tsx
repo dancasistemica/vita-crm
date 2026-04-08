@@ -469,8 +469,19 @@ export default function LeadsPage() {
               Limpar Filtros
             </Button>
           )}
-        </div>
 
+          {selectedIds.length > 0 && (
+            <div className="flex items-center gap-2 border-l border-neutral-200 pl-4 ml-2">
+              <span className="text-xs font-bold text-primary-600 uppercase tracking-tight">{selectedIds.length} selecionado{selectedIds.length !== 1 ? 's' : ''}</span>
+              <Button size="sm" variant="primary" className="h-8" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3.5 w-3.5" />}>
+                Edição em Massa
+              </Button>
+              <Button size="sm" variant="secondary" className="h-8 text-error-600 hover:bg-error-50" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3.5 w-3.5" />}>
+                Excluir
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ... existing table code ... */}
