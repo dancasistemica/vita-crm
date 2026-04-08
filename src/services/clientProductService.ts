@@ -82,9 +82,7 @@ export async function fetchClientsByProduct(
   }
 
   if (filters?.riskOfChurn) {
-    // Definindo risco de churn como end_date menor que hoje ou nulo quando deveria existir
-    const today = new Date().toISOString();
-    query = query.lt('end_date', today);
+    query = query.eq('risk_of_churn', true);
   }
 
   const { data, error } = await query.order('created_at', { ascending: false });
