@@ -111,11 +111,132 @@ export type Database = {
           },
         ]
       }
+      class_attendance: {
+        Row: {
+          attendance_type: string
+          class_date: string
+          client_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          product_id: string
+        }
+        Insert: {
+          attendance_type?: string
+          class_date?: string
+          client_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          product_id: string
+        }
+        Update: {
+          attendance_type?: string
+          class_date?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_attendance_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_attendance_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_attendance_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_products: {
+        Row: {
+          client_id: string
+          created_at: string
+          end_date: string | null
+          id: string
+          organization_id: string
+          payment_method: string | null
+          payment_status: string
+          plan_type: string | null
+          product_id: string
+          risk_of_churn: boolean | null
+          start_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          organization_id: string
+          payment_method?: string | null
+          payment_status?: string
+          plan_type?: string | null
+          product_id: string
+          risk_of_churn?: boolean | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          organization_id?: string
+          payment_method?: string | null
+          payment_status?: string
+          plan_type?: string | null
+          product_id?: string
+          risk_of_churn?: boolean | null
+          start_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_products_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_products_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           created_at: string | null
           email: string | null
+          engagement_level: string | null
           id: string
+          last_attendance_date: string | null
           name: string
           organization_id: string
           phone: string | null
@@ -124,7 +245,9 @@ export type Database = {
         Insert: {
           created_at?: string | null
           email?: string | null
+          engagement_level?: string | null
           id?: string
+          last_attendance_date?: string | null
           name: string
           organization_id: string
           phone?: string | null
@@ -133,7 +256,9 @@ export type Database = {
         Update: {
           created_at?: string | null
           email?: string | null
+          engagement_level?: string | null
           id?: string
+          last_attendance_date?: string | null
           name?: string
           organization_id?: string
           phone?: string | null
