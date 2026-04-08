@@ -81,6 +81,12 @@ export async function fetchClientsByProduct(
     query = query.eq('clientes.engagement_level', filters.engagementLevel);
   }
 
+  if (filters?.riskOfChurn) {
+    // Definindo risco de churn como end_date menor que hoje ou nulo quando deveria existir
+    const today = new Date().toISOString();
+    query = query.lt('end_date', today);
+  }
+
   const { data, error } = await query.order('created_at', { ascending: false });
 
   if (error) {
