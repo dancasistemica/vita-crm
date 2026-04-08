@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import LeadForm from "@/components/LeadForm";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import MultiSelectFilter from "@/components/leads/MultiSelectFilter";
-import BulkEditModal from "@/components/bulk/BulkEditModal";
+import MassEditModal from "@/components/leads/MassEditModal";
 import BulkDeleteModal from "@/components/bulk/BulkDeleteModal";
 import ExportModal from "@/components/export/ExportModal";
 import RecordCounter from "@/components/common/RecordCounter";
@@ -355,12 +355,29 @@ export default function LeadsPage() {
       </div>
 
       <div className="space-y-4">
-        <Input
-          placeholder="Buscar por nome, email ou telefone..."
-          value={search}
-          onChange={e => { setSearch(e.target.value); resetPage(); }}
-          icon={<Search className="h-4 w-4" />}
-        />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              placeholder="Buscar por nome, email ou telefone..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); resetPage(); }}
+              className="pl-10"
+            />
+          </div>
+          <div className="flex items-center gap-2 bg-white border border-neutral-200 rounded-lg px-3 py-1 shrink-0">
+            <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider whitespace-nowrap">Exibir:</label>
+            <select
+              value={perPage}
+              onChange={(e) => setPerPage(Number(e.target.value))}
+              className="bg-transparent text-sm font-bold text-neutral-700 focus:outline-none cursor-pointer hover:text-primary-600 transition-colors"
+            >
+              {[10, 25, 50, 100].map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {/* ... existing filter code ... */}
         <div className="flex flex-wrap items-center gap-2 pt-1" ref={filterRef}>
@@ -469,8 +486,19 @@ export default function LeadsPage() {
               Limpar Filtros
             </Button>
           )}
-        </div>
 
+          {selectedIds.length > 0 && (
+            <div className="flex items-center gap-2 border-l border-neutral-200 pl-4 ml-2">
+              <span className="text-xs font-bold text-primary-600 uppercase tracking-tight">{selectedIds.length} selecionado{selectedIds.length !== 1 ? 's' : ''}</span>
+              <Button size="sm" variant="primary" className="h-8" onClick={() => setBulkEditOpen(true)} icon={<Pencil className="h-3.5 w-3.5" />}>
+                Edição em Massa
+              </Button>
+              <Button size="sm" variant="secondary" className="h-8 text-error-600 hover:bg-error-50" onClick={() => setBulkDeleteOpen(true)} icon={<Trash2 className="h-3.5 w-3.5" />}>
+                Excluir
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ... existing table code ... */}
@@ -492,7 +520,10 @@ export default function LeadsPage() {
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {paginated.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-neutral-50/50 transition-colors">
+                <tr 
+                  key={lead.id} 
+                  className={`group hover:bg-neutral-50/50 transition-colors ${selectedIds.includes(lead.id) ? 'bg-primary-50/30' : ''}`}
+                >
                   <td className="px-3 sm:px-6 py-4">
                     <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
                   </td>
@@ -570,17 +601,63 @@ export default function LeadsPage() {
 
 
       {filtered.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <span className="text-sm text-neutral-500">{filtered.length} leads</span>
-          <div className="flex items-center gap-1">
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-            <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-neutral-100">
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-neutral-500 font-medium">
+              Mostrando {Math.min(filtered.length, (page - 1) * perPage + 1)} a {Math.min(filtered.length, page * perPage)} de {filtered.length} leads
+            </span>
+            <div className="flex items-center gap-2 border-l border-neutral-200 pl-4">
+              <span className="text-xs text-neutral-400 font-medium uppercase tracking-wider">Por página:</span>
+              <select
+                value={perPage}
+                onChange={(e) => setPerPage(Number(e.target.value))}
+                className="bg-transparent text-sm font-semibold text-neutral-700 focus:outline-none cursor-pointer hover:text-primary-600 transition-colors"
+              >
+                {[10, 25, 50, 100].map(n => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-neutral-50 p-1 rounded-lg border border-neutral-200">
+            <Button variant="secondary" size="sm" className="h-8 w-8 p-0" disabled={page <= 1} onClick={() => setPage(page - 1)}>
+              <span className="sr-only">Anterior</span>
+              &larr;
+            </Button>
+            <div className="flex items-center px-3">
+              <span className="text-sm font-bold text-neutral-900">{page}</span>
+              <span className="text-sm text-neutral-400 mx-1">/</span>
+              <span className="text-sm text-neutral-500">{totalPages}</span>
+            </div>
+            <Button variant="secondary" size="sm" className="h-8 w-8 p-0" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
+              <span className="sr-only">Próximo</span>
+              &rarr;
+            </Button>
           </div>
         </div>
       )}
 
-      <BulkEditModal open={bulkEditOpen} onOpenChange={setBulkEditOpen} selectedIds={selectedIds} type="leads" onSuccess={() => setSelectedIds([])} />
+      {bulkEditOpen && (
+        <MassEditModal 
+          selectedLeadsCount={selectedIds.length} 
+          onClose={() => setBulkEditOpen(false)} 
+          onSave={async (updates) => {
+            console.log('[LeadsPage] Aplicando edicao em massa:', updates);
+            try {
+              for (const id of selectedIds) {
+                await updateLead(id, updates);
+              }
+              toast.success(`${selectedIds.length} leads atualizados!`);
+              setSelectedIds([]);
+              setBulkEditOpen(false);
+              refetch();
+            } catch (err) {
+              console.error('[LeadsPage] Erro ao atualizar leads em massa:', err);
+              toast.error('Erro ao atualizar alguns leads');
+            }
+          }} 
+        />
+      )}
       <BulkDeleteModal open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen} selectedIds={selectedIds} type="leads" onSuccess={() => { setSelectedIds([]); refetch(); }} items={leads.map(l => ({ id: l.id, name: l.name, email: l.email, phone: l.phone }))} onDelete={deleteLead} />
       <ExportModal open={exportOpen} onOpenChange={setExportOpen} type="leads" allData={leads} filteredData={filtered} />
       <LeadDetailSheet
