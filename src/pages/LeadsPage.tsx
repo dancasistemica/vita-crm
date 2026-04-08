@@ -570,12 +570,38 @@ export default function LeadsPage() {
 
 
       {filtered.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <span className="text-sm text-neutral-500">{filtered.length} leads</span>
-          <div className="flex items-center gap-1">
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page <= 1} onClick={() => setPage(page - 1)}>Anterior</Button>
-            <span className="text-sm text-neutral-500 px-3">{page} / {totalPages}</span>
-            <Button variant="secondary" size="sm" className="h-8 text-xs" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próximo</Button>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-neutral-100">
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-neutral-500 font-medium">
+              Mostrando {Math.min(filtered.length, (page - 1) * perPage + 1)} a {Math.min(filtered.length, page * perPage)} de {filtered.length} leads
+            </span>
+            <div className="flex items-center gap-2 border-l border-neutral-200 pl-4">
+              <span className="text-xs text-neutral-400 font-medium uppercase tracking-wider">Por página:</span>
+              <select
+                value={perPage}
+                onChange={(e) => setPerPage(Number(e.target.value))}
+                className="bg-transparent text-sm font-semibold text-neutral-700 focus:outline-none cursor-pointer hover:text-primary-600 transition-colors"
+              >
+                {[10, 25, 50, 100].map(n => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-neutral-50 p-1 rounded-lg border border-neutral-200">
+            <Button variant="secondary" size="sm" className="h-8 w-8 p-0" disabled={page <= 1} onClick={() => setPage(page - 1)}>
+              <span className="sr-only">Anterior</span>
+              &larr;
+            </Button>
+            <div className="flex items-center px-3">
+              <span className="text-sm font-bold text-neutral-900">{page}</span>
+              <span className="text-sm text-neutral-400 mx-1">/</span>
+              <span className="text-sm text-neutral-500">{totalPages}</span>
+            </div>
+            <Button variant="secondary" size="sm" className="h-8 w-8 p-0" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
+              <span className="sr-only">Próximo</span>
+              &rarr;
+            </Button>
           </div>
         </div>
       )}
