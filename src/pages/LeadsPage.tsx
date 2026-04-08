@@ -503,7 +503,10 @@ export default function LeadsPage() {
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {paginated.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-neutral-50/50 transition-colors">
+                <tr 
+                  key={lead.id} 
+                  className={`group hover:bg-neutral-50/50 transition-colors ${selectedIds.includes(lead.id) ? 'bg-primary-50/30' : ''}`}
+                >
                   <td className="px-3 sm:px-6 py-4">
                     <Checkbox checked={selectedIds.includes(lead.id)} onCheckedChange={() => toggleSelect(lead.id)} />
                   </td>
