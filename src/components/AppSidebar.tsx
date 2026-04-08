@@ -36,6 +36,7 @@ const baseItems = [
   { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
   { title: "Vendas", url: "/vendas", icon: ShoppingCart },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
+  { title: "Clientes por Produto", url: "/clientes/por-produto", icon: Package },
 
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
