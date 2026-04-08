@@ -1,6 +1,6 @@
 import { Lead } from '@/types/crm';
 import { supabase } from '@/integrations/supabase/client';
-import { Database } from '@/integrations/supabase/types';
+import { Database } from '@/types/supabase';
 
 export interface CSVRow {
   [key: string]: string;

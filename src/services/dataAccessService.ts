@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { Database } from '@/integrations/supabase/types';
+import { Database } from '@/types/supabase';
 
 interface DataAccessOptions {
   organizationId: string;
