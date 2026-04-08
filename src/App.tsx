@@ -16,6 +16,7 @@ const LeadsPage = lazy(() => import("@/pages/LeadsPage"));
 const PipelinePage = lazy(() => import("@/pages/PipelinePage"));
 const ClientesPage = lazy(() => import("@/pages/ClientesPage"));
 const ClientDetailPage = lazy(() => import("@/components/clients/ClientDetailPage"));
+const ClientesPorProdutoPage = lazy(() => import("@/pages/ClientesPorProdutoPage"));
 const InteracoesPage = lazy(() => import("@/pages/InteracoesPage"));
 const TarefasPage = lazy(() => import("@/pages/TarefasPage"));
 const ProdutosPage = lazy(() => import("@/pages/ProdutosPage"));
@@ -96,6 +97,7 @@ const App = () => {
                     <Route path="/vendas" element={<VendasPage />} />
 
                     <Route path="/clientes" element={<ClientesPage />} />
+                    <Route path="/clientes/por-produto" element={<ClientesPorProdutoPage />} />
                     <Route path="/clientes/:id" element={<ClientDetailPage />} />
                     <Route path="/interacoes" element={<InteracoesPage />} />
                     <Route path="/tarefas" element={<TarefasPage />} />
