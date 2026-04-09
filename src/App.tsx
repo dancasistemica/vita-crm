@@ -36,6 +36,7 @@ const CustomizePage = lazy(() => import("@/pages/CustomizePage"));
 const AdminUsersPage = lazy(() => import("@/pages/AdminUsersPage"));
 const VendasPage = lazy(() => import("@/pages/VendasPage").then(module => ({ default: module.VendasPage })));
 const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
+const HistoricoFrequenciaPage = lazy(() => import("@/pages/HistoricoFrequenciaPage"));
 
 const queryClient = new QueryClient();
 
