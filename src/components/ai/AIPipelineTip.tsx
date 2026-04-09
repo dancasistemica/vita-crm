@@ -1,4 +1,4 @@
-import { Button, Popover } from "@/components/ui/ds";
+import { Button, Popover, PopoverTrigger, PopoverContent } from "@/components/ui/ds";
 import { useState } from 'react';
 import { useAI } from '@/hooks/useAI';
 import { Sparkles, RefreshCw, Plus } from 'lucide-react';
@@ -27,12 +27,13 @@ Sugira uma ação prática para avançar esta lead no funil.`;
 
   return (
     <Popover open={open} onOpenChange={handleOpen}>
-      
+      <PopoverTrigger>
         <Button variant="secondary" size="sm" className="p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors" title="Sugestão IA">
           <Sparkles className="h-3.5 w-3.5 text-purple-500" />
         </Button>
+      </PopoverTrigger>
       
-      <div className="absolute z-50 mt-2 p-4 bg-white border border-neutral-200 rounded-lg shadow-lg">
+      <PopoverContent className="w-80">
         <div className="space-y-3">
           <div className="flex items-center gap-1.5">
             <span className="inline-flex items-center gap-1 text-[10px] font-medium text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded-full">✨ IA</span>
@@ -50,7 +51,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
                 {onCreateTask && (
                   <Button size="sm" variant="secondary" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
                     <Plus className="h-3 w-3 mr-1" /> Criar tarefa
-                  </Button>
+                  </Badge>
                 )}
                 <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Nova sugestão
@@ -60,7 +61,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
             </>
           ) : null}
         </div>
-      </div>
+      </PopoverContent>
     </Popover>
   );
 }
