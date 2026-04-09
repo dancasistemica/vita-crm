@@ -5,11 +5,13 @@ import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";
 import { MoveHorizontal, ArrowRight, ArrowLeft } from "lucide-react";
+import { useDataAccess } from "@/hooks/useDataAccess";
 
 const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 
 export default function PipelinePage() {
   const { leads, pipelineStages, updateLead, loading } = useLeadsData();
+  const dataAccess = useDataAccess();
   const [dragging, setDragging] = useState<string | null>(null);
   const [detailLead, setDetailLead] = useState<LeadView | null>(null);
 
