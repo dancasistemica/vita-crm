@@ -1,72 +1,18 @@
 import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
-import { X, Loader, ChevronRight, Check, Search } from 'lucide-react';
+import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { createSaleWithInstallments } from '@/services/salesService';
+import { createSale } from '@/services/salesService';
+import { createSubscription } from '@/services/subscriptionService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-
-interface ValidationError {
-  field: string;
-  message: string;
-}
-
-const validateSaleFormData = (
-  formData: any,
-  saleType: 'unica' | 'mensalidade'
-): ValidationError[] => {
-  const errors: ValidationError[] = [];
-
-  console.log('[CreateSaleModal] Validando formulário:', { saleType, formData });
-
-  // Validações obrigatórias para todas as fases
-  if (!formData.client_id) {
-    errors.push({ field: 'client_id', message: 'Cliente não selecionado' });
-  }
-  if (!formData.product_id) {
-    errors.push({ field: 'product_id', message: 'Produto não selecionado' });
-  }
-  if (!formData.sales_stage_id) {
-    errors.push({ field: 'sales_stage_id', message: 'Etapa de venda não selecionada' });
-  }
-  if (!formData.payment_method_id) {
-    errors.push({ field: 'payment_method_id', message: 'Forma de pagamento não selecionada' });
-  }
-
-  // Validações específicas para venda única
-  if (saleType === 'unica') {
-    // Validar número de parcelas
-    const installments = parseInt(formData.installments) || 0;
-    if (installments < 1) {
-      errors.push({ field: 'installments', message: 'Número de parcelas deve ser maior que 0' });
-    }
-
-    // Validar data do primeiro vencimento
-    if (!formData.first_payment_date) {
-      errors.push({ field: 'first_payment_date', message: 'Data do 1º vencimento é obrigatória' });
-    } else {
-      const selectedDate = new Date(formData.first_payment_date + 'T00:00:00');
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (selectedDate < today) {
-        errors.push({ field: 'first_payment_date', message: 'Data do vencimento não pode ser no passado' });
-      }
-    }
-
-    // Validar valor da venda
-    if (formData.stage_value <= 0) {
-      errors.push({ field: 'stage_value', message: 'Valor da venda deve ser maior que 0' });
-    }
-  }
-
-  return errors;
-};
+import { validatePhase, validateFormComplete, type SaleFormData, type ValidationError } from '@/utils/saleValidation';
 
 interface CreateSaleModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  initialClientId?: string; // Permitir abrir já com um cliente selecionado
 }
 
 interface ProductSalesStage {
@@ -89,14 +35,30 @@ interface Client {
   email: string;
 }
 
-export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalProps) => {
+const INITIAL_FORM_DATA: SaleFormData = {
+  client_id: '',
+  product_id: '',
+  sales_stage_id: '',
+  stage_value: 0,
+  payment_method_id: '',
+  sale_type: 'unica',
+  installments: '1',
+  first_payment_date: '',
+  start_date: '',
+  end_date: '',
+  first_payment_due_date: '',
+  auto_payment_enabled: true,
+  notes: '',
+};
+
+export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }: CreateSaleModalProps) => {
   const { organization } = useOrganization();
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
-  const [loadingData, setLoadingData] = useState(true);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
   // Busca de cliente
@@ -105,51 +67,28 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
   // Controle de fase
   const [currentPhase, setCurrentPhase] = useState(1);
-  const [saleType, setSaleType] = useState<'unica' | 'mensalidade'>('unica');
+  const [formData, setFormData] = useState<SaleFormData>(INITIAL_FORM_DATA);
 
-  const totalPhases = saleType === 'unica' ? 6 : 7;
-
-  // Form state
-  const [formData, setFormData] = useState({
-    client_id: '',
-    product_id: '',
-    sales_stage_id: '',
-    stage_value: 0,
-    payment_method_id: '',
-    initial_payment: 0,
-    installments: '1',
-    first_payment_date: '',
-    start_date: '',
-    end_date: '',
-    first_payment_due_date: '',
-    auto_payment_enabled: true,
-    notes: '',
-  });
-
-  useEffect(() => {
-    if (formData.sales_stage_id) {
-      const selectedStage = productSalesStages.find(s => s.id === formData.sales_stage_id);
-      if (selectedStage) {
-        setSaleType(selectedStage.sale_type);
-      }
-    }
-  }, [formData.sales_stage_id, productSalesStages]);
-
-  const filteredClients = useMemo(() => {
-    if (!clientSearch.trim()) return clients;
-    const search = clientSearch.toLowerCase();
-    return clients.filter(
-      client =>
-        client.name.toLowerCase().includes(search) ||
-        client.email.toLowerCase().includes(search)
-    );
-  }, [clients, clientSearch]);
+  // Total de fases dinâmico
+  const totalPhases = formData.sale_type === 'unica' ? 6 : 7;
 
   useEffect(() => {
     if (isOpen && organization?.id) {
       loadAllData();
+      if (initialClientId) {
+        setFormData(prev => ({ ...prev, client_id: initialClientId }));
+        // Se já tem cliente, talvez queira pular para fase 2? Vamos deixar o usuário decidir
+      }
     }
-  }, [isOpen, organization?.id]);
+  }, [isOpen, organization?.id, initialClientId]);
+
+  // Sincronizar nome do cliente se o initialClientId mudar
+  useEffect(() => {
+    if (formData.client_id && clients.length > 0) {
+      const client = clients.find(c => c.id === formData.client_id);
+      if (client) setClientSearch(client.name);
+    }
+  }, [formData.client_id, clients]);
 
   const loadAllData = async () => {
     if (!organization?.id) return;
@@ -177,29 +116,33 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
       setProductSalesStages(mappedStages);
 
     } catch (error) {
-      toast.error('Erro ao carregar dados');
+      console.error('[CreateSaleModal] Erro ao carregar dados:', error);
+      toast.error('Erro ao carregar dados do formulário');
     } finally {
       setLoadingData(false);
     }
   };
 
+  const filteredClients = useMemo(() => {
+    if (!clientSearch.trim()) return clients;
+    const search = clientSearch.toLowerCase();
+    return clients.filter(
+      client =>
+        client.name.toLowerCase().includes(search) ||
+        client.email.toLowerCase().includes(search)
+    );
+  }, [clients, clientSearch]);
+
   const handleNextPhase = () => {
-    console.log('[CreateSaleModal] Tentando avançar da fase:', currentPhase);
-
-    // Validar dados antes de avançar
-    const errors = validateSaleFormData(formData, saleType);
-
+    const errors = validatePhase(formData, currentPhase, formData.sale_type);
     if (errors.length > 0) {
-      console.warn('[CreateSaleModal] Erros de validação encontrados:', errors);
       setValidationErrors(errors);
-      toast.error(`Preencha os campos obrigatórios (${errors.length} erro${errors.length > 1 ? 's' : ''})`);
+      toast.error(errors[0].message);
       return;
     }
 
     setValidationErrors([]);
-
     if (currentPhase < totalPhases) {
-      console.log('[CreateSaleModal] Avançando para fase:', currentPhase + 1);
       setCurrentPhase(currentPhase + 1);
     }
   };
@@ -210,68 +153,30 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log('[CreateSaleModal] Iniciando submissão de venda');
-
-    // Validação final
-    const errors = validateSaleFormData(formData, saleType);
+    
+    const errors = validateFormComplete(formData, formData.sale_type);
     if (errors.length > 0) {
-      console.error('[CreateSaleModal] Erros de validação no submit:', errors);
       setValidationErrors(errors);
-      toast.error(`Corrija os erros antes de finalizar (${errors.length} erro${errors.length > 1 ? 's' : ''})`);
+      toast.error('Por favor, corrija os erros antes de finalizar');
       return;
     }
 
-    setValidationErrors([]);
     setLoading(true);
-
     try {
-      if (saleType === 'unica') {
-        console.log('[CreateSaleModal] Criando venda única');
-
-        // Validações específicas
-        if (!formData.first_payment_date) {
-          throw new Error('Data do primeiro vencimento é obrigatória');
-        }
-
-        const installmentCount = parseInt(formData.installments) || 1;
-        if (installmentCount < 1) {
-          throw new Error('Número de parcelas deve ser maior que 0');
-        }
-
-        if (formData.stage_value <= 0) {
-          throw new Error('Valor da venda deve ser maior que 0');
-        }
-
-        console.log('[CreateSaleModal] Chamando createSaleWithInstallments com dados:', {
-          client_id: formData.client_id,
-          installments: installmentCount,
-          first_payment_date: formData.first_payment_date,
-          stage_value: formData.stage_value,
-        });
-
-        await createSaleWithInstallments(organization!.id, {
+      if (formData.sale_type === 'unica') {
+        await createSale(organization!.id, {
           client_id: formData.client_id,
           value: formData.stage_value,
           status: 'pendente',
-          installments: installmentCount,
+          installments: parseInt(formData.installments) || 1,
           first_payment_date: formData.first_payment_date,
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
           payment_method_id: formData.payment_method_id,
-          initial_payment: formData.initial_payment,
           sales_stage_id: formData.sales_stage_id,
-          items: [{ product_id: formData.product_id, quantity: 1, unit_price: formData.stage_value }],
         });
-
-        console.log('[CreateSaleModal] ✅ Venda criada com sucesso');
-        toast.success('Venda criada com sucesso!');
-
+        toast.success('Venda única criada com sucesso!');
       } else {
-        console.log('[CreateSaleModal] Criando mensalidade');
-
-        const { createSubscription } = await import('@/services/subscriptionService');
-
         await createSubscription(organization!.id, {
           client_id: formData.client_id,
           product_id: formData.product_id,
@@ -282,49 +187,27 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           payment_method_id: formData.payment_method_id,
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
-          first_payment_due_date: formData.first_payment_date,
+          first_payment_due_date: formData.first_payment_due_date,
         });
-
-        console.log('[CreateSaleModal] ✅ Mensalidade criada com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
 
-      // Limpar e fechar
-      setFormData({
-        client_id: '',
-        product_id: '',
-        sales_stage_id: '',
-        stage_value: 0,
-        payment_method_id: '',
-        initial_payment: 0,
-        installments: '1',
-        first_payment_date: '',
-        start_date: '',
-        end_date: '',
-        first_payment_due_date: '',
-        auto_payment_enabled: true,
-        notes: '',
-      });
-      setCurrentPhase(1);
-      setValidationErrors([]);
-      setClientSearch('');
-
-      onClose();
       onSuccess?.();
-
+      handleClose();
     } catch (error) {
-      console.error('[CreateSaleModal] ❌ Erro ao processar operação:', error);
-
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Erro desconhecido ao processar a operação';
-
-      setValidationErrors([{ field: 'submit', message: errorMessage }]);
-      toast.error(errorMessage);
-
+      console.error('[CreateSaleModal] Erro ao salvar:', error);
+      toast.error('Erro ao processar a operação');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData(INITIAL_FORM_DATA);
+    setCurrentPhase(1);
+    setValidationErrors([]);
+    setClientSearch('');
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -332,25 +215,29 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   return (
     <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-neutral-200">
+        
         {/* Header com Progresso */}
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
-            <Button variant="ghost" size="sm" onClick={onClose} icon={<X className="w-5 h-5" />} />
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-900">Nova Venda</h2>
+              <p className="text-sm text-neutral-500">Preencha os dados para registrar uma nova operação</p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={handleClose} icon={<X className="w-5 h-5" />} />
           </div>
 
           <div className="flex items-center gap-3">
             {Array.from({ length: totalPhases }).map((_, i) => (
               <div key={i} className="flex items-center flex-1">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2 ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${
                   i + 1 < currentPhase ? 'bg-success-600 border-success-600 text-white' : 
                   i + 1 === currentPhase ? 'bg-primary-600 border-primary-600 text-white' : 
                   'bg-white border-neutral-300 text-neutral-500'
                 }`}>
-                  {i + 1 < currentPhase ? <Check className="w-5 h-5" /> : i + 1}
+                  {i + 1 < currentPhase ? <Check className="w-4 h-4" /> : i + 1}
                 </div>
                 {i < totalPhases - 1 && (
-                  <div className={`flex-1 h-1 mx-2 rounded-full ${i + 1 < currentPhase ? 'bg-success-600' : 'bg-neutral-200'}`} />
+                  <div className={`flex-1 h-1 mx-1 rounded-full ${i + 1 < currentPhase ? 'bg-success-600' : 'bg-neutral-200'}`} />
                 )}
               </div>
             ))}
@@ -359,174 +246,329 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
         {/* Conteúdo */}
         <div className="flex-1 overflow-y-auto p-6">
-          <form id="sale-form" onSubmit={handleSubmit} className="space-y-6">
-            {currentPhase === 1 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <Input
-                  label="Buscar Cliente"
-                  placeholder="Nome ou email..."
-                  value={clientSearch}
-                  onChange={(e) => {
-                    setClientSearch(e.target.value);
-                    setShowClientDropdown(true);
-                  }}
-                  icon={<Search className="w-5 h-5" />}
-                />
-                {showClientDropdown && clientSearch && (
-                  <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-lg bg-white">
-                    {filteredClients.map(client => (
-                      <Button variant="secondary" size="sm"
-                        key={client.id}
+          {loadingData ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader className="w-10 h-10 animate-spin text-primary-600 mb-4" />
+              <p className="text-neutral-500">Carregando dados...</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              
+              {/* FASE 1: Cliente */}
+              {currentPhase === 1 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">1</span>
+                    Selecionar Cliente
+                  </h3>
+                  <div className="relative">
+                    <Input
+                      placeholder="Buscar por nome ou email..."
+                      value={clientSearch}
+                      onChange={(e) => {
+                        setClientSearch(e.target.value);
+                        setShowClientDropdown(true);
+                      }}
+                      onFocus={() => setShowClientDropdown(true)}
+                      icon={<Search className="w-5 h-5" />}
+                      error={validationErrors.find(e => e.field === 'client_id')?.message}
+                    />
+                    {showClientDropdown && clientSearch && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                        {filteredClients.length > 0 ? (
+                          filteredClients.map(client => (
+                            <button
+                              key={client.id}
+                              type="button"
+                              className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
+                              onClick={() => {
+                                setFormData({ ...formData, client_id: client.id });
+                                setClientSearch(client.name);
+                                setShowClientDropdown(false);
+                              }}
+                            >
+                              <p className="font-semibold text-neutral-900">{client.name}</p>
+                              <p className="text-xs text-neutral-500">{client.email}</p>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="p-4 text-center text-neutral-500">Nenhum cliente encontrado</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {formData.client_id && (
+                    <Alert variant="success" title="Cliente Selecionado">
+                      {clients.find(c => c.id === formData.client_id)?.name}
+                    </Alert>
+                  )}
+                </div>
+              )}
+
+              {/* FASE 2: Produto */}
+              {currentPhase === 2 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">2</span>
+                    Selecionar Produto
+                  </h3>
+                  <Select
+                    label="Produto"
+                    options={products.map(p => ({ value: p.id, label: p.name }))}
+                    value={formData.product_id}
+                    onChange={(e) => setFormData({ ...formData, product_id: e.target.value, sales_stage_id: '' })}
+                    placeholder="Escolha um produto..."
+                    error={validationErrors.find(e => e.field === 'product_id')?.message}
+                  />
+                </div>
+              )}
+
+              {/* FASE 3: Etapa e Tipo */}
+              {currentPhase === 3 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">3</span>
+                    Etapa de Venda e Tipo
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    {productSalesStages
+                      .filter(s => s.product_id === formData.product_id)
+                      .map(stage => (
+                        <button
+                          key={stage.id}
+                          type="button"
+                          onClick={() => setFormData({ 
+                            ...formData, 
+                            sales_stage_id: stage.id, 
+                            stage_value: stage.value,
+                            sale_type: stage.sale_type
+                          })}
+                          className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                            formData.sales_stage_id === stage.id 
+                              ? 'border-primary-600 bg-primary-50 shadow-md' 
+                              : 'border-neutral-200 hover:border-primary-300 bg-white'
+                          }`}
+                        >
+                          <div className="text-left">
+                            <p className="font-bold text-neutral-900">{stage.name}</p>
+                            <Badge variant={stage.sale_type === 'unica' ? 'default' : 'warning'} size="sm" className="mt-1">
+                              {stage.sale_type === 'unica' ? 'Venda Única' : 'Mensalidade'}
+                            </Badge>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-black text-primary-700">R$ {stage.value.toFixed(2)}</p>
+                          </div>
+                        </button>
+                      ))}
+                  </div>
+                  {validationErrors.find(e => e.field === 'sales_stage_id') && (
+                    <p className="text-sm text-destructive-600">{validationErrors.find(e => e.field === 'sales_stage_id')?.message}</p>
+                  )}
+                </div>
+              )}
+
+              {/* FASE 4: Pagamento */}
+              {currentPhase === 4 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">4</span>
+                    Forma de Pagamento
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {paymentMethods.filter(pm => pm.active).map(pm => (
+                      <button
+                        key={pm.id}
                         type="button"
-                        className="w-full text-left p-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-0 transition-colors"
-                        onClick={() => {
-                          setFormData({ ...formData, client_id: client.id });
-                          setClientSearch(client.name);
-                          setShowClientDropdown(false);
-                        }}
+                        onClick={() => setFormData({ ...formData, payment_method_id: pm.id })}
+                        className={`p-4 rounded-xl border-2 text-center transition-all ${
+                          formData.payment_method_id === pm.id 
+                            ? 'border-primary-600 bg-primary-50 text-primary-700 font-bold' 
+                            : 'border-neutral-200 hover:border-primary-300 bg-white text-neutral-600'
+                        }`}
                       >
-                        <p className="font-semibold text-neutral-900">{client.name}</p>
-                        <p className="text-xs text-neutral-500">{client.email}</p>
-                      </Button>
+                        {pm.name}
+                      </button>
                     ))}
                   </div>
-                )}
-                {formData.client_id && (
-                  <Alert variant="success" title="Cliente Selecionado">
-                    O lead foi identificado com sucesso.
-                  </Alert>
-                )}
-              </div>
-            )}
+                  {validationErrors.find(e => e.field === 'payment_method_id') && (
+                    <p className="text-sm text-destructive-600">{validationErrors.find(e => e.field === 'payment_method_id')?.message}</p>
+                  )}
+                </div>
+              )}
 
-            {currentPhase === 2 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <Select
-                  label="Selecione o Produto"
-                  options={products.map(p => ({ value: p.id, label: p.name }))}
-                  value={formData.product_id}
-                  onChange={(e) => setFormData({ ...formData, product_id: e.target.value, sales_stage_id: '' })}
-                  placeholder="Escolha um produto..."
-                />
-              </div>
-            )}
-
-            {currentPhase === 3 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <Select
-                  label="Etapa de Venda"
-                  options={productSalesStages.filter(s => s.product_id === formData.product_id).map(s => ({ value: s.id, label: s.name }))}
-                  value={formData.sales_stage_id}
-                  onChange={(e) => {
-                    const stage = productSalesStages.find(s => s.id === e.target.value);
-                    setFormData({ ...formData, sales_stage_id: e.target.value, stage_value: stage?.value || 0 });
-                  }}
-                />
-                {formData.stage_value > 0 && (
-                  <Card variant="primary" padding="md" className="bg-primary-50 border-primary-100">
-                    <p className="text-sm text-primary-700 font-semibold text-center">
-                      Valor Previsto: R$ {formData.stage_value.toFixed(2)}
-                    </p>
+              {/* FASE 5: Datas Dinâmicas */}
+              {currentPhase === 5 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">5</span>
+                    Definição de Datas e Valores
+                  </h3>
+                  
+                  {formData.sale_type === 'unica' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Input
+                        label="Nº de Parcelas"
+                        type="number"
+                        min="1"
+                        value={formData.installments}
+                        onChange={(e) => setFormData({ ...formData, installments: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'installments')?.message}
+                      />
+                      <Input
+                        label="Data do 1º Vencimento"
+                        type="date"
+                        value={formData.first_payment_date}
+                        onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'first_payment_date')?.message}
+                      />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Input
+                        label="Data de Início"
+                        type="date"
+                        value={formData.start_date}
+                        onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'start_date')?.message}
+                      />
+                      <Input
+                        label="Data do 1º Pagamento"
+                        type="date"
+                        value={formData.first_payment_due_date}
+                        onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'first_payment_due_date')?.message}
+                      />
+                    </div>
+                  )}
+                  
+                  <Card variant="primary" padding="md" className="bg-primary-50 border-primary-100 mt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-primary-700 font-medium">Valor Total:</span>
+                      <span className="text-xl font-bold text-primary-900">R$ {formData.stage_value.toFixed(2)}</span>
+                    </div>
+                    {formData.sale_type === 'unica' && parseInt(formData.installments) > 1 && (
+                      <p className="text-xs text-primary-600 text-right mt-1">
+                        {formData.installments}x de R$ {(formData.stage_value / (parseInt(formData.installments) || 1)).toFixed(2)}
+                      </p>
+                    )}
                   </Card>
-                )}
-              </div>
-            )}
+                </div>
+              )}
 
-            {currentPhase === 4 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <Select
-                  label="Forma de Pagamento"
-                  options={paymentMethods.map(p => ({ value: p.id, label: p.name }))}
-                  value={formData.payment_method_id}
-                  onChange={(e) => setFormData({ ...formData, payment_method_id: e.target.value })}
-                />
-              </div>
-            )}
+              {/* FASE 6: Extra ou Final */}
+              {currentPhase === 6 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">6</span>
+                    {formData.sale_type === 'mensalidade' ? 'Data Final (Opcional)' : 'Finalização'}
+                  </h3>
 
-            {currentPhase === 5 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                {validationErrors.length > 0 && (
-                  <Alert variant="error" title="Erros de Validação">
-                    <ul className="list-disc list-inside space-y-1">
-                      {validationErrors.map((error, idx) => (
-                        <li key={idx} className="text-sm">
-                          {error.message}
-                        </li>
-                      ))}
-                    </ul>
-                  </Alert>
-                )}
-                {saleType === 'unica' ? (
-                  <>
-                    <Input
-                      label="Nº Parcelas"
-                      type="number"
-                      value={formData.installments}
-                      onChange={(e) => setFormData({ ...formData, installments: e.target.value })}
-                    />
-                    <Input
-                      label="Data 1º Vencimento"
-                      type="date"
-                      value={formData.first_payment_date}
-                      onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Input
-                      label="Início da Vigência"
-                      type="date"
-                      value={formData.start_date}
-                      onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                    />
-                    <Input
-                      label="1º Pagamento"
-                      type="date"
-                      value={formData.first_payment_due_date}
-                      onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
-                    />
-                  </>
-                )}
-              </div>
-            )}
+                  {formData.sale_type === 'mensalidade' ? (
+                    <>
+                      <p className="text-sm text-neutral-500">Deixe em branco para mensalidade sem data de término definida.</p>
+                      <Input
+                        label="Data Final"
+                        type="date"
+                        value={formData.end_date}
+                        onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'end_date')?.message}
+                      />
+                    </>
+                  ) : (
+                    <div className="space-y-4">
+                      <Card padding="md" variant="primary" className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-neutral-900">Baixa Automática</p>
+                          <p className="text-xs text-neutral-500">Marcar parcelas como pagas automaticamente no vencimento</p>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={formData.auto_payment_enabled}
+                          onChange={(e) => setFormData({ ...formData, auto_payment_enabled: e.target.checked })}
+                          className="w-5 h-5 accent-primary-600 rounded cursor-pointer"
+                        />
+                      </Card>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-neutral-700">Observações</label>
+                        <textarea
+                          value={formData.notes}
+                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                          className="w-full p-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 outline-none transition-all h-24 resize-none"
+                          placeholder="Alguma nota importante sobre esta venda?"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {currentPhase === 6 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <Input
-                  label="Observações Adicionais"
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="Algum detalhe importante?"
-                />
-              </div>
-            )}
-          </form>
+              {/* FASE 7: Finalização (Só para Mensalidade) */}
+              {currentPhase === 7 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                  <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">7</span>
+                    Finalização
+                  </h3>
+                  <div className="space-y-4">
+                    <Card padding="md" variant="primary" className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-neutral-900">Baixa Automática</p>
+                        <p className="text-xs text-neutral-500">Marcar pagamentos como pagos automaticamente no vencimento</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={formData.auto_payment_enabled}
+                        onChange={(e) => setFormData({ ...formData, auto_payment_enabled: e.target.checked })}
+                        className="w-5 h-5 accent-primary-600 rounded cursor-pointer"
+                      />
+                    </Card>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-neutral-700">Observações</label>
+                      <textarea
+                        value={formData.notes}
+                        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                        className="w-full p-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 outline-none transition-all h-24 resize-none"
+                        placeholder="Alguma nota importante sobre esta mensalidade?"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+            </form>
+          )}
         </div>
 
-        {/* Footer com Ações */}
-        <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex justify-between gap-4">
-          <Button variant="secondary" onClick={handlePreviousPhase} disabled={currentPhase === 1}>
+        {/* Rodapé com Ações */}
+        <div className="p-6 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between gap-4">
+          <Button
+            variant="ghost"
+            onClick={handlePreviousPhase}
+            disabled={currentPhase === 1 || loading}
+            icon={<ArrowLeft className="w-4 h-4" />}
+          >
             Voltar
           </Button>
+
           {currentPhase < totalPhases ? (
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleNextPhase}
               disabled={loading}
-              className="flex-1"
+              className="px-8"
+              icon={<ArrowRight className="w-4 h-4" />}
             >
-              Próximo
+              Continuar
             </Button>
           ) : (
-            <Button 
-              variant="success" 
-              type="submit" 
-              form="sale-form" 
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
               loading={loading}
-              disabled={loading || validationErrors.length > 0}
-              className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold"
+              className="px-8 bg-success-600 hover:bg-success-700 border-success-600"
+              icon={<Check className="w-4 h-4" />}
             >
-              {loading ? 'Processando...' : `Finalizar ${saleType === 'unica' ? 'Venda' : 'Assinatura'}`}
+              {loading ? 'Salvando...' : 'Finalizar e Salvar'}
             </Button>
           )}
         </div>

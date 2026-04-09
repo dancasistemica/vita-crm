@@ -2,12 +2,11 @@ import { Alert, Badge, Button, Card, Input } from "@/components/ui/ds";
 import React, { useState } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { Plus, Search, Filter, FileDown, Pencil, Trash2 } from 'lucide-react';
-import { useClientsFilter, SortField } from '@/hooks/useClientsFilter';
+import { useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
 import { FilterChip } from '@/components/clients/FilterChip';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
-import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -18,23 +17,16 @@ export default function ClientesPage() {
   const hook = useClientsFilter();
   const { organization } = useOrganization();
   
-  const [showFilters, setShowFilters] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<any>(null);
 
   const handleNewSale = (leadId?: string) => {
     setSaleLeadId(leadId);
     setSaleModalOpen(true);
-  };
-
-  const handleSelectClient = (client: any) => {
-    setSelectedClient(client);
   };
 
   return (
@@ -56,20 +48,12 @@ export default function ClientesPage() {
             Exportar
           </Button>
           <Button 
-            variant="secondary" 
-            size="md" 
-            icon={<Plus className="w-4 h-4" />}
-            onClick={() => setShowSubscriptionModal(true)}
-          >
-            Nova Mensalidade
-          </Button>
-          <Button 
             variant="primary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setShowCreateModal(true)}
           >
-            Nova Venda
+            Nova Venda / Mensalidade
           </Button>
         </div>
       </div>
@@ -161,7 +145,7 @@ export default function ClientesPage() {
             onNewSale={handleNewSale}
             loading={hook.loading}
             products={hook.products}
-            onSelectClient={handleSelectClient}
+            onSelectClient={() => {}}
           />
         </div>
       </div>
@@ -203,11 +187,7 @@ export default function ClientesPage() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onSuccess={() => hook.refetchData()}
-      />
-      <CreateSubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-        onSuccess={() => hook.refetchData()}
+        initialClientId={saleLeadId}
       />
     </div>
   );
