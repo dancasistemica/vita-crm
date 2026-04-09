@@ -346,6 +346,24 @@ export default function ClientDetailPage() {
             <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
           </TabsContent>
 
+          {/* Frequência */}
+          <TabsContent value="frequencia">
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+                <Activity className="h-8 w-8 text-primary-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">Histórico de Frequência</h3>
+                <p className="text-neutral-600 max-w-sm mx-auto mt-2">
+                  Visualize o engajamento, presenças e ausências detalhadas deste cliente em um calendário interativo.
+                </p>
+              </div>
+              <Button onClick={() => navigate(`/clientes/${id}/frequencia`)}>
+                Ver Histórico Completo
+              </Button>
+            </div>
+          </TabsContent>
+
           {/* Histórico */}
           <TabsContent value="historico">
             <LeadTimeline leadId={id!} leadCreatedAt={undefined} />
