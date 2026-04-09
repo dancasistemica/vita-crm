@@ -74,32 +74,32 @@ export default function PipelinePage() {
             return (
               <div
                 key={stage.id}
-                className="w-72 flex-shrink-0 bg-muted/30 rounded-xl p-3 border border-border/50"
+                className="w-64 flex-shrink-0 bg-muted/30 rounded-xl p-2 border border-border/50"
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => handleDrop(e, stage.id)}
               >
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base font-bold text-neutral-800">{stage.name}</h3>
-                    <Badge variant="secondary" className="bg-white/50 text-[10px] h-5 px-1.5">{stageLeads.length}</Badge>
+                    <h3 className="text-sm font-bold text-neutral-800">{stage.name}</h3>
+                    <Badge variant="secondary" className="bg-white/50 text-[9px] h-4 px-1">{stageLeads.length}</Badge>
                   </div>
                 </div>
                 {totalDealValue > 0 && (
-                  <p className="text-[10px] font-medium text-neutral-500 mb-3 uppercase tracking-wider">
+                  <p className="text-[9px] font-medium text-neutral-500 mb-2 uppercase tracking-wider">
                     Total: R$ {totalDealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                 )}
-                <div className="space-y-3 min-h-[200px]">
+                <div className="space-y-2 min-h-[200px]">
                   {stageLeads.map(lead => (
                     <Card
                       key={lead.id}
                       draggable
                       onDragStart={e => handleDragStart(e, lead.id)}
-                      className={`p-3 cursor-grab active:cursor-grabbing border-l-4 ${interestColors[lead.interestLevel]} transition-all hover:shadow-lg hover:border-r hover:border-r-primary/20 ${dragging === lead.id ? 'opacity-30 scale-95' : ''}`}
+                      className={`p-2.5 cursor-grab active:cursor-grabbing border-l-4 ${interestColors[lead.interestLevel]} transition-all hover:shadow-lg hover:border-r hover:border-r-primary/20 ${dragging === lead.id ? 'opacity-30 scale-95' : ''}`}
                     >
-                      <div className="flex justify-between items-start mb-1">
+                      <div className="flex justify-between items-start mb-0.5">
                         <p 
-                          className="font-semibold text-sm text-foreground cursor-pointer hover:underline hover:text-primary transition-colors truncate flex-1 mr-2" 
+                          className="font-semibold text-[13px] text-foreground cursor-pointer hover:underline hover:text-primary transition-colors truncate flex-1 mr-2" 
                           onClick={() => setDetailLead(lead)}
                         >
                           {lead.name}
@@ -111,23 +111,23 @@ export default function PipelinePage() {
                         />
                       </div>
                       
-                      <p className="text-xs text-neutral-500 mb-2">{lead.origin}</p>
+                      <p className="text-[10px] text-neutral-500 mb-1.5">{lead.origin}</p>
                       
                       {lead.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1 mb-2">
-                          {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0 bg-muted">{tag}</Badge>)}
+                        <div className="flex flex-wrap gap-1 mt-0.5 mb-1.5">
+                          {lead.tags.map(tag => <Badge key={tag} variant="secondary" className="text-[9px] px-1 py-0 bg-muted">{tag}</Badge>)}
                         </div>
                       )}
 
                       {lead.dealValue != null && lead.dealValue > 0 && (
-                        <p className="text-xs font-bold text-success mb-2">
+                        <p className="text-[11px] font-bold text-success mb-1.5">
                           💰 R$ {lead.dealValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </p>
                       )}
 
-                      <div className="pt-2 mt-2 border-t border-border/50 flex flex-col gap-2">
+                      <div className="pt-1.5 mt-1.5 border-t border-border/50 flex flex-col gap-1.5">
                         <div className="flex items-center justify-between">
-                           <span className="text-[10px] text-neutral-400">Alterar etapa:</span>
+                           <span className="text-[9px] text-neutral-400">Etapa:</span>
                            <div className="flex gap-1">
                               {prevStage && (
                                 <button 
@@ -135,7 +135,7 @@ export default function PipelinePage() {
                                   className="p-1 hover:bg-muted rounded transition-colors"
                                   title={`Mover para ${prevStage.name}`}
                                 >
-                                  <ArrowLeft className="w-3.5 h-3.5 text-neutral-500" />
+                                  <ArrowLeft className="w-3 h-3 text-neutral-500" />
                                 </button>
                               )}
                               {nextStage && (
@@ -144,30 +144,30 @@ export default function PipelinePage() {
                                   className="p-1 hover:bg-muted rounded transition-colors"
                                   title={`Mover para ${nextStage.name}`}
                                 >
-                                  <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
+                                  <ArrowRight className="w-3 h-3 text-neutral-500" />
                                 </button>
                               )}
                            </div>
                         </div>
                         
                         <Select value={stage.id} onValueChange={(val) => moveLead(lead.id, val)}>
-                          <SelectTrigger className="h-7 text-[10px] px-2 bg-muted/50 border-none hover:bg-muted">
-                            <SelectValue placeholder="Mover para..." />
+                          <SelectTrigger className="h-6 text-[9px] px-1.5 bg-muted/50 border-none hover:bg-muted">
+                            <SelectValue placeholder="Mover..." />
                           </SelectTrigger>
                           <SelectContent>
                             {sortedStages.map(s => (
-                              <SelectItem key={s.id} value={s.id} className="text-xs">{s.name}</SelectItem>
+                              <SelectItem key={s.id} value={s.id} className="text-[11px]">{s.name}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
 
                       {lead.responsible && (
-                        <div className="mt-2 flex items-center gap-1.5">
-                          <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[8px] font-bold text-primary">
+                        <div className="mt-1.5 flex items-center gap-1">
+                          <div className="w-3.5 h-3.5 rounded-full bg-primary/20 flex items-center justify-center text-[7px] font-bold text-primary">
                             {lead.responsible.charAt(0).toUpperCase()}
                           </div>
-                          <span className="text-[10px] text-primary font-medium">{lead.responsible}</span>
+                          <span className="text-[9px] text-primary font-medium">{lead.responsible}</span>
                         </div>
                       )}
                     </Card>
