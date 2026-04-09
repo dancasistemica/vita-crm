@@ -93,12 +93,14 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
           onChange={e => set('origin', e.target.value)}
           placeholder="Selecionar"
           options={origins.map(o => ({ value: o, label: o }))}
+          size="sm"
         />
         <Select 
           label="Nível de interesse"
           value={form.interestLevel || 'frio'} 
           onChange={e => set('interestLevel', e.target.value)}
           options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+          size="sm"
         />
         <Select 
           label="Etapa do funil"
