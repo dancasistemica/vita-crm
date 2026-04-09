@@ -63,6 +63,7 @@ export default function MassEditModal({ selectedLeadsCount, onClose, onSave }: M
             onChange={e => set('pipelineStage', e.target.value)}
             placeholder="Não alterar"
             options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+            size="sm"
           />
 
           <Select 
