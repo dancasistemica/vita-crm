@@ -556,7 +556,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
               onClick={handleNextPhase}
               disabled={loading}
               className="px-8"
-              iconRight={<ArrowRight className="w-4 h-4" />}
+              icon={<ArrowRight className="w-4 h-4" />}
             >
               Continuar
             </Button>
