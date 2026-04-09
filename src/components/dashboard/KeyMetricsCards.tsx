@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, TrendingUp, DollarSign, AlertTriangle, CheckCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
+import { Users, DollarSign, AlertTriangle, CheckCircle } from "lucide-react";
 
 interface KeyMetricsCardsProps {
   data: {
@@ -23,9 +23,9 @@ export function KeyMetricsCards({ data }: KeyMetricsCardsProps) {
     },
     {
       title: "Receita Total",
-      value: `R$ ${data.totalRevenue.toLocaleString()}`,
+      value: `R$ ${data.totalRevenue.toLocaleString('pt-BR')}`,
       icon: DollarSign,
-      description: `MRR: R$ ${data.totalMRR.toLocaleString()}`,
+      description: `MRR: R$ ${data.totalMRR.toLocaleString('pt-BR')}`,
       color: "text-green-600",
     },
     {

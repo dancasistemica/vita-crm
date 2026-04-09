@@ -37,7 +37,7 @@ const AdminUsersPage = lazy(() => import("@/pages/AdminUsersPage"));
 const VendasPage = lazy(() => import("@/pages/VendasPage").then(module => ({ default: module.VendasPage })));
 const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
 const HistoricoFrequenciaPage = lazy(() => import("@/pages/HistoricoFrequenciaPage"));
-const RegistroPresencaPage = lazy(() => import("@/pages/RegistroPresencaPage"));
+const DashboardExecutivoPage = lazy(() => import("@/pages/DashboardExecutivoPage"));
 
 const queryClient = new QueryClient();
 
@@ -93,6 +93,8 @@ const App = () => {
                     <Route path="/debug" element={<DebugMultiTenantPage />} />
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/dashboard/consolidado" element={<ConsolidatedDashboardPage />} />
+                    <Route path="/dashboard/executivo" element={<DashboardExecutivoPage />} />
+
                     <Route path="/leads" element={<LeadsPage />} />
                     <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                     <Route path="/pipeline" element={<PipelinePage />} />
