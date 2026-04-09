@@ -59,13 +59,13 @@ export default function DashboardExecutivoPage() {
     <div className="container mx-auto p-6 space-y-8 animate-in fade-in duration-500">
       <div className="flex justify-between items-center">
         <div>
-          <PageTitle>Dashboard Executivo</PageTitle>
-          <p className="text-muted-foreground text-sm mt-1">
-            Visão consolidada de desempenho por produto
-          </p>
+          <PageTitle 
+            title="Dashboard Executivo" 
+            description="Visão consolidada de desempenho por produto"
+          />
         </div>
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="sm" 
           onClick={loadData}
           disabled={loading}
@@ -75,6 +75,7 @@ export default function DashboardExecutivoPage() {
           Atualizar
         </Button>
       </div>
+
 
       <KeyMetricsCards data={data} />
 
