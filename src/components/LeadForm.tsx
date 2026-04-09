@@ -105,6 +105,7 @@ export default function LeadForm({ lead, onSave }: LeadFormProps) {
           value={form.pipelineStage || '1'} 
           onChange={e => set('pipelineStage', e.target.value)}
           options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+          size="sm"
         />
         <Input label="Responsável" value={form.responsible || ''} onChange={e => set('responsible', e.target.value)} placeholder="Nome do responsável" />
       </div>
