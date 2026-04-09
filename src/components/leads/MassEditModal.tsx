@@ -63,6 +63,7 @@ export default function MassEditModal({ selectedLeadsCount, onClose, onSave }: M
             onChange={e => set('pipelineStage', e.target.value)}
             placeholder="Não alterar"
             options={pipelineStages.map(s => ({ value: s.id, label: s.name }))}
+            size="sm"
           />
 
           <Select 
@@ -71,6 +72,7 @@ export default function MassEditModal({ selectedLeadsCount, onClose, onSave }: M
             onChange={e => set('interestLevel', e.target.value)}
             placeholder="Não alterar"
             options={interestLevels.map(l => ({ value: l.value, label: l.label }))}
+            size="sm"
           />
 
           <Select 
@@ -79,6 +81,7 @@ export default function MassEditModal({ selectedLeadsCount, onClose, onSave }: M
             onChange={e => set('origin', e.target.value)}
             placeholder="Não alterar"
             options={origins.map(o => ({ value: o, label: o }))}
+            size="sm"
           />
 
           <Input 
