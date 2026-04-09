@@ -18,9 +18,9 @@ interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>
 }
 
 const sizeStyles = {
-  sm: 'px-3 py-2 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-4 py-3 text-lg',
+  sm: 'px-3 py-2 text-xs',
+  md: 'px-4 py-2 text-sm',
+  lg: 'px-4 py-3 text-base',
 };
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
