@@ -8,7 +8,7 @@ import ChurnAlertCard from '@/components/churn/ChurnAlertCard';
 import { Skeleton } from '@/components/ui/ds/Skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/ds/Tabs';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/ds/Alert';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, Users } from 'lucide-react';
 import { Button } from '@/components/ui/ds/Button';
 import { toast } from 'sonner';
 
@@ -51,7 +51,7 @@ const ChurnMonitoringPage: React.FC = () => {
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <PageTitle title="Monitoramento de Churn" subtitle="Identifique clientes em risco e automatize a retenção" />
+          <PageTitle title="Monitoramento de Churn" description="Identifique clientes em risco e automatize a retenção" />
         </div>
         <Button 
           variant="secondary" 
