@@ -127,15 +127,15 @@ export default function PipelinePage() {
 
                       <div className="pt-2 mt-2 border-t border-border/50 flex flex-col gap-2">
                         <div className="flex items-center justify-between">
-                           <span className="text-[10px] font-medium text-neutral-500">Etapa:</span>
-                           <div className="flex gap-1">
+                           <span className="text-[11px] font-medium text-neutral-500">Etapa:</span>
+                           <div className="flex gap-1.5">
                               {prevStage && (
                                 <button 
                                   onClick={() => moveLead(lead.id, prevStage.id)}
                                   className="p-1 hover:bg-muted rounded transition-colors"
                                   title={`Mover para ${prevStage.name}`}
                                 >
-                                  <ArrowLeft className="w-3.5 h-3.5 text-neutral-500" />
+                                  <ArrowLeft className="w-4 h-4 text-neutral-500" />
                                 </button>
                               )}
                               {nextStage && (
@@ -144,14 +144,14 @@ export default function PipelinePage() {
                                   className="p-1 hover:bg-muted rounded transition-colors"
                                   title={`Mover para ${nextStage.name}`}
                                 >
-                                  <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
+                                  <ArrowRight className="w-4 h-4 text-neutral-500" />
                                 </button>
                               )}
                            </div>
                         </div>
                         
                         <Select value={stage.id} onValueChange={(val) => moveLead(lead.id, val)}>
-                          <SelectTrigger className="h-7 text-[10px] px-2 bg-muted/50 border-none hover:bg-muted">
+                          <SelectTrigger className="h-8 text-[11px] px-2.5 bg-muted/50 border-none hover:bg-muted">
                             <SelectValue placeholder="Mover..." />
                           </SelectTrigger>
                           <SelectContent>
