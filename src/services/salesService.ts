@@ -128,12 +128,18 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       auto_payment_enabled: boolean;
     }> = [];
     const valueToInstall = saleData.value - (saleData.initial_payment || 0);
-    const firstPaymentDate = new Date(saleData.first_payment_date);
+    const [year, month, day] = saleData.first_payment_date.split('-').map(Number);
+    const dayOfMonth = day;
     const installmentAmount = valueToInstall / saleData.installments;
 
     for (let i = 1; i <= saleData.installments; i += 1) {
-      const dueDate = new Date(firstPaymentDate);
-      dueDate.setMonth(dueDate.getMonth() + (i - 1));
+      // Cria a data para o mês correspondente
+      const dueDate = new Date(year, month - 1 + (i - 1), dayOfMonth);
+      
+      // Se o dia do mês mudou (ex: Jan 31 -> Mar 2), ajustamos para o último dia do mês correto
+      if (dueDate.getDate() !== dayOfMonth) {
+        dueDate.setDate(0);
+      }
 
       installmentRecords.push({
         sale_id: sale.id,
@@ -173,6 +179,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     throw error;
   }
 };
+
+export const createUniqueSale = createSaleWithInstallments;
 
 export const deleteSale = async (saleId: string) => {
   try {

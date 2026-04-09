@@ -6,6 +6,63 @@ import { createSaleWithInstallments } from '@/services/salesService';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
+const validateSaleFormData = (
+  formData: any,
+  saleType: 'unica' | 'mensalidade'
+): ValidationError[] => {
+  const errors: ValidationError[] = [];
+
+  console.log('[CreateSaleModal] Validando formulário:', { saleType, formData });
+
+  // Validações obrigatórias para todas as fases
+  if (!formData.client_id) {
+    errors.push({ field: 'client_id', message: 'Cliente não selecionado' });
+  }
+  if (!formData.product_id) {
+    errors.push({ field: 'product_id', message: 'Produto não selecionado' });
+  }
+  if (!formData.sales_stage_id) {
+    errors.push({ field: 'sales_stage_id', message: 'Etapa de venda não selecionada' });
+  }
+  if (!formData.payment_method_id) {
+    errors.push({ field: 'payment_method_id', message: 'Forma de pagamento não selecionada' });
+  }
+
+  // Validações específicas para venda única
+  if (saleType === 'unica') {
+    // Validar número de parcelas
+    const installments = parseInt(formData.installments) || 0;
+    if (installments < 1) {
+      errors.push({ field: 'installments', message: 'Número de parcelas deve ser maior que 0' });
+    }
+
+    // Validar data do primeiro vencimento
+    if (!formData.first_payment_date) {
+      errors.push({ field: 'first_payment_date', message: 'Data do 1º vencimento é obrigatória' });
+    } else {
+      const selectedDate = new Date(formData.first_payment_date + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        errors.push({ field: 'first_payment_date', message: 'Data do vencimento não pode ser no passado' });
+      }
+    }
+
+    // Validar valor da venda
+    if (formData.stage_value <= 0) {
+      errors.push({ field: 'stage_value', message: 'Valor da venda deve ser maior que 0' });
+    }
+  }
+
+  return errors;
+};
+
 interface CreateSaleModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,6 +97,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
   // Busca de cliente
   const [clientSearch, setClientSearch] = useState('');
@@ -126,7 +184,24 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
   };
 
   const handleNextPhase = () => {
-    if (currentPhase < totalPhases) setCurrentPhase(currentPhase + 1);
+    console.log('[CreateSaleModal] Tentando avançar da fase:', currentPhase);
+
+    // Validar dados antes de avançar
+    const errors = validateSaleFormData(formData, saleType);
+
+    if (errors.length > 0) {
+      console.warn('[CreateSaleModal] Erros de validação encontrados:', errors);
+      setValidationErrors(errors);
+      toast.error(`Preencha os campos obrigatórios (${errors.length} erro${errors.length > 1 ? 's' : ''})`);
+      return;
+    }
+
+    setValidationErrors([]);
+
+    if (currentPhase < totalPhases) {
+      console.log('[CreateSaleModal] Avançando para fase:', currentPhase + 1);
+      setCurrentPhase(currentPhase + 1);
+    }
   };
 
   const handlePreviousPhase = () => {
@@ -135,14 +210,51 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log('[CreateSaleModal] Iniciando submissão de venda');
+
+    // Validação final
+    const errors = validateSaleFormData(formData, saleType);
+    if (errors.length > 0) {
+      console.error('[CreateSaleModal] Erros de validação no submit:', errors);
+      setValidationErrors(errors);
+      toast.error(`Corrija os erros antes de finalizar (${errors.length} erro${errors.length > 1 ? 's' : ''})`);
+      return;
+    }
+
+    setValidationErrors([]);
     setLoading(true);
+
     try {
       if (saleType === 'unica') {
+        console.log('[CreateSaleModal] Criando venda única');
+
+        // Validações específicas
+        if (!formData.first_payment_date) {
+          throw new Error('Data do primeiro vencimento é obrigatória');
+        }
+
+        const installmentCount = parseInt(formData.installments) || 1;
+        if (installmentCount < 1) {
+          throw new Error('Número de parcelas deve ser maior que 0');
+        }
+
+        if (formData.stage_value <= 0) {
+          throw new Error('Valor da venda deve ser maior que 0');
+        }
+
+        console.log('[CreateSaleModal] Chamando createSaleWithInstallments com dados:', {
+          client_id: formData.client_id,
+          installments: installmentCount,
+          first_payment_date: formData.first_payment_date,
+          stage_value: formData.stage_value,
+        });
+
         await createSaleWithInstallments(organization!.id, {
           client_id: formData.client_id,
           value: formData.stage_value,
           status: 'pendente',
-          installments: parseInt(formData.installments),
+          installments: installmentCount,
           first_payment_date: formData.first_payment_date,
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
@@ -151,9 +263,15 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           sales_stage_id: formData.sales_stage_id,
           items: [{ product_id: formData.product_id, quantity: 1, unit_price: formData.stage_value }],
         });
+
+        console.log('[CreateSaleModal] ✅ Venda criada com sucesso');
         toast.success('Venda criada com sucesso!');
+
       } else {
+        console.log('[CreateSaleModal] Criando mensalidade');
+
         const { createSubscription } = await import('@/services/subscriptionService');
+
         await createSubscription(organization!.id, {
           client_id: formData.client_id,
           product_id: formData.product_id,
@@ -164,14 +282,46 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
           payment_method_id: formData.payment_method_id,
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
-          first_payment_due_date: formData.first_payment_due_date,
+          first_payment_due_date: formData.first_payment_date,
         });
+
+        console.log('[CreateSaleModal] ✅ Mensalidade criada com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
+
+      // Limpar e fechar
+      setFormData({
+        client_id: '',
+        product_id: '',
+        sales_stage_id: '',
+        stage_value: 0,
+        payment_method_id: '',
+        initial_payment: 0,
+        installments: '1',
+        first_payment_date: '',
+        start_date: '',
+        end_date: '',
+        first_payment_due_date: '',
+        auto_payment_enabled: true,
+        notes: '',
+      });
+      setCurrentPhase(1);
+      setValidationErrors([]);
+      setClientSearch('');
+
       onClose();
       onSuccess?.();
+
     } catch (error) {
-      toast.error('Erro ao processar a operação');
+      console.error('[CreateSaleModal] ❌ Erro ao processar operação:', error);
+
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'Erro desconhecido ao processar a operação';
+
+      setValidationErrors([{ field: 'submit', message: errorMessage }]);
+      toast.error(errorMessage);
+
     } finally {
       setLoading(false);
     }
@@ -295,6 +445,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
 
             {currentPhase === 5 && (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                {validationErrors.length > 0 && (
+                  <Alert variant="error" title="Erros de Validação">
+                    <ul className="list-disc list-inside space-y-1">
+                      {validationErrors.map((error, idx) => (
+                        <li key={idx} className="text-sm">
+                          {error.message}
+                        </li>
+                      ))}
+                    </ul>
+                  </Alert>
+                )}
                 {saleType === 'unica' ? (
                   <>
                     <Input
@@ -348,12 +509,24 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess }: CreateSaleModalP
             Voltar
           </Button>
           {currentPhase < totalPhases ? (
-            <Button variant="primary" onClick={handleNextPhase}>
+            <Button 
+              variant="primary" 
+              onClick={handleNextPhase}
+              disabled={loading}
+              className="flex-1"
+            >
               Próximo
             </Button>
           ) : (
-            <Button variant="success" type="submit" form="sale-form" loading={loading}>
-              Finalizar {saleType === 'unica' ? 'Venda' : 'Assinatura'}
+            <Button 
+              variant="success" 
+              type="submit" 
+              form="sale-form" 
+              loading={loading}
+              disabled={loading || validationErrors.length > 0}
+              className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold"
+            >
+              {loading ? 'Processando...' : `Finalizar ${saleType === 'unica' ? 'Venda' : 'Assinatura'}`}
             </Button>
           )}
         </div>
