@@ -110,9 +110,7 @@ export function Header({
                 </span>
               </div>
             )}
-            <span className="text-sm lg:text-base font-bold text-primary hidden xl:inline">
-              {brand.org_display_name?.split(' ')[0] || 'VITA'}
-            </span>
+            {/* Text next to logo removed per user request */}
           </div>
 
           {/* Logout Button - Desktop */}
