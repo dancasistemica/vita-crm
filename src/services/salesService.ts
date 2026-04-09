@@ -180,6 +180,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
   }
 };
 
+export const createUniqueSale = createSaleWithInstallments;
+
 export const deleteSale = async (saleId: string) => {
   try {
     console.log('[SalesService] Excluindo venda e parcelas:', saleId);
