@@ -5,11 +5,13 @@ import AIPipelineTip from "@/components/ai/AIPipelineTip";
 import LeadDetailSheet from "@/components/leads/LeadDetailSheet";
 import { toast } from "sonner";
 import { MoveHorizontal, ArrowRight, ArrowLeft } from "lucide-react";
+import { useDataAccess } from "@/hooks/useDataAccess";
 
 const interestColors: Record<string, string> = { frio: 'border-l-cold', morno: 'border-l-warm', quente: 'border-l-hot' };
 
 export default function PipelinePage() {
   const { leads, pipelineStages, updateLead, loading } = useLeadsData();
+  const dataAccess = useDataAccess();
   const [dragging, setDragging] = useState<string | null>(null);
   const [detailLead, setDetailLead] = useState<LeadView | null>(null);
 
@@ -38,6 +40,21 @@ export default function PipelinePage() {
       toast.success('Lead movido com sucesso');
     } catch (err) {
       toast.error('Erro ao mover lead');
+    }
+  };
+
+  const handleCreateTask = async (leadId: string, title: string) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.createTask({
+        title,
+        lead_id: leadId,
+        due_date: new Date().toISOString().split('T')[0],
+        type: 'outro'
+      });
+      toast.success('Tarefa criada com sucesso!');
+    } catch (err) {
+      toast.error('Erro ao criar tarefa');
     }
   };
 
@@ -87,7 +104,11 @@ export default function PipelinePage() {
                         >
                           {lead.name}
                         </p>
-                        <AIPipelineTip lead={lead} stageName={stage.name} />
+                        <AIPipelineTip 
+                          lead={lead} 
+                          stageName={stage.name} 
+                          onCreateTask={(title) => handleCreateTask(lead.id, title)}
+                        />
                       </div>
                       
                       <p className="text-xs text-neutral-500 mb-2">{lead.origin}</p>
