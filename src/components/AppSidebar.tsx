@@ -32,6 +32,8 @@ import {
 
 const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Dashboard Executivo", url: "/dashboard/executivo", icon: BarChart3 },
+
   { title: "Leads", url: "/leads", icon: Users },
   { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
   { title: "Vendas", url: "/vendas", icon: ShoppingCart },
