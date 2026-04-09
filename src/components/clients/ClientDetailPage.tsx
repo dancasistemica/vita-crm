@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
 import { useDataAccess } from '@/hooks/useDataAccess';
-import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader, History } from 'lucide-react';
+import { ArrowLeft, Plus, ShoppingCart, MessageSquare, CheckSquare, StickyNote, Edit2, Clock, Trash2, Loader, History, Activity } from 'lucide-react';
 import LeadTimeline from '@/components/leads/LeadTimeline';
 import { INTERACTION_TYPES } from '@/types/crm';
 import { toast } from 'sonner';
@@ -225,6 +225,9 @@ export default function ClientDetailPage() {
             <TabsTrigger value="notas" className="flex items-center gap-2">
               <StickyNote className="h-4 w-4" /> Notas
             </TabsTrigger>
+            <TabsTrigger value="frequencia" className="flex items-center gap-2 text-primary-600 font-semibold border-b-2 border-primary-500">
+              <Activity className="h-4 w-4" /> Frequência
+            </TabsTrigger>
             <TabsTrigger value="historico" className="flex items-center gap-2">
               <History className="h-4 w-4" /> Histórico
             </TabsTrigger>
@@ -341,6 +344,24 @@ export default function ClientDetailPage() {
           {/* Agendamentos */}
           <TabsContent value="agendamentos">
             <ScheduledMessagesList organizationId={organizationId} clientId={client.id} />
+          </TabsContent>
+
+          {/* Frequência */}
+          <TabsContent value="frequencia">
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+                <Activity className="h-8 w-8 text-primary-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-neutral-900">Histórico de Frequência</h3>
+                <p className="text-neutral-600 max-w-sm mx-auto mt-2">
+                  Visualize o engajamento, presenças e ausências detalhadas deste cliente em um calendário interativo.
+                </p>
+              </div>
+              <Button onClick={() => navigate(`/clientes/${id}/frequencia`)}>
+                Ver Histórico Completo
+              </Button>
+            </div>
           </TabsContent>
 
           {/* Histórico */}
