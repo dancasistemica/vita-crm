@@ -7,7 +7,7 @@ import ClientsTable from '@/components/clients/ClientsTable';
 import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
 import { FilterChip } from '@/components/clients/FilterChip';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
-import { CreateSubscriptionModal } from '@/components/sales/CreateSubscriptionModal';
+// CreateSubscriptionModal removido e unificado no CreateSaleModal
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -20,7 +20,7 @@ export default function ClientesPage() {
   
   const [showFilters, setShowFilters] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  // showSubscriptionModal agora abre o CreateSaleModal unificado
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [exportOpen, setExportOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function ClientesPage() {
             variant="secondary" 
             size="md" 
             icon={<Plus className="w-4 h-4" />}
-            onClick={() => setShowSubscriptionModal(true)}
+            onClick={() => setShowCreateModal(true)}
           >
             Nova Mensalidade
           </Button>
@@ -204,11 +204,7 @@ export default function ClientesPage() {
         onClose={() => setShowCreateModal(false)}
         onSuccess={() => hook.refetchData()}
       />
-      <CreateSubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-        onSuccess={() => hook.refetchData()}
-      />
+      {/* CreateSubscriptionModal unificado no CreateSaleModal */}
     </div>
   );
 }
