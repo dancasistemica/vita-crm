@@ -103,6 +103,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
 };
 
 export const createUniqueSale = createSaleWithInstallments;
+export const createSale = createSaleWithInstallments;
 
 export const deleteSale = async (saleId: string) => {
   try {
