@@ -37,6 +37,7 @@ const AdminUsersPage = lazy(() => import("@/pages/AdminUsersPage"));
 const VendasPage = lazy(() => import("@/pages/VendasPage").then(module => ({ default: module.VendasPage })));
 const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
 const HistoricoFrequenciaPage = lazy(() => import("@/pages/HistoricoFrequenciaPage"));
+const RegistroPresencaPage = lazy(() => import("@/pages/RegistroPresencaPage"));
 
 const queryClient = new QueryClient();
 
@@ -101,6 +102,7 @@ const App = () => {
                     <Route path="/clientes/por-produto" element={<ClientesPorProdutoPage />} />
                     <Route path="/clientes/:id" element={<ClientDetailPage />} />
                     <Route path="/clientes/:id/frequencia" element={<HistoricoFrequenciaPage />} />
+                    <Route path="/presenca" element={<RegistroPresencaPage />} />
                     <Route path="/interacoes" element={<InteracoesPage />} />
                     <Route path="/tarefas" element={<TarefasPage />} />
                     <Route path="/produtos" element={<ProdutosPage />} />
