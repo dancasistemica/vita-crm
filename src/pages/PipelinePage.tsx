@@ -104,7 +104,11 @@ export default function PipelinePage() {
                         >
                           {lead.name}
                         </p>
-                        <AIPipelineTip lead={lead} stageName={stage.name} />
+                        <AIPipelineTip 
+                          lead={lead} 
+                          stageName={stage.name} 
+                          onCreateTask={(title) => handleCreateTask(lead.id, title)}
+                        />
                       </div>
                       
                       <p className="text-xs text-neutral-500 mb-2">{lead.origin}</p>
