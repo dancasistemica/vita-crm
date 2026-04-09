@@ -130,6 +130,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     const valueToInstall = saleData.value - (saleData.initial_payment || 0);
     const [year, month, day] = saleData.first_payment_date.split('-').map(Number);
     const dayOfMonth = day;
+    const installmentAmount = valueToInstall / saleData.installments;
 
     for (let i = 1; i <= saleData.installments; i += 1) {
       // Cria a data para o mês correspondente
