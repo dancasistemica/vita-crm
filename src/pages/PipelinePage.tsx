@@ -43,6 +43,21 @@ export default function PipelinePage() {
     }
   };
 
+  const handleCreateTask = async (leadId: string, title: string) => {
+    if (!dataAccess) return;
+    try {
+      await dataAccess.createTask({
+        title,
+        lead_id: leadId,
+        due_date: new Date().toISOString().split('T')[0],
+        type: 'outro'
+      });
+      toast.success('Tarefa criada com sucesso!');
+    } catch (err) {
+      toast.error('Erro ao criar tarefa');
+    }
+  };
+
   return (
     <div className="space-y-4 px-2 py-4 sm:p-6">
       <div className="px-1 mb-2">
