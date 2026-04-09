@@ -225,6 +225,9 @@ export default function ClientDetailPage() {
             <TabsTrigger value="notas" className="flex items-center gap-2">
               <StickyNote className="h-4 w-4" /> Notas
             </TabsTrigger>
+            <TabsTrigger value="frequencia" className="flex items-center gap-2 text-primary-600 font-semibold border-b-2 border-primary-500">
+              <Activity className="h-4 w-4" /> Frequência
+            </TabsTrigger>
             <TabsTrigger value="historico" className="flex items-center gap-2">
               <History className="h-4 w-4" /> Histórico
             </TabsTrigger>
