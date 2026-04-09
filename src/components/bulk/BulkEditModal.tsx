@@ -127,11 +127,8 @@ export default function BulkEditModal({ open, onOpenChange, selectedIds, type, o
                 </Select>
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'pipelineStage' && (
-                <Select value={value} onValueChange={setValue}>
-                  
-                  
-                    {pipelineStages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                  
+                <Select value={value} onValueChange={setValue} size="sm">
+                  {pipelineStages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </Select>
               )}
               {currentFieldDef.inputType === 'select' && selectedField === 'responsible' && (
