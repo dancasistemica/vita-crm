@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   fetchClientsByProduct, 
   fetchProductsForOrganization,
-  getProductMetrics
 } from '@/services/clientProductService';
+import { 
+  getProductMetrics, 
+  ProductMetrics 
+} from '@/services/productMetricsService';
 import { ClientsFilterBar, FilterState } from '@/components/clients/ClientsFilterBar';
 import { ClientsByProductTable } from '@/components/clients/ClientsByProductTable';
-import { CONSOLIDATED_ORG_ID } from '@/contexts/OrganizationContext';
-import { supabase } from '@/lib/supabase';
+import { ProductMetricsCard } from '@/components/products/ProductMetricsCard';
+import { ProductMetricsCharts } from '@/components/products/ProductMetricsCharts';
 import { 
-  Users, 
-  Package, 
-  TrendingUp, 
-  AlertCircle,
-  RefreshCw
+  RefreshCw,
+  LayoutDashboard
 } from 'lucide-react';
 
 // Assuming there's a hook or context to get the current organization
@@ -25,7 +25,7 @@ export default function ClientesPorProdutoPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [clients, setClients] = useState<any[]>([]);
-  const [metrics, setMetrics] = useState<any>(null);
+  const [metrics, setMetrics] = useState<ProductMetrics | null>(null);
   const [filters, setFilters] = useState<FilterState>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -97,43 +97,37 @@ export default function ClientesPorProdutoPage() {
         </button>
       </div>
 
-      {/* Métricas do Produto Selecionado */}
+      {/* Dashboard de Métricas */}
       {selectedProductId && metrics && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-sm">
-            <div className="flex items-center gap-3 text-neutral-500 mb-2">
-              <Users className="w-5 h-5" />
-              <span className="text-sm font-medium">Total de Alunos</span>
+        <div className="space-y-6 animate-in slide-in-from-top duration-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ProductMetricsCard 
+              productName={metrics.productName}
+              totalClients={metrics.totalClients}
+              activeClients={metrics.activeClients}
+              activePercentage={metrics.activePercentage}
+              attendanceRate={metrics.attendanceRate}
+              churnRisk={metrics.churnRisk}
+              averageEngagementLevel={metrics.averageEngagementLevel}
+            />
+            
+            <div className="bg-white p-6 rounded-lg border border-neutral-200 shadow-sm flex flex-col justify-center items-center text-center space-y-4">
+               <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center text-primary-600">
+                 <LayoutDashboard className="w-8 h-8" />
+               </div>
+               <div>
+                 <h3 className="text-lg font-bold text-neutral-900">Visão Geral do Produto</h3>
+                 <p className="text-sm text-neutral-500 max-w-xs">
+                   Acompanhe o desempenho de {metrics.productName} em tempo real com indicadores de retenção e engajamento.
+                 </p>
+               </div>
             </div>
-            <div className="text-2xl font-bold text-neutral-900">{metrics.total}</div>
-          </div>
-          
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-sm">
-            <div className="flex items-center gap-3 text-green-600 mb-2">
-              <TrendingUp className="w-5 h-5" />
-              <span className="text-sm font-medium">Alunos Ativos</span>
-            </div>
-            <div className="text-2xl font-bold text-neutral-900">{metrics.active}</div>
-            <div className="text-xs text-neutral-500 mt-1">{metrics.activePercentage}% do total</div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-sm">
-            <div className="flex items-center gap-3 text-red-500 mb-2">
-              <AlertCircle className="w-5 h-5" />
-              <span className="text-sm font-medium">Inativos / Churn</span>
-            </div>
-            <div className="text-2xl font-bold text-neutral-900">{metrics.inactive}</div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-sm">
-            <div className="flex items-center gap-3 text-primary-600 mb-2">
-              <Package className="w-5 h-5" />
-              <span className="text-sm font-medium">Produto</span>
-            </div>
-            <div className="text-lg font-bold text-neutral-900 truncate">
-              {products.find(p => p.id === selectedProductId)?.name || 'Selecionado'}
-            </div>
-          </div>
+          <ProductMetricsCharts 
+            weeklyData={metrics.weeklyData}
+            engagementDistribution={metrics.engagementDistribution}
+          />
         </div>
       )}
 
