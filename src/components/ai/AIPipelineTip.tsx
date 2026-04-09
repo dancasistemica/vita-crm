@@ -51,7 +51,7 @@ Sugira uma ação prática para avançar esta lead no funil.`;
                 {onCreateTask && (
                   <Button size="sm" variant="secondary" className="h-7 text-xs" onClick={() => onCreateTask(response)}>
                     <Plus className="h-3 w-3 mr-1" /> Criar tarefa
-                  </Badge>
+                  </Button>
                 )}
                 <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={regenerate} disabled={loading}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Nova sugestão
