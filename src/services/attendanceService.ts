@@ -1,124 +1,218 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
-interface AttendanceRecord {
+export interface AttendanceRecord {
+  id: string;
+  organization_id: string;
   client_id: string;
   product_id: string;
   class_date: string;
-  attendance_type: 'PRESENTE' | 'AUSENTE' | 'GRAVADA';
-  recorded_by: string;
+  attendance_type: 'presente' | 'ausente' | 'gravada';
+  created_at: string;
+  client_name?: string;
+  client_email?: string;
 }
 
-export async function getProductClients(
+export interface AttendanceFormData {
+  product_id: string;
+  class_date: string;
+  class_description?: string;
+  attendances: Array<{
+    client_id: string;
+    attendance_type: 'presente' | 'ausente' | 'gravada';
+  }>;
+}
+
+// Buscar clientes de um produto
+export const fetchClientsByProduct = async (
   organizationId: string,
   productId: string
-) {
-  console.log('[attendanceService] Buscando clientes do produto:', productId);
-
+) => {
   try {
+    console.log('[attendanceService] Buscando clientes do produto:', productId);
+
     const { data, error } = await supabase
       .from('client_products')
-      .select(
-        `
-        id,
+      .select(`
         client_id,
-        clientes:client_id (
+        clients(
           id,
           name,
-          email,
-          phone
+          email
         )
-      `
-      )
-      .eq('organization_id', organizationId)
+      `)
       .eq('product_id', productId)
-      .eq('payment_status', 'ATIVO');
+      .eq('organization_id', organizationId);
 
     if (error) throw error;
 
-    return (data || []).map((cp: any) => ({
-      client_id: cp.client_id,
-      client_name: cp.clientes?.name || 'Desconhecido',
-      email: cp.clientes?.email || '',
-      phone: cp.clientes?.phone || '',
+    const clients = (data || []).map((cp: any) => ({
+      id: cp.client_id,
+      name: cp.clients?.name || 'Cliente desconhecido',
+      email: cp.clients?.email || '',
     }));
+
+    console.log('[attendanceService] ✅ Clientes encontrados:', clients.length);
+    return clients;
+
   } catch (error) {
-    console.error('[attendanceService] Erro ao buscar clientes:', error);
+    console.error('[attendanceService] ❌ Erro ao buscar clientes:', error);
     throw error;
   }
-}
+};
 
-export async function recordAttendance(
-  organizationId: string,
-  records: AttendanceRecord[]
-) {
-  console.log('[attendanceService] Registrando presença:', {
-    count: records.length,
-    date: records[0]?.class_date,
-  });
-
+// Buscar produtos da organização
+export const fetchProductsForOrganization = async (organizationId: string) => {
   try {
-    // Delete existing records for the same date and product to avoid duplicates
-    // This allows re-submitting the form to update attendance
-    if (records.length > 0) {
-      const { error: deleteError } = await supabase
-        .from('class_attendance')
-        .delete()
-        .eq('organization_id', organizationId)
-        .eq('product_id', records[0].product_id)
-        .eq('class_date', records[0].class_date);
-
-      if (deleteError) throw deleteError;
-    }
+    console.log('[attendanceService] Buscando produtos da organização');
 
     const { data, error } = await supabase
-      .from('class_attendance')
-      .insert(
-        records.map((r) => ({
-          organization_id: organizationId,
-          client_id: r.client_id,
-          product_id: r.product_id,
-          class_date: r.class_date,
-          attendance_type: r.attendance_type,
-          // recorded_by: r.recorded_by, // This column doesn't exist in my check above
-          created_at: new Date().toISOString(),
-        }))
-      );
+      .from('products')
+      .select('id, name')
+      .eq('organization_id', organizationId)
+      .order('name');
 
     if (error) throw error;
 
-    console.log('[attendanceService] Presença registrada com sucesso');
-    return data;
+    console.log('[attendanceService] ✅ Produtos encontrados:', data?.length || 0);
+    return data || [];
+
   } catch (error) {
-    console.error('[attendanceService] Erro ao registrar presença:', error);
+    console.error('[attendanceService] ❌ Erro ao buscar produtos:', error);
     throw error;
   }
-}
+};
 
-export async function getAttendanceForDate(
+// Buscar presença registrada para uma data específica
+export const fetchAttendanceByDate = async (
   organizationId: string,
   productId: string,
   classDate: string
-) {
-  console.log('[attendanceService] Buscando presença para data:', classDate);
-
+) => {
   try {
+    console.log('[attendanceService] Buscando presença para:', {
+      productId,
+      classDate,
+    });
+
     const { data, error } = await supabase
       .from('class_attendance')
-      .select('client_id, attendance_type')
+      .select(`
+        id,
+        client_id,
+        attendance_type,
+        created_at,
+        clients(
+          id,
+          name,
+          email
+        )
+      `)
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
       .eq('class_date', classDate);
 
     if (error) throw error;
 
-    const attendanceMap = new Map<string, string>();
-    (data || []).forEach((record: any) => {
-      attendanceMap.set(record.client_id, record.attendance_type);
-    });
+    const attendances = (data || []).map((att: any) => ({
+      id: att.id,
+      client_id: att.client_id,
+      client_name: att.clients?.name || 'Cliente desconhecido',
+      client_email: att.clients?.email || '',
+      attendance_type: att.attendance_type as 'presente' | 'ausente' | 'gravada',
+      created_at: att.created_at,
+    }));
 
-    return attendanceMap;
+    console.log('[attendanceService] ✅ Registros encontrados:', attendances.length);
+    return attendances;
+
   } catch (error) {
-    console.error('[attendanceService] Erro ao buscar presença:', error);
+    console.error('[attendanceService] ❌ Erro ao buscar presença:', error);
     throw error;
   }
-}
+};
+
+// Salvar/atualizar presença
+export const saveAttendance = async (
+  organizationId: string,
+  productId: string,
+  classDate: string,
+  attendances: Array<{
+    client_id: string;
+    attendance_type: 'presente' | 'ausente' | 'gravada';
+  }>
+) => {
+  try {
+    console.log('[attendanceService] Salvando presença:', {
+      productId,
+      classDate,
+      totalClients: attendances.length,
+    });
+
+    // PASSO 1: Deletar registros antigos para esta data/produto
+    const { error: deleteError } = await supabase
+      .from('class_attendance')
+      .delete()
+      .eq('organization_id', organizationId)
+      .eq('product_id', productId)
+      .eq('class_date', classDate);
+
+    if (deleteError) {
+      console.error('[attendanceService] ❌ Erro ao deletar registros antigos:', deleteError);
+      throw deleteError;
+    }
+
+    // PASSO 2: Inserir novos registros
+    const recordsToInsert = attendances.map(att => ({
+      organization_id: organizationId,
+      client_id: att.client_id,
+      product_id: productId,
+      class_date: classDate,
+      attendance_type: att.attendance_type,
+    }));
+
+    if (recordsToInsert.length > 0) {
+      const { error: insertError } = await supabase
+        .from('class_attendance')
+        .insert(recordsToInsert);
+
+      if (insertError) {
+        console.error('[attendanceService] ❌ Erro ao inserir presença:', insertError);
+        throw insertError;
+      }
+    }
+
+    console.log('[attendanceService] ✅ Presença salva com sucesso');
+    return true;
+
+  } catch (error) {
+    console.error('[attendanceService] ❌ Erro ao salvar presença:', error);
+    throw error;
+  }
+};
+
+// Atualizar um único registro de presença
+export const updateSingleAttendance = async (
+  attendanceId: string,
+  attendanceType: 'presente' | 'ausente' | 'gravada'
+) => {
+  try {
+    console.log('[attendanceService] Atualizando presença:', {
+      attendanceId,
+      attendanceType,
+    });
+
+    const { error } = await supabase
+      .from('class_attendance')
+      .update({ attendance_type: attendanceType })
+      .eq('id', attendanceId);
+
+    if (error) throw error;
+
+    console.log('[attendanceService] ✅ Presença atualizada');
+    return true;
+
+  } catch (error) {
+    console.error('[attendanceService] ❌ Erro ao atualizar presença:', error);
+    throw error;
+  }
+};
