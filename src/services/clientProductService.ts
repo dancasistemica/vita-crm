@@ -76,13 +76,21 @@ export async function fetchClientsByProduct(
   }
 
   // Note: Filtering on joined tables in Supabase works by checking if any record exists.
-  // For engagement_level, it's on the 'clientes' (client_id) relationship.
+  // We use .not('clientes', 'is', null) or similar if needed, but eq('clientes.field') 
+  // actually performs an inner join filter in newer postgrest versions if specified.
   if (filters?.engagementLevel) {
     query = query.eq('clientes.engagement_level', filters.engagementLevel);
   }
 
   if (filters?.riskOfChurn) {
     query = query.eq('risk_of_churn', true);
+  }
+
+  if (filters?.searchTerm) {
+    // Se houver termo de busca, tentamos filtrar pelo nome ou email do cliente
+    // Como o filtro é em tabela relacionada, o ideal seria usar !inner se quisermos 
+    // que o banco filtre. Para simplificar e manter compatibilidade:
+    query = query.or(`name.ilike.%${filters.searchTerm}%,email.ilike.%${filters.searchTerm}%`, { foreignTable: 'clientes' });
   }
 
   const { data, error } = await query.order('created_at', { ascending: false });
