@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { PageTitle, Skeleton, Alert, Toaster } from '@/components/ui/ds';
 import { ClipboardCheck, Loader2 } from 'lucide-react';
@@ -9,6 +10,12 @@ import { saveClassSession } from '@/services/classSessionService';
 
 export default function RegistroPresencaPage() {
   const { organizationId } = useOrganization();
+  const [searchParams] = useSearchParams();
+  
+  // Receber parâmetros da URL
+  const urlProductId = searchParams.get('product');
+  const urlDate = searchParams.get('date');
+
   const [products, setProducts] = useState<any[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -116,6 +123,12 @@ export default function RegistroPresencaPage() {
           products={products}
           onSubmit={handleSubmitAttendance}
           isLoading={isSaving}
+          initialData={urlProductId && urlDate ? {
+            product_id: urlProductId,
+            class_date: urlDate,
+            class_description: '',
+            attendances: []
+          } : undefined}
         />
       )}
       <Toaster />

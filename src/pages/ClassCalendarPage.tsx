@@ -80,6 +80,7 @@ export default function ClassCalendarPage() {
 
   const handleCreateNewClass = async (formData: {
     class_date: string;
+    class_time: string;
     description: string;
   }) => {
     try {
@@ -87,6 +88,8 @@ export default function ClassCalendarPage() {
 
       const { saveClassSession } = await import('@/services/classSessionService');
       
+      // Concatenar data e hora se necessário, ou enviar separadamente se o serviço suportar
+      // Por enquanto vamos manter o comportamento original mas aceitando os novos campos
       await saveClassSession(
         organization!.id,
         selectedProductId,
@@ -237,6 +240,7 @@ export default function ClassCalendarPage() {
           ) : detail ? (
             <ClassCalendarDetail 
               classDate={selectedDate}
+              productId={selectedProductId}
               session={detail.session}
               attendances={detail.attendances}
               onClose={() => setSelectedDate(null)}
