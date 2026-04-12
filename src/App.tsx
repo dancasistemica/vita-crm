@@ -115,6 +115,7 @@ const App = () => {
                     <Route path="/configuracoes" element={<ConfiguracoesPage />} />
                     <Route path="/personalizar" element={<CustomizePage />} />
                     <Route path="/perfil" element={<ProfilePage />} />
+                    <Route path="/calendario-aulas" element={<ClassCalendarPage />} />
                     <Route path="/search" element={<SearchResultsPage />} />
                   </Route>
                 </Route>
