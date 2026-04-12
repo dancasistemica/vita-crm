@@ -5,6 +5,7 @@ import { ClipboardCheck, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { AttendanceForm } from '@/components/attendance/AttendanceForm';
 import { fetchProductsForOrganization, saveAttendance } from '@/services/attendanceService';
+import { saveClassSession } from '@/services/classSessionService';
 
 export default function RegistroPresencaPage() {
   const { organizationId } = useOrganization();
