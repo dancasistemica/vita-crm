@@ -163,6 +163,51 @@ export type Database = {
           },
         ]
       }
+      class_sessions: {
+        Row: {
+          class_date: string
+          created_at: string
+          description: string | null
+          id: string
+          organization_id: string
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_date: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id: string
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_date?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id?: string
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_sessions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_products: {
         Row: {
           client_id: string

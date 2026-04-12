@@ -30,10 +30,13 @@ export const fetchClientsByProduct = async (
   try {
     console.log('[attendanceService] Buscando clientes do produto:', productId);
 
+    // PASSO 1: Buscar clientes com acesso ao produto
     const { data, error } = await supabase
       .from('client_products')
       .select(`
         client_id,
+        start_date,
+        end_date,
         clients(
           id,
           name,
@@ -45,17 +48,87 @@ export const fetchClientsByProduct = async (
 
     if (error) throw error;
 
-    const clients = (data || []).map((cp: any) => ({
+    // PASSO 2: Filtrar apenas clientes com acesso ativo
+    const today = new Date().toISOString().split('T')[0];
+    const activeClients = (data || []).filter((cp: any) => {
+      const startDate = cp.start_date;
+      const endDate = cp.end_date;
+
+      // Cliente ativo se: data >= start_date E (sem end_date OU data <= end_date)
+      const isActive = startDate <= today && (!endDate || endDate >= today);
+
+      if (!isActive) {
+        console.log('[attendanceService] ⚠️ Cliente inativo:', {
+          name: cp.clients?.name,
+          startDate,
+          endDate,
+          today,
+        });
+      }
+
+      return isActive;
+    });
+
+    const clients = activeClients.map((cp: any) => ({
       id: cp.client_id,
       name: cp.clients?.name || 'Cliente desconhecido',
       email: cp.clients?.email || '',
     }));
 
-    console.log('[attendanceService] ✅ Clientes encontrados:', clients.length);
+    console.log('[attendanceService] ✅ Clientes ativos encontrados:', clients.length);
     return clients;
 
   } catch (error) {
     console.error('[attendanceService] ❌ Erro ao buscar clientes:', error);
+    throw error;
+  }
+};
+
+export const fetchAttendanceWithPreviousData = async (
+  organizationId: string,
+  productId: string,
+  classDate: string
+) => {
+  try {
+    console.log('[attendanceService] Buscando presença anterior para:', {
+      productId,
+      classDate,
+    });
+
+    // PASSO 1: Buscar presença registrada para esta data
+    const { data, error } = await supabase
+      .from('class_attendance')
+      .select(`
+        id,
+        client_id,
+        attendance_type,
+        created_at,
+        clients(
+          id,
+          name,
+          email
+        )
+      `)
+      .eq('organization_id', organizationId)
+      .eq('product_id', productId)
+      .eq('class_date', classDate);
+
+    if (error) throw error;
+
+    // PASSO 2: Transformar em mapa para fácil lookup
+    const attendanceMap = new Map();
+    (data || []).forEach((att: any) => {
+      attendanceMap.set(att.client_id, {
+        id: att.id,
+        attendance_type: att.attendance_type,
+      });
+    });
+
+    console.log('[attendanceService] ✅ Presença anterior carregada:', attendanceMap.size, 'registros');
+    return attendanceMap;
+
+  } catch (error) {
+    console.error('[attendanceService] ❌ Erro ao buscar presença anterior:', error);
     throw error;
   }
 };

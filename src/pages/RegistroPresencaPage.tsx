@@ -5,6 +5,7 @@ import { ClipboardCheck, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { AttendanceForm } from '@/components/attendance/AttendanceForm';
 import { fetchProductsForOrganization, saveAttendance } from '@/services/attendanceService';
+import { saveClassSession } from '@/services/classSessionService';
 
 export default function RegistroPresencaPage() {
   const { organizationId } = useOrganization();
@@ -49,6 +50,17 @@ export default function RegistroPresencaPage() {
 
     setIsSaving(true);
     try {
+      console.log('[RegistroPresencaPage] Iniciando salvamento de presença e sessão');
+
+      // PASSO 1: Salvar a descrição da sessão de aula
+      await saveClassSession(
+        organizationId,
+        data.product_id,
+        data.class_date,
+        data.class_description
+      );
+
+      // PASSO 2: Salvar os registros de presença dos alunos
       await saveAttendance(
         organizationId,
         data.product_id,
@@ -58,14 +70,14 @@ export default function RegistroPresencaPage() {
 
       toast({
         title: 'Sucesso',
-        description: 'Registro de presença salvo com sucesso!',
+        description: 'Registro de presença e descrição da aula salvos com sucesso!',
       });
     } catch (error) {
-      console.error('[RegistroPresencaPage] Erro ao salvar presença:', error);
+      console.error('[RegistroPresencaPage] Erro ao salvar:', error);
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Ocorreu um erro ao salvar o registro de presença.',
+        description: 'Ocorreu um erro ao salvar o registro.',
       });
       throw error;
     } finally {
