@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Button, Input, Alert } from '@/components/ui/ds';
-import { X, Calendar, Clock, BookOpen } from 'lucide-react';
+import { X, Calendar, Clock, BookOpen, Loader } from 'lucide-react';
 
 interface ClassCalendarNewClassProps {
   organizationId: string;
@@ -139,14 +139,20 @@ export const ClassCalendarNewClass = ({
             >
               Cancelar
             </Button>
-            <Button
-              variant="success"
+            <button
               type="submit"
-              loading={isSubmitting}
-              className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-success-600 hover:bg-success-700 disabled:bg-neutral-300 text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
             >
-              {isSubmitting ? 'Criando...' : 'Criar Aula'}
-            </Button>
+              {isSubmitting ? (
+                <>
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Criando...
+                </>
+              ) : (
+                '✓ Criar Aula'
+              )}
+            </button>
           </div>
         </form>
       </Card>
