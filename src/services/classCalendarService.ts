@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { format, startOfMonth, endOfMonth } from 'date-fns';
 
 export interface ClassCalendarData {
   id: string;
@@ -23,8 +24,9 @@ export const fetchClassesByMonth = async (
   try {
     console.log('[classCalendarService] Buscando aulas do mês:', { year, month, productId });
 
-    const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0];
-    const endDate = new Date(year, month, 0).toISOString().split('T')[0];
+    const baseDate = new Date(year, month - 1, 1);
+    const startDate = format(startOfMonth(baseDate), 'yyyy-MM-dd');
+    const endDate = format(endOfMonth(baseDate), 'yyyy-MM-dd');
 
     // PASSO 1: Buscar sessões de aula do mês
     const { data: sessions, error: sessionsError } = await supabase
@@ -63,7 +65,7 @@ export const fetchClassesByMonth = async (
         const totalCount = attendances?.length || 0;
 
         // Determinar status
-        const today = new Date().toISOString().split('T')[0];
+        const today = format(new Date(), 'yyyy-MM-dd');
         let status: 'registered' | 'pending' | 'future' = 'future';
         
         if (session.class_date < today) {
@@ -110,7 +112,10 @@ export const fetchClassDetail = async (
     // PASSO 1: Buscar sessão
     const { data: session, error: sessionError } = await supabase
       .from('class_sessions')
-      .select('*')
+      .select(`
+        *,
+        products(name)
+      `)
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
       .eq('class_date', classDate)
