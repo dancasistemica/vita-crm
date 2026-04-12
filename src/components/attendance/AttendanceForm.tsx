@@ -172,7 +172,7 @@ export const AttendanceForm = ({
                 </h3>
                 <Button 
                   type="button" 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm"
                   onClick={() => setAttendances(prev => prev.map(a => ({ ...a, attendance_type: 'presente' })))}
                   className="text-xs"
