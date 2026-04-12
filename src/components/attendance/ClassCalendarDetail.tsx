@@ -6,6 +6,7 @@ import { ptBR } from 'date-fns/locale';
 
 interface ClassCalendarDetailProps {
   classDate: string;
+  productId: string;
   session: any;
   attendances: Array<{
     id: string;
@@ -14,21 +15,19 @@ interface ClassCalendarDetailProps {
     client_email: string;
     attendance_type: string;
   }>;
-  onClose?: () => void;
+  onClose: () => void;
+  onRefresh?: () => void;
 }
 
 export const ClassCalendarDetail = ({
   classDate,
+  productId,
   session,
   attendances,
   onClose,
+  onRefresh,
 }: ClassCalendarDetailProps) => {
   const navigate = useNavigate();
-
-  const handleEditAttendance = () => {
-    // Navigate to the attendance registration page for this date
-    navigate(`/registro-presenca?date=${classDate}&productId=${session.product_id}`);
-  };
 
   const getAttendanceBadge = (type: string) => {
     switch (type.toLowerCase()) {
@@ -69,9 +68,6 @@ export const ClassCalendarDetail = ({
             </div>
           </div>
         </div>
-        <Button variant="primary" size="md" onClick={handleEditAttendance}>
-          Editar Presença
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -144,6 +140,28 @@ export const ClassCalendarDetail = ({
             </TableBody>
           </Table>
         </div>
+      </div>
+
+      {/* Botão Editar Presença */}
+      <div className="flex gap-4 mt-6 pt-6 border-t border-neutral-200">
+        <Button
+          variant="secondary"
+          onClick={onClose}
+          className="flex-1"
+        >
+          Fechar
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => {
+            // Navegar para página de registro de presença com produto e data pré-selecionados
+            const url = `/registro-presenca?product=${productId}&date=${classDate}`;
+            window.location.href = url;
+          }}
+          className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold"
+        >
+          ✏️ Editar Presença
+        </Button>
       </div>
     </Card>
   );
