@@ -157,7 +157,7 @@ export const AttendanceForm = ({
           </div>
 
           {errors.length > 0 && (
-            <Alert variant="destructive">
+            <Alert variant="error">
               {errors.map((error, i) => (
                 <div key={i}>{error}</div>
               ))}
