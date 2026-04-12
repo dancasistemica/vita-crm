@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck
+  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck, Calendar
 } from "lucide-react";
 
 import { NavLink } from "@/components/NavLink";
@@ -40,6 +40,7 @@ const baseItems = [
   { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Clientes por Produto", url: "/clientes/por-produto", icon: Package },
   { title: "Presença", url: "/presenca", icon: ClipboardCheck },
+  { title: "Calendário", url: "/calendario-aulas", icon: Calendar },
 
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
