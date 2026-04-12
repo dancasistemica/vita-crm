@@ -95,6 +95,33 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     // Converter lead em cliente
     await convertLeadToClient(saleData.client_id, organizationId);
 
+    // ✨ NOVO: Registrar relacionamento com produto se houver
+    if (saleData.sales_stage_id) {
+      try {
+        // Obter o product_id real da etapa de venda
+        const { data: stage } = await supabase
+          .from('product_sales_stages')
+          .select('product_id')
+          .eq('id', saleData.sales_stage_id)
+          .single();
+
+        if (stage?.product_id) {
+          await supabase
+            .from('client_products')
+            .upsert({
+              organization_id: organizationId,
+              client_id: saleData.client_id,
+              product_id: stage.product_id,
+              payment_status: 'ATIVO', // Se criou venda com parcelas, assumimos que está ativo
+              start_date: new Date().toISOString().split('T')[0],
+              plan_type: 'AVULSO'
+            }, { onConflict: 'client_id,product_id' });
+        }
+      } catch (cpErr) {
+        console.warn('[SalesService] Erro ao registrar client_product:', cpErr);
+      }
+    }
+
     return { sale, installments: installmentRecords };
   } catch (error) {
     console.error('[SalesService] ❌ Erro ao criar venda:', error);
