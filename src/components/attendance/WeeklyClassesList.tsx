@@ -68,8 +68,8 @@ export const WeeklyClassesList = ({
     <div className="space-y-6">
       {sortedDays.map(day => (
         <div key={day} className="space-y-3">
-          <h3 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary-600" />
+          <h3 className="text-lg font-semibold text-neutral-800 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-primary-500" />
             {day}
           </h3>
 
@@ -79,18 +79,18 @@ export const WeeklyClassesList = ({
                 key={cls.id}
                 variant="elevated"
                 padding="md"
-                className="cursor-pointer hover:shadow-lg hover:border-primary-300 transition-all duration-200"
+                className="cursor-pointer hover:shadow-lg hover:border-primary-200 transition-all duration-200"
                 onClick={() => onSelectClass(cls)}
               >
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-neutral-500" />
-                      <span className="font-medium text-neutral-900">{cls.class_time}</span>
+                      <Clock className="w-4 h-4 text-neutral-400" />
+                      <span className="font-medium text-neutral-700">{cls.class_time}</span>
                     </div>
-                    <h4 className="font-bold text-lg text-primary-700">{cls.product_name}</h4>
+                    <h4 className="font-bold text-lg text-primary-600">{cls.product_name}</h4>
                     {cls.description && (
-                      <p className="text-sm text-neutral-600 line-clamp-2">{cls.description}</p>
+                      <p className="text-sm text-neutral-500 line-clamp-2">{cls.description}</p>
                     )}
                   </div>
                   <Badge variant="primary">
@@ -98,7 +98,7 @@ export const WeeklyClassesList = ({
                     {cls.attendance_count}
                   </Badge>
                 </div>
-                <div className="mt-4 flex items-center justify-end text-primary-600 font-medium text-sm">
+                <div className="mt-4 flex items-center justify-end text-primary-500 font-medium text-sm">
                   Ver/Editar Presença
                   <ChevronRight className="ml-1 w-4 h-4" />
                 </div>
