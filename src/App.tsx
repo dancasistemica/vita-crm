@@ -39,6 +39,7 @@ const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
 const HistoricoFrequenciaPage = lazy(() => import("@/pages/HistoricoFrequenciaPage"));
 const RegistroPresencaPage = lazy(() => import("@/pages/RegistroPresencaPage"));
 const DashboardExecutivoPage = lazy(() => import("@/pages/DashboardExecutivoPage"));
+const ClassCalendarPage = lazy(() => import("@/pages/ClassCalendarPage"));
 
 
 const queryClient = new QueryClient();
