@@ -1,43 +1,117 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useOrganization } from '@/contexts/OrganizationContext';
 import { fetchClassesByMonth, fetchClassDetail, fetchMonthStatistics } from '@/services/classCalendarService';
+import { fetchProductsForOrganization } from '@/services/attendanceService';
 import { ClassCalendar } from '@/components/attendance/ClassCalendar';
 import { ClassCalendarDetail } from '@/components/attendance/ClassCalendarDetail';
-import { PageTitle, Select, Skeleton } from '@/components/ui/ds';
-import { useQuery } from '@tanstack/react-query';
+import { ClassCalendarNewClass } from '@/components/attendance/ClassCalendarNewClass';
+import { PageTitle, Select, Skeleton, Button } from '@/components/ui/ds';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Calendar, Search, Filter, LayoutDashboard, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 export default function ClassCalendarPage() {
   const { session } = useAuth();
-  const organizationId = session?.user?.user_metadata?.organization_id;
+  const { organization } = useOrganization();
+  const organizationId = organization?.id;
+  const queryClient = useQueryClient();
 
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  
+  const [showNewClassModal, setShowNewClassModal] = useState(false);
+  const [newClassDate, setNewClassDate] = useState<string>('');
 
-  // Fetch products
-  const { data: products } = useQuery({
-    queryKey: ['products', organizationId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, name')
-        .eq('organization_id', organizationId)
-        .order('name');
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!organizationId,
-  });
-
-  // Set first product as default
   useEffect(() => {
-    if (products && products.length > 0 && !selectedProductId) {
-      setSelectedProductId(products[0].id);
+    console.log('[ClassCalendarPage] useEffect disparado');
+    console.log('[ClassCalendarPage] organization:', organization);
+
+    if (organization?.id) {
+      console.log('[ClassCalendarPage] Carregando produtos para org:', organization.id);
+      loadProducts();
+    } else {
+      console.warn('[ClassCalendarPage] ⚠️ organization?.id não disponível');
     }
-  }, [products, selectedProductId]);
+  }, [organization?.id]);
+
+  const loadProducts = async () => {
+    try {
+      setIsLoading(true);
+      console.log('[ClassCalendarPage] Iniciando loadProducts');
+
+      if (!organization?.id) {
+        console.error('[ClassCalendarPage] ❌ organization?.id é undefined');
+        toast.error('Organização não carregada. Recarregue a página.');
+        setProducts([]);
+        return;
+      }
+
+      console.log('[ClassCalendarPage] Chamando fetchProductsForOrganization com:', organization.id);
+      const data = await fetchProductsForOrganization(organization.id);
+      
+      console.log('[ClassCalendarPage] ✅ Produtos retornados:', data);
+      console.log('[ClassCalendarPage] Total de produtos:', data.length);
+
+      setProducts(data);
+
+      if (data && data.length > 0) {
+        console.log('[ClassCalendarPage] Selecionando primeiro produto:', data[0].id);
+        setSelectedProductId(data[0].id);
+      } else {
+        console.warn('[ClassCalendarPage] ⚠️ Nenhum produto encontrado para org:', organization.id);
+        setSelectedProductId('');
+        toast.warning('Nenhum produto cadastrado. Crie um produto primeiro.');
+      }
+    } catch (error) {
+      console.error('[ClassCalendarPage] ❌ Erro ao carregar produtos:', error);
+      console.error('[ClassCalendarPage] Stack:', error instanceof Error ? error.stack : 'N/A');
+      toast.error(`Erro ao carregar produtos: ${error instanceof Error ? error.message : 'Desconhecido'}`);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreateNewClass = async (formData: {
+    class_date: string;
+    description: string;
+  }) => {
+    try {
+      console.log('[ClassCalendarPage] Criando nova aula:', formData);
+
+      const { saveClassSession } = await import('@/services/classSessionService');
+      
+      await saveClassSession(
+        organization!.id,
+        selectedProductId,
+        formData.class_date,
+        formData.description
+      );
+
+      console.log('[ClassCalendarPage] ✅ Aula criada com sucesso');
+      toast.success('Aula criada! Agora registre a presença.');
+      
+      setShowNewClassModal(false);
+      setNewClassDate(formData.class_date);
+      
+      // Recarregar aulas
+      await queryClient.invalidateQueries({ queryKey: ['classes', organizationId, selectedProductId] });
+      await queryClient.invalidateQueries({ queryKey: ['stats', organizationId, selectedProductId] });
+      
+      // Abrir detalhes da aula criada
+      setSelectedDate(formData.class_date);
+
+    } catch (error) {
+      console.error('[ClassCalendarPage] ❌ Erro ao criar aula:', error);
+      toast.error('Erro ao criar aula');
+    }
+  };
 
   // Fetch classes for the month
   const { data: classes, isLoading: isLoadingClasses } = useQuery({
@@ -84,17 +158,31 @@ export default function ClassCalendarPage() {
           icon={<Calendar className="w-6 h-6 text-primary-600" />}
         />
         
-        <div className="w-full lg:w-72 bg-white p-1 rounded-xl shadow-sm border border-neutral-200">
-          <Select
-            options={products?.map(p => ({ label: p.name, value: p.id })) || []}
-            value={selectedProductId || ''}
-            onValueChange={(val) => {
-              setSelectedProductId(val);
-              setSelectedDate(null);
-            }}
-            placeholder="Selecione um produto"
-            className="border-none focus:ring-0"
-          />
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          <div className="w-full lg:w-72 bg-white p-1 rounded-xl shadow-sm border border-neutral-200">
+            <Select
+              options={products?.map(p => ({ label: p.name, value: p.id })) || []}
+              value={selectedProductId || ''}
+              onValueChange={(val) => {
+                setSelectedProductId(val);
+                setSelectedDate(null);
+              }}
+              placeholder="Selecione um produto"
+              className="border-none focus:ring-0"
+            />
+          </div>
+
+          {selectedProductId && (
+            <div className="flex gap-2">
+              <Button
+                variant="primary"
+                onClick={() => setShowNewClassModal(true)}
+                className="flex-1 px-8"
+              >
+                + Nova Aula
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -166,6 +254,15 @@ export default function ClassCalendarPage() {
           )}
         </div>
       </div>
+
+      {showNewClassModal && (
+        <ClassCalendarNewClass
+          organizationId={organization!.id}
+          productId={selectedProductId}
+          onClose={() => setShowNewClassModal(false)}
+          onSubmit={handleCreateNewClass}
+        />
+      )}
     </div>
   );
 }
