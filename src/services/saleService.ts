@@ -672,9 +672,30 @@ export const createSale = async (
       sale = await createSubscriptionSale(organizationId, saleData);
     }
 
-    // ✨ NOVO: Converter lead em cliente
-    console.log('[SaleService] Convertendo lead em cliente...');
+    // ✨ NOVO: Converter lead em cliente e criar relacionamento com produto
+    console.log('[SaleService] Convertendo lead em cliente e registrando produto...');
     await convertLeadToClient(saleData.client_id, organizationId);
+    
+    // Obter o product_id real da etapa de venda
+    const { data: stage } = await supabase
+      .from('product_sales_stages')
+      .select('product_id')
+      .eq('id', saleData.sales_stage_id)
+      .single();
+
+    if (stage?.product_id) {
+      // Registrar na tabela client_products para visibilidade nos dashboards
+      await supabase
+        .from('client_products')
+        .upsert({
+          organization_id: organizationId,
+          client_id: saleData.client_id,
+          product_id: stage.product_id,
+          payment_status: saleData.sale_type === 'mensalidade' ? 'ATIVO' : 'PENDENTE',
+          start_date: new Date().toISOString().split('T')[0],
+          plan_type: saleData.sale_type === 'mensalidade' ? 'MENSAL' : 'AVULSO',
+        }, { onConflict: 'client_id,product_id' });
+    }
 
     console.log('[SaleService] ✅ Venda criada e lead convertido em cliente');
     return sale;
