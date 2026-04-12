@@ -156,12 +156,8 @@ export const ClassCalendarDetail = ({
             console.log('[ClassCalendarDetail] Navegando para Registro de Presença');
             console.log('[ClassCalendarDetail] Parâmetros:', { productId, classDate });
             
-            // Usar window.location.href com URL completa
-            const baseUrl = window.location.origin;
-            const url = `${baseUrl}/registro-presenca?product=${encodeURIComponent(productId)}&date=${encodeURIComponent(classDate)}`;
-            
-            console.log('[ClassCalendarDetail] URL completa:', url);
-            window.location.href = url;
+            // Usar React Router navigate em vez de window.location.href
+            navigate(`/registro-presenca?product=${encodeURIComponent(productId)}&date=${encodeURIComponent(classDate)}`);
           }}
           className="flex-1 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-all"
         >
