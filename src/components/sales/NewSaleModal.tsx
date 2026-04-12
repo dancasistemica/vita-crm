@@ -196,13 +196,13 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-3xl">
+    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-3xl overflow-visible">
       
         <div className="mb-4">
           <h2 className="text-2xl font-semibold">Nova Venda</h2>
         </div>
 
-        <div className="space-y-6 py-2 min-h-[500px]">
+        <div className="space-y-6 py-2 min-h-[600px] overflow-visible">
           {/* Section 1: Lead/Client search */}
           <div className="space-y-3">
             <Label>Selecione o Lead ou Cliente *</Label>
@@ -232,7 +232,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                   className="pl-9"
                 />
                 {showResults && searchResults.length > 0 && (
-                  <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-[100] mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto shadow-xl ring-1 ring-black/5">
                     {searchResults.map(lead => (
                       <Button variant="secondary" size="sm"
                         key={lead.id}

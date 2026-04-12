@@ -214,7 +214,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
 
   return (
     <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-neutral-200">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-visible border border-neutral-200">
         
         {/* Header com Progresso */}
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
@@ -256,7 +256,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
               
               {/* FASE 1: Cliente */}
               {currentPhase === 1 && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 min-h-[400px]">
                   <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">1</span>
                     Selecionar Cliente
@@ -274,7 +274,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                       error={validationErrors.find(e => e.field === 'client_id')?.message}
                     />
                     {showClientDropdown && clientSearch && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                      <div className="absolute z-[100] w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto ring-1 ring-black/5">
                         {filteredClients.length > 0 ? (
                           filteredClients.map(client => (
                             <button
