@@ -256,7 +256,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
               
               {/* FASE 1: Cliente */}
               {currentPhase === 1 && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 min-h-[400px]">
                   <h3 className="text-lg font-medium text-neutral-900 flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">1</span>
                     Selecionar Cliente
