@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from './Card';
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DialogProps {
   isOpen?: boolean;
