@@ -196,13 +196,13 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-3xl">
       
         <div className="mb-4">
           <h2 className="text-2xl font-semibold">Nova Venda</h2>
         </div>
 
-        <div className="space-y-6 py-2">
+        <div className="space-y-6 py-2 min-h-[500px]">
           {/* Section 1: Lead/Client search */}
           <div className="space-y-3">
             <Label>Selecione o Lead ou Cliente *</Label>
@@ -253,6 +253,8 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
               </div>
             )}
           </div>
+
+          <div className="pb-4"></div>
 
           {/* Section 2: Sale data */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
