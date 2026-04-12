@@ -714,10 +714,10 @@ export const convertLeadToClient = async (
       organizationId,
     });
 
-    // PASSO 1: Verificar se lead já é cliente
+    // PASSO 1: Buscar dados completos do lead
     const { data: leadData, error: leadError } = await supabase
       .from('leads')
-      .select('is_client, became_client_at')
+      .select('*')
       .eq('id', leadId)
       .eq('organization_id', organizationId)
       .single();
@@ -727,29 +727,38 @@ export const convertLeadToClient = async (
       throw leadError;
     }
 
-    // Se já é cliente, não fazer nada
-    if (leadData?.is_client) {
-      console.log('[SaleService] ℹ️ Lead já é cliente');
-      return;
+    // PASSO 2: Atualizar flag is_client no lead (se ainda não for)
+    if (!leadData?.is_client) {
+      const { error: updateError } = await supabase
+        .from('leads')
+        .update({
+          is_client: true,
+          became_client_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', leadId);
+
+      if (updateError) throw updateError;
     }
 
-    // PASSO 2: Converter lead em cliente
-    const { error: updateError } = await supabase
-      .from('leads')
-      .update({
-        is_client: true,
-        became_client_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', leadId)
-      .eq('organization_id', organizationId);
+    // PASSO 3: Upsert na tabela 'clients' para manter compatibilidade
+    const { error: clientUpsertError } = await supabase
+      .from('clients')
+      .upsert({
+        id: leadId,
+        organization_id: organizationId,
+        name: leadData.name,
+        email: leadData.email,
+        phone: leadData.phone,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
 
-    if (updateError) {
-      console.error('[SaleService] ❌ Erro ao converter lead:', updateError.message);
-      throw updateError;
+    if (clientUpsertError) {
+      console.error('[SaleService] ❌ Erro ao sincronizar tabela clients:', clientUpsertError.message);
+      throw clientUpsertError;
     }
 
-    console.log('[SaleService] ✅ Lead convertido em cliente com sucesso');
+    console.log('[SaleService] ✅ Lead convertido e sincronizado na tabela clients');
   } catch (error) {
     console.error('[SaleService] ❌ Erro crítico ao converter lead:', error);
     throw error;
