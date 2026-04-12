@@ -39,7 +39,7 @@ const baseItems = [
   { title: "Vendas", url: "/vendas", icon: ShoppingCart },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Clientes por Produto", url: "/clientes/por-produto", icon: Package },
-  { title: "Presença", url: "/presenca", icon: ClipboardCheck },
+  { title: "Presença", url: "/registro-presenca", icon: ClipboardCheck },
   { title: "Calendário", url: "/calendario-aulas", icon: Calendar },
 
   { title: "Interações", url: "/interacoes", icon: MessageCircle },
@@ -145,6 +145,8 @@ export function AppSidebar() {
                     asChild 
                     active={location.pathname === item.url}
                     onClick={() => {
+                      console.log('[Sidebar] Navegando para:', item.url);
+                      console.log('[Sidebar] Path completo:', window.location.origin + item.url);
                       if (window.innerWidth < 768) {
                         // @ts-ignore
                         setOpen(false);
