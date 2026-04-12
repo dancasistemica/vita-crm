@@ -214,7 +214,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
 
   return (
     <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-neutral-200">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-visible border border-neutral-200">
         
         {/* Header com Progresso */}
         <div className="p-6 bg-neutral-50 border-b border-neutral-200">
