@@ -1,63 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { PageTitle, Skeleton, Alert, Toaster } from '@/components/ui/ds';
-import { ClipboardCheck, Loader2 } from 'lucide-react';
+import { PageTitle, Skeleton, Alert, Toaster, Button } from '@/components/ui/ds';
+import { ClipboardCheck, ArrowLeft, Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { AttendanceForm } from '@/components/attendance/AttendanceForm';
-import { fetchProductsForOrganization, saveAttendance } from '@/services/attendanceService';
+import { WeeklyClassesList } from '@/components/attendance/WeeklyClassesList';
+import { ClassSearchFilters } from '@/components/attendance/ClassSearchFilters';
+import { 
+  fetchProductsForOrganization, 
+  saveAttendance, 
+  fetchWeeklyClasses 
+} from '@/services/attendanceService';
 import { saveClassSession } from '@/services/classSessionService';
 
 export default function RegistroPresencaPage() {
-  const { organization, organizationId } = useOrganization();
-  const [searchParams] = useSearchParams();
+  const { organizationId } = useOrganization();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
   
-  // Logs para debug
-  console.log('[RegistroPresencaPage] 🔍 Página carregada');
-  console.log('[RegistroPresencaPage] URL completa:', window.location.href);
-  console.log('[RegistroPresencaPage] searchParams:', Object.fromEntries(searchParams));
-
   const urlProductId = searchParams.get('product');
   const urlDate = searchParams.get('date');
 
-  console.log('[RegistroPresencaPage] ✅ Parâmetros extraídos:', {
-    urlProductId,
-    urlDate,
-  });
-
   const [products, setProducts] = useState<any[]>([]);
+  const [weeklyClasses, setWeeklyClasses] = useState<any[]>([]);
+  const [filteredClasses, setFilteredClasses] = useState<any[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [isLoadingWeekly, setIsLoadingWeekly] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const { toast } = useToast();
+  const [showForm, setShowForm] = useState(!!(urlProductId && urlDate));
 
   useEffect(() => {
-    console.log('[RegistroPresencaPage] Mount/Update disparado');
-    console.log('[RegistroPresencaPage] Estado atual:', {
-      urlProductId,
-      urlDate,
-      organizationId,
-    });
-
     if (organizationId) {
-      loadProducts();
+      loadInitialData();
     }
-  }, [organizationId, urlProductId, urlDate]);
+  }, [organizationId]);
 
-  const loadProducts = async () => {
+  // Atualiza visibilidade do form se os parâmetros da URL mudarem
+  useEffect(() => {
+    setShowForm(!!(urlProductId && urlDate));
+  }, [urlProductId, urlDate]);
+
+  const loadInitialData = async () => {
     setIsLoadingProducts(true);
+    setIsLoadingWeekly(true);
     try {
-      const data = await fetchProductsForOrganization(organizationId!);
-      setProducts(data);
+      const [productsData, weeklyData] = await Promise.all([
+        fetchProductsForOrganization(organizationId!),
+        fetchWeeklyClasses(organizationId!)
+      ]);
+      setProducts(productsData);
+      setWeeklyClasses(weeklyData);
+      setFilteredClasses(weeklyData);
     } catch (error) {
-      console.error('[RegistroPresencaPage] Erro ao buscar produtos:', error);
+      console.error('[RegistroPresencaPage] Erro ao carregar dados:', error);
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Não foi possível carregar os produtos da organização.',
+        description: 'Não foi possível carregar os dados iniciais.',
       });
     } finally {
       setIsLoadingProducts(false);
+      setIsLoadingWeekly(false);
     }
+  };
+
+  const handleFilterChange = (filters: { productId?: string; searchTerm?: string }) => {
+    let filtered = [...weeklyClasses];
+
+    if (filters.productId) {
+      filtered = filtered.filter(cls => cls.product_id === filters.productId);
+    }
+
+    if (filters.searchTerm) {
+      const term = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(cls => 
+        cls.product_name.toLowerCase().includes(term) || 
+        cls.description.toLowerCase().includes(term)
+      );
+    }
+
+    setFilteredClasses(filtered);
+  };
+
+  const handleSelectClass = (classData: any) => {
+    setSearchParams({
+      product: classData.product_id,
+      date: classData.class_date
+    });
+    setShowForm(true);
+  };
+
+  const handleBackToList = () => {
+    setSearchParams({});
+    setShowForm(false);
+    // Recarregar aulas semanais para ver estatísticas atualizadas
+    loadInitialData();
   };
 
   const handleSubmitAttendance = async (data: {
@@ -73,9 +111,6 @@ export default function RegistroPresencaPage() {
 
     setIsSaving(true);
     try {
-      console.log('[RegistroPresencaPage] Iniciando salvamento de presença e sessão');
-
-      // PASSO 1: Salvar a descrição da sessão de aula
       await saveClassSession(
         organizationId,
         data.product_id,
@@ -83,7 +118,6 @@ export default function RegistroPresencaPage() {
         data.class_description
       );
 
-      // PASSO 2: Salvar os registros de presença dos alunos
       await saveAttendance(
         organizationId,
         data.product_id,
@@ -93,8 +127,11 @@ export default function RegistroPresencaPage() {
 
       toast({
         title: 'Sucesso',
-        description: 'Registro de presença e descrição da aula salvos com sucesso!',
+        description: 'Registro de presença salvo com sucesso!',
       });
+      
+      // Voltar para a listagem após salvar
+      handleBackToList();
     } catch (error) {
       console.error('[RegistroPresencaPage] Erro ao salvar:', error);
       toast({
@@ -120,32 +157,67 @@ export default function RegistroPresencaPage() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-5xl space-y-8">
-      <div className="space-y-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PageTitle 
           title="Registro de Presença" 
-          description="Marque a presença dos alunos nas aulas e mantenha o histórico atualizado."
+          description="Acompanhe as aulas da semana e registre a presença dos seus alunos."
           icon={<ClipboardCheck className="w-8 h-8 text-primary-500" />}
         />
+        
+        {!showForm && (
+          <Button 
+            onClick={() => setShowForm(true)} 
+            icon={<Plus className="w-4 h-4" />}
+          >
+            Nova Aula
+          </Button>
+        )}
       </div>
 
-      {isLoadingProducts ? (
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-1/3" />
-          <Skeleton className="h-64 w-full" />
+      {showForm ? (
+        <div className="space-y-6">
+          <Button 
+            variant="ghost" 
+            onClick={handleBackToList}
+            icon={<ArrowLeft className="w-4 h-4" />}
+          >
+            Voltar para Listagem
+          </Button>
+
+          {isLoadingProducts ? (
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-1/3" />
+              <Skeleton className="h-64 w-full" />
+            </div>
+          ) : (
+            <AttendanceForm
+              organizationId={organizationId}
+              products={products}
+              onSubmit={handleSubmitAttendance}
+              isLoading={isSaving}
+              initialData={urlProductId && urlDate ? {
+                product_id: urlProductId,
+                class_date: urlDate,
+                class_description: '',
+                attendances: []
+              } : undefined}
+            />
+          )}
         </div>
       ) : (
-        <AttendanceForm
-          organizationId={organizationId}
-          products={products}
-          onSubmit={handleSubmitAttendance}
-          isLoading={isSaving}
-          initialData={urlProductId && urlDate ? {
-            product_id: urlProductId,
-            class_date: urlDate,
-            class_description: '',
-            attendances: []
-          } : undefined}
-        />
+        <div className="space-y-8">
+          <ClassSearchFilters 
+            products={products} 
+            onFilterChange={handleFilterChange} 
+          />
+          
+          <WeeklyClassesList
+            classes={weeklyClasses}
+            filteredClasses={filteredClasses}
+            onSelectClass={handleSelectClass}
+            isLoading={isLoadingWeekly}
+          />
+        </div>
       )}
       <Toaster />
     </div>
