@@ -274,7 +274,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                       error={validationErrors.find(e => e.field === 'client_id')?.message}
                     />
                     {showClientDropdown && clientSearch && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                      <div className="absolute z-[100] w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-xl max-h-60 overflow-y-auto ring-1 ring-black/5">
                         {filteredClients.length > 0 ? (
                           filteredClients.map(client => (
                             <button
