@@ -16,16 +16,29 @@ export default function RegistroPresencaPage() {
   const urlProductId = searchParams.get('product');
   const urlDate = searchParams.get('date');
 
+  console.log('[RegistroPresencaPage] Parâmetros de URL recebidos:', {
+    urlProductId,
+    urlDate,
+    allParams: Object.fromEntries(searchParams),
+  });
+
   const [products, setProducts] = useState<any[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('[RegistroPresencaPage] Mount/Update disparado');
+    console.log('[RegistroPresencaPage] Estado atual:', {
+      urlProductId,
+      urlDate,
+      organizationId,
+    });
+
     if (organizationId) {
       loadProducts();
     }
-  }, [organizationId]);
+  }, [organizationId, urlProductId, urlDate]);
 
   const loadProducts = async () => {
     setIsLoadingProducts(true);
