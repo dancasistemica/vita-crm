@@ -202,7 +202,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
           <h2 className="text-2xl font-semibold">Nova Venda</h2>
         </div>
 
-        <div className="space-y-6 py-2">
+        <div className="space-y-6 py-2 min-h-[500px]">
           {/* Section 1: Lead/Client search */}
           <div className="space-y-3">
             <Label>Selecione o Lead ou Cliente *</Label>
