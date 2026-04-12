@@ -170,6 +170,15 @@ export const AttendanceForm = ({
                 <h3 className="text-lg font-semibold text-neutral-800">
                   Lista de Alunos ({clients.length})
                 </h3>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setAttendances(prev => prev.map(a => ({ ...a, attendance_type: 'presente' })))}
+                  className="text-xs"
+                >
+                  Marcar todos como presente
+                </Button>
               </div>
 
               <AttendanceTable
