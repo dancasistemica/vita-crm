@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen, ClipboardCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBrand } from '@/contexts/BrandContext';
 import { cn } from '@/lib/utils';
@@ -26,6 +26,7 @@ interface UserProfile {
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Clientes', path: '/clientes' },
+  { icon: ClipboardCheck, label: 'Presença', path: '/presenca' },
   { icon: TrendingUp, label: 'Leads', path: '/leads' },
   { icon: Settings, label: 'Configurações', path: '/configuracoes' },
 ];
