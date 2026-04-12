@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, Input, Select, Alert, Card, Label, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/ds';
 import { Loader, Calendar, BookOpen, Save, Package } from 'lucide-react';
-import { fetchClientsByProduct, fetchAttendanceByDate } from '@/services/attendanceService';
+import { fetchClientsByProduct, fetchAttendanceWithPreviousData } from '@/services/attendanceService';
+import { fetchClassSession } from '@/services/classSessionService';
 import { AttendanceTable } from './AttendanceTable';
 
 interface AttendanceFormProps {
