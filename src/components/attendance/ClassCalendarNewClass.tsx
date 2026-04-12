@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Button, Input, Alert } from '@/components/ui/ds';
-import { X, Calendar, BookOpen } from 'lucide-react';
+import { X, Calendar, Clock, BookOpen } from 'lucide-react';
 
 interface ClassCalendarNewClassProps {
   organizationId: string;
@@ -8,6 +8,7 @@ interface ClassCalendarNewClassProps {
   onClose: () => void;
   onSubmit: (data: {
     class_date: string;
+    class_time: string;
     description: string;
   }) => Promise<void>;
 }
@@ -19,6 +20,7 @@ export const ClassCalendarNewClass = ({
   onSubmit,
 }: ClassCalendarNewClassProps) => {
   const [classDate, setClassDate] = useState('');
+  const [classTime, setClassTime] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -30,6 +32,7 @@ export const ClassCalendarNewClass = ({
 
     const newErrors: string[] = [];
     if (!classDate) newErrors.push('Data da aula é obrigatória');
+    if (!classTime) newErrors.push('Horário da aula é obrigatório');
     if (!description.trim()) newErrors.push('Descrição da aula é obrigatória');
 
     // Validar se data não é no passado
@@ -54,6 +57,7 @@ export const ClassCalendarNewClass = ({
     try {
       await onSubmit({
         class_date: classDate,
+        class_time: classTime,
         description,
       });
     } catch (error) {
@@ -89,6 +93,7 @@ export const ClassCalendarNewClass = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Data da Aula */}
           <Input
             label="Data da Aula"
             type="date"
@@ -98,6 +103,17 @@ export const ClassCalendarNewClass = ({
             required
           />
 
+          {/* Horário da Aula */}
+          <Input
+            label="Horário da Aula"
+            type="time"
+            value={classTime}
+            onChange={(e) => setClassTime(e.target.value)}
+            icon={<Clock className="w-5 h-5" />}
+            required
+          />
+
+          {/* Descrição da Aula */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               <BookOpen className="w-4 h-4 inline mr-2" />
@@ -112,7 +128,8 @@ export const ClassCalendarNewClass = ({
             />
           </div>
 
-          <div className="flex gap-3">
+          {/* Botões */}
+          <div className="flex gap-3 pt-2">
             <Button
               variant="secondary"
               type="button"
@@ -126,10 +143,9 @@ export const ClassCalendarNewClass = ({
               variant="success"
               type="submit"
               loading={isSubmitting}
-              disabled={isSubmitting}
-              className="flex-1"
+              className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold"
             >
-              Criar Aula
+              {isSubmitting ? 'Criando...' : 'Criar Aula'}
             </Button>
           </div>
         </form>

@@ -6,6 +6,7 @@ import { ptBR } from 'date-fns/locale';
 
 interface ClassCalendarDetailProps {
   classDate: string;
+  productId: string;
   session: any;
   attendances: Array<{
     id: string;
@@ -15,6 +16,7 @@ interface ClassCalendarDetailProps {
     attendance_type: string;
   }>;
   onClose?: () => void;
+  onRefresh?: () => void;
 }
 
 export const ClassCalendarDetail = ({
@@ -24,11 +26,6 @@ export const ClassCalendarDetail = ({
   onClose,
 }: ClassCalendarDetailProps) => {
   const navigate = useNavigate();
-
-  const handleEditAttendance = () => {
-    // Navigate to the attendance registration page for this date
-    navigate(`/registro-presenca?date=${classDate}&productId=${session.product_id}`);
-  };
 
   const getAttendanceBadge = (type: string) => {
     switch (type.toLowerCase()) {
