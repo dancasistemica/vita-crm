@@ -232,7 +232,7 @@ export default function NewSaleModal({ open, onOpenChange, preSelectedLeadId, on
                   className="pl-9"
                 />
                 {showResults && searchResults.length > 0 && (
-                  <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-[100] mt-1 w-full rounded-lg border border-border bg-popover shadow-lg max-h-60 overflow-y-auto shadow-xl ring-1 ring-black/5">
                     {searchResults.map(lead => (
                       <Button variant="secondary" size="sm"
                         key={lead.id}
