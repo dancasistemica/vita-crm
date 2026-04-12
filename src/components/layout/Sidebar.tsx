@@ -27,6 +27,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Clientes', path: '/clientes' },
   { icon: ClipboardCheck, label: 'Presença', path: '/presenca' },
+  { icon: Calendar, label: 'Calendário', path: '/calendario-aulas' },
   { icon: TrendingUp, label: 'Leads', path: '/leads' },
   { icon: Settings, label: 'Configurações', path: '/configuracoes' },
 ];
