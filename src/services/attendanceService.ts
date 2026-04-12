@@ -289,3 +289,100 @@ export const updateSingleAttendance = async (
     throw error;
   }
 };
+
+// Buscar aulas da semana
+export const fetchWeeklyClasses = async (
+  organizationId: string,
+  productId?: string
+): Promise<Array<{
+  id: string;
+  product_id: string;
+  product_name: string;
+  class_date: string;
+  class_time: string;
+  description: string;
+  day_of_week: string;
+  attendance_count: number;
+  total_clients: number;
+}>> => {
+  try {
+    console.log('[attendanceService] Buscando aulas da semana');
+
+    // PASSO 1: Calcular início e fim da semana (segunda a domingo)
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    
+    const weekStart = new Date(today.setDate(diff));
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+
+    const startDateStr = weekStart.toISOString().split('T')[0];
+    const endDateStr = weekEnd.toISOString().split('T')[0];
+
+    console.log('[attendanceService] Período:', { startDateStr, endDateStr });
+
+    // PASSO 2: Buscar sessões de aula da semana
+    let query = supabase
+      .from('class_sessions')
+      .select(`
+        id,
+        product_id,
+        class_date,
+        description,
+        products(id, name)
+      `)
+      .eq('organization_id', organizationId)
+      .gte('class_date', startDateStr)
+      .lte('class_date', endDateStr)
+      .order('class_date', { ascending: true });
+
+    if (productId) {
+      query = query.eq('product_id', productId);
+    }
+
+    const { data: sessions, error: sessionsError } = await query;
+
+    if (sessionsError) throw sessionsError;
+
+    // PASSO 3: Para cada sessão, contar presença
+    const classesWithData = await Promise.all(
+      (sessions || []).map(async (session: any) => {
+        const { data: attendances } = await supabase
+          .from('class_attendance')
+          .select('id')
+          .eq('organization_id', organizationId)
+          .eq('product_id', session.product_id)
+          .eq('class_date', session.class_date);
+
+        const dayOfWeek = new Date(session.class_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+          weekday: 'long',
+        });
+
+        // Extrair horário da descrição (formato: "HH:MM - descrição")
+        const timeMatch = session.description?.match(/^(\d{2}:\d{2})/);
+        const classTime = timeMatch ? timeMatch[1] : '';
+        const description = session.description?.replace(/^\d{2}:\d{2}\s*-\s*/, '') || '';
+
+        return {
+          id: session.id,
+          product_id: session.product_id,
+          product_name: session.products?.name || 'Produto desconhecido',
+          class_date: session.class_date,
+          class_time: classTime,
+          description,
+          day_of_week: dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1),
+          attendance_count: attendances?.length || 0,
+          total_clients: attendances?.length || 0,
+        };
+      })
+    );
+
+    console.log('[attendanceService] ✅ Aulas da semana encontradas:', classesWithData.length);
+    return classesWithData;
+
+  } catch (error) {
+    console.error('[attendanceService] ❌ Erro ao buscar aulas da semana:', error);
+    throw error;
+  }
+};
