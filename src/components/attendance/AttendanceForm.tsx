@@ -46,38 +46,58 @@ export const AttendanceForm = ({
   const [loadingClients, setLoadingClients] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  // Carregar clientes e presença existente quando produto ou data mudam
+  // Carregar clientes e presença anterior quando produto/data mudam
   useEffect(() => {
-    if (productId && organizationId) {
-      loadData();
+    if (productId && classDate && organizationId) {
+      loadClientsAndPreviousAttendance();
     } else {
       setClients([]);
       setAttendances([]);
     }
   }, [productId, classDate, organizationId]);
 
-  const loadData = async () => {
-    setLoadingClients(true);
-    setErrors([]);
+  const loadClientsAndPreviousAttendance = async () => {
     try {
-      const productClients = await fetchClientsByProduct(organizationId, productId);
-      setClients(productClients);
+      setLoadingClients(true);
+      setErrors([]);
+      console.log('[AttendanceForm] Carregando clientes e presença anterior');
 
-      // Buscar presença existente para esta data
-      const existingAttendance = await fetchAttendanceByDate(organizationId, productId, classDate);
-      
-      const newAttendances = productClients.map(client => {
-        const existing = existingAttendance.find(a => a.client_id === client.id);
-        return {
-          client_id: client.id,
-          attendance_type: (existing?.attendance_type || 'ausente') as 'presente' | 'ausente' | 'gravada'
-        };
-      });
-      
-      setAttendances(newAttendances);
+      // PASSO 1: Carregar clientes (filtrados por acesso ativo)
+      const clientsData = await fetchClientsByProduct(organizationId, productId);
+      setClients(clientsData);
+
+      // PASSO 2: Carregar presença anterior
+      const previousAttendanceMap = await fetchAttendanceWithPreviousData(
+        organizationId,
+        productId,
+        classDate
+      );
+
+      // PASSO 3: Se tem presença anterior, usar; senão, inicializar com "ausente"
+      if (previousAttendanceMap.size > 0) {
+        console.log('[AttendanceForm] ✅ Presença anterior encontrada');
+        
+        const previousAttendances = clientsData.map(client => {
+          const previous = previousAttendanceMap.get(client.id);
+          return {
+            client_id: client.id,
+            attendance_type: (previous?.attendance_type || 'ausente') as 'presente' | 'ausente' | 'gravada',
+          };
+        });
+
+        setAttendances(previousAttendances);
+      } else {
+        console.log('[AttendanceForm] ℹ️ Nenhuma presença anterior encontrada');
+        setAttendances(clientsData.map(c => ({ client_id: c.id, attendance_type: 'ausente' })));
+      }
+
+      // PASSO 4: Carregar descrição da aula
+      const session = await fetchClassSession(organizationId, productId, classDate);
+      setClassDescription(session?.description || '');
+
     } catch (error) {
       console.error('[AttendanceForm] Erro ao carregar dados:', error);
-      setErrors(['Erro ao carregar clientes ou presença existente.']);
+      setErrors(['Erro ao carregar clientes ou presença anterior.']);
     } finally {
       setLoadingClients(false);
     }
