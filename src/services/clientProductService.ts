@@ -100,21 +100,8 @@ export async function fetchClientsByProduct(
     throw error;
   }
 
-  // Frontend filtering for search term if provided
-  let results = data || [];
-  if (filters?.searchTerm) {
-    const term = filters.searchTerm.toLowerCase();
-    results = results.filter(item => {
-      const client = item.clientes as any;
-      return (
-        client?.name?.toLowerCase().includes(term) ||
-        client?.email?.toLowerCase().includes(term)
-      );
-    });
-  }
-
-  console.log('[clientProductService] Clientes encontrados:', results.length);
-  return results;
+  console.log('[clientProductService] Clientes encontrados:', data?.length || 0);
+  return data || [];
 }
 
 export async function fetchProductsForOrganization(organizationId: string) {
