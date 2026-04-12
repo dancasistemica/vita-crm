@@ -27,6 +27,14 @@ export function ProtectedRoute() {
     return <Navigate to="/auth" replace />;
   }
 
+  // Adicionar log para debug de acesso a rotas
+  const location = useLocation();
+  console.log(`[ProtectedRoute] Acessando rota: ${location.pathname}${location.search}`);
+
+  if (location.pathname === '/registro-presenca') {
+    console.log('[ProtectedRoute] Permitindo acesso a /registro-presenca');
+  }
+
   console.log('[ProtectedRoute] Usuário autenticado, liberando rota protegida');
   return <Outlet />;
 }
