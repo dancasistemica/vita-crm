@@ -80,7 +80,7 @@ export default function ClassCalendarPage() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <PageTitle 
           title="Calendário de Aulas" 
-          subtitle="Visualize e gerencie a presença das suas turmas de forma organizada"
+          description="Visualize e gerencie a presença das suas turmas de forma organizada"
           icon={<Calendar className="w-6 h-6 text-primary-600" />}
         />
         
