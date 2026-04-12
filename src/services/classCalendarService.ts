@@ -134,7 +134,7 @@ export const fetchClassDetail = async (
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
       .eq('class_date', classDate)
-      .order('clients(name)', { ascending: true });
+      .order('name', { foreignTable: 'clients', ascending: true });
 
     if (attError) throw attError;
 
