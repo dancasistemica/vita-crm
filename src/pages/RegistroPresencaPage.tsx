@@ -9,17 +9,20 @@ import { fetchProductsForOrganization, saveAttendance } from '@/services/attenda
 import { saveClassSession } from '@/services/classSessionService';
 
 export default function RegistroPresencaPage() {
-  const { organizationId } = useOrganization();
+  const { organization, organizationId } = useOrganization();
   const [searchParams] = useSearchParams();
   
-  // Receber parâmetros da URL
+  // Logs para debug
+  console.log('[RegistroPresencaPage] 🔍 Página carregada');
+  console.log('[RegistroPresencaPage] URL completa:', window.location.href);
+  console.log('[RegistroPresencaPage] searchParams:', Object.fromEntries(searchParams));
+
   const urlProductId = searchParams.get('product');
   const urlDate = searchParams.get('date');
 
-  console.log('[RegistroPresencaPage] Parâmetros de URL recebidos:', {
+  console.log('[RegistroPresencaPage] ✅ Parâmetros extraídos:', {
     urlProductId,
     urlDate,
-    allParams: Object.fromEntries(searchParams),
   });
 
   const [products, setProducts] = useState<any[]>([]);
