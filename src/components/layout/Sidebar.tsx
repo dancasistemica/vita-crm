@@ -26,7 +26,7 @@ interface UserProfile {
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Clientes', path: '/clientes' },
-  { icon: ClipboardCheck, label: 'Presença', path: '/presenca' },
+  { icon: ClipboardCheck, label: 'Presença', path: '/registro-presenca' },
   { icon: Calendar, label: 'Calendário', path: '/calendario-aulas' },
   { icon: TrendingUp, label: 'Leads', path: '/leads' },
   { icon: Settings, label: 'Configurações', path: '/configuracoes' },
@@ -139,6 +139,8 @@ export function Sidebar({ onClose, collapsed = false, onToggleCollapse }: Sideba
   }, []);
 
   const handleNavigate = (path: string) => {
+    console.log('[Sidebar] Navegando para:', path);
+    console.log('[Sidebar] Path completo:', window.location.origin + path);
     navigate(path);
     onClose();
   };
