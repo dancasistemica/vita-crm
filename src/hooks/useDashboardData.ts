@@ -141,6 +141,10 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
           : supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id').eq('organization_id', organizationId);
 
+        const subPaymentsQ = consolidated
+          ? supabase.from('subscription_payments').select('id, amount, created_at, organization_id')
+          : supabase.from('subscription_payments').select('id, amount, created_at, organization_id').eq('organization_id', organizationId);
+
         const productsQ = consolidated
           ? supabase.from('products').select('id, name, organization_id')
           : supabase.from('products').select('id, name, organization_id').eq('organization_id', organizationId);
