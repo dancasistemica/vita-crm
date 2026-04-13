@@ -49,6 +49,57 @@ export type Database = {
           },
         ]
       }
+      alerts: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          id: string
+          message: string
+          organization_id: string
+          resolved_at: string | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          organization_id: string
+          resolved_at?: string | null
+          severity: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          organization_id?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_settings: {
         Row: {
           accent_color: string

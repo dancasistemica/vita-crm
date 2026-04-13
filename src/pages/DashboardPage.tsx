@@ -1,7 +1,7 @@
 import { Card, Skeleton } from "@/components/ui/ds";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, DollarSign, TrendingUp, Target } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, RefreshCw } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -15,11 +15,18 @@ import ProductInsights from "@/components/dashboard/ProductInsights";
 import DashboardCustomizer from "@/components/dashboard/DashboardCustomizer";
 import { useDashboardSettings } from "@/hooks/useDashboardSettings";
 import { useUserRole } from "@/hooks/useUserRole";
+import { calculateDashboardMetrics, type DashboardMetrics } from "@/services/dashboardService";
+import ExecutiveMetrics from "@/components/dashboard/ExecutiveMetrics";
+import SalesMetrics from "@/components/dashboard/SalesMetrics";
+import AttendanceMetrics from "@/components/dashboard/AttendanceMetrics";
+import AlertsSummary from "@/components/dashboard/AlertsSummary";
+import IntegrationStatus from "@/components/dashboard/IntegrationStatus";
+import QuickActions from "@/components/dashboard/QuickActions";
+import { Button } from "@/components/ui/ds";
 
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
   const { canAccessSettings, isSuperadmin } = useUserRole();
@@ -32,12 +39,47 @@ export default function DashboardPage() {
     return { start, end, label: '30 dias' };
   });
 
-  const { totalLeads = 0, clients = 0, conversionRate = '0', totalRevenue = 0, totalSales = 0, recurringClients = 0, ticketMedio = 0, predictedRevenue = 0, predictedLeadsCount = 0, topProducts = [], salesByDay = [], leadsByStage = [], leadsByOrigin = [], revenueByProduct = [], stuckLeads = [], stageMetrics = [], loading, productInsights } = useDashboardData(dateRange);
+  const [execMetrics, setExecMetrics] = useState<DashboardMetrics | null>(null);
+  const [execLoading, setExecLoading] = useState(false);
 
-  const isCardVisible = (cardId: string) => {
-    const s = settings.find(s => s.card_id === cardId);
-    return s ? s.is_visible : true;
-  };
+  const { 
+    totalLeads = 0, 
+    clients = 0, 
+    conversionRate = '0', 
+    totalRevenue = 0, 
+    totalSales = 0, 
+    recurringClients = 0, 
+    ticketMedio = 0, 
+    predictedRevenue = 0, 
+    predictedLeadsCount = 0, 
+    topProducts = [], 
+    salesByDay = [], 
+    leadsByStage = [], 
+    leadsByOrigin = [], 
+    revenueByProduct = [], 
+    stuckLeads = [], 
+    stageMetrics = [], 
+    loading, 
+    productInsights 
+  } = useDashboardData(dateRange);
+
+  useEffect(() => {
+    const fetchExecMetrics = async () => {
+      if (!organizationId) return;
+      setExecLoading(true);
+      try {
+        const days = Math.floor((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24)) || 30;
+        const data = await calculateDashboardMetrics(organizationId, undefined, days);
+        setExecMetrics(data);
+      } catch (error) {
+        console.error("Erro ao carregar métricas executivas:", error);
+      } finally {
+        setExecLoading(false);
+      }
+    };
+
+    fetchExecMetrics();
+  }, [organizationId, dateRange]);
 
   const metrics = [
     { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
@@ -50,42 +92,25 @@ export default function DashboardPage() {
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },
   ];
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-4xl font-bold text-neutral-900">📊 Dashboard</h1>
-          <p className="text-sm text-neutral-500 mt-0.5">Visão geral do seu CRM</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <Card key={i} className="shadow-card border-border/60">
-              <div>
-                <Skeleton className="h-16 w-full" />
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // Map card_id to rendered content
   const cardRenderers: Record<string, () => React.ReactNode> = {
+    executive_metrics: () => execMetrics ? <ExecutiveMetrics metrics={execMetrics} /> : (execLoading ? <Skeleton className="h-32 w-full" /> : null),
+    quick_actions: () => <QuickActions />,
+    sales_metrics: () => execMetrics ? <SalesMetrics metrics={execMetrics} /> : (execLoading ? <Skeleton className="h-[300px] w-full" /> : null),
+    attendance_metrics: () => execMetrics ? <AttendanceMetrics metrics={execMetrics} /> : (execLoading ? <Skeleton className="h-[300px] w-full" /> : null),
+    alerts_summary: () => execMetrics ? <AlertsSummary metrics={execMetrics} /> : (execLoading ? <Skeleton className="h-[300px] w-full" /> : null),
+    integration_status: () => execMetrics ? <IntegrationStatus metrics={execMetrics} /> : (execLoading ? <Skeleton className="h-[300px] w-full" /> : null),
     metrics_grid: () => (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
           <Card key={i} className="shadow-card hover-lift border-border/60 animate-slide-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'backwards' }}>
-            <div>
-              <div className="flex items-center gap-3.5">
-                <div className={`p-2.5 rounded-xl ${m.color}`}>
-                  <m.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{m.label}</p>
-                  <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
-                  {'subtitle' in m && m.subtitle && <p className="text-xs text-neutral-500">{m.subtitle}</p>}
-                </div>
+            <div className="flex items-center gap-3.5">
+              <div className={`p-2.5 rounded-xl ${m.color}`}>
+                <m.icon className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{m.label}</p>
+                <p className="text-2xl font-bold text-foreground mt-0.5">{m.value}</p>
+                {'subtitle' in m && m.subtitle && <p className="text-xs text-neutral-500">{m.subtitle}</p>}
               </div>
             </div>
           </Card>
@@ -109,7 +134,7 @@ export default function DashboardPage() {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
               <YAxis allowDecimals={false} />
               <Tooltip />
-<Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="value" fill="hsl(346,38%,52%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -118,14 +143,14 @@ export default function DashboardPage() {
     leads_por_origem: () => (
       <Card className="shadow-card border-border/60">
         <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Leads por Origem</h2></div>
-        <div>
+        <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={leadsByOrigin} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                 {leadsByOrigin.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
               <Tooltip />
-</PieChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </Card>
@@ -133,7 +158,7 @@ export default function DashboardPage() {
     receita_por_produto: () => revenueByProduct.length > 0 ? (
       <Card className="shadow-card border-border/60">
         <div className="mb-4"><h2 className="text-2xl font-semibold mb-2">Receita por Produto</h2></div>
-        <div>
+        <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={revenueByProduct}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
@@ -190,11 +215,29 @@ export default function DashboardPage() {
     insights_produtos: () => productInsights ? <ProductInsights insights={productInsights} isSuperadmin={false} /> : null,
   };
 
-  // Full-width cards that should not be inside the 2-col grid
-  const fullWidthCards = new Set(['metrics_grid', 'tarefas_metricas', 'leads_parados', 'metricas_estagio', 'insights_produtos']);
+  const fullWidthCards = new Set([
+    'executive_metrics', 
+    'metrics_grid', 
+    'tarefas_metricas', 
+    'leads_parados', 
+    'metricas_estagio', 
+    'insights_produtos',
+    'quick_actions'
+  ]);
 
-  // Sort settings by position and split into full-width and grid cards
   const sortedVisible = settings.filter(s => s.is_visible).sort((a, b) => a.position - b.position);
+
+  if (loading && !execMetrics) {
+    return (
+      <div className="space-y-6 p-6">
+        <Skeleton className="h-10 w-64" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full" />)}
+        </div>
+        <Skeleton className="h-[400px] w-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 px-2 py-4 sm:p-6">
@@ -207,20 +250,28 @@ export default function DashboardPage() {
             Dados de <strong className="text-neutral-700">{organization?.name || 'sua organização'}</strong>
           </p>
         </div>
-        {(canAccessSettings || isSuperadmin) && (
-          <div className="flex-shrink-0">
+        <div className="flex items-center gap-3 flex-shrink-0">
+          {(canAccessSettings || isSuperadmin) && (
             <DashboardCustomizer
               settings={settings}
               onToggleVisibility={toggleVisibility}
               onReorder={reorder}
             />
-          </div>
-        )}
+          )}
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            onClick={() => window.location.reload()}
+            className="hidden sm:flex gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Recarregar
+          </Button>
+        </div>
       </div>
 
       <FilterPeriod onPeriodChange={setDateRange} selectedLabel={dateRange.label} />
 
-      {/* Render cards in order, grouping grid-eligible cards into a 2-col grid */}
       {(() => {
         const elements: React.ReactNode[] = [];
         let gridBuffer: React.ReactNode[] = [];
