@@ -38,7 +38,7 @@ export const AlertsList = ({ alerts, onResolve, onContact, loading }: AlertsList
     switch (severity) {
       case 'high': return <Badge variant="error">Crítico</Badge>;
       case 'medium': return <Badge variant="warning">Moderado</Badge>;
-      case 'low': return <Badge variant="info">Leve</Badge>;
+      case 'low': return <Badge variant="primary">Leve</Badge>;
       default: return null;
     }
   };
