@@ -60,7 +60,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       .insert({
         organization_id: organizationId,
         lead_id: saleData.client_id,
-        value: saleData.final_amount || saleData.value, // Usa final_amount se disponível
+        value: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value, // Usa final_amount se disponível
         status: saleData.status || 'pendente',
         notes: saleData.notes,
         payment_method: paymentMethodName || saleData.payment_method_id || '',
@@ -68,8 +68,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
         discount_type: saleData.discount_type,
         discount_value: saleData.discount_value,
         discount_description: saleData.discount_description,
-        original_amount: saleData.original_amount || saleData.value,
-        final_amount: saleData.final_amount || saleData.value,
+        original_amount: (saleData.original_amount !== undefined && saleData.original_amount !== null) ? saleData.original_amount : saleData.value,
+        final_amount: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value,
         discount_granted_by: saleData.discount_granted_by,
         discount_granted_at: saleData.discount_granted_at,
       })
