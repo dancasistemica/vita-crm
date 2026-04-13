@@ -1,7 +1,8 @@
 import { Alert, Button, Card, Input, Select } from "@/components/ui/ds";
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
-import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
+import { deleteSale } from '@/services/saleService';
+import { fetchSales } from '@/services/salesService';
 import { Plus, Search, Filter, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
@@ -33,7 +34,7 @@ export function VendasPage() {
       setError(null);
       console.log('[VendasPage] Carregando vendas para org:', organization.id);
 
-      const allSales = await getSalesAndSubscriptions(organization.id);
+      const allSales = await fetchSales(organization.id);
       console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
       setSales(allSales);
     } catch (err) {

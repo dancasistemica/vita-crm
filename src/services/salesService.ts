@@ -158,3 +158,45 @@ export const deleteSale = async (saleId: string) => {
     throw error;
   }
 };
+
+export const fetchSales = async (
+  organizationId: string
+): Promise<any[]> => {
+  try {
+    console.log('[salesService] 📊 Buscando vendas');
+
+    // Query simples sem JOINs problemáticos
+    // Adicionamos leads(name, email) para não quebrar a UI que depende do nome do cliente
+    const { data: sales, error } = await supabase
+      .from('sales')
+      .select(`
+        *,
+        leads(name, email),
+        product_sales_stages(name, value)
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[salesService] ❌ Erro na query:', error);
+      throw error;
+    }
+
+    // Mapear para o formato que a UI espera (client_name, stage_name, etc.)
+    const formattedSales = sales?.map(sale => ({
+      ...sale,
+      client_name: sale.leads?.name || 'Cliente Desconhecido',
+      client_email: sale.leads?.email || '',
+      stage_name: sale.product_sales_stages?.name || 'Venda Direta',
+      stage_value: sale.final_amount || sale.product_sales_stages?.value || 0,
+      original_amount: sale.original_amount || sale.product_sales_stages?.value || 0,
+      sale_type: 'unica',
+    })) || [];
+
+    console.log('[salesService] ✅ Vendas carregadas:', formattedSales.length);
+    return formattedSales;
+  } catch (error) {
+    console.error('[salesService] ❌ Erro ao buscar vendas:', error);
+    throw error;
+  }
+};
