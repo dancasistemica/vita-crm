@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck, Calendar, Bell
+  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck, Calendar, Bell, Plug
 } from "lucide-react";
 
 import { NavLink } from "@/components/NavLink";
@@ -47,6 +47,7 @@ const baseItems = [
   { title: "Tarefas", url: "/tarefas", icon: CheckSquare },
   { title: "Produtos", url: "/produtos", icon: Package },
   { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
+  { title: "Integrações", url: "/integracoes", icon: Plug },
 ];
 
 export function AppSidebar() {

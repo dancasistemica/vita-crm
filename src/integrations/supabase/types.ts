@@ -539,6 +539,59 @@ export type Database = {
           },
         ]
       }
+      integrations: {
+        Row: {
+          created_at: string
+          credentials: Json | null
+          description: string | null
+          error_message: string | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          name: string
+          organization_id: string
+          status: string | null
+          sync_config: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credentials?: Json | null
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          name: string
+          organization_id: string
+          status?: string | null
+          sync_config?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credentials?: Json | null
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          name?: string
+          organization_id?: string
+          status?: string | null
+          sync_config?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       interactions: {
         Row: {
           created_at: string
@@ -1263,12 +1316,15 @@ export type Database = {
       }
       sales: {
         Row: {
+          client_email: string | null
           created_at: string
           id: string
           lead_id: string
           notes: string | null
           organization_id: string
+          payment_date: string | null
           payment_method: string | null
+          payment_status: string | null
           product_id: string | null
           sale_date: string | null
           status: string
@@ -1276,12 +1332,15 @@ export type Database = {
           value: number
         }
         Insert: {
+          client_email?: string | null
           created_at?: string
           id?: string
           lead_id: string
           notes?: string | null
           organization_id: string
+          payment_date?: string | null
           payment_method?: string | null
+          payment_status?: string | null
           product_id?: string | null
           sale_date?: string | null
           status?: string
@@ -1289,12 +1348,15 @@ export type Database = {
           value?: number
         }
         Update: {
+          client_email?: string | null
           created_at?: string
           id?: string
           lead_id?: string
           notes?: string | null
           organization_id?: string
+          payment_date?: string | null
           payment_method?: string | null
+          payment_status?: string | null
           product_id?: string | null
           sale_date?: string | null
           status?: string
