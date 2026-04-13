@@ -6,7 +6,7 @@ import { useClientsFilter } from '@/hooks/useClientsFilter';
 import ClientsTable from '@/components/clients/ClientsTable';
 import ClientsAdvancedFilter from '@/components/clients/ClientsAdvancedFilter';
 import { FilterChip } from '@/components/clients/FilterChip';
-import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
+
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
@@ -17,7 +17,7 @@ export default function ClientesPage() {
   const { organization } = useOrganization();
   
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [saleModalOpen, setSaleModalOpen] = useState(false);
+  
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
   const [exportOpen, setExportOpen] = useState(false);
   const [bulkEditOpen, setBulkEditOpen] = useState(false);
