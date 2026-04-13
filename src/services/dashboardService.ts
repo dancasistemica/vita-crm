@@ -66,17 +66,21 @@ export const calculateDashboardMetrics = async (
 
     // VENDAS
     console.log('[dashboardService] Calculando vendas...');
-    const { data: sales } = await supabase
+    const { data: sales, error: salesError } = await supabase
       .from('sales')
-      .select('amount, status, payment_status')
+      .select('value, status, payment_status')
       .eq('organization_id', organizationId)
       .gte('created_at', startDate.toISOString());
 
+    if (salesError) {
+      console.error('[dashboardService] Erro ao buscar vendas:', salesError);
+    }
+
     const totalSales = sales?.length || 0;
-    const totalRevenue = sales?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
-    const completedSales = sales?.filter(s => s.status === 'completed').length || 0;
-    const pendingSales = sales?.filter(s => s.status === 'pending').length || 0;
-    const overdueSales = sales?.filter(s => s.payment_status === 'OVERDUE').length || 0;
+    const totalRevenue = sales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const completedSales = sales?.filter(s => s.status === 'completed' || s.status === 'concluido').length || 0;
+    const pendingSales = sales?.filter(s => s.status === 'pending' || s.status === 'pendente').length || 0;
+    const overdueSales = sales?.filter(s => s.payment_status === 'OVERDUE' || s.payment_status === 'ATRASADO').length || 0;
     const conversionRate = totalSales > 0 ? (completedSales / totalSales) * 100 : 0;
     const averageTicket = totalSales > 0 ? totalRevenue / totalSales : 0;
 
@@ -105,6 +109,7 @@ export const calculateDashboardMetrics = async (
 
     // ALERTAS
     console.log('[dashboardService] Calculando alertas...');
+    // @ts-ignore - a tabela alerts foi criada recentemente e os tipos podem não ter atualizado
     const { data: alerts } = await supabase
       .from('alerts')
       .select('severity, status, created_at')
@@ -112,10 +117,14 @@ export const calculateDashboardMetrics = async (
       .eq('status', 'active');
 
     const totalAlerts = alerts?.length || 0;
+    // @ts-ignore
     const highSeverityAlerts = alerts?.filter(a => a.severity === 'high').length || 0;
+    // @ts-ignore
     const mediumSeverityAlerts = alerts?.filter(a => a.severity === 'medium').length || 0;
+    // @ts-ignore
     const lowSeverityAlerts = alerts?.filter(a => a.severity === 'low').length || 0;
 
+    // @ts-ignore
     const { data: resolvedAlerts } = await supabase
       .from('alerts')
       .select('id')
@@ -133,7 +142,7 @@ export const calculateDashboardMetrics = async (
       .eq('organization_id', organizationId);
 
     const totalIntegrations = integrations?.length || 0;
-    const connectedIntegrations = integrations?.filter(i => i.status === 'connected').length || 0;
+    const connectedIntegrations = integrations?.filter(i => i.status === 'connected' || i.status === 'active').length || 0;
     const disconnectedIntegrations = totalIntegrations - connectedIntegrations;
     
     // @ts-ignore
@@ -153,12 +162,12 @@ export const calculateDashboardMetrics = async (
     
     const { data: previousSales } = await supabase
       .from('sales')
-      .select('amount')
+      .select('value')
       .eq('organization_id', organizationId)
       .gte('created_at', previousStartDate.toISOString())
       .lt('created_at', startDate.toISOString());
 
-    const previousRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    const previousRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
     const revenueTrend = previousRevenue > 0 
       ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 
       : 0;
@@ -191,16 +200,16 @@ export const calculateDashboardMetrics = async (
         overdue_sales: overdueSales,
         conversion_rate: conversionRate,
         average_ticket: averageTicket,
-        sales_trend: salesTrend,
+        sales_trend: salesTrend as 'up' | 'down' | 'stable',
         sales_trend_percentage: revenueTrend,
       },
       attendance: {
         total_classes: totalClasses,
         total_students: uniqueStudents,
         average_attendance_rate: averageAttendanceRate,
-        students_at_risk: 0, // Será calculado com dados de alertas
-        students_with_high_engagement: 0, // Será calculado com dados de presença
-        attendance_trend: attendanceTrend,
+        students_at_risk: 0, 
+        students_with_high_engagement: 0,
+        attendance_trend: attendanceTrend as 'up' | 'down' | 'stable',
         attendance_trend_percentage: attendanceTrendPercentage,
       },
       alerts: {
