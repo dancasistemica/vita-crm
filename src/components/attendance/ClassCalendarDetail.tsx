@@ -184,6 +184,6 @@ export const ClassCalendarDetail = ({
           ✏️ Editar Presença
         </button>
       </div>
-    </Card>
+    </div>
   );
 };
