@@ -40,7 +40,6 @@ export const SalesEditModal = ({
       if (isUnica) {
         // Campos para tabela 'sales'
         cleanData.value = formData.amount;
-        cleanData.client_email = formData.client_email;
         cleanData.discount_type = formData.discount_type;
         cleanData.discount_value = formData.discount_value;
         cleanData.discount_description = formData.discount_description;
