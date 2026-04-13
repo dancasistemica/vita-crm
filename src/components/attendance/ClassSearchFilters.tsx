@@ -53,7 +53,7 @@ export const ClassSearchFilters = ({
     setDateStart(date);
     onFilterChange({
       productId: selectedProduct || undefined,
-      searchTerm: term,
+      searchTerm: searchTerm,
       dateStart: date,
       dateEnd,
     });
@@ -63,7 +63,7 @@ export const ClassSearchFilters = ({
     setDateEnd(date);
     onFilterChange({
       productId: selectedProduct || undefined,
-      searchTerm: term,
+      searchTerm: searchTerm,
       dateStart,
       dateEnd: date,
     });

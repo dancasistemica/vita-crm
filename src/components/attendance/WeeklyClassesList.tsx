@@ -10,6 +10,7 @@ interface WeeklyClassesListProps {
     class_time: string;
     description: string;
     day_of_week: string;
+    day_number: number;
     attendance_count: number;
     total_clients: number;
   }>;
@@ -21,6 +22,7 @@ interface WeeklyClassesListProps {
     class_time: string;
     description: string;
     day_of_week: string;
+    day_number: number;
     attendance_count: number;
     total_clients: number;
   }>;
