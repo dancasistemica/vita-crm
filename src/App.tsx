@@ -40,6 +40,7 @@ const HistoricoFrequenciaPage = lazy(() => import("@/pages/HistoricoFrequenciaPa
 const RegistroPresencaPage = lazy(() => import("@/pages/RegistroPresencaPage"));
 const DashboardExecutivoPage = lazy(() => import("@/pages/DashboardExecutivoPage"));
 const ClassCalendarPage = lazy(() => import("@/pages/ClassCalendarPage"));
+const AttendanceReportsPage = lazy(() => import("@/pages/AttendanceReportsPage"));
 
 
 const queryClient = new QueryClient();
@@ -112,6 +113,7 @@ const App = () => {
                     <Route path="/tarefas" element={<TarefasPage />} />
                     <Route path="/produtos" element={<ProdutosPage />} />
                     <Route path="/relatorios" element={<RelatoriosPage />} />
+                    <Route path="/relatorios/presenca" element={<AttendanceReportsPage />} />
                     <Route path="/configuracoes" element={<ConfiguracoesPage />} />
                     <Route path="/personalizar" element={<CustomizePage />} />
                     <Route path="/perfil" element={<ProfilePage />} />

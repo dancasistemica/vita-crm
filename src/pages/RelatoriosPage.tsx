@@ -1,4 +1,6 @@
-import { Card } from "@/components/ui/ds";
+import { Card, Button } from "@/components/ui/ds";
+import { Link } from "react-router-dom";
+import { BarChart3 } from "lucide-react";
 import { useCRMStore } from "@/store/crmStore";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 
@@ -21,7 +23,14 @@ export default function RelatoriosPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-4xl font-bold text-neutral-900">Relatórios</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-4xl font-bold text-neutral-900">Relatórios</h1>
+        <Link to="/relatorios/presenca">
+          <Button variant="primary" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" /> Relatório de Presença
+          </Button>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>

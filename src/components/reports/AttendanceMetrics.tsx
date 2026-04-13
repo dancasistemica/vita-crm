@@ -32,12 +32,12 @@ export const AttendanceMetrics = ({ metrics }: AttendanceMetricsProps) => {
               </Badge>
             )}
             {metrics.trend === 'declining' && (
-              <Badge variant="danger" className="flex items-center gap-1">
+              <Badge variant="error" className="flex items-center gap-1">
                 <TrendingDown className="w-3 h-3" /> Queda
               </Badge>
             )}
             {metrics.trend === 'stable' && (
-              <Badge variant="info" className="flex items-center gap-1">
+              <Badge variant="primary" className="flex items-center gap-1">
                 <Minus className="w-3 h-3" /> Estável
               </Badge>
             )}
@@ -46,7 +46,7 @@ export const AttendanceMetrics = ({ metrics }: AttendanceMetricsProps) => {
         <Badge
           variant={
             metrics.risk_level === 'high'
-              ? 'danger'
+              ? 'error'
               : metrics.risk_level === 'medium'
               ? 'warning'
               : 'success'
@@ -72,9 +72,9 @@ export const AttendanceMetrics = ({ metrics }: AttendanceMetricsProps) => {
           <p className="text-xs text-info-700 opacity-75">Gravadas</p>
           <p className="text-2xl font-bold text-info-600">{metrics.recorded_count}</p>
         </div>
-        <div className="bg-danger-50 rounded-lg p-3 text-center">
-          <p className="text-xs text-danger-700 opacity-75">Faltas</p>
-          <p className="text-2xl font-bold text-danger-600">{metrics.absent_count}</p>
+        <div className="bg-error-50 rounded-lg p-3 text-center">
+          <p className="text-xs text-error-700 opacity-75">Faltas</p>
+          <p className="text-2xl font-bold text-error-600">{metrics.absent_count}</p>
         </div>
       </div>
 
@@ -84,7 +84,7 @@ export const AttendanceMetrics = ({ metrics }: AttendanceMetricsProps) => {
             <span className="text-neutral-600">Presença (Ao vivo + Gravação)</span>
             <span className="font-semibold">{metrics.presence_rate.toFixed(1)}%</span>
           </div>
-          <Progress value={metrics.presence_rate} variant="primary" />
+          <Progress value={metrics.presence_rate} className="h-2" />
         </div>
 
         <div>
@@ -92,7 +92,7 @@ export const AttendanceMetrics = ({ metrics }: AttendanceMetricsProps) => {
             <span className="text-neutral-600">Presença Ao Vivo</span>
             <span className="font-semibold">{metrics.live_rate.toFixed(1)}%</span>
           </div>
-          <Progress value={metrics.live_rate} variant="success" />
+          <Progress value={metrics.live_rate} className="h-2" />
         </div>
       </div>
 

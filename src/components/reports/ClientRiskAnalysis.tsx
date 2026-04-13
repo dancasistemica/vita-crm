@@ -1,4 +1,4 @@
-import { Card, Badge, Table, Button } from '@/components/ui/ds';
+import { Card, Badge, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, Button } from '@/components/ui/ds';
 import { AlertTriangle, User, ExternalLink } from 'lucide-react';
 import { AttendanceMetrics as AttendanceMetricsType } from '@/services/reportService';
 import { useNavigate } from 'react-router-dom';
@@ -64,50 +64,50 @@ export const ClientRiskAnalysis = ({ clientsAtRisk }: ClientRiskAnalysisProps) =
         </div>
         
         <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Aluno</Table.Head>
-              <Table.Head>Risco</Table.Head>
-              <Table.Head>Presença</Table.Head>
-              <Table.Head>Faltas Seguidas</Table.Head>
-              <Table.Head className="text-right">Ações</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Aluno</TableHead>
+              <TableHead>Risco</TableHead>
+              <TableHead>Presença</TableHead>
+              <TableHead>Faltas Seguidas</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {clientsAtRisk.map((client) => (
-              <Table.Row key={client.client_id}>
-                <Table.Cell className="font-medium">{client.client_name}</Table.Cell>
-                <Table.Cell>
+              <TableRow key={client.client_id}>
+                <TableCell className="font-medium">{client.client_name}</TableCell>
+                <TableCell>
                   <Badge variant={client.risk_level === 'high' ? 'error' : 'warning'}>
                     {client.risk_level === 'high' ? 'Alto' : 'Médio'}
                   </Badge>
-                </Table.Cell>
-                <Table.Cell>
+                </TableCell>
+                <TableCell>
                   <span className={client.presence_rate < 30 ? 'text-error-600 font-semibold' : ''}>
                     {client.presence_rate.toFixed(0)}%
                   </span>
-                </Table.Cell>
-                <Table.Cell>
+                </TableCell>
+                <TableCell>
                   {client.consecutive_absences >= 3 ? (
                     <span className="text-error-600 font-bold">{client.consecutive_absences}</span>
                   ) : (
                     client.consecutive_absences
                   )}
-                </Table.Cell>
-                <Table.Cell className="text-right">
+                </TableCell>
+                <TableCell className="text-right">
                   <Button 
                     variant="ghost" 
                     size="sm"
                     className="flex items-center gap-1 ml-auto"
-                    onClick={() => navigate(`/clients/${client.client_id}`)}
+                    onClick={() => navigate(`/clientes/${client.client_id}`)}
                   >
                     <ExternalLink className="w-4 h-4" />
                     Ver Perfil
                   </Button>
-                </Table.Cell>
-              </Table.Row>
+                </TableCell>
+              </TableRow>
             ))}
-          </Table.Body>
+          </TableBody>
         </Table>
       </Card>
     </div>

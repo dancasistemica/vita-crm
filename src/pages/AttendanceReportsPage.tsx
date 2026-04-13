@@ -69,10 +69,10 @@ export default function AttendanceReportsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PageTitle 
           title="Relatórios de Presença e Engajamento" 
-          subtitle="Acompanhe a retenção e identifique alunos em risco de evasão."
+          description="Acompanhe a retenção e identifique alunos em risco de evasão."
         />
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Button variant="secondary" size="sm" className="flex items-center gap-2">
             <Download className="w-4 h-4" /> Exportar
           </Button>
         </div>
