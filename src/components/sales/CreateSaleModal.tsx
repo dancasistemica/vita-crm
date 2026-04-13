@@ -28,7 +28,6 @@ interface ProductSalesStage {
 interface Product {
   id: string;
   name: string;
-  price?: number;
 }
 
 interface Client {
