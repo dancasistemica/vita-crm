@@ -1,6 +1,6 @@
 import { Alert, Button } from "@/components/ui/ds";
 import { useState, useEffect } from 'react';
-import { X, Loader, Check, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
+import { X, Loader, Check, AlertCircle, RefreshCw, Trash2, Info, DollarSign, Percent } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { getSaleById, updateSale, deleteSale } from '@/services/saleService';
@@ -46,6 +46,11 @@ export const EditSaleModal = ({
     payment_method_id: sale?.payment_method_id || '',
     status: sale?.status || '',
     notes: '',
+    discount_type: sale?.discount_type || 'none',
+    discount_value: sale?.discount_value || 0,
+    discount_description: sale?.discount_description || '',
+    original_amount: sale?.original_amount || sale?.stage_value || 0,
+    final_amount: sale?.final_amount || sale?.stage_value || 0,
   });
 
   useEffect(() => {
@@ -93,6 +98,11 @@ export const EditSaleModal = ({
         payment_method_id: data.payment_method_id || '',
         status: data.status || '',
         notes: data.notes || '',
+        discount_type: data.discount_type || 'none',
+        discount_value: data.discount_value || 0,
+        discount_description: data.discount_description || '',
+        original_amount: data.original_amount || data.value || 0,
+        final_amount: data.final_amount || data.value || 0,
       });
       console.log('[EditSaleModal] ✅ Venda carregada com sucesso');
     } catch (err) {
@@ -147,6 +157,12 @@ export const EditSaleModal = ({
         payment_method_id: formData.payment_method_id || null,
         status: formData.status,
         notes: formData.notes,
+        discount_type: formData.discount_type,
+        discount_value: formData.discount_value,
+        discount_description: formData.discount_description,
+        original_amount: formData.original_amount,
+        final_amount: formData.final_amount,
+        value: formData.final_amount, // Atualiza o valor principal também
       });
 
       toast.success('Venda atualizada com sucesso!');
@@ -299,6 +315,85 @@ export const EditSaleModal = ({
                   placeholder="Adicione detalhes importantes sobre esta venda..."
                 />
               </div>
+
+              {/* Seção de Desconto */}
+              {sale.sale_type === 'unica' && (
+                <div className="space-y-4 pt-4 border-t border-neutral-100">
+                  <div className="flex items-center gap-2">
+                    <Info className="w-4 h-4 text-blue-600" />
+                    <h4 className="text-sm font-semibold text-neutral-700">Desconto</h4>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Tipo</label>
+                      <select
+                        value={formData.discount_type}
+                        onChange={(e) => setFormData({ ...formData, discount_type: e.target.value })}
+                        className="w-full px-2 py-1.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="none">Sem desconto</option>
+                        <option value="fixed">Fixo (R$)</option>
+                        <option value="percentage">Percentual (%)</option>
+                      </select>
+                    </div>
+
+                    {formData.discount_type !== 'none' && (
+                      <div>
+                        <label className="block text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">
+                          {formData.discount_type === 'fixed' ? 'Valor (R$)' : 'Valor (%)'}
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-neutral-400">
+                            {formData.discount_type === 'fixed' ? 'R$' : '%'}
+                          </span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={formData.discount_value}
+                            onChange={(e) => {
+                              const val = parseFloat(e.target.value) || 0;
+                              const original = formData.original_amount;
+                              let final = original;
+                              if (formData.discount_type === 'fixed') {
+                                final = original - val;
+                              } else {
+                                final = original - (original * val / 100);
+                              }
+                              setFormData({
+                                ...formData,
+                                discount_value: val,
+                                final_amount: Math.max(0, final)
+                              });
+                            }}
+                            className="w-full pl-6 pr-2 py-1.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {formData.discount_type !== 'none' && (
+                    <div>
+                      <label className="block text-[10px] text-neutral-400 uppercase font-bold tracking-wider mb-1">Motivo</label>
+                      <input
+                        type="text"
+                        value={formData.discount_description}
+                        onChange={(e) => setFormData({ ...formData, discount_description: e.target.value })}
+                        className="w-full px-2 py-1.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Motivo do desconto..."
+                      />
+                    </div>
+                  )}
+
+                  <div className="bg-blue-50 p-3 rounded-lg flex justify-between items-center">
+                    <span className="text-sm font-medium text-blue-800">Valor Final:</span>
+                    <span className="text-lg font-bold text-blue-900">
+                      R$ {formData.final_amount.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-4">
                 {/* Botão Excluir */}
