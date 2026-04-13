@@ -423,13 +423,14 @@ export const fetchSales = async (
     console.log('[salesService] 📊 Buscando vendas');
     console.log('[salesService] Organization ID:', organizationId);
 
-    // Query com joins para obter dados do cliente e da etapa
+    // Query com join para obter dados do cliente
+    // Como não há FK direta com product_sales_stages, buscamos produtos separadamente ou fazemos join com products
     const { data, error } = await supabase
       .from('sales')
       .select(`
         *,
         leads(name, email),
-        product_sales_stages(name, value)
+        products(name)
       `)
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
@@ -439,15 +440,28 @@ export const fetchSales = async (
       throw error;
     }
 
+    // Como sales.product_id pode estar guardando um ID de product_sales_stages,
+    // buscamos os nomes das etapas separadamente para maior precisão
+    const { data: stages } = await supabase
+      .from('product_sales_stages')
+      .select('id, name, value');
+
+    const stagesMap = new Map((stages || []).map(s => [s.id, s]));
+
     // Formatar dados para o frontend
-    const formattedSales = (data || []).map(sale => ({
-      ...sale,
-      client_name: sale.leads?.name || 'Cliente desconhecido',
-      client_email: sale.leads?.email || '',
-      stage_name: sale.product_sales_stages?.name || 'Etapa não identificada',
-      stage_value: sale.product_sales_stages?.value || 0,
-      sale_type: sale.sale_type || 'unica'
-    }));
+    const formattedSales = (data || []).map(sale => {
+      const stage = stagesMap.get(sale.product_id);
+      return {
+        ...sale,
+        client_name: sale.leads?.name || 'Cliente desconhecido',
+        client_email: sale.leads?.email || '',
+        stage_name: stage?.name || sale.products?.name || 'Etapa não identificada',
+        stage_value: stage?.value || sale.value || 0,
+        original_amount: sale.original_amount || sale.value || 0,
+        final_amount: sale.final_amount || sale.value || 0,
+        sale_type: 'unica'
+      };
+    });
 
     return formattedSales;
 
@@ -462,13 +476,13 @@ export const loadAllSales = async (organizationId: string) => {
   console.log('[salesService] Organization ID:', organizationId);
 
   try {
-    // BUSCA 1: Vendas únicas (tabela sales) com joins
+    // 1. BUSCAR VENDAS ÚNICAS
     const { data: uniqueSalesData, error: uniqueError } = await supabase
       .from('sales')
       .select(`
         *,
         leads(name, email),
-        product_sales_stages(name, value)
+        products(name)
       `)
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
@@ -477,25 +491,14 @@ export const loadAllSales = async (organizationId: string) => {
       console.error('[salesService] ❌ ERRO ao buscar sales:', uniqueError);
     }
 
-    const formattedUniqueSales = (uniqueSalesData || []).map(sale => ({
-      ...sale,
-      client_name: sale.leads?.name || 'Cliente desconhecido',
-      client_email: sale.leads?.email || '',
-      stage_name: sale.product_sales_stages?.name || 'Etapa não identificada',
-      stage_value: sale.product_sales_stages?.value || 0,
-      sale_type: sale.sale_type || 'unica',
-      is_subscription: false
-    }));
-
-    console.log('[salesService] ✅ Vendas únicas encontradas:', formattedUniqueSales.length);
-
-    // BUSCA 2: Mensalidades (tabela subscriptions) com joins
+    // 2. BUSCAR MENSALIDADES
     const { data: subscriptionsData, error: subscriptionError } = await supabase
       .from('subscriptions')
       .select(`
         *,
         leads:client_id(name, email),
-        product_sales_stages(name, value)
+        product_sales_stages(name, value),
+        products(name)
       `)
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
@@ -504,31 +507,53 @@ export const loadAllSales = async (organizationId: string) => {
       console.error('[salesService] ❌ ERRO ao buscar subscriptions:', subscriptionError);
     }
 
-    // UNIFICAR: Transformar subscriptions no formato de sales
+    // 3. BUSCAR ETAPAS (para vendas únicas que não têm join direto)
+    const { data: stages } = await supabase
+      .from('product_sales_stages')
+      .select('id, name, value');
+
+    const stagesMap = new Map((stages || []).map(s => [s.id, s]));
+
+    // 4. FORMATAR VENDAS ÚNICAS
+    const formattedUniqueSales = (uniqueSalesData || []).map(sale => {
+      const stage = stagesMap.get(sale.product_id);
+      return {
+        ...sale,
+        client_name: sale.leads?.name || 'Cliente desconhecido',
+        client_email: sale.leads?.email || '',
+        stage_name: stage?.name || sale.products?.name || 'Venda Única',
+        stage_value: stage?.value || sale.value || 0,
+        original_amount: sale.original_amount || sale.value || 0,
+        final_amount: sale.final_amount || sale.value || 0,
+        sale_type: 'unica',
+        is_subscription: false
+      };
+    });
+
+    console.log('[salesService] ✅ Vendas únicas encontradas:', formattedUniqueSales.length);
+
+    // 5. FORMATAR MENSALIDADES
     const unifiedSubscriptions = (subscriptionsData || []).map(sub => ({
       ...sub,
       client_name: sub.leads?.name || 'Cliente desconhecido',
       client_email: sub.leads?.email || '',
-      stage_name: sub.product_sales_stages?.name || 'Mensalidade',
+      stage_name: sub.product_sales_stages?.name || sub.products?.name || 'Mensalidade',
       stage_value: sub.product_sales_stages?.value || sub.monthly_value,
       value: sub.monthly_value,
       original_amount: sub.monthly_value,
       final_amount: sub.monthly_value,
-      status: sub.status === 'active' ? 'ativa' : 'cancelada',
+      status: sub.status === 'active' || sub.status === 'ativa' ? 'ativa' : 'cancelada',
       sale_type: 'mensalidade',
       is_subscription: true,
     }));
 
     console.log('[salesService] ✅ Mensalidades encontradas:', unifiedSubscriptions.length);
 
-    // COMBINAR: Juntar vendas únicas + mensalidades
+    // 6. COMBINAR E ORDENAR
     const allSales = [...formattedUniqueSales, ...unifiedSubscriptions];
-
-    // ORDENAR: Por data de criação (mais recentes primeiro)
     allSales.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-    console.log('[salesService] ✅ Total de vendas + mensalidades:', allSales.length);
-
+    console.log('[salesService] ✅ Total unificado:', allSales.length);
     return allSales;
 
   } catch (error) {
@@ -536,4 +561,5 @@ export const loadAllSales = async (organizationId: string) => {
     throw error;
   }
 };
+
 
