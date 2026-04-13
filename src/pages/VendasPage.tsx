@@ -3,7 +3,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
 import { Card, Button, Alert, Input } from '@/components/ui/ds';
 import { Plus, Filter, Search, Loader2 } from 'lucide-react';
-import { fetchSales } from '@/services/salesService';
+import { fetchSales, loadAllSales } from '@/services/salesService';
 import { SalesTable } from '@/components/sales/SalesTable';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import { SalesEditModal } from '@/components/sales/SalesEditModal';
@@ -54,17 +54,13 @@ export function VendasPage() {
       console.log('[VendasPage] Timestamp:', new Date().toISOString());
       console.log('');
 
-      // Usamos o serviço que já está formatando os dados corretamente com joins
-      const data = await fetchSales(organization.id);
+      // Usar a nova função que busca AMBAS as tabelas (vendas + mensalidades)
+      const allSales = await loadAllSales(organization.id);
 
-      console.log('[VendasPage] ✅ Vendas carregadas:', data?.length || 0);
-      if (data && data.length > 0) {
-        console.log('[VendasPage] Primeira venda carregada:', JSON.stringify(data[0], null, 2));
-      } else {
-        console.log('[VendasPage] Nenhuma venda retornada pelo banco');
-      }
-
-      setSales(data || []);
+      console.log('[VendasPage] ✅ Vendas unificadas carregadas:', allSales.length);
+      
+      setSales(allSales || []);
+      
       console.log('═══════════════════════════════════════════════════════');
       console.log('[VendasPage] ✅ loadSales finalizado com sucesso');
       console.log('═══════════════════════════════════════════════════════');
@@ -76,7 +72,6 @@ export function VendasPage() {
       console.error('═══════════════════════════════════════════════════════');
       console.error('[VendasPage] Tipo do erro:', error instanceof Error ? error.constructor.name : typeof error);
       console.error('[VendasPage] Mensagem:', error instanceof Error ? error.message : String(error));
-      console.error('[VendasPage] Objeto do erro:', error);
       console.error('');
       
       const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar vendas';

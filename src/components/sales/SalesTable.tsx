@@ -36,9 +36,15 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
               </td>
               <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.stage_name}</td>
               <td className="py-3 px-2 sm:px-4">
-                <Badge variant={sale.sale_type === 'unica' ? 'default' : 'warning'} size="sm">
-                  {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
-                </Badge>
+                {sale.is_subscription ? (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    💳 Mensalidade
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    🛒 Venda Única
+                  </span>
+                )}
               </td>
               <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-500">
                 R$ {Number(sale.original_amount || sale.stage_value).toFixed(2)}
