@@ -265,7 +265,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       status: saleData.status || 'ativo',
       notes: saleData.notes,
       payment_method: paymentMethodName || saleData.payment_method_id || '',
-      product_id: saleData.sales_stage_id || null,
+      product_id: saleData.product_id || saleData.sales_stage_id || null,
       discount_type: saleData.discount_type,
       discount_value: saleData.discount_value,
       discount_description: saleData.discount_description,
