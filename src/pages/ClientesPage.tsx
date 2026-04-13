@@ -10,7 +10,6 @@ import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
-import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import RecordCounter from "@/components/common/RecordCounter";
 
 export default function ClientesPage() {
