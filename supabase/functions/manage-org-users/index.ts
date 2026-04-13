@@ -236,6 +236,31 @@ Deno.serve(async (req) => {
         });
       }
 
+      // Check if user is member of org
+      const { data: userRecord } = await adminClient.auth.admin.listUsers();
+      const targetUser = userRecord?.users?.find(u => u.email === email);
+      
+      if (!targetUser) {
+        return new Response(JSON.stringify({ error: 'Usuário não encontrado' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const { data: isMember } = await adminClient
+        .from('organization_members')
+        .select('id')
+        .eq('user_id', targetUser.id)
+        .eq('organization_id', organization_id)
+        .maybeSingle();
+
+      if (!isMember) {
+        return new Response(JSON.stringify({ error: 'Usuário não pertence a esta organização' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       await adminClient.auth.admin.generateLink({
         type: 'recovery',
         email,
