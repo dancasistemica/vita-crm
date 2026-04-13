@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Input, Alert } from '@/components/ui/ds';
 import { X, Calendar, Clock, BookOpen, Loader } from 'lucide-react';
 
@@ -24,6 +24,24 @@ export const ClassCalendarNewClass = ({
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+
+  // Bloquear scroll do body quando modal aberta e fechar com ESC
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        console.log('[ClassCalendarNewClass] ESC pressionado, fechando modal');
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleEscKey);
+    };
+  }, [onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,8 +87,8 @@ export const ClassCalendarNewClass = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <Card variant="elevated" padding="lg" className="max-w-md w-full space-y-6">
+    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[9999] p-4 backdrop-blur-sm">
+      <Card variant="elevated" padding="lg" className="max-w-md w-full space-y-6 relative z-[10000]">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-neutral-900">Nova Aula</h2>
           <Button
