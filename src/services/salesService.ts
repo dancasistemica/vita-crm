@@ -17,6 +17,8 @@ interface CreateSaleInput {
   discount_description?: string;
   original_amount?: number;
   final_amount?: number;
+  discount_granted_by?: string;
+  discount_granted_at?: string;
   items?: Array<{
     product_id: string;
     quantity: number;
@@ -68,6 +70,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
         discount_description: saleData.discount_description,
         original_amount: saleData.original_amount || saleData.value,
         final_amount: saleData.final_amount || saleData.value,
+        discount_granted_by: saleData.discount_granted_by,
+        discount_granted_at: saleData.discount_granted_at,
       })
       .select()
       .single();
