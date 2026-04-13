@@ -171,7 +171,7 @@ export const fetchSales = async (
       .from('sales')
       .select(`
         *,
-        leads(name, email)
+        leads!lead_id(name, email)
       `)
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
