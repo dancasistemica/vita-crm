@@ -590,7 +590,7 @@ export type Database = {
           },
         ]
       }
-      integrations: {
+      integrations_secure: {
         Row: {
           created_at: string
           credentials: Json | null
@@ -1902,7 +1902,59 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      integrations: {
+        Row: {
+          created_at: string | null
+          credentials: Json | null
+          description: string | null
+          error_message: string | null
+          id: string | null
+          integration_type: string | null
+          is_active: boolean | null
+          name: string | null
+          organization_id: string | null
+          status: string | null
+          sync_config: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          credentials?: never
+          description?: string | null
+          error_message?: string | null
+          id?: string | null
+          integration_type?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          organization_id?: string | null
+          status?: string | null
+          sync_config?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          credentials?: never
+          description?: string | null
+          error_message?: string | null
+          id?: string | null
+          integration_type?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          organization_id?: string | null
+          status?: string | null
+          sync_config?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       bootstrap_first_superadmin: {
@@ -1915,6 +1967,7 @@ export type Database = {
       }
       get_user_org_ids: { Args: { _user_id: string }; Returns: string[] }
       has_any_superadmin: { Args: never; Returns: boolean }
+      is_org_admin: { Args: { org_id: string }; Returns: boolean }
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
