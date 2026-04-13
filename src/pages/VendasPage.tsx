@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
-import { Card, Button, Loader, Alert, Input } from '@/components/ui/ds';
-import { Plus, Filter, Search } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Card, Button, Alert, Input } from '@/components/ui/ds';
+import { Plus, Filter, Search, Loader2 } from 'lucide-react';
 import { fetchSales } from '@/services/salesService';
 import { SalesTable } from '@/components/sales/SalesTable';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
@@ -11,7 +10,7 @@ import { SalesEditModal } from '@/components/sales/SalesEditModal';
 import { SalesFilters } from '@/components/sales/SalesFilters';
 import { deleteSale } from '@/services/saleService';
 
-export default function VendasPage() {
+export function VendasPage() {
   const { organization } = useOrganization();
   const [sales, setSales] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -174,7 +173,7 @@ export default function VendasPage() {
       {/* Tabela de Vendas */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded-lg border border-neutral-100 min-h-[300px]">
-          <Loader className="w-8 h-8 animate-spin text-primary-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
           <p className="mt-4 text-neutral-600">Carregando dados das vendas...</p>
         </div>
       ) : filteredSales.length > 0 ? (
@@ -189,7 +188,7 @@ export default function VendasPage() {
         <Alert variant="info" title="Nenhuma venda encontrada">
           <div className="space-y-2">
             <p>Não encontramos nenhuma venda com os filtros atuais ou você ainda não registrou vendas.</p>
-            <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
+            <Button variant="secondary" size="sm" onClick={() => setShowCreateModal(true)}>
               + Criar Primeira Venda
             </Button>
           </div>
@@ -217,3 +216,5 @@ export default function VendasPage() {
     </div>
   );
 }
+
+export default VendasPage;
