@@ -1369,10 +1369,15 @@ export type Database = {
         Row: {
           client_email: string | null
           created_at: string
+          discount_description: string | null
+          discount_type: string | null
+          discount_value: number | null
+          final_amount: number | null
           id: string
           lead_id: string
           notes: string | null
           organization_id: string
+          original_amount: number | null
           payment_date: string | null
           payment_method: string | null
           payment_status: string | null
@@ -1385,10 +1390,15 @@ export type Database = {
         Insert: {
           client_email?: string | null
           created_at?: string
+          discount_description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          final_amount?: number | null
           id?: string
           lead_id: string
           notes?: string | null
           organization_id: string
+          original_amount?: number | null
           payment_date?: string | null
           payment_method?: string | null
           payment_status?: string | null
@@ -1401,10 +1411,15 @@ export type Database = {
         Update: {
           client_email?: string | null
           created_at?: string
+          discount_description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          final_amount?: number | null
           id?: string
           lead_id?: string
           notes?: string | null
           organization_id?: string
+          original_amount?: number | null
           payment_date?: string | null
           payment_method?: string | null
           payment_status?: string | null
