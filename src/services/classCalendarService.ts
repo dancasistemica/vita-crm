@@ -7,6 +7,7 @@ export interface ClassCalendarData {
   product_name: string;
   class_date: string;
   description: string;
+  class_time: string;
   attendance_count: number;
   total_clients: number;
   attendance_rate: number;
