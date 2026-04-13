@@ -1,11 +1,12 @@
-import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
+import { Alert, Button, Card, Input, Select } from "@/components/ui/ds";
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from '@/contexts/OrganizationContext';
 import { getSalesAndSubscriptions, deleteSale } from '@/services/saleService';
-import { Plus, Search, Filter, Edit2, Trash2, Loader } from 'lucide-react';
+import { Plus, Search, Filter, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
-import EditSaleModal from '@/components/sales/EditSaleModal';
+import { SalesEditModal } from '@/components/sales/SalesEditModal';
+import { SalesTable } from '@/components/sales/SalesTable';
 
 export function VendasPage() {
   const { organization } = useOrganization();
@@ -60,15 +61,18 @@ export function VendasPage() {
   };
 
   const handleEditSale = (sale: any) => {
+    console.log('[VendasPage] Abrindo edição para:', sale.id);
     setSelectedSale(sale);
     setShowEditModal(true);
   };
 
   // Filtrar vendas
   const filteredSales = sales.filter(sale => {
+    const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
-      sale.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sale.stage_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      sale.client_name?.toLowerCase().includes(searchLower) ||
+      sale.client_email?.toLowerCase().includes(searchLower) ||
+      sale.stage_name?.toLowerCase().includes(searchLower);
     
     const matchesStatus = statusFilter === 'todos' || sale.status === statusFilter;
     const matchesType = typeFilter === 'todos' || sale.sale_type === typeFilter;
@@ -113,7 +117,7 @@ export function VendasPage() {
       <Card variant="primary" padding="md">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Input
-            placeholder="Buscar por cliente ou etapa..."
+            placeholder="Buscar por cliente, email ou etapa..."
             icon={<Search className="w-4 h-4" />}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -166,67 +170,11 @@ export function VendasPage() {
         </Card>
       ) : (
         <Card variant="elevated" padding="lg">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-neutral-200">
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Cliente</th>
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Etapa</th>
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Tipo</th>
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor</th>
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
-                  <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSales.map((sale) => (
-                  <tr key={sale.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors">
-                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.client_name}</td>
-                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.stage_name}</td>
-                    <td className="py-3 px-2 sm:px-4">
-                      <Badge variant={sale.sale_type === 'unica' ? 'default' : 'warning'} size="sm">
-                        {sale.sale_type === 'unica' ? '💳 Única' : '📅 Mensalidade'}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900 font-semibold">
-                      <div className="flex flex-col">
-                        <span>R$ {Number(sale.stage_value).toFixed(2)}</span>
-                        {sale.discount_type && sale.discount_type !== 'none' && (
-                          <span className="text-[10px] text-success-600 font-normal">
-                            Com desconto
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-2 sm:px-4">
-                      <Badge 
-                        variant={sale.status === 'ativa' ? 'success' : 'error'} 
-                        size="sm"
-                      >
-                        {sale.status === 'ativa' ? '✅ Ativa' : '❌ Cancelada'}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-2 sm:px-4">
-                      <div className="flex gap-3">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          icon={<Edit2 className="w-4 h-4" />} 
-                          onClick={() => handleEditSale(sale)}
-                        />
-                        <Button 
-                          variant="error" 
-                          size="sm" 
-                          icon={<Trash2 className="w-4 h-4" />} 
-                          onClick={() => handleDeleteSale(sale)}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <SalesTable 
+            sales={filteredSales} 
+            onEdit={handleEditSale} 
+            onDelete={handleDeleteSale} 
+          />
         </Card>
       )}
 
@@ -238,7 +186,7 @@ export function VendasPage() {
       />
       
       {showEditModal && selectedSale && (
-        <EditSaleModal
+        <SalesEditModal
           isOpen={showEditModal}
           onClose={() => {
             setShowEditModal(false);
