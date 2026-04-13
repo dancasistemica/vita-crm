@@ -8,7 +8,11 @@ import { ptBR } from 'date-fns/locale';
 interface ClassCalendarProps {
   classes: Array<{
     id: string;
+    product_id: string;
+    product_name: string;
     class_date: string;
+    class_time: string;
+    description: string;
     status: 'registered' | 'pending' | 'future';
     attendance_rate: number;
     total_clients: number;
