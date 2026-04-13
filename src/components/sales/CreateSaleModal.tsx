@@ -49,6 +49,11 @@ const INITIAL_FORM_DATA: SaleFormData = {
   first_payment_due_date: '',
   auto_payment_enabled: true,
   notes: '',
+  discount_type: 'none',
+  discount_value: 0,
+  discount_description: '',
+  original_amount: 0,
+  final_amount: 0,
 };
 
 export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }: CreateSaleModalProps) => {
