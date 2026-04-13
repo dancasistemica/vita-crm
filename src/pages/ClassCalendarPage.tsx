@@ -84,35 +84,36 @@ export default function ClassCalendarPage() {
     description: string;
   }) => {
     try {
+      setIsLoading(true);
       console.log('[ClassCalendarPage] Criando nova aula:', formData);
 
       const { saveClassSession } = await import('@/services/classSessionService');
       
-      // Concatenar data e hora se necessário, ou enviar separadamente se o serviço suportar
-      // Por enquanto vamos manter o comportamento original mas aceitando os novos campos
+      // Salvar com horário também na descrição
       await saveClassSession(
         organization!.id,
         selectedProductId,
         formData.class_date,
-        formData.description
+        `${formData.class_time} - ${formData.description}`.trim()
       );
 
       console.log('[ClassCalendarPage] ✅ Aula criada com sucesso');
-      toast.success('Aula criada! Agora registre a presença.');
+      toast.success('Aula criada! Acesse "Registro de Presença" para registrar a presença.', {
+        duration: 5000,
+      });
       
+      // APENAS FECHAR MODAL - NÃO REDIRECIONAR
       setShowNewClassModal(false);
-      setNewClassDate(formData.class_date);
       
-      // Recarregar aulas
+      // Recarregar calendário para exibir nova aula através da invalidação do cache
       await queryClient.invalidateQueries({ queryKey: ['classes', organizationId, selectedProductId] });
       await queryClient.invalidateQueries({ queryKey: ['stats', organizationId, selectedProductId] });
-      
-      // Abrir detalhes da aula criada
-      setSelectedDate(formData.class_date);
 
     } catch (error) {
       console.error('[ClassCalendarPage] ❌ Erro ao criar aula:', error);
       toast.error('Erro ao criar aula');
+    } finally {
+      setIsLoading(false);
     }
   };
 
