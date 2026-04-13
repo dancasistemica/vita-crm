@@ -67,6 +67,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   // Busca de cliente
   const [clientSearch, setClientSearch] = useState('');
