@@ -12,6 +12,11 @@ interface CreateSaleInput {
   payment_method_id?: string;
   initial_payment?: number;
   sales_stage_id?: string;
+  discount_type?: string;
+  discount_value?: number;
+  discount_description?: string;
+  original_amount?: number;
+  final_amount?: number;
   items?: Array<{
     product_id: string;
     quantity: number;
@@ -53,11 +58,16 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       .insert({
         organization_id: organizationId,
         lead_id: saleData.client_id,
-        value: saleData.value,
+        value: saleData.final_amount || saleData.value, // Usa final_amount se disponível
         status: saleData.status || 'pendente',
         notes: saleData.notes,
         payment_method: paymentMethodName || saleData.payment_method_id || '',
         product_id: saleData.sales_stage_id || null,
+        discount_type: saleData.discount_type,
+        discount_value: saleData.discount_value,
+        discount_description: saleData.discount_description,
+        original_amount: saleData.original_amount || saleData.value,
+        final_amount: saleData.final_amount || saleData.value,
       })
       .select()
       .single();

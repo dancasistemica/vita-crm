@@ -288,7 +288,12 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         payment_method,
         status,
         created_at,
-        updated_at
+        updated_at,
+        discount_type,
+        discount_value,
+        discount_description,
+        original_amount,
+        final_amount
       `);
     
     if (organizationId !== 'consolidado') {
@@ -363,7 +368,12 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         client_name: sale.leads?.name || 'Cliente desconhecido',
         sales_stage_id: sale.product_id,
         stage_name: stage?.name || 'Etapa desconhecida',
-        stage_value: Number(stage?.value || 0),
+        stage_value: Number(sale.final_amount || stage?.value || 0),
+        original_amount: Number(sale.original_amount || stage?.value || 0),
+        final_amount: Number(sale.final_amount || stage?.value || 0),
+        discount_type: sale.discount_type,
+        discount_value: sale.discount_value,
+        discount_description: sale.discount_description,
         sale_type: 'unica' as const,
         payment_method_id: sale.payment_method,
         payment_method_name: sale.payment_method || 'Não definida',

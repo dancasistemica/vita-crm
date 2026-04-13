@@ -1,6 +1,6 @@
 import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
-import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight } from 'lucide-react';
+import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight, Info, DollarSign, Percent } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSale } from '@/services/salesService';
 import { createSubscription } from '@/services/subscriptionService';
@@ -49,6 +49,11 @@ const INITIAL_FORM_DATA: SaleFormData = {
   first_payment_due_date: '',
   auto_payment_enabled: true,
   notes: '',
+  discount_type: 'none',
+  discount_value: 0,
+  discount_description: '',
+  original_amount: 0,
+  final_amount: 0,
 };
 
 export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }: CreateSaleModalProps) => {
@@ -89,6 +94,38 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
       if (client) setClientSearch(client.name);
     }
   }, [formData.client_id, clients]);
+
+  // Recalcular valores quando amount ou desconto mudam
+  useEffect(() => {
+    const originalAmount = formData.stage_value || 0;
+    let discountAmount = 0;
+    let finalAmount = originalAmount;
+
+    if (formData.discount_type !== 'none' && formData.discount_value) {
+      const discountValue = formData.discount_value || 0;
+
+      if (formData.discount_type === 'fixed') {
+        discountAmount = Math.min(discountValue, originalAmount);
+        finalAmount = originalAmount - discountAmount;
+      } else if (formData.discount_type === 'percentage') {
+        if (discountValue > 100) {
+          discountAmount = originalAmount;
+          finalAmount = 0;
+        } else {
+          discountAmount = (originalAmount * discountValue) / 100;
+          finalAmount = originalAmount - discountAmount;
+        }
+      }
+    }
+
+    if (formData.original_amount !== originalAmount || formData.final_amount !== finalAmount) {
+      setFormData(prev => ({
+        ...prev,
+        original_amount: originalAmount,
+        final_amount: Math.max(0, finalAmount)
+      }));
+    }
+  }, [formData.stage_value, formData.discount_type, formData.discount_value]);
 
   const loadAllData = async () => {
     if (!organization?.id) return;
@@ -166,7 +203,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
       if (formData.sale_type === 'unica') {
         await createSale(organization!.id, {
           client_id: formData.client_id,
-          value: formData.stage_value,
+          value: formData.final_amount, // Enviar valor final
           status: 'pendente',
           installments: parseInt(formData.installments) || 1,
           first_payment_date: formData.first_payment_date,
@@ -174,6 +211,11 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           notes: formData.notes,
           payment_method_id: formData.payment_method_id,
           sales_stage_id: formData.sales_stage_id,
+          discount_type: formData.discount_type,
+          discount_value: formData.discount_value,
+          discount_description: formData.discount_description,
+          original_amount: formData.original_amount,
+          final_amount: formData.final_amount,
         });
         toast.success('Venda única criada com sucesso!');
       } else {
@@ -440,6 +482,49 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                       />
                     </div>
                   )}
+                  
+                  {/* Seção de Desconto */}
+                  <div className="space-y-4 pt-4 border-t border-neutral-100">
+                    <div className="flex items-center gap-2">
+                      <Info className="w-5 h-5 text-primary-600" />
+                      <h4 className="font-semibold text-neutral-900">Desconto (Opcional)</h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Select
+                        label="Tipo de Desconto"
+                        options={[
+                          { value: 'none', label: 'Sem desconto' },
+                          { value: 'fixed', label: 'Valor Fixo (R$)' },
+                          { value: 'percentage', label: 'Percentual (%)' },
+                        ]}
+                        value={formData.discount_type}
+                        onChange={(e) => setFormData({ ...formData, discount_type: e.target.value as any })}
+                      />
+
+                      {formData.discount_type !== 'none' && (
+                        <Input
+                          label={formData.discount_type === 'fixed' ? 'Desconto (R$)' : 'Desconto (%)'}
+                          type="number"
+                          step={formData.discount_type === 'fixed' ? '0.01' : '0.1'}
+                          min="0"
+                          max={formData.discount_type === 'percentage' ? '100' : undefined}
+                          value={formData.discount_value}
+                          onChange={(e) => setFormData({ ...formData, discount_value: parseFloat(e.target.value) || 0 })}
+                          icon={formData.discount_type === 'fixed' ? <DollarSign className="w-5 h-5" /> : <Percent className="w-5 h-5" />}
+                        />
+                      )}
+                    </div>
+
+                    {formData.discount_type !== 'none' && (
+                      <Input
+                        label="Motivo/Descrição do Desconto"
+                        value={formData.discount_description}
+                        onChange={(e) => setFormData({ ...formData, discount_description: e.target.value })}
+                        placeholder="Ex: Cupom BLACKFRIDAY, Desconto fidelidade..."
+                      />
+                    )}
+                  </div>
                   
                   <Card variant="primary" padding="md" className="bg-primary-50 border-primary-100 mt-4">
                     <div className="flex justify-between items-center">

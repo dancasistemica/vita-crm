@@ -20,6 +20,12 @@ export interface SaleFormData {
   // Comum
   auto_payment_enabled: boolean;
   notes: string;
+  // Desconto
+  discount_type: 'none' | 'fixed' | 'percentage';
+  discount_value: number;
+  discount_description: string;
+  original_amount: number;
+  final_amount: number;
 }
 
 export const validatePhase = (
