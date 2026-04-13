@@ -10,7 +10,7 @@ import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import ExportModal from '@/components/export/ExportModal';
 import BulkEditModal from '@/components/bulk/BulkEditModal';
 import BulkDeleteModal from '@/components/bulk/BulkDeleteModal';
-import NewSaleModal from '@/components/sales/NewSaleModal';
+import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import RecordCounter from "@/components/common/RecordCounter";
 
 export default function ClientesPage() {
@@ -26,7 +26,7 @@ export default function ClientesPage() {
 
   const handleNewSale = (leadId?: string) => {
     setSaleLeadId(leadId);
-    setSaleModalOpen(true);
+    setShowCreateModal(true);
   };
 
   return (
@@ -176,12 +176,6 @@ export default function ClientesPage() {
         onSuccess={() => {
           hook.selectedIds.forEach(id => hook.toggleSelect(id));
         }}
-      />
-      <NewSaleModal
-        open={saleModalOpen}
-        onOpenChange={setSaleModalOpen}
-        preSelectedLeadId={saleLeadId}
-        onSaleCreated={() => hook.refetchData()}
       />
       <CreateSaleModal
         isOpen={showCreateModal}
