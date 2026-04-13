@@ -330,6 +330,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
     setFormData(INITIAL_FORM_DATA);
     setCurrentPhase(1);
     setValidationErrors([]);
+    setError(null);
     setClientSearch('');
     onClose();
   };
