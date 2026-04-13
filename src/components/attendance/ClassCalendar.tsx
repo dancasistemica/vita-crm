@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Button, Card, Badge } from '@/components/ui/ds';
-import { ChevronLeft, ChevronRight, Calendar, Info, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -64,18 +64,6 @@ export const ClassCalendar = ({
 
   const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'registered':
-        return <CheckCircle className="w-3 h-3 text-success-500" />;
-      case 'pending':
-        return <AlertCircle className="w-3 h-3 text-warning-500" />;
-      case 'future':
-        return <Clock className="w-3 h-3 text-primary-500" />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <Card variant="elevated" padding="none" className="overflow-hidden">
