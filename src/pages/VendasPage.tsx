@@ -39,21 +39,46 @@ export function VendasPage() {
   }, [organization?.id]);
 
   const loadSales = async () => {
-    if (!organization?.id) return;
+    if (!organization?.id) {
+      console.warn('[VendasPage] ⚠️ loadSales abortado: organizationId ausente');
+      return;
+    }
 
     try {
       setIsLoading(true);
-      console.log('[VendasPage] 📊 Iniciando loadSales para org:', organization.id);
+      console.log('');
+      console.log('═══════════════════════════════════════════════════════');
+      console.log('[VendasPage] 📊 INICIANDO loadSales');
+      console.log('═══════════════════════════════════════════════════════');
+      console.log('[VendasPage] Organization ID:', organization.id);
+      console.log('[VendasPage] Timestamp:', new Date().toISOString());
+      console.log('');
 
       // Usamos o serviço que já está formatando os dados corretamente com joins
       const data = await fetchSales(organization.id);
 
       console.log('[VendasPage] ✅ Vendas carregadas:', data?.length || 0);
-      console.log('[VendasPage] Dados:', data);
+      if (data && data.length > 0) {
+        console.log('[VendasPage] Primeira venda carregada:', JSON.stringify(data[0], null, 2));
+      } else {
+        console.log('[VendasPage] Nenhuma venda retornada pelo banco');
+      }
 
       setSales(data || []);
+      console.log('═══════════════════════════════════════════════════════');
+      console.log('[VendasPage] ✅ loadSales finalizado com sucesso');
+      console.log('═══════════════════════════════════════════════════════');
+      console.log('');
     } catch (error) {
-      console.error('[VendasPage] ❌ Erro geral ao carregar vendas:', error);
+      console.error('');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('[VendasPage] ❌ ERRO ao carregar vendas');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('[VendasPage] Tipo do erro:', error instanceof Error ? error.constructor.name : typeof error);
+      console.error('[VendasPage] Mensagem:', error instanceof Error ? error.message : String(error));
+      console.error('[VendasPage] Objeto do erro:', error);
+      console.error('');
+      
       const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar vendas';
       toast.error(errorMessage);
       setSales([]);

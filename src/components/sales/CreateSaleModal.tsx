@@ -193,19 +193,31 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════');
+    console.log('[CreateSaleModal] 🔘 Botão "Finalizar e Salvar" clicado');
+    console.log('═══════════════════════════════════════════════════════');
+    console.log('[CreateSaleModal] Timestamp:', new Date().toISOString());
+    console.log('[CreateSaleModal] Modo:', formData.sale_type);
+    console.log('[CreateSaleModal] Form Data:', JSON.stringify(formData, null, 2));
+    console.log('');
+
     const errors = validateFormComplete(formData, formData.sale_type);
     if (errors.length > 0) {
+      console.error('[CreateSaleModal] ❌ Validação falhou:', errors);
       setValidationErrors(errors);
       toast.error('Por favor, corrija os erros antes de finalizar');
       return;
     }
 
+    console.log('[CreateSaleModal] ✅ Todas as validações passaram');
+
     setLoading(true);
     try {
       if (formData.sale_type === 'unica') {
-        await createSale(organization!.id, {
+        const saleData = {
           client_id: formData.client_id,
-          value: formData.final_amount, // Enviar valor final
+          value: formData.final_amount,
           status: 'ativo',
           installments: parseInt(formData.installments) || 1,
           first_payment_date: formData.first_payment_date,
@@ -220,10 +232,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           final_amount: formData.final_amount,
           discount_granted_by: user?.id,
           discount_granted_at: new Date().toISOString(),
-        });
+        };
+
+        console.log('[CreateSaleModal] 📤 Chamando createSale com:', JSON.stringify(saleData, null, 2));
+        await createSale(organization!.id, saleData);
+        console.log('[CreateSaleModal] ✅ createSale retornou com sucesso');
         toast.success('Venda única criada com sucesso!');
       } else {
-        await createSubscription(organization!.id, {
+        const subscriptionData = {
           client_id: formData.client_id,
           product_id: formData.product_id,
           sales_stage_id: formData.sales_stage_id,
@@ -234,14 +250,23 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
           first_payment_due_date: formData.first_payment_due_date,
-        });
+        };
+
+        console.log('[CreateSaleModal] 📤 Chamando createSubscription com:', JSON.stringify(subscriptionData, null, 2));
+        await createSubscription(organization!.id, subscriptionData);
+        console.log('[CreateSaleModal] ✅ createSubscription retornou com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
 
       onSuccess?.();
       handleClose();
     } catch (error) {
-      console.error('[CreateSaleModal] Erro ao salvar:', error);
+      console.error('');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('[CreateSaleModal] ❌ ERRO CRÍTICO ao salvar');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('[CreateSaleModal] Detalhes do erro:', error);
+      console.error('');
       toast.error('Erro ao processar a operação');
     } finally {
       setLoading(false);
