@@ -60,19 +60,19 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       .insert({
         organization_id: organizationId,
         lead_id: saleData.client_id,
-        value: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value,
-        status: saleData.status || 'ativo', // Alterado para 'ativo' para compatibilidade com o dashboard
+        value: Number(saleData.final_amount) || Number(saleData.value) || 0,
+        status: saleData.status || 'ativo',
         notes: saleData.notes,
         payment_method: paymentMethodName || saleData.payment_method_id || '',
         product_id: saleData.sales_stage_id || null,
         discount_type: saleData.discount_type,
         discount_value: saleData.discount_value,
         discount_description: saleData.discount_description,
-        original_amount: (saleData.original_amount !== undefined && saleData.original_amount !== null) ? saleData.original_amount : saleData.value,
-        final_amount: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value,
+        original_amount: Number(saleData.original_amount) || Number(saleData.value) || 0,
+        final_amount: Number(saleData.final_amount) || Number(saleData.value) || 0,
         discount_granted_by: saleData.discount_granted_by,
         discount_granted_at: saleData.discount_granted_at,
-        sale_date: new Date().toISOString().split('T')[0], // Definir explicitamente
+        sale_date: new Date().toISOString().split('T')[0],
       })
       .select()
       .single();
