@@ -202,83 +202,30 @@ export const fetchSales = async (
   organizationId: string
 ): Promise<any[]> => {
   try {
-    console.log('[salesService] 📊 Buscando vendas e mensalidades para org:', organizationId);
-    const isConsolidated = organizationId === 'consolidado';
+    console.log('[salesService] 📊 Buscando vendas');
+    console.log('[salesService] Organization ID:', organizationId);
 
-    // 1. Buscar Vendas Únicas
-    let salesQuery = supabase
+    // Query SIMPLES - sem JOINs
+    const { data, error } = await supabase
       .from('sales')
-      .select('*, leads(name, email)');
-    
-    if (!isConsolidated) {
-      salesQuery = salesQuery.eq('organization_id', organizationId);
-    }
-    
-    const { data: sales, error: salesError } = await salesQuery.order('created_at', { ascending: false });
+      .select('*')  // ← APENAS DADOS DE SALES
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
 
-    if (salesError) throw salesError;
-
-    // 2. Buscar Mensalidades (Subscriptions)
-    let subsQuery = supabase
-      .from('subscriptions')
-      .select('*, leads(name, email)');
-
-    if (!isConsolidated) {
-      subsQuery = subsQuery.eq('organization_id', organizationId);
+    if (error) {
+      console.error('[salesService] ❌ Erro na query:', error);
+      console.error('[salesService] Código do erro:', error.code);
+      console.error('[salesService] Mensagem:', error.message);
+      throw error;
     }
 
-    const { data: subscriptions, error: subsError } = await subsQuery.order('created_at', { ascending: false });
+    console.log('[salesService] ✅ Vendas carregadas:', data?.length || 0);
+    console.log('[salesService] Dados:', data);
 
-    if (subsError) throw subsError;
+    return data || [];
 
-    // 3. Buscar Etapas para formatar nomes
-    const { data: stages } = await supabase
-      .from('product_sales_stages')
-      .select('id, name, value');
-
-    const stagesMap = new Map((stages || []).map(s => [s.id, s]));
-
-    // 4. Formatar Vendas Únicas
-    const formattedSales = (sales || []).map(sale => {
-      const stage = stagesMap.get(sale.product_id);
-      return {
-        ...sale,
-        client_name: sale.leads?.name || 'Cliente Desconhecido',
-        client_email: sale.leads?.email || '',
-        stage_name: stage?.name || 'Venda Direta',
-        stage_value: sale.final_amount || stage?.value || sale.value || 0,
-        original_amount: sale.original_amount || stage?.value || sale.value || 0,
-        sale_type: 'unica',
-      };
-    });
-
-    // 5. Formatar Mensalidades
-    const formattedSubs = (subscriptions || []).map(sub => {
-      const stage = stagesMap.get(sub.sales_stage_id);
-      return {
-        ...sub,
-        id: sub.id,
-        value: sub.monthly_value,
-        client_name: sub.leads?.name || 'Cliente Desconhecido',
-        client_email: sub.leads?.email || '',
-        stage_name: stage?.name || 'Mensalidade',
-        stage_value: sub.monthly_value,
-        original_amount: sub.monthly_value,
-        sale_type: 'mensalidade',
-        status: sub.status,
-        sale_date: sub.start_date,
-        created_at: sub.created_at,
-      };
-    });
-
-    const allRecords = [...formattedSales, ...formattedSubs].sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-
-    console.log('[salesService] ✅ Total carregado:', allRecords.length);
-    return allRecords;
   } catch (error) {
-    console.error('[salesService] ❌ Erro ao buscar vendas:', error);
+    console.error('[salesService] ❌ Erro geral:', error);
     throw error;
   }
 };
