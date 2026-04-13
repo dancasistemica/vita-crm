@@ -46,12 +46,22 @@ export const ClassCalendarNewClass = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('[ClassCalendarNewClass] 🔘 Botão clicado');
     console.log('[ClassCalendarNewClass] Validando formulário');
 
     const newErrors: string[] = [];
-    if (!classDate) newErrors.push('Data da aula é obrigatória');
-    if (!classTime) newErrors.push('Horário da aula é obrigatório');
-    if (!description.trim()) newErrors.push('Descrição da aula é obrigatória');
+    if (!classDate) {
+      newErrors.push('Data da aula é obrigatória');
+      console.warn('[ClassCalendarNewClass] ⚠️ Data faltando');
+    }
+    if (!classTime) {
+      newErrors.push('Horário da aula é obrigatório');
+      console.warn('[ClassCalendarNewClass] ⚠️ Horário faltando');
+    }
+    if (!description.trim()) {
+      newErrors.push('Descrição da aula é obrigatória');
+      console.warn('[ClassCalendarNewClass] ⚠️ Descrição faltando');
+    }
 
     // Validar se data não é no passado
     if (classDate) {
@@ -61,14 +71,17 @@ export const ClassCalendarNewClass = ({
 
       if (selectedDate < today) {
         newErrors.push('Data da aula não pode ser no passado');
+        console.warn('[ClassCalendarNewClass] ⚠️ Data no passado');
       }
     }
 
     if (newErrors.length > 0) {
+      console.log('[ClassCalendarNewClass] ❌ Erros de validação:', newErrors);
       setErrors(newErrors);
       return;
     }
 
+    console.log('[ClassCalendarNewClass] ✅ Validação OK, chamando onSubmit');
     setErrors([]);
     setIsSubmitting(true);
 
@@ -78,8 +91,9 @@ export const ClassCalendarNewClass = ({
         class_time: classTime,
         description,
       });
+      console.log('[ClassCalendarNewClass] ✅ Aula criada com sucesso');
     } catch (error) {
-      console.error('[ClassCalendarNewClass] Erro ao criar aula:', error);
+      console.error('[ClassCalendarNewClass] ❌ Erro ao criar aula:', error);
       setErrors(['Erro ao criar aula. Tente novamente.']);
     } finally {
       setIsSubmitting(false);
@@ -148,27 +162,32 @@ export const ClassCalendarNewClass = ({
 
           {/* Botões */}
           <div className="flex gap-3 pt-2">
-            <Button
-              variant="secondary"
+            <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1"
+              className="flex-1 px-4 py-3 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 font-semibold rounded-lg transition-all"
             >
               Cancelar
-            </Button>
+            </button>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-3 bg-success-600 hover:bg-success-700 disabled:bg-neutral-300 text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting || !classDate || !classTime || !description.trim()}
+              className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
-                  <Loader className="w-4 h-4 animate-spin" />
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
                   Criando...
                 </>
               ) : (
-                '✓ Criar Aula'
+                <>
+                  <span>✓</span>
+                  Criar Aula
+                </>
               )}
             </button>
           </div>
