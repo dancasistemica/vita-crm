@@ -283,7 +283,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
       .select(`
         id,
         lead_id,
-        leads(name),
+        leads(name, email),
         product_id,
         payment_method,
         status,
@@ -293,7 +293,10 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         discount_value,
         discount_description,
         original_amount,
-        final_amount
+        final_amount,
+        discount_granted_by,
+        discount_granted_at,
+        granted_by:profiles!sales_discount_granted_by_fkey(full_name)
       `);
     
     if (organizationId !== 'consolidado') {
@@ -329,7 +332,7 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
       .select(`
         id,
         client_id,
-        leads(name),
+        leads(name, email),
         sales_stage_id,
         monthly_value,
         payment_method_id,
@@ -366,6 +369,8 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         id: sale.id,
         client_id: sale.lead_id,
         client_name: sale.leads?.name || 'Cliente desconhecido',
+        client_email: sale.leads?.email || '',
+        product_id: sale.product_id,
         sales_stage_id: sale.product_id,
         stage_name: stage?.name || 'Etapa desconhecida',
         stage_value: Number(sale.final_amount || stage?.value || 0),
@@ -374,6 +379,9 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         discount_type: sale.discount_type,
         discount_value: sale.discount_value,
         discount_description: sale.discount_description,
+        discount_granted_by: sale.discount_granted_by,
+        discount_granted_at: sale.discount_granted_at,
+        discount_granted_by_name: sale.granted_by?.full_name || 'N/A',
         sale_type: 'unica' as const,
         payment_method_id: sale.payment_method,
         payment_method_name: sale.payment_method || 'Não definida',
@@ -390,7 +398,9 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         id: sub.id,
         client_id: sub.client_id,
         client_name: sub.leads?.name || 'Cliente desconhecido',
+        client_email: sub.leads?.email || '',
         sales_stage_id: sub.sales_stage_id,
+        product_id: sub.sales_stage_id,
         stage_name: stage?.name || 'Etapa desconhecida',
         stage_value: Number(sub.monthly_value || 0),
         sale_type: 'mensalidade' as const,

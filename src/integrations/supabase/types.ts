@@ -1370,6 +1370,8 @@ export type Database = {
           client_email: string | null
           created_at: string
           discount_description: string | null
+          discount_granted_at: string | null
+          discount_granted_by: string | null
           discount_type: string | null
           discount_value: number | null
           final_amount: number | null
@@ -1391,6 +1393,8 @@ export type Database = {
           client_email?: string | null
           created_at?: string
           discount_description?: string | null
+          discount_granted_at?: string | null
+          discount_granted_by?: string | null
           discount_type?: string | null
           discount_value?: number | null
           final_amount?: number | null
@@ -1412,6 +1416,8 @@ export type Database = {
           client_email?: string | null
           created_at?: string
           discount_description?: string | null
+          discount_granted_at?: string | null
+          discount_granted_by?: string | null
           discount_type?: string | null
           discount_value?: number | null
           final_amount?: number | null
