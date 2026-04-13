@@ -40,14 +40,20 @@ export interface ExecutiveDashboardData {
 export async function getExecutiveDashboardData(
   organizationId: string
 ): Promise<ExecutiveDashboardData> {
-  console.log('[executiveDashboardService] Calculando dashboard executivo:', organizationId);
+  const isConsolidated = organizationId === 'consolidado';
+  console.log('[executiveDashboardService] Calculando dashboard executivo:', organizationId, 'consolidado:', isConsolidated);
 
   try {
     // Buscar todos os produtos da organização
-    const { data: products, error: productsError } = await supabase
+    let productsQuery = supabase
       .from('products')
-      .select('id, name')
-      .eq('organization_id', organizationId);
+      .select('id, name');
+    
+    if (!isConsolidated) {
+      productsQuery = productsQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: products, error: productsError } = await productsQuery;
 
     if (productsError) throw productsError;
 
