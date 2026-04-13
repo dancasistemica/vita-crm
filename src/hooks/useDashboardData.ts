@@ -141,6 +141,10 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           ? supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id')
           : supabase.from('sales').select('id, value, product_id, lead_id, created_at, organization_id').eq('organization_id', organizationId);
 
+        const subPaymentsQ = consolidated
+          ? supabase.from('subscription_payments').select('id, amount, created_at, organization_id')
+          : supabase.from('subscription_payments').select('id, amount, created_at, organization_id').eq('organization_id', organizationId);
+
         const productsQ = consolidated
           ? supabase.from('products').select('id, name, organization_id')
           : supabase.from('products').select('id, name, organization_id').eq('organization_id', organizationId);
@@ -153,11 +157,11 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           ? supabase.from('lead_origins').select('id, name, organization_id').eq('active', true)
           : supabase.from('lead_origins').select('id, name, organization_id').eq('active', true).eq('organization_id', organizationId);
 
-        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ] as const;
+        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ, subPaymentsQ] as const;
 
         let orgsData: { id: string; name: string }[] = [];
 
-        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all(basePromises);
+        const [leadsRes, salesRes, productsRes, stagesRes, originsRes, subPaymentsRes] = await Promise.all(basePromises);
 
         if (consolidated) {
           const orgsRes = await supabase.from('organizations').select('id, name').eq('active', true).order('name');
@@ -165,7 +169,21 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
         }
 
         const allLeads = leadsRes.data || [];
-        const allSales = salesRes.data || [];
+        const rawSales = salesRes.data || [];
+        const subPayments = subPaymentsRes.data || [];
+        
+        // Transformar pagamentos de mensalidade em formato de "venda" para o dashboard
+        const subSales = subPayments.map((sp: any) => ({
+          id: sp.id,
+          value: Number(sp.amount) || 0,
+          product_id: null, // Pode ser melhorado buscando via subscription
+          lead_id: null, // Pode ser melhorado buscando via subscription
+          created_at: sp.created_at,
+          organization_id: sp.organization_id,
+          is_subscription: true
+        }));
+
+        const allSales = [...rawSales, ...subSales];
         const products = productsRes.data || [];
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];

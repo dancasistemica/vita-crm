@@ -76,11 +76,32 @@ export const calculateDashboardMetrics = async (
       console.error('[dashboardService] Erro ao buscar vendas:', salesError);
     }
 
-    const totalSales = sales?.length || 0;
-    const totalRevenue = sales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
-    const completedSales = sales?.filter(s => ['completed', 'concluido', 'pago', 'ativo'].includes(s.status?.toLowerCase())).length || 0;
-    const pendingSales = sales?.filter(s => ['pending', 'pendente'].includes(s.status?.toLowerCase())).length || 0;
-    const overdueSales = sales?.filter(s => ['overdue', 'atrasado'].includes(s.payment_status?.toUpperCase())).length || 0;
+    // MENSALIDADES (Subscription Payments)
+    console.log('[dashboardService] Calculando mensalidades...');
+    const { data: subPayments, error: subError } = await supabase
+      .from('subscription_payments')
+      .select('amount, status')
+      .eq('organization_id', organizationId)
+      .gte('created_at', startDate.toISOString());
+
+    if (subError) {
+      console.error('[dashboardService] Erro ao buscar mensalidades:', subError);
+    }
+
+    const totalSales = (sales?.length || 0) + (subPayments?.length || 0);
+    const salesRevenue = sales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const subRevenue = subPayments?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    const totalRevenue = salesRevenue + subRevenue;
+
+    const completedSales = (sales?.filter(s => ['completed', 'concluido', 'pago', 'ativo'].includes(s.status?.toLowerCase())).length || 0) +
+                           (subPayments?.filter(s => ['pago', 'concluido'].includes(s.status?.toLowerCase())).length || 0);
+    
+    const pendingSales = (sales?.filter(s => ['pending', 'pendente'].includes(s.status?.toLowerCase())).length || 0) +
+                         (subPayments?.filter(s => ['pendente'].includes(s.status?.toLowerCase())).length || 0);
+    
+    const overdueSales = (sales?.filter(s => ['overdue', 'atrasado'].includes(s.payment_status?.toUpperCase())).length || 0) +
+                         (subPayments?.filter(s => ['atrasado'].includes(s.status?.toLowerCase())).length || 0);
+
     const conversionRate = totalSales > 0 ? (completedSales / totalSales) * 100 : 0;
     const averageTicket = totalSales > 0 ? totalRevenue / totalSales : 0;
 
@@ -167,7 +188,16 @@ export const calculateDashboardMetrics = async (
       .gte('created_at', previousStartDate.toISOString())
       .lt('created_at', startDate.toISOString());
 
-    const previousRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const { data: previousSubPayments } = await supabase
+      .from('subscription_payments')
+      .select('amount')
+      .eq('organization_id', organizationId)
+      .gte('created_at', previousStartDate.toISOString())
+      .lt('created_at', startDate.toISOString());
+
+    const previousSalesRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const previousSubRevenue = previousSubPayments?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    const previousRevenue = previousSalesRevenue + previousSubRevenue;
     const revenueTrend = previousRevenue > 0 
       ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 
       : 0;
