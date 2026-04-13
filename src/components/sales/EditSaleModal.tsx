@@ -19,6 +19,11 @@ interface Sale {
   status: string;
   created_at: string;
   updated_at: string;
+  discount_type?: string;
+  discount_value?: number;
+  discount_description?: string;
+  original_amount?: number;
+  final_amount?: number;
 }
 
 interface EditSaleModalProps {
@@ -95,14 +100,14 @@ export const EditSaleModal = ({
 
       setSaleData(data);
       setFormData({
-        payment_method_id: data.payment_method_id || '',
-        status: data.status || '',
-        notes: data.notes || '',
-        discount_type: data.discount_type || 'none',
-        discount_value: data.discount_value || 0,
-        discount_description: data.discount_description || '',
-        original_amount: data.original_amount || data.value || 0,
-        final_amount: data.final_amount || data.value || 0,
+        payment_method_id: (data as any).payment_method_id || '',
+        status: (data as any).status || '',
+        notes: (data as any).notes || '',
+        discount_type: (data as any).discount_type || 'none',
+        discount_value: (data as any).discount_value || 0,
+        discount_description: (data as any).discount_description || '',
+        original_amount: (data as any).original_amount || (data as any).value || 0,
+        final_amount: (data as any).final_amount || (data as any).value || 0,
       });
       console.log('[EditSaleModal] ✅ Venda carregada com sucesso');
     } catch (err) {
