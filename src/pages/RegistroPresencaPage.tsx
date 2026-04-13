@@ -25,6 +25,7 @@ export default function RegistroPresencaPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [weeklyClasses, setWeeklyClasses] = useState<any[]>([]);
   const [filteredClasses, setFilteredClasses] = useState<any[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string | undefined>(urlProductId || undefined);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingWeekly, setIsLoadingWeekly] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +33,7 @@ export default function RegistroPresencaPage() {
 
   useEffect(() => {
     if (organizationId) {
-      loadInitialData();
+      loadProducts();
     }
   }, [organizationId]);
 
@@ -41,26 +42,62 @@ export default function RegistroPresencaPage() {
     setShowForm(!!(urlProductId && urlDate));
   }, [urlProductId, urlDate]);
 
-  const loadInitialData = async () => {
+  useEffect(() => {
+    console.log('[RegistroPresencaPage] useEffect: Carregando aulas');
+    console.log('[RegistroPresencaPage] Parâmetros:', {
+      organizationId,
+      selectedProductId,
+    });
+
+    if (organizationId) {
+      console.log('[RegistroPresencaPage] ✅ Chamando loadWeeklyClasses');
+      loadWeeklyClasses();
+    } else {
+      console.warn('[RegistroPresencaPage] ⚠️ organizationId não disponível');
+    }
+  }, [organizationId, selectedProductId]);
+
+  const loadProducts = async () => {
     setIsLoadingProducts(true);
-    setIsLoadingWeekly(true);
     try {
-      const [productsData, weeklyData] = await Promise.all([
-        fetchProductsForOrganization(organizationId!),
-        fetchWeeklyClasses(organizationId!)
-      ]);
+      const productsData = await fetchProductsForOrganization(organizationId!);
       setProducts(productsData);
-      setWeeklyClasses(weeklyData);
-      setFilteredClasses(weeklyData);
     } catch (error) {
-      console.error('[RegistroPresencaPage] Erro ao carregar dados:', error);
+      console.error('[RegistroPresencaPage] Erro ao carregar produtos:', error);
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
+  const loadWeeklyClasses = async () => {
+    try {
+      setIsLoadingWeekly(true);
+      console.log('[RegistroPresencaPage] 🔄 loadWeeklyClasses iniciado');
+      console.log('[RegistroPresencaPage] Chamando fetchWeeklyClasses com:', {
+        organizationId: organizationId!,
+        productId: selectedProductId || 'undefined',
+      });
+
+      const data = await fetchWeeklyClasses(
+        organizationId!,
+        selectedProductId
+      );
+
+      console.log('[RegistroPresencaPage] ✅ Aulas retornadas:', data.length);
+      console.log('[RegistroPresencaPage] Dados:', data);
+
+      setWeeklyClasses(data);
+      setFilteredClasses(data);
+    } catch (error) {
+      console.error('[RegistroPresencaPage] ❌ Erro em loadWeeklyClasses:', error);
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Não foi possível carregar os dados iniciais.',
+        description: 'Não foi possível carregar as aulas da semana.',
       });
+      setWeeklyClasses([]);
+      setFilteredClasses([]);
     } finally {
-      setIsLoadingProducts(false);
       setIsLoadingWeekly(false);
     }
   };
@@ -71,6 +108,13 @@ export default function RegistroPresencaPage() {
     dateStart?: string;
     dateEnd?: string;
   }) => {
+    // Se o produto mudou, atualizamos o estado para disparar o fetch via useEffect
+    if (filters.productId !== selectedProductId) {
+      console.log('[RegistroPresencaPage] Produto alterado no filtro:', filters.productId);
+      setSelectedProductId(filters.productId);
+      return;
+    }
+
     let filtered = [...weeklyClasses];
 
     if (filters.productId) {
@@ -96,6 +140,7 @@ export default function RegistroPresencaPage() {
     setFilteredClasses(filtered);
   };
 
+
   const handleSelectClass = (classData: any) => {
     setSearchParams({
       product: classData.product_id,
@@ -108,7 +153,7 @@ export default function RegistroPresencaPage() {
     setSearchParams({});
     setShowForm(false);
     // Recarregar aulas semanais para ver estatísticas atualizadas
-    loadInitialData();
+    loadWeeklyClasses();
   };
 
   const handleSubmitAttendance = async (data: {
