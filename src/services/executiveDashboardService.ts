@@ -58,7 +58,7 @@ export async function getExecutiveDashboardData(
     if (productsError) throw productsError;
 
     // Buscar dados de clientes por produto
-    const { data: clientProducts, error: cpError } = await supabase
+    let cpQuery = supabase
       .from('client_products')
       .select(
         `
@@ -75,8 +75,13 @@ export async function getExecutiveDashboardData(
           last_attendance_date
         )
       `
-      )
-      .eq('organization_id', organizationId);
+      );
+    
+    if (!isConsolidated) {
+      cpQuery = cpQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: clientProducts, error: cpError } = await cpQuery;
 
     if (cpError) throw cpError;
 
@@ -210,11 +215,16 @@ export async function getProductTrendData(
       .toISOString()
       .split('T')[0];
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('client_products')
       .select('start_date, payment_status')
-      .eq('organization_id', organizationId)
       .gte('start_date', startDate);
+    
+    if (organizationId !== 'consolidado') {
+      query = query.eq('organization_id', organizationId);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
