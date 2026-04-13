@@ -211,7 +211,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </Card>
-    ),
+    ) : null,
     resumo_ia: () => <AIWeeklySummary />,
     insights_produtos: () => productInsights ? <ProductInsights insights={productInsights} isSuperadmin={false} /> : null,
   };
