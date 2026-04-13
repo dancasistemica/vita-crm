@@ -181,7 +181,7 @@ export const AsaasIntegration: React.FC<AsaasIntegrationProps> = ({
                   className="max-w-md"
                 />
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={handleTestConnection}
                   disabled={isTesting}
                 >
@@ -206,7 +206,7 @@ export const AsaasIntegration: React.FC<AsaasIntegrationProps> = ({
               <div className="flex gap-2">
                 {integration && (
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     onClick={handleManualSync}
                     disabled={isSyncing}
                   >

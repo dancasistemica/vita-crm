@@ -25,7 +25,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         );
       case 'error':
         return (
-          <Badge variant="destructive" className="border-none">
+          <Badge variant="error" className="border-none">
             <AlertCircle className="w-3 h-3 mr-1" />
             Erro na Sincronização
           </Badge>

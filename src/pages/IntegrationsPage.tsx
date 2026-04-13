@@ -52,13 +52,13 @@ const IntegrationsPage: React.FC = () => {
               <ChevronLeft className="w-5 h-5 text-neutral-500" />
             </button>
           )}
-          <PageTitle>Integrações</PageTitle>
+          <PageTitle 
+            title="Integrações" 
+            description={selectedType 
+              ? `Configure os detalhes da sua integração com ${selectedType === 'asaas' ? 'Asaas' : selectedType}.`
+              : "Conecte sua conta com ferramentas externas para automatizar seu fluxo de trabalho e sincronizar pagamentos."}
+          />
         </div>
-        <p className="text-neutral-500 max-w-2xl">
-          {selectedType 
-            ? `Configure os detalhes da sua integração com ${selectedType === 'asaas' ? 'Asaas' : selectedType}.`
-            : "Conecte sua conta com ferramentas externas para automatizar seu fluxo de trabalho e sincronizar pagamentos."}
-        </p>
       </div>
 
       <ScrollArea className="flex-1 px-8 pb-8">
