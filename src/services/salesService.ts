@@ -1,5 +1,36 @@
 import { supabase } from '@/integrations/supabase/client';
-import { convertLeadToClient } from './saleService';
+
+export const convertLeadToClient = async (leadId: string, organizationId: string) => {
+  const { error: updateError } = await supabase
+    .from('leads')
+    .update({
+      is_client: true,
+      became_client_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', leadId);
+
+  if (updateError) throw updateError;
+
+  const { data: leadData } = await supabase
+    .from('leads')
+    .select('name, email, phone')
+    .eq('id', leadId)
+    .single();
+
+  if (leadData) {
+    await supabase
+      .from('clients')
+      .upsert({
+        id: leadId,
+        organization_id: organizationId,
+        name: leadData.name,
+        email: leadData.email,
+        phone: leadData.phone,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
+  }
+};
 
 interface CreateSaleInput {
   client_id: string;

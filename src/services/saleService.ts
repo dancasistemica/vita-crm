@@ -2,12 +2,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   fetchSales as fetchSalesFromPlural,
   createSaleWithInstallments,
-  deleteSale as deleteSaleFromPlural
+  deleteSale as deleteSaleFromPlural,
+  convertLeadToClient as convertLeadToClientFromPlural
 } from './salesService';
 
 // Re-exportar funções do salesService (plural) para manter compatibilidade
 export const fetchSales = fetchSalesFromPlural;
 export const createUniqueSale = createSaleWithInstallments;
+export const convertLeadToClient = convertLeadToClientFromPlural;
 
 export const getSaleById = async (
   saleId: string,
@@ -54,34 +56,4 @@ export const updateSale = async (
 
 export const deleteSale = deleteSaleFromPlural;
 
-export const convertLeadToClient = async (leadId: string, organizationId: string) => {
-  const { error: updateError } = await supabase
-    .from('leads')
-    .update({
-      is_client: true,
-      became_client_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', leadId);
-
-  if (updateError) throw updateError;
-
-  const { data: leadData } = await supabase
-    .from('leads')
-    .select('name, email, phone')
-    .eq('id', leadId)
-    .single();
-
-  if (leadData) {
-    await supabase
-      .from('clients')
-      .upsert({
-        id: leadId,
-        organization_id: organizationId,
-        name: leadData.name,
-        email: leadData.email,
-        phone: leadData.phone,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'id' });
-  }
-};
+// convertLeadToClient moved to salesService.ts to break circular dependency
