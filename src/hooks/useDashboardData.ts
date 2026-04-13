@@ -157,11 +157,11 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
           ? supabase.from('lead_origins').select('id, name, organization_id').eq('active', true)
           : supabase.from('lead_origins').select('id, name, organization_id').eq('active', true).eq('organization_id', organizationId);
 
-        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ] as const;
+        const basePromises = [leadsQ, salesQ, productsQ, stagesQ, originsQ, subPaymentsQ] as const;
 
         let orgsData: { id: string; name: string }[] = [];
 
-        const [leadsRes, salesRes, productsRes, stagesRes, originsRes] = await Promise.all(basePromises);
+        const [leadsRes, salesRes, productsRes, stagesRes, originsRes, subPaymentsRes] = await Promise.all(basePromises);
 
         if (consolidated) {
           const orgsRes = await supabase.from('organizations').select('id, name').eq('active', true).order('name');
