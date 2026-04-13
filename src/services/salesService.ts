@@ -171,47 +171,72 @@ export const fetchSales = async (
   organizationId: string
 ): Promise<any[]> => {
   try {
-    console.log('[salesService] 📊 Buscando vendas');
+    console.log('[salesService] 📊 Buscando vendas e mensalidades');
 
-    // Query simples sem JOINs problemáticos
-    // Adicionamos leads(name, email) pois existe relação via foreign key
-    const { data: sales, error } = await supabase
+    // 1. Buscar Vendas Únicas
+    const { data: sales, error: salesError } = await supabase
       .from('sales')
-      .select(`
-        *,
-        leads(name, email)
-      `)
+      .select('*, leads(name, email)')
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('[salesService] ❌ Erro na query:', error);
-      throw error;
-    }
+    if (salesError) throw salesError;
 
-    // Buscar etapas de venda separadamente pois não há relação FK definida no banco
+    // 2. Buscar Mensalidades (Subscriptions)
+    const { data: subscriptions, error: subsError } = await supabase
+      .from('subscriptions')
+      .select('*, leads(name, email)')
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (subsError) throw subsError;
+
+    // 3. Buscar Etapas para formatar nomes
     const { data: stages } = await supabase
       .from('product_sales_stages')
       .select('id, name, value');
 
     const stagesMap = new Map((stages || []).map(s => [s.id, s]));
 
-    // Mapear para o formato que a UI espera (client_name, stage_name, etc.)
-    const formattedSales = sales?.map(sale => {
+    // 4. Formatar Vendas Únicas
+    const formattedSales = (sales || []).map(sale => {
       const stage = stagesMap.get(sale.product_id);
       return {
         ...sale,
         client_name: sale.leads?.name || 'Cliente Desconhecido',
         client_email: sale.leads?.email || '',
         stage_name: stage?.name || 'Venda Direta',
-        stage_value: sale.final_amount || stage?.value || 0,
-        original_amount: sale.original_amount || stage?.value || 0,
+        stage_value: sale.final_amount || stage?.value || sale.value || 0,
+        original_amount: sale.original_amount || stage?.value || sale.value || 0,
         sale_type: 'unica',
       };
-    }) || [];
+    });
 
-    console.log('[salesService] ✅ Vendas carregadas:', formattedSales.length);
-    return formattedSales;
+    // 5. Formatar Mensalidades
+    const formattedSubs = (subscriptions || []).map(sub => {
+      const stage = stagesMap.get(sub.sales_stage_id);
+      return {
+        ...sub,
+        id: sub.id,
+        value: sub.monthly_value,
+        client_name: sub.leads?.name || 'Cliente Desconhecido',
+        client_email: sub.leads?.email || '',
+        stage_name: stage?.name || 'Mensalidade',
+        stage_value: sub.monthly_value,
+        original_amount: sub.monthly_value,
+        sale_type: 'mensalidade',
+        status: sub.status,
+        sale_date: sub.start_date,
+        created_at: sub.created_at,
+      };
+    });
+
+    const allRecords = [...formattedSales, ...formattedSubs].sort((a, b) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    console.log('[salesService] ✅ Total carregado:', allRecords.length);
+    return allRecords;
   } catch (error) {
     console.error('[salesService] ❌ Erro ao buscar vendas:', error);
     throw error;
