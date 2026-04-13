@@ -2,11 +2,12 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
 
 // Validar que variáveis de ambiente existem
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('[Supabase] Variáveis de ambiente não configuradas. Verifique seu arquivo .env');
+  console.error('❌ ERRO: Variáveis de ambiente Supabase não configuradas!');
+  console.error('Adicione VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY em .env.local');
 }
 
 // Criar cliente Supabase com configurações de segurança
