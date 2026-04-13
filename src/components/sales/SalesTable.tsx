@@ -18,6 +18,7 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Etapa</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Tipo</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Original</th>
+            <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Mensal</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Desconto</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Final</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
@@ -35,20 +36,32 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
                 </div>
               </td>
               <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900">{sale.stage_name}</td>
-              <td className="py-3 px-2 sm:px-4">
+              <td className="px-4 py-2 text-sm">
                 {sale.is_subscription ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    💳 Mensalidade
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                    <span className="text-base">💳</span>
+                    Mensalidade
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    🛒 Venda Única
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
+                    <span className="text-base">🛒</span>
+                    Venda Única
                   </span>
                 )}
               </td>
               <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-500">
-                R$ {Number(sale.original_amount || sale.stage_value).toFixed(2)}
+                R$ {Number(sale.original_amount || sale.stage_value || 0).toFixed(2)}
               </td>
+              {sale.is_subscription && (
+                <td className="px-4 py-2 text-sm font-semibold text-blue-600">
+                  R$ {Number(sale.value || 0).toFixed(2)}/mês
+                </td>
+              )}
+              {!sale.is_subscription && (
+                <td className="px-4 py-2 text-sm text-slate-400">
+                  —
+                </td>
+              )}
               <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm">
                 {sale.discount_type && sale.discount_type !== 'none' ? (
                   <div className="flex flex-col">
