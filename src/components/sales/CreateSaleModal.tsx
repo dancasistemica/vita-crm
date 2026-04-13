@@ -1,6 +1,7 @@
 import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
 import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight, Info, DollarSign, Percent } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { createSale } from '@/services/salesService';
 import { createSubscription } from '@/services/subscriptionService';
@@ -58,6 +59,7 @@ const INITIAL_FORM_DATA: SaleFormData = {
 
 export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }: CreateSaleModalProps) => {
   const { organization } = useOrganization();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [clients, setClients] = useState<Client[]>([]);
@@ -216,6 +218,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           discount_description: formData.discount_description,
           original_amount: formData.original_amount,
           final_amount: formData.final_amount,
+          discount_granted_by: user?.id,
+          discount_granted_at: new Date().toISOString(),
         });
         toast.success('Venda única criada com sucesso!');
       } else {
