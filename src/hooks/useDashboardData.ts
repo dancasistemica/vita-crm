@@ -169,7 +169,21 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
         }
 
         const allLeads = leadsRes.data || [];
-        const allSales = salesRes.data || [];
+        const rawSales = salesRes.data || [];
+        const subPayments = subPaymentsRes.data || [];
+        
+        // Transformar pagamentos de mensalidade em formato de "venda" para o dashboard
+        const subSales = subPayments.map((sp: any) => ({
+          id: sp.id,
+          value: Number(sp.amount) || 0,
+          product_id: null, // Pode ser melhorado buscando via subscription
+          lead_id: null, // Pode ser melhorado buscando via subscription
+          created_at: sp.created_at,
+          organization_id: sp.organization_id,
+          is_subscription: true
+        }));
+
+        const allSales = [...rawSales, ...subSales];
         const products = productsRes.data || [];
         const stages = stagesRes.data || [];
         const origins = originsRes.data || [];
