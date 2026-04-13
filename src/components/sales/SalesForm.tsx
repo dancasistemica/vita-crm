@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Card, Input, Select, Button, Alert } from '@/components/ui/ds';
 import { DollarSign, Percent, Info } from 'lucide-react';
 import { toast } from 'sonner';
