@@ -65,7 +65,12 @@ export default function RegistroPresencaPage() {
     }
   };
 
-  const handleFilterChange = (filters: { productId?: string; searchTerm?: string }) => {
+  const handleFilterChange = (filters: {
+    productId?: string;
+    searchTerm?: string;
+    dateStart?: string;
+    dateEnd?: string;
+  }) => {
     let filtered = [...weeklyClasses];
 
     if (filters.productId) {
@@ -78,6 +83,14 @@ export default function RegistroPresencaPage() {
         cls.product_name.toLowerCase().includes(term) || 
         cls.description.toLowerCase().includes(term)
       );
+    }
+
+    if (filters.dateStart) {
+      filtered = filtered.filter(cls => cls.class_date >= filters.dateStart!);
+    }
+
+    if (filters.dateEnd) {
+      filtered = filtered.filter(cls => cls.class_date <= filters.dateEnd!);
     }
 
     setFilteredClasses(filtered);
@@ -164,14 +177,6 @@ export default function RegistroPresencaPage() {
           icon={<ClipboardCheck className="w-8 h-8 text-primary-500" />}
         />
         
-        {!showForm && (
-          <Button 
-            onClick={() => setShowForm(true)} 
-            icon={<Plus className="w-4 h-4" />}
-          >
-            Nova Aula
-          </Button>
-        )}
       </div>
 
       {showForm ? (

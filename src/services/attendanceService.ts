@@ -302,25 +302,26 @@ export const fetchWeeklyClasses = async (
   class_time: string;
   description: string;
   day_of_week: string;
+  day_number: number;
   attendance_count: number;
   total_clients: number;
 }>> => {
   try {
-    console.log('[attendanceService] Buscando aulas da semana');
+    console.log('[attendanceService] Buscando aulas da semana:', { organizationId, productId });
 
     // PASSO 1: Calcular início e fim da semana (segunda a domingo)
     const today = new Date();
     const dayOfWeek = today.getDay();
     const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
     
-    const weekStart = new Date(today.setDate(diff));
+    const weekStart = new Date(today.getFullYear(), today.getMonth(), diff);
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekEnd.getDate() + 6);
 
     const startDateStr = weekStart.toISOString().split('T')[0];
     const endDateStr = weekEnd.toISOString().split('T')[0];
 
-    console.log('[attendanceService] Período:', { startDateStr, endDateStr });
+    console.log('[attendanceService] Período da semana:', { startDateStr, endDateStr });
 
     // PASSO 2: Buscar sessões de aula da semana
     let query = supabase
@@ -337,17 +338,28 @@ export const fetchWeeklyClasses = async (
       .lte('class_date', endDateStr)
       .order('class_date', { ascending: true });
 
-    if (productId) {
+    if (productId && productId !== '') {
+      console.log('[attendanceService] Filtrando por produto:', productId);
       query = query.eq('product_id', productId);
     }
 
     const { data: sessions, error: sessionsError } = await query;
 
-    if (sessionsError) throw sessionsError;
+    if (sessionsError) {
+      console.error('[attendanceService] ❌ Erro na query:', sessionsError);
+      throw sessionsError;
+    }
+
+    console.log('[attendanceService] ✅ Sessões encontradas:', sessions?.length || 0);
+
+    if (!sessions || sessions.length === 0) {
+      console.warn('[attendanceService] ⚠️ Nenhuma aula encontrada para o período');
+      return [];
+    }
 
     // PASSO 3: Para cada sessão, contar presença
     const classesWithData = await Promise.all(
-      (sessions || []).map(async (session: any) => {
+      sessions.map(async (session: any) => {
         const { data: attendances } = await supabase
           .from('class_attendance')
           .select('id')
@@ -355,7 +367,11 @@ export const fetchWeeklyClasses = async (
           .eq('product_id', session.product_id)
           .eq('class_date', session.class_date);
 
-        const dayOfWeek = new Date(session.class_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+        const classDateTime = new Date(session.class_date + 'T00:00:00');
+        const dayOfWeek = classDateTime.getDay();
+        const dayNumber = classDateTime.getDate();
+        
+        const dayName = classDateTime.toLocaleDateString('pt-BR', {
           weekday: 'long',
         });
 
@@ -370,15 +386,16 @@ export const fetchWeeklyClasses = async (
           product_name: session.products?.name || 'Produto desconhecido',
           class_date: session.class_date,
           class_time: classTime,
-          description,
-          day_of_week: dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1),
+          description: description || 'Aula',
+          day_of_week: dayName.charAt(0).toUpperCase() + dayName.slice(1),
+          day_number: dayNumber,
           attendance_count: attendances?.length || 0,
           total_clients: attendances?.length || 0,
         };
       })
     );
 
-    console.log('[attendanceService] ✅ Aulas da semana encontradas:', classesWithData.length);
+    console.log('[attendanceService] ✅ Aulas processadas:', classesWithData.length);
     return classesWithData;
 
   } catch (error) {
