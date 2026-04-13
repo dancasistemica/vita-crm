@@ -206,7 +206,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
         await createSale(organization!.id, {
           client_id: formData.client_id,
           value: formData.final_amount, // Enviar valor final
-          status: 'pendente',
+          status: 'ativo',
           installments: parseInt(formData.installments) || 1,
           first_payment_date: formData.first_payment_date,
           auto_payment_enabled: formData.auto_payment_enabled,

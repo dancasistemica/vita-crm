@@ -78,9 +78,9 @@ export const calculateDashboardMetrics = async (
 
     const totalSales = sales?.length || 0;
     const totalRevenue = sales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
-    const completedSales = sales?.filter(s => s.status === 'completed' || s.status === 'concluido').length || 0;
-    const pendingSales = sales?.filter(s => s.status === 'pending' || s.status === 'pendente').length || 0;
-    const overdueSales = sales?.filter(s => s.payment_status === 'OVERDUE' || s.payment_status === 'ATRASADO').length || 0;
+    const completedSales = sales?.filter(s => ['completed', 'concluido', 'pago', 'ativo'].includes(s.status?.toLowerCase())).length || 0;
+    const pendingSales = sales?.filter(s => ['pending', 'pendente'].includes(s.status?.toLowerCase())).length || 0;
+    const overdueSales = sales?.filter(s => ['overdue', 'atrasado'].includes(s.payment_status?.toUpperCase())).length || 0;
     const conversionRate = totalSales > 0 ? (completedSales / totalSales) * 100 : 0;
     const averageTicket = totalSales > 0 ? totalRevenue / totalSales : 0;
 

@@ -60,8 +60,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       .insert({
         organization_id: organizationId,
         lead_id: saleData.client_id,
-        value: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value, // Usa final_amount se disponível
-        status: saleData.status || 'pendente',
+        value: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value,
+        status: saleData.status || 'ativo', // Alterado para 'ativo' para compatibilidade com o dashboard
         notes: saleData.notes,
         payment_method: paymentMethodName || saleData.payment_method_id || '',
         product_id: saleData.sales_stage_id || null,
@@ -72,6 +72,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
         final_amount: (saleData.final_amount !== undefined && saleData.final_amount !== null) ? saleData.final_amount : saleData.value,
         discount_granted_by: saleData.discount_granted_by,
         discount_granted_at: saleData.discount_granted_at,
+        sale_date: new Date().toISOString().split('T')[0], // Definir explicitamente
       })
       .select()
       .single();
@@ -146,12 +147,19 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
 export const createUniqueSale = createSaleWithInstallments;
 export const createSale = createSaleWithInstallments;
 
-export const deleteSale = async (saleId: string) => {
+export const deleteSale = async (saleId: string, saleType: 'unica' | 'mensalidade' = 'unica') => {
   try {
-    // Primeiro excluímos as parcelas
-    await supabase.from('sale_installments').delete().eq('sale_id', saleId);
-    // Depois a venda
-    await supabase.from('sales').delete().eq('id', saleId);
+    if (saleType === 'unica') {
+      // Primeiro excluímos as parcelas
+      await supabase.from('sale_installments').delete().eq('sale_id', saleId);
+      // Depois a venda
+      await supabase.from('sales').delete().eq('id', saleId);
+    } else {
+      // Deletar parcelas de mensalidade
+      await supabase.from('subscription_payments').delete().eq('subscription_id', saleId);
+      // Depois a mensalidade
+      await supabase.from('subscriptions').delete().eq('id', saleId);
+    }
     return true;
   } catch (error) {
     console.error('[SalesService] ❌ Erro ao excluir venda:', error);
