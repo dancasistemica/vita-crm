@@ -21,6 +21,7 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Desconto</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Final</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
+            <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Data</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Ações</th>
           </tr>
         </thead>
@@ -69,6 +70,9 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
                 >
                   {sale.status === 'ativa' ? '✅ Ativa' : '❌ Cancelada'}
                 </Badge>
+              </td>
+              <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-600">
+                {sale.created_at ? new Date(sale.created_at).toLocaleDateString('pt-BR') : '-'}
               </td>
               <td className="py-3 px-2 sm:px-4">
                 <div className="flex gap-2">

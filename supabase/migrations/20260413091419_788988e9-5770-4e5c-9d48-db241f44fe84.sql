@@ -1,0 +1,1 @@
+ALTER TABLE public.sales DROP CONSTRAINT IF EXISTS fk_sales_leads;
