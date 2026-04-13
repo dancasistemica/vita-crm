@@ -3,7 +3,7 @@ import { useOrganization } from '@/contexts/OrganizationContext';
 import { toast } from 'sonner';
 import { Card, Button, Alert, Input } from '@/components/ui/ds';
 import { Plus, Filter, Search, Loader2 } from 'lucide-react';
-import { fetchSales, loadAllSales } from '@/services/salesService';
+import { loadAllSales } from '@/services/salesService';
 import { SalesTable } from '@/components/sales/SalesTable';
 import { CreateSaleModal } from '@/components/sales/CreateSaleModal';
 import { SalesEditModal } from '@/components/sales/SalesEditModal';
@@ -12,9 +12,11 @@ import { deleteSale } from '@/services/saleService';
 
 export function VendasPage() {
   const { organization } = useOrganization();
-  const [sales, setSales] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [vendas, setVendas] = useState<any[]>([]);
+  const [allVendas, setAllVendas] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,59 +28,53 @@ export function VendasPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSale, setSelectedSale] = useState<any>(null);
 
+  const organizationId = organization?.id;
+
   useEffect(() => {
-    console.log('[VendasPage] 🔍 useEffect disparado');
-    console.log('[VendasPage] Organization:', organization);
-
-    if (organization?.id) {
-      console.log('[VendasPage] ✅ Organization ID encontrado:', organization.id);
-      loadSales();
-    } else {
-      console.warn('[VendasPage] ⚠️ Organization ID não disponível');
+    if (organizationId) {
+      loadVendas();
     }
-  }, [organization?.id]);
+  }, [organizationId]);
 
-  const loadSales = async () => {
-    if (!organization?.id) {
-      console.warn('[VendasPage] ⚠️ loadSales abortado: organizationId ausente');
-      return;
-    }
-
+  const loadVendas = async () => {
+    if (!organizationId) return;
+    
     try {
-      setIsLoading(true);
+      setLoading(true);
+      setError(null);
       console.log('');
       console.log('═══════════════════════════════════════════════════════');
-      console.log('[VendasPage] 📊 INICIANDO loadSales');
+      console.log('[VendasPage] 📊 INICIANDO loadVendas');
       console.log('═══════════════════════════════════════════════════════');
-      console.log('[VendasPage] Organization ID:', organization.id);
+      console.log('[VendasPage] Organization ID:', organizationId);
       console.log('[VendasPage] Timestamp:', new Date().toISOString());
       console.log('');
 
-      // Usar a nova função que busca AMBAS as tabelas (vendas + mensalidades)
-      const allSales = await loadAllSales(organization.id);
+      // Usar a nova função que busca AMBAS as tabelas
+      const allSales = await loadAllSales(organizationId);
 
-      console.log('[VendasPage] ✅ Vendas unificadas carregadas:', allSales.length);
-      
-      setSales(allSales || []);
-      
+      console.log('[VendasPage] ✅ Vendas carregadas:', allSales.length);
+      if (allSales.length > 0) {
+        console.log('[VendasPage] Primeiros 3 itens:', JSON.stringify(allSales.slice(0, 3), null, 2));
+      } else {
+        console.log('[VendasPage] ⚠️ Nenhuma venda retornada pelo banco');
+      }
+
+      setVendas(allSales);
+      setAllVendas(allSales);
+
+      console.log('');
       console.log('═══════════════════════════════════════════════════════');
-      console.log('[VendasPage] ✅ loadSales finalizado com sucesso');
+      console.log('[VendasPage] ✅ loadVendas finalizado com sucesso');
       console.log('═══════════════════════════════════════════════════════');
       console.log('');
+
     } catch (error) {
-      console.error('');
-      console.error('═══════════════════════════════════════════════════════');
-      console.error('[VendasPage] ❌ ERRO ao carregar vendas');
-      console.error('═══════════════════════════════════════════════════════');
-      console.error('[VendasPage] Tipo do erro:', error instanceof Error ? error.constructor.name : typeof error);
-      console.error('[VendasPage] Mensagem:', error instanceof Error ? error.message : String(error));
-      console.error('');
-      
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar vendas';
-      toast.error(errorMessage);
-      setSales([]);
+      console.error('[VendasPage] ❌ ERRO ao carregar vendas:', error);
+      setError('Erro ao carregar vendas');
+      toast.error('Erro ao carregar vendas');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -88,7 +84,7 @@ export function VendasPage() {
     try {
       await deleteSale(sale.id, sale.sale_type);
       toast.success('Venda excluída com sucesso');
-      loadSales();
+      loadVendas();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir venda';
       toast.error(errorMessage);
@@ -105,10 +101,11 @@ export function VendasPage() {
     setSearchTerm('');
     setStatusFilter('todos');
     setTypeFilter('todos');
+    setVendas(allVendas);
   };
 
   // Filtragem local
-  const filteredSales = sales.filter(sale => {
+  const filteredSales = vendas.filter(sale => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
       (sale.client_name || '').toLowerCase().includes(searchLower) ||
@@ -161,23 +158,52 @@ export function VendasPage() {
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
           typeFilter={typeFilter}
-          setTypeFilter={setTypeFilter}
+          setTypeFilter={(val) => {
+            setTypeFilter(val);
+            if (val === 'todos') setVendas(allVendas);
+            else if (val === 'unica') setVendas(allVendas.filter(v => !v.is_subscription));
+            else if (val === 'mensalidade') setVendas(allVendas.filter(v => v.is_subscription));
+          }}
           onClear={handleClearFilters}
         />
       )}
 
-      {/* Busca Rápida (Sempre visível se filtros recolhidos) */}
+      {/* Busca Rápida e Filtro de Tipo (Sempre visíveis se filtros recolhidos) */}
       {!showFilters && (
-        <Card variant="elevated" padding="md" className="border-neutral-200">
-          <div className="max-w-md">
-            <Input
-              placeholder="Busca rápida por cliente ou etapa..."
-              icon={<Search className="w-4 h-4" />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="flex flex-col md:flex-row gap-4">
+          <Card variant="elevated" padding="md" className="border-neutral-200 flex-1">
+            <div className="max-w-md">
+              <Input
+                placeholder="Busca rápida por cliente ou etapa..."
+                icon={<Search className="w-4 h-4" />}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </Card>
+          
+          <div className="flex items-center gap-2">
+            <select
+              onChange={(e) => {
+                const filterType = e.target.value;
+                setTypeFilter(filterType);
+                if (filterType === 'all' || filterType === 'todos') {
+                  setVendas(allVendas);
+                } else if (filterType === 'unica') {
+                  setVendas(allVendas.filter(v => !v.is_subscription));
+                } else if (filterType === 'mensalidade') {
+                  setVendas(allVendas.filter(v => v.is_subscription));
+                }
+              }}
+              className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white hover:border-slate-400 transition-colors h-full min-w-[200px]"
+              value={typeFilter}
+            >
+              <option value="all">📊 Todas as vendas</option>
+              <option value="unica">🛒 Apenas vendas únicas</option>
+              <option value="mensalidade">💳 Apenas mensalidades</option>
+            </select>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* Status */}
@@ -187,13 +213,13 @@ export function VendasPage() {
             Total encontrado: <strong className="text-neutral-900">{filteredSales.length}</strong> {filteredSales.length === 1 ? 'venda' : 'vendas'}
           </p>
           <p className="text-sm text-neutral-600">
-            Total geral: <strong className="text-neutral-900">{sales.length}</strong>
+            Total geral: <strong className="text-neutral-900">{vendas.length}</strong>
           </p>
         </div>
       </Card>
 
       {/* Tabela de Vendas */}
-      {isLoading ? (
+      {loading ? (
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded-lg border border-neutral-100 min-h-[300px]">
           <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
           <p className="mt-4 text-neutral-600">Carregando dados das vendas...</p>
@@ -221,7 +247,7 @@ export function VendasPage() {
       <CreateSaleModal 
         isOpen={showCreateModal} 
         onClose={() => setShowCreateModal(false)} 
-        onSuccess={loadSales}
+        onSuccess={loadVendas}
       />
       
       {showEditModal && selectedSale && (
@@ -232,7 +258,7 @@ export function VendasPage() {
             setSelectedSale(null);
           }}
           sale={selectedSale}
-          onSuccess={loadSales}
+          onSuccess={loadVendas}
         />
       )}
     </div>
