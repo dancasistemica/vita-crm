@@ -57,20 +57,29 @@ export const calculateDashboardMetrics = async (
   days: number = 30
 ): Promise<DashboardMetrics> => {
   try {
-    console.log('[dashboardService] Calculando métricas do dashboard');
+    const isConsolidated = organizationId === 'consolidado';
+    console.log(`[dashboardService] Calculando métricas do dashboard (org: ${organizationId}, consolidado: ${isConsolidated})`);
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
     const startDateStr = startDate.toISOString().split('T')[0];
     const endDateStr = new Date().toISOString().split('T')[0];
 
+    // Helper function for organization filtering
+    const applyOrgFilter = (query: any) => {
+      if (isConsolidated) return query;
+      return query.eq('organization_id', organizationId);
+    };
+
     // VENDAS
     console.log('[dashboardService] Calculando vendas...');
-    const { data: sales, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
       .select('value, status, payment_status')
-      .eq('organization_id', organizationId)
       .gte('created_at', startDate.toISOString());
+    
+    salesQuery = applyOrgFilter(salesQuery);
+    const { data: sales, error: salesError } = await salesQuery;
 
     if (salesError) {
       console.error('[dashboardService] Erro ao buscar vendas:', salesError);
@@ -78,11 +87,13 @@ export const calculateDashboardMetrics = async (
 
     // MENSALIDADES (Subscription Payments)
     console.log('[dashboardService] Calculando mensalidades...');
-    const { data: subPayments, error: subError } = await supabase
+    let subPaymentsQuery = supabase
       .from('subscription_payments')
       .select('amount, status')
-      .eq('organization_id', organizationId)
       .gte('created_at', startDate.toISOString());
+    
+    subPaymentsQuery = applyOrgFilter(subPaymentsQuery);
+    const { data: subPayments, error: subError } = await subPaymentsQuery;
 
     if (subError) {
       console.error('[dashboardService] Erro ao buscar mensalidades:', subError);
@@ -107,17 +118,21 @@ export const calculateDashboardMetrics = async (
 
     // PRESENÇA
     console.log('[dashboardService] Calculando presença...');
-    const { data: classes } = await supabase
+    let classesQuery = supabase
       .from('class_sessions')
       .select('id')
-      .eq('organization_id', organizationId)
       .gte('class_date', startDateStr);
+    
+    classesQuery = applyOrgFilter(classesQuery);
+    const { data: classes } = await classesQuery;
 
-    const { data: attendances } = await supabase
+    let attendancesQuery = supabase
       .from('class_attendance')
       .select('client_id, attendance_type')
-      .eq('organization_id', organizationId)
       .gte('class_date', startDateStr);
+    
+    attendancesQuery = applyOrgFilter(attendancesQuery);
+    const { data: attendances } = await attendancesQuery;
 
     const totalClasses = classes?.length || 0;
     const uniqueStudents = new Set(attendances?.map(a => a.client_id)).size;
@@ -130,48 +145,46 @@ export const calculateDashboardMetrics = async (
 
     // ALERTAS
     console.log('[dashboardService] Calculando alertas...');
-    // @ts-ignore - a tabela alerts foi criada recentemente e os tipos podem não ter atualizado
-    const { data: alerts } = await supabase
+    let alertsQuery = supabase
       .from('alerts')
       .select('severity, status, created_at')
-      .eq('organization_id', organizationId)
       .eq('status', 'active');
+    
+    alertsQuery = applyOrgFilter(alertsQuery);
+    const { data: alerts } = await alertsQuery;
 
     const totalAlerts = alerts?.length || 0;
-    // @ts-ignore
-    const highSeverityAlerts = alerts?.filter(a => a.severity === 'high').length || 0;
-    // @ts-ignore
-    const mediumSeverityAlerts = alerts?.filter(a => a.severity === 'medium').length || 0;
-    // @ts-ignore
-    const lowSeverityAlerts = alerts?.filter(a => a.severity === 'low').length || 0;
+    const highSeverityAlerts = alerts?.filter(a => (a as any).severity === 'high').length || 0;
+    const mediumSeverityAlerts = alerts?.filter(a => (a as any).severity === 'medium').length || 0;
+    const lowSeverityAlerts = alerts?.filter(a => (a as any).severity === 'low').length || 0;
 
-    // @ts-ignore
-    const { data: resolvedAlerts } = await supabase
+    let resolvedAlertsQuery = supabase
       .from('alerts')
       .select('id')
-      .eq('organization_id', organizationId)
       .eq('status', 'resolved')
       .gte('resolved_at', endDateStr);
+    
+    resolvedAlertsQuery = applyOrgFilter(resolvedAlertsQuery);
+    const { data: resolvedAlerts } = await resolvedAlertsQuery;
 
     const alertsResolvedToday = resolvedAlerts?.length || 0;
 
     // INTEGRAÇÕES
     console.log('[dashboardService] Calculando integrações...');
-    const { data: integrations } = await supabase
+    let integrationsQuery = supabase
       .from('integrations')
-      .select('id, status, sync_config')
-      .eq('organization_id', organizationId);
+      .select('id, status, sync_config');
+    
+    integrationsQuery = applyOrgFilter(integrationsQuery);
+    const { data: integrations } = await integrationsQuery;
 
     const totalIntegrations = integrations?.length || 0;
     const connectedIntegrations = integrations?.filter(i => i.status === 'connected' || i.status === 'active').length || 0;
     const disconnectedIntegrations = totalIntegrations - connectedIntegrations;
     
-    // @ts-ignore
     const lastSync = integrations
-      // @ts-ignore
-      ?.filter(i => i.sync_config?.last_sync)
-      // @ts-ignore
-      .map(i => new Date(i.sync_config.last_sync).getTime())
+      ?.filter(i => (i as any).sync_config?.last_sync)
+      .map(i => new Date((i as any).sync_config.last_sync).getTime())
       .sort((a, b) => b - a)[0];
     
     const lastSyncTime = lastSync ? new Date(lastSync).toLocaleString('pt-BR') : 'Nunca';
@@ -181,19 +194,23 @@ export const calculateDashboardMetrics = async (
     const previousStartDate = new Date(startDate);
     previousStartDate.setDate(previousStartDate.getDate() - days);
     
-    const { data: previousSales } = await supabase
+    let previousSalesQuery = supabase
       .from('sales')
       .select('value')
-      .eq('organization_id', organizationId)
       .gte('created_at', previousStartDate.toISOString())
       .lt('created_at', startDate.toISOString());
+    
+    previousSalesQuery = applyOrgFilter(previousSalesQuery);
+    const { data: previousSales } = await previousSalesQuery;
 
-    const { data: previousSubPayments } = await supabase
+    let previousSubPaymentsQuery = supabase
       .from('subscription_payments')
       .select('amount')
-      .eq('organization_id', organizationId)
       .gte('created_at', previousStartDate.toISOString())
       .lt('created_at', startDate.toISOString());
+    
+    previousSubPaymentsQuery = applyOrgFilter(previousSubPaymentsQuery);
+    const { data: previousSubPayments } = await previousSubPaymentsQuery;
 
     const previousSalesRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
     const previousSubRevenue = previousSubPayments?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
@@ -203,12 +220,14 @@ export const calculateDashboardMetrics = async (
       : 0;
     const salesTrend = revenueTrend > 5 ? 'up' : revenueTrend < -5 ? 'down' : 'stable';
 
-    const { data: previousAttendances } = await supabase
+    let previousAttendancesQuery = supabase
       .from('class_attendance')
       .select('attendance_type')
-      .eq('organization_id', organizationId)
       .gte('class_date', previousStartDate.toISOString().split('T')[0])
       .lt('class_date', startDateStr);
+    
+    previousAttendancesQuery = applyOrgFilter(previousAttendancesQuery);
+    const { data: previousAttendances } = await previousAttendancesQuery;
 
     const previousPresent = previousAttendances?.filter(a => a.attendance_type === 'presente').length || 0;
     const previousRecorded = previousAttendances?.filter(a => a.attendance_type === 'gravada').length || 0;
