@@ -121,10 +121,33 @@ Deno.serve(async (req) => {
           });
         }
 
+        // Verify pre-existing membership on server to prevent redundant records and cross-tenant issues
+        const { data: alreadyMember, error: checkError } = await adminClient
+          .from('organization_members')
+          .select('id')
+          .eq('user_id', existingUser.id)
+          .eq('organization_id', organization_id)
+          .maybeSingle();
+
+        if (checkError) {
+          return new Response(JSON.stringify({ error: 'Erro ao verificar associação: ' + checkError.message }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        if (alreadyMember) {
+          return new Response(JSON.stringify({ error: 'Usuário já é membro desta organização' }), {
+            status: 409,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
         // Add existing user to org
         const { error: memberError } = await adminClient
           .from('organization_members')
           .insert({ organization_id, user_id: existingUser.id, role: userRole });
+
 
         if (memberError) {
           return new Response(JSON.stringify({ error: 'Erro ao adicionar usuário: ' + memberError.message }), {
