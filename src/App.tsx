@@ -44,7 +44,6 @@ const AttendanceReportsPage = lazy(() => import("@/pages/AttendanceReportsPage")
 const AlertsPage = lazy(() => import("@/pages/AlertsPage"));
 
 
-
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -108,6 +107,7 @@ const App = () => {
 
                     <Route path="/clientes" element={<ClientesPage />} />
                     <Route path="/clientes/por-produto" element={<ClientesPorProdutoPage />} />
+                    <Route path="/alertas" element={<AlertsPage />} />
                     <Route path="/clientes/:id" element={<ClientDetailPage />} />
                     <Route path="/clientes/:id/frequencia" element={<HistoricoFrequenciaPage />} />
                     <Route path="/registro-presenca" element={<RegistroPresencaPage />} />

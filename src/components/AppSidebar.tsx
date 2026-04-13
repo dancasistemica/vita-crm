@@ -39,6 +39,7 @@ const baseItems = [
   { title: "Vendas", url: "/vendas", icon: ShoppingCart },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Clientes por Produto", url: "/clientes/por-produto", icon: Package },
+  { title: "Alertas de Churn", url: "/alertas", icon: Bell },
   { title: "Presença", url: "/registro-presenca", icon: ClipboardCheck },
   { title: "Calendário", url: "/calendario-aulas", icon: Calendar },
 
@@ -107,7 +108,7 @@ export function AppSidebar() {
 
         {/* User & Organization Info */}
         {!collapsed && (
-          <div className="pt-2 pb-1">
+          <div className="pt-2 pb-1 px-4">
             <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9 shrink-0">
                 {avatarUrl ? (
@@ -145,8 +146,6 @@ export function AppSidebar() {
                     asChild 
                     active={location.pathname === item.url}
                     onClick={() => {
-                      console.log('[Sidebar] Navegando para:', item.url);
-                      console.log('[Sidebar] Path completo:', window.location.origin + item.url);
                       if (window.innerWidth < 768) {
                         // @ts-ignore
                         setOpen(false);
@@ -186,13 +185,15 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <Button variant="secondary" size="sm"
-          onClick={signOut}
-          className="flex items-center gap-3 w-full mt-2"
-        >
-          <LogOut className="h-4 w-4" />
-          {!collapsed && <span>Sair</span>}
-        </Button>
+        <div className="px-4 py-4">
+          <Button variant="secondary" size="sm"
+            onClick={signOut}
+            className="flex items-center gap-3 w-full"
+          >
+            <LogOut className="h-4 w-4" />
+            {!collapsed && <span>Sair</span>}
+          </Button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
