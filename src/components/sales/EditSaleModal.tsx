@@ -158,17 +158,26 @@ export const EditSaleModal = ({
         formData
       });
 
-      await updateSale(sale.id, sale.sale_type, {
-        payment_method_id: formData.payment_method_id || null,
+      const isUnica = sale.sale_type === 'unica';
+      const updateData: any = {
         status: formData.status,
         notes: formData.notes,
-        discount_type: formData.discount_type,
-        discount_value: formData.discount_value,
-        discount_description: formData.discount_description,
-        original_amount: formData.original_amount,
-        final_amount: formData.final_amount,
-        value: formData.final_amount, // Atualiza o valor principal também
-      });
+      };
+
+      if (isUnica) {
+        updateData.payment_method = paymentMethods.find(pm => pm.id === formData.payment_method_id)?.name || null;
+        updateData.discount_type = formData.discount_type;
+        updateData.discount_value = formData.discount_value;
+        updateData.discount_description = formData.discount_description;
+        updateData.original_amount = formData.original_amount;
+        updateData.final_amount = formData.final_amount;
+        updateData.value = formData.final_amount;
+      } else {
+        updateData.payment_method_id = formData.payment_method_id || null;
+        updateData.monthly_value = formData.final_amount;
+      }
+
+      await updateSale(sale.id, sale.sale_type, updateData);
 
       toast.success('Venda atualizada com sucesso!');
       onSuccess?.();

@@ -26,8 +26,37 @@ export const SalesEditModal = ({
     try {
       setLoading(true);
       console.log('[SalesEditModal] Atualizando venda:', sale.id, formData);
+
+      // Preparar os dados para atualização baseado no tipo de venda
+      const isUnica = sale.sale_type === 'unica';
       
-      const success = await updateSale(sale.id, sale.sale_type, formData);
+      // Criar objeto limpo apenas com colunas que existem no banco
+      const cleanData: any = {
+        product_id: formData.product_id || null,
+        status: formData.status || sale.status,
+        notes: formData.notes || '',
+      };
+
+      if (isUnica) {
+        // Campos para tabela 'sales'
+        cleanData.value = formData.amount;
+        cleanData.client_email = formData.client_email;
+        cleanData.discount_type = formData.discount_type;
+        cleanData.discount_value = formData.discount_value;
+        cleanData.discount_description = formData.discount_description;
+        cleanData.original_amount = formData.original_amount;
+        cleanData.final_amount = formData.final_amount;
+        cleanData.discount_granted_by = formData.discount_granted_by;
+        cleanData.discount_granted_at = formData.discount_granted_at;
+      } else {
+        // Campos para tabela 'subscriptions'
+        cleanData.monthly_value = formData.amount;
+        // Se houver um lead_id, não precisamos de client_email na tabela subscriptions
+      }
+
+      console.log('[SalesEditModal] Enviando dados limpos para updateSale:', cleanData);
+      
+      const success = await updateSale(sale.id, sale.sale_type, cleanData);
       
       if (success) {
         toast.success('Venda atualizada com sucesso!');
@@ -36,7 +65,8 @@ export const SalesEditModal = ({
       }
     } catch (error) {
       console.error('[SalesEditModal] Erro ao atualizar:', error);
-      toast.error('Falha ao atualizar venda');
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      toast.error(`Falha ao atualizar venda: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
