@@ -65,19 +65,27 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      const { data: callerMember } = await adminClient
+      const { data: callerMember, error: callerError } = await adminClient
         .from('organization_members')
-        .select('role')
+        .select('role, organization_id')
         .eq('user_id', callerId)
         .eq('organization_id', organization_id)
         .maybeSingle();
 
+      if (callerError) {
+        return new Response(JSON.stringify({ error: 'Erro ao verificar permissões: ' + callerError.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       if (!callerMember || !['owner', 'admin'].includes(callerMember.role)) {
-        return new Response(JSON.stringify({ error: 'Sem permissão' }), {
+        return new Response(JSON.stringify({ error: 'Sem permissão para esta organização' }), {
           status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
+
     }
 
     // ---- CREATE USER ----
