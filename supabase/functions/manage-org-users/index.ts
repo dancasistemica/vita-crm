@@ -256,6 +256,22 @@ Deno.serve(async (req) => {
         });
       }
 
+      if (!isGlobalAction) {
+        const { data: isMember } = await adminClient
+          .from('organization_members')
+          .select('id')
+          .eq('user_id', user_id)
+          .eq('organization_id', organization_id)
+          .maybeSingle();
+
+        if (!isMember) {
+          return new Response(JSON.stringify({ error: 'Usuário não pertence a esta organização' }), {
+            status: 403,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
+
       const updateData: Record<string, string> = {};
       if (email) updateData.email = email;
       if (password) {
