@@ -147,6 +147,8 @@ export const SalesForm = ({
           value={formData.client_name}
           onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
           required
+          disabled={isEditing}
+          className={isEditing ? "bg-neutral-100 opacity-70 cursor-not-allowed" : ""}
         />
 
         <Input
@@ -155,6 +157,8 @@ export const SalesForm = ({
           value={formData.client_email}
           onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
           required
+          disabled={isEditing}
+          className={isEditing ? "bg-neutral-100 opacity-70 cursor-not-allowed" : ""}
         />
 
         <Input
