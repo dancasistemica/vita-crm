@@ -423,27 +423,117 @@ export const fetchSales = async (
     console.log('[salesService] 📊 Buscando vendas');
     console.log('[salesService] Organization ID:', organizationId);
 
-    // Query SIMPLES - sem JOINs
+    // Query com joins para obter dados do cliente e da etapa
     const { data, error } = await supabase
       .from('sales')
-      .select('*')  // ← APENAS DADOS DE SALES
+      .select(`
+        *,
+        leads(name, email),
+        product_sales_stages(name, value)
+      `)
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
     if (error) {
       console.error('[salesService] ❌ Erro na query:', error);
-      console.error('[salesService] Código do erro:', error.code);
-      console.error('[salesService] Mensagem:', error.message);
       throw error;
     }
 
-    console.log('[salesService] ✅ Vendas carregadas:', data?.length || 0);
-    console.log('[salesService] Dados:', data);
+    // Formatar dados para o frontend
+    const formattedSales = (data || []).map(sale => ({
+      ...sale,
+      client_name: sale.leads?.name || 'Cliente desconhecido',
+      client_email: sale.leads?.email || '',
+      stage_name: sale.product_sales_stages?.name || 'Etapa não identificada',
+      stage_value: sale.product_sales_stages?.value || 0,
+      sale_type: sale.sale_type || 'unica'
+    }));
 
-    return data || [];
+    return formattedSales;
 
   } catch (error) {
     console.error('[salesService] ❌ Erro geral:', error);
     throw error;
   }
 };
+
+export const loadAllSales = async (organizationId: string) => {
+  console.log('[salesService] 📊 Buscando vendas E mensalidades');
+  console.log('[salesService] Organization ID:', organizationId);
+
+  try {
+    // BUSCA 1: Vendas únicas (tabela sales) com joins
+    const { data: uniqueSalesData, error: uniqueError } = await supabase
+      .from('sales')
+      .select(`
+        *,
+        leads(name, email),
+        product_sales_stages(name, value)
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (uniqueError) {
+      console.error('[salesService] ❌ ERRO ao buscar sales:', uniqueError);
+    }
+
+    const formattedUniqueSales = (uniqueSalesData || []).map(sale => ({
+      ...sale,
+      client_name: sale.leads?.name || 'Cliente desconhecido',
+      client_email: sale.leads?.email || '',
+      stage_name: sale.product_sales_stages?.name || 'Etapa não identificada',
+      stage_value: sale.product_sales_stages?.value || 0,
+      sale_type: sale.sale_type || 'unica',
+      is_subscription: false
+    }));
+
+    console.log('[salesService] ✅ Vendas únicas encontradas:', formattedUniqueSales.length);
+
+    // BUSCA 2: Mensalidades (tabela subscriptions) com joins
+    const { data: subscriptionsData, error: subscriptionError } = await supabase
+      .from('subscriptions')
+      .select(`
+        *,
+        leads:client_id(name, email),
+        product_sales_stages(name, value)
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false });
+
+    if (subscriptionError) {
+      console.error('[salesService] ❌ ERRO ao buscar subscriptions:', subscriptionError);
+    }
+
+    // UNIFICAR: Transformar subscriptions no formato de sales
+    const unifiedSubscriptions = (subscriptionsData || []).map(sub => ({
+      ...sub,
+      client_name: sub.leads?.name || 'Cliente desconhecido',
+      client_email: sub.leads?.email || '',
+      stage_name: sub.product_sales_stages?.name || 'Mensalidade',
+      stage_value: sub.product_sales_stages?.value || sub.monthly_value,
+      value: sub.monthly_value,
+      original_amount: sub.monthly_value,
+      final_amount: sub.monthly_value,
+      status: sub.status === 'active' ? 'ativa' : 'cancelada',
+      sale_type: 'mensalidade',
+      is_subscription: true,
+    }));
+
+    console.log('[salesService] ✅ Mensalidades encontradas:', unifiedSubscriptions.length);
+
+    // COMBINAR: Juntar vendas únicas + mensalidades
+    const allSales = [...formattedUniqueSales, ...unifiedSubscriptions];
+
+    // ORDENAR: Por data de criação (mais recentes primeiro)
+    allSales.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    console.log('[salesService] ✅ Total de vendas + mensalidades:', allSales.length);
+
+    return allSales;
+
+  } catch (error) {
+    console.error('[salesService] ❌ ERRO ao carregar vendas:', error);
+    throw error;
+  }
+};
+
