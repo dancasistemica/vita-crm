@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Badge, Button, Card, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/ds';
 import { User, CheckCircle, XCircle, Clock, ExternalLink, Calendar, MapPin, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +30,24 @@ export const ClassCalendarDetail = ({
 }: ClassCalendarDetailProps) => {
   const navigate = useNavigate();
 
+  // Bloquear scroll do body quando modal aberta e fechar com ESC
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        console.log('[ClassCalendarDetail] ESC pressionado, fechando modal');
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleEscKey);
+    };
+  }, [onClose]);
+
   const getAttendanceBadge = (type: string) => {
     switch (type.toLowerCase()) {
       case 'presente':
@@ -43,7 +62,8 @@ export const ClassCalendarDetail = ({
   const formattedDate = format(new Date(classDate + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: ptBR });
 
   return (
-    <Card variant="elevated" padding="lg" className="space-y-6">
+    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[9999] p-4 backdrop-blur-sm">
+      <Card variant="elevated" padding="lg" className="max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[10000] space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-6">
         <div className="flex items-start gap-4">
           <div className="bg-primary-100 p-3 rounded-xl">
@@ -164,6 +184,7 @@ export const ClassCalendarDetail = ({
           ✏️ Editar Presença
         </button>
       </div>
-    </Card>
+      </Card>
+    </div>
   );
 };
