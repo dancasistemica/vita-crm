@@ -40,19 +40,25 @@ export interface ExecutiveDashboardData {
 export async function getExecutiveDashboardData(
   organizationId: string
 ): Promise<ExecutiveDashboardData> {
-  console.log('[executiveDashboardService] Calculando dashboard executivo:', organizationId);
+  const isConsolidated = organizationId === 'consolidado';
+  console.log('[executiveDashboardService] Calculando dashboard executivo:', organizationId, 'consolidado:', isConsolidated);
 
   try {
     // Buscar todos os produtos da organização
-    const { data: products, error: productsError } = await supabase
+    let productsQuery = supabase
       .from('products')
-      .select('id, name')
-      .eq('organization_id', organizationId);
+      .select('id, name');
+    
+    if (!isConsolidated) {
+      productsQuery = productsQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: products, error: productsError } = await productsQuery;
 
     if (productsError) throw productsError;
 
     // Buscar dados de clientes por produto
-    const { data: clientProducts, error: cpError } = await supabase
+    let cpQuery = supabase
       .from('client_products')
       .select(
         `
@@ -69,8 +75,13 @@ export async function getExecutiveDashboardData(
           last_attendance_date
         )
       `
-      )
-      .eq('organization_id', organizationId);
+      );
+    
+    if (!isConsolidated) {
+      cpQuery = cpQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: clientProducts, error: cpError } = await cpQuery;
 
     if (cpError) throw cpError;
 
@@ -204,11 +215,16 @@ export async function getProductTrendData(
       .toISOString()
       .split('T')[0];
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('client_products')
       .select('start_date, payment_status')
-      .eq('organization_id', organizationId)
       .gte('start_date', startDate);
+    
+    if (organizationId !== 'consolidado') {
+      query = query.eq('organization_id', organizationId);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 

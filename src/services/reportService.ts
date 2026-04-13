@@ -34,13 +34,17 @@ export const calculateClientMetrics = async (
     const startDateStr = startDate.toISOString().split('T')[0];
 
     // Buscar todas as presenças do cliente
-    const { data: attendances } = await supabase
+    let attendancesQuery = supabase
       .from('class_attendance')
       .select('attendance_type, class_date')
-      .eq('organization_id', organizationId)
       .eq('client_id', clientId)
-      .gte('class_date', startDateStr)
-      .order('class_date', { ascending: false });
+      .gte('class_date', startDateStr);
+    
+    if (organizationId !== 'consolidado') {
+      attendancesQuery = attendancesQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: attendances } = await attendancesQuery.order('class_date', { ascending: false });
 
     // Buscar nome do cliente
     const { data: client } = await supabase
@@ -131,11 +135,16 @@ export const getClientsAtRisk = async (
     console.log('[reportService] Buscando clientes em risco para produto:', productId);
 
     // Buscar todos os clientes do produto
-    const { data: clientProducts, error } = await supabase
+    let cpQuery = supabase
       .from('client_products')
       .select('client_id')
-      .eq('product_id', productId)
-      .eq('organization_id', organizationId);
+      .eq('product_id', productId);
+    
+    if (organizationId !== 'consolidado') {
+      cpQuery = cpQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: clientProducts, error } = await cpQuery;
 
     if (error) throw error;
     if (!clientProducts || clientProducts.length === 0) {

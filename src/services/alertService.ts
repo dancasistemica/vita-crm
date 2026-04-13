@@ -51,11 +51,16 @@ export const calculateRealAbsences = async (
     const startDateStr = startDate.toISOString().split('T')[0];
 
     // Buscar TODAS as aulas do período para os produtos que o cliente tem
-    const { data: clientProducts } = await supabase
+    let cpQuery = supabase
       .from('client_products')
       .select('product_id')
-      .eq('client_id', clientId)
-      .eq('organization_id', organizationId);
+      .eq('client_id', clientId);
+    
+    if (organizationId !== 'consolidado') {
+      cpQuery = cpQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: clientProducts } = await cpQuery;
 
     const productIds = clientProducts?.map(cp => cp.product_id) || [];
 
@@ -68,22 +73,30 @@ export const calculateRealAbsences = async (
       };
     }
 
-    const { data: allClasses } = await supabase
+    let sessionsQuery = supabase
       .from('class_sessions')
       .select('class_date, product_id')
       .in('product_id', productIds)
-      .eq('organization_id', organizationId)
-      .gte('class_date', startDateStr)
-      .order('class_date', { ascending: false });
+      .gte('class_date', startDateStr);
+    
+    if (organizationId !== 'consolidado') {
+      sessionsQuery = sessionsQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: allClasses } = await sessionsQuery.order('class_date', { ascending: false });
 
     // Buscar presença/ausência do cliente
-    const { data: attendances } = await supabase
+    let attQuery = supabase
       .from('class_attendance')
       .select('class_date, attendance_type, product_id')
-      .eq('organization_id', organizationId)
       .eq('client_id', clientId)
-      .gte('class_date', startDateStr)
-      .order('class_date', { ascending: false });
+      .gte('class_date', startDateStr);
+    
+    if (organizationId !== 'consolidado') {
+      attQuery = attQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: attendances } = await attQuery.order('class_date', { ascending: false });
 
     console.log('[alertService] Aulas totais:', allClasses?.length || 0);
     console.log('[alertService] Registros de presença:', attendances?.length || 0);
@@ -177,11 +190,16 @@ export const generateAlertsForProduct = async (
     const productName = productData?.name || 'Produto desconhecido';
 
     // Buscar todos os clientes do produto
-    const { data: clients } = await supabase
+    let cpQuery = supabase
       .from('client_products')
       .select('client_id, clients(id, name, email)')
-      .eq('product_id', productId)
-      .eq('organization_id', organizationId);
+      .eq('product_id', productId);
+    
+    if (organizationId !== 'consolidado') {
+      cpQuery = cpQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: clients } = await cpQuery;
 
     if (!clients || clients.length === 0) {
       console.log('[alertService] ℹ️ Nenhum cliente encontrado');
@@ -213,13 +231,18 @@ export const generateAlertsForProduct = async (
         startDate.setDate(startDate.getDate() - days);
         const startDateStr = startDate.toISOString().split('T')[0];
 
-        const { data: attendances } = await supabase
+        let attQuery = supabase
           .from('class_attendance')
           .select('attendance_type')
-          .eq('organization_id', organizationId)
           .eq('client_id', clientId)
           .eq('product_id', productId)
           .gte('class_date', startDateStr);
+        
+        if (organizationId !== 'consolidado') {
+          attQuery = attQuery.eq('organization_id', organizationId);
+        }
+
+        const { data: attendances } = await attQuery;
 
         const attended = attendances?.filter(a => a.attendance_type === 'presente').length || 0;
         const recorded = attendances?.filter(a => a.attendance_type === 'gravada').length || 0;

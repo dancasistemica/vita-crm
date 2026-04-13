@@ -202,23 +202,32 @@ export const fetchSales = async (
   organizationId: string
 ): Promise<any[]> => {
   try {
-    console.log('[salesService] 📊 Buscando vendas e mensalidades');
+    console.log('[salesService] 📊 Buscando vendas e mensalidades para org:', organizationId);
+    const isConsolidated = organizationId === 'consolidado';
 
     // 1. Buscar Vendas Únicas
-    const { data: sales, error: salesError } = await supabase
+    let salesQuery = supabase
       .from('sales')
-      .select('*, leads(name, email)')
-      .eq('organization_id', organizationId)
-      .order('created_at', { ascending: false });
+      .select('*, leads(name, email)');
+    
+    if (!isConsolidated) {
+      salesQuery = salesQuery.eq('organization_id', organizationId);
+    }
+    
+    const { data: sales, error: salesError } = await salesQuery.order('created_at', { ascending: false });
 
     if (salesError) throw salesError;
 
     // 2. Buscar Mensalidades (Subscriptions)
-    const { data: subscriptions, error: subsError } = await supabase
+    let subsQuery = supabase
       .from('subscriptions')
-      .select('*, leads(name, email)')
-      .eq('organization_id', organizationId)
-      .order('created_at', { ascending: false });
+      .select('*, leads(name, email)');
+
+    if (!isConsolidated) {
+      subsQuery = subsQuery.eq('organization_id', organizationId);
+    }
+
+    const { data: subscriptions, error: subsError } = await subsQuery.order('created_at', { ascending: false });
 
     if (subsError) throw subsError;
 
