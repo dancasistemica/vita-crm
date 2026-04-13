@@ -41,6 +41,8 @@ const RegistroPresencaPage = lazy(() => import("@/pages/RegistroPresencaPage"));
 const DashboardExecutivoPage = lazy(() => import("@/pages/DashboardExecutivoPage"));
 const ClassCalendarPage = lazy(() => import("@/pages/ClassCalendarPage"));
 const AttendanceReportsPage = lazy(() => import("@/pages/AttendanceReportsPage"));
+const AlertsPage = lazy(() => import("@/pages/AlertsPage"));
+
 
 
 const queryClient = new QueryClient();
