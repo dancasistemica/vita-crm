@@ -32,7 +32,7 @@ export const saveIntegration = async (
     console.log('[integrationService] Salvando integração:', integration.integration_type);
 
     const { data, error } = await supabase
-      .from('integrations')
+      .from('integrations_secure')
       .upsert({
         organization_id: organizationId,
         integration_type: integration.integration_type || '',
@@ -95,7 +95,7 @@ export const updateIntegrationStatus = async (
     console.log('[integrationService] Atualizando status:', { integrationId, status });
 
     const { error } = await supabase
-      .from('integrations')
+      .from('integrations_secure')
       .update({
         status,
         error_message: errorMessage || null,
