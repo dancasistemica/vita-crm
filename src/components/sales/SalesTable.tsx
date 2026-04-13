@@ -53,11 +53,7 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
                         {sale.discount_description}
                       </span>
                     )}
-                    {sale.discount_granted_by_name && (
-                      <span className="text-[10px] text-neutral-400 italic">
-                        Por: {sale.discount_granted_by_name}
-                      </span>
-                    )}
+                    {/* Removido o nome do usuário que concedeu desconto para evitar erro de relacionamento */}
                   </div>
                 ) : (
                   <span className="text-neutral-400">-</span>
