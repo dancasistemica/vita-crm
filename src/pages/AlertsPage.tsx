@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOrganization } from "@/contexts/OrganizationContext";
-import { Card, Button, Select, PageTitle, Toaster } from "@/components/ui/ds";
+import { Card, Button, Select, PageTitle } from "@/components/ui/ds";
 import { AlertsList } from "@/components/alerts/AlertsList";
 import { AlertActions } from "@/components/alerts/AlertActions";
 import { generateAlertsForProduct, resolveAlert, ClientAlert } from "@/services/alertService";
@@ -87,7 +87,7 @@ export default function AlertsPage() {
         <div>
           <PageTitle 
             title="Alertas de Churn" 
-            subtitle="Identifique clientes que não estão vindo nem assistindo gravações"
+            description="Identifique clientes que não estão vindo nem assistindo gravações"
           />
         </div>
         <div className="flex items-center gap-3">
