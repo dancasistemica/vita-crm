@@ -37,6 +37,11 @@ export default function RegistroPresencaPage() {
     }
   }, [organizationId]);
 
+  // Atualiza visibilidade do form se os parâmetros da URL mudarem
+  useEffect(() => {
+    setShowForm(!!(urlProductId && urlDate));
+  }, [urlProductId, urlDate]);
+
   useEffect(() => {
     console.log('[RegistroPresencaPage] useEffect: Carregando aulas');
     console.log('[RegistroPresencaPage] Parâmetros:', {
@@ -103,11 +108,37 @@ export default function RegistroPresencaPage() {
     dateStart?: string;
     dateEnd?: string;
   }) => {
+    // Se o produto mudou, atualizamos o estado para disparar o fetch via useEffect
+    if (filters.productId !== selectedProductId) {
+      console.log('[RegistroPresencaPage] Produto alterado no filtro:', filters.productId);
+      setSelectedProductId(filters.productId);
+      return;
+    }
+
     let filtered = [...weeklyClasses];
 
     if (filters.productId) {
       filtered = filtered.filter(cls => cls.product_id === filters.productId);
     }
+
+    if (filters.searchTerm) {
+      const term = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(cls => 
+        cls.product_name.toLowerCase().includes(term) || 
+        cls.description.toLowerCase().includes(term)
+      );
+    }
+
+    if (filters.dateStart) {
+      filtered = filtered.filter(cls => cls.class_date >= filters.dateStart!);
+    }
+
+    if (filters.dateEnd) {
+      filtered = filtered.filter(cls => cls.class_date <= filters.dateEnd!);
+    }
+
+    setFilteredClasses(filtered);
+  };
 
     if (filters.searchTerm) {
       const term = filters.searchTerm.toLowerCase();
@@ -140,7 +171,7 @@ export default function RegistroPresencaPage() {
     setSearchParams({});
     setShowForm(false);
     // Recarregar aulas semanais para ver estatísticas atualizadas
-    loadInitialData();
+    loadWeeklyClasses();
   };
 
   const handleSubmitAttendance = async (data: {
