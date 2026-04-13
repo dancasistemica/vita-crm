@@ -483,15 +483,14 @@ export const loadAllSales = async (organizationId: string) => {
       .from('sales')
       .select(`
         id,
-        client_id,
+        lead_id,
         product_id,
         value,
         status,
         created_at,
         updated_at,
-        sale_type,
         discount_value,
-        leads(name, email),
+        leads:lead_id(name, email),
         products(name)
       `)
       .eq('organization_id', organizationId)
@@ -534,7 +533,7 @@ export const loadAllSales = async (organizationId: string) => {
       // Vendas únicas
       ...(uniqueSales || []).map(sale => ({
         id: sale.id,
-        client_id: sale.client_id,
+        client_id: sale.lead_id,
         product_id: sale.product_id,
         value: sale.value,
         status: sale.status,

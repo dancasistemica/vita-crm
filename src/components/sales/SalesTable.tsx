@@ -18,6 +18,7 @@ export const SalesTable = ({ sales, onEdit, onDelete }: SalesTableProps) => {
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Etapa</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Tipo</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Original</th>
+            <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Mensal</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Desconto</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Valor Final</th>
             <th className="text-left py-3 px-2 sm:px-4 font-semibold text-neutral-900 text-xs sm:text-sm">Status</th>
