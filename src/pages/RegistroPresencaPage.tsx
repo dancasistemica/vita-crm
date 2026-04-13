@@ -140,24 +140,6 @@ export default function RegistroPresencaPage() {
     setFilteredClasses(filtered);
   };
 
-    if (filters.searchTerm) {
-      const term = filters.searchTerm.toLowerCase();
-      filtered = filtered.filter(cls => 
-        cls.product_name.toLowerCase().includes(term) || 
-        cls.description.toLowerCase().includes(term)
-      );
-    }
-
-    if (filters.dateStart) {
-      filtered = filtered.filter(cls => cls.class_date >= filters.dateStart!);
-    }
-
-    if (filters.dateEnd) {
-      filtered = filtered.filter(cls => cls.class_date <= filters.dateEnd!);
-    }
-
-    setFilteredClasses(filtered);
-  };
 
   const handleSelectClass = (classData: any) => {
     setSearchParams({
