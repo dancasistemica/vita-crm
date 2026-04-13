@@ -67,6 +67,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
   const [productSalesStages, setProductSalesStages] = useState<ProductSalesStage[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<Array<{ id: string; name: string; active: boolean }>>([]);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   // Busca de cliente
   const [clientSearch, setClientSearch] = useState('');
@@ -192,6 +193,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
     console.log('');
     console.log('═══════════════════════════════════════════════════════');
@@ -210,10 +212,51 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
       return;
     }
 
-    console.log('[CreateSaleModal] ✅ Todas as validações passaram');
+    if (!organization?.id) {
+      setError('Organização não identificada.');
+      return;
+    }
 
     setLoading(true);
+
     try {
+      // PASSO 1 - Adicionar Validação de product_id
+      // Validar se product_id existe na tabela products
+      console.log('[CreateSaleModal] 🔍 Validando product_id:', formData.product_id);
+      const { data: productExists, error: productCheckError } = await supabase
+        .from('products')
+        .select('id, name')
+        .eq('id', formData.product_id)
+        .eq('organization_id', organization.id)
+        .single();
+
+      if (productCheckError || !productExists) {
+        console.error('[CreateSaleModal] ❌ ERRO: Produto não encontrado', {
+          product_id: formData.product_id,
+          organization_id: organization.id,
+          error: productCheckError,
+        });
+        
+        setError('Produto selecionado não existe. Por favor, selecione outro produto.');
+        toast.error('Produto selecionado não existe. Por favor, selecione outro produto.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('[CreateSaleModal] ✅ Produto validado:', productExists.name);
+
+      // PASSO 2 - Adicionar Debug Logs Completos
+      console.log('[CreateSaleModal] 📋 Dados da venda antes de salvar:', {
+        product_id: formData.product_id,
+        product_name: productExists?.name,
+        value: formData.stage_value,
+        status: 'ativo',
+        organization_id: organization.id,
+        user_id: user?.id,
+        timestamp: new Date().toISOString(),
+        sale_type: formData.sale_type
+      });
+
       if (formData.sale_type === 'unica') {
         const saleData = {
           client_id: formData.client_id,
@@ -225,6 +268,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           notes: formData.notes,
           payment_method_id: formData.payment_method_id,
           sales_stage_id: formData.sales_stage_id,
+          product_id: formData.product_id, // Adicionando product_id aqui também
           discount_type: formData.discount_type,
           discount_value: formData.discount_value,
           discount_description: formData.discount_description,
@@ -235,7 +279,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSale com:', JSON.stringify(saleData, null, 2));
-        await createSale(organization!.id, saleData);
+        await createSale(organization.id, saleData);
         console.log('[CreateSaleModal] ✅ createSale retornou com sucesso');
         toast.success('Venda única criada com sucesso!');
       } else {
@@ -253,21 +297,30 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSubscription com:', JSON.stringify(subscriptionData, null, 2));
-        await createSubscription(organization!.id, subscriptionData);
+        await createSubscription(organization.id, subscriptionData);
         console.log('[CreateSaleModal] ✅ createSubscription retornou com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
 
       onSuccess?.();
       handleClose();
-    } catch (error) {
+    } catch (err: any) {
       console.error('');
       console.error('═══════════════════════════════════════════════════════');
       console.error('[CreateSaleModal] ❌ ERRO CRÍTICO ao salvar');
       console.error('═══════════════════════════════════════════════════════');
-      console.error('[CreateSaleModal] Detalhes do erro:', error);
+      console.error('[CreateSaleModal] Detalhes do erro:', err);
+      
+      // PASSO 4 - Tratamento de Erro Melhorado
+      if (err.code === '23503') {
+        console.error('[CreateSaleModal] ❌ ERRO de Foreign Key (23503):', err.message);
+        setError('Erro de validação: Verifique se o produto selecionado existe.');
+        toast.error('Erro de validação: Verifique se o produto selecionado existe.');
+      } else {
+        setError(`Erro ao salvar: ${err.message || 'Erro inesperado'}`);
+        toast.error(`Erro ao salvar: ${err.message || 'Erro inesperado'}`);
+      }
       console.error('');
-      toast.error('Erro ao processar a operação');
     } finally {
       setLoading(false);
     }
@@ -277,6 +330,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
     setFormData(INITIAL_FORM_DATA);
     setCurrentPhase(1);
     setValidationErrors([]);
+    setError(null);
     setClientSearch('');
     onClose();
   };
@@ -324,6 +378,11 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <Alert variant="error" title="Erro" className="animate-in fade-in slide-in-from-top-2">
+                  {error}
+                </Alert>
+              )}
               
               {/* FASE 1: Cliente */}
               {currentPhase === 1 && (
