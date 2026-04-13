@@ -137,7 +137,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
       setLoadingData(true);
       const [leadsRes, productsRes, paymentMethodsRes, stagesRes] = await Promise.all([
         supabase.from('leads').select('id, name, email').eq('organization_id', organization.id).order('name'),
-        supabase.from('products').select('id, name').eq('organization_id', organization.id).order('name'),
+        supabase.from('products').select('id, name, price').eq('organization_id', organization.id).order('name'),
         supabase.from('payment_methods').select('id, name, active').eq('organization_id', organization.id).order('sort_order'),
         supabase.from('product_sales_stages').select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)').eq('products.organization_id', organization.id)
       ]);
