@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Button, Card, Badge } from '@/components/ui/ds';
-import { ChevronLeft, ChevronRight, Calendar, Info, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -8,7 +8,11 @@ import { ptBR } from 'date-fns/locale';
 interface ClassCalendarProps {
   classes: Array<{
     id: string;
+    product_id: string;
+    product_name: string;
     class_date: string;
+    class_time: string;
+    description: string;
     status: 'registered' | 'pending' | 'future';
     attendance_rate: number;
     total_clients: number;
@@ -60,18 +64,6 @@ export const ClassCalendar = ({
 
   const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'registered':
-        return <CheckCircle className="w-3 h-3 text-success-500" />;
-      case 'pending':
-        return <AlertCircle className="w-3 h-3 text-warning-500" />;
-      case 'future':
-        return <Clock className="w-3 h-3 text-primary-500" />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <Card variant="elevated" padding="none" className="overflow-hidden">
@@ -116,6 +108,7 @@ export const ClassCalendar = ({
             <div
               key={dateStr}
               onClick={() => onSelectDate(dateStr)}
+              title={classData ? `${classData.product_name}\n${classData.class_time}\n${classData.description}` : ''}
               className={cn(
                 "min-h-[100px] border-r border-b border-neutral-100 p-2 transition-all cursor-pointer hover:bg-neutral-50 relative group",
                 !isSelectedMonth && "bg-neutral-50/50 text-neutral-400 opacity-60",
@@ -134,43 +127,47 @@ export const ClassCalendar = ({
                   {format(day, 'd')}
                 </span>
                 {classData && (
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Info className="w-3.5 h-3.5 text-neutral-400" />
-                  </div>
+                  <div
+                    className={cn(
+                      "w-1.5 h-1.5 rounded-full mt-1 shrink-0",
+                      classData.status === 'registered' ? "bg-success-600" :
+                      classData.status === 'pending' ? "bg-warning-600" : "bg-info-600"
+                    )}
+                  />
                 )}
               </div>
               
-              <div className="mt-1 flex flex-col gap-1.5 min-h-[4rem]">
+              <div className="mt-1 flex flex-col gap-1 min-h-[4rem]">
                 {classData ? (
-                  <>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      {getStatusIcon(classData.status)}
-                      <span className="text-[10px] font-bold text-neutral-600 uppercase">
-                        {classData.status === 'registered' ? 'Registrada' : classData.status === 'pending' ? 'Pendente' : 'Futura'}
-                      </span>
-                    </div>
-                    {classData.status !== 'future' && (
-                      <div className="mt-auto pb-1">
-                        <div className="flex justify-between text-[10px] text-neutral-500 mb-0.5">
-                          <span>Presença:</span>
-                          <span className="font-bold text-neutral-700">{Math.round(classData.attendance_rate)}%</span>
-                        </div>
-                        <div className="w-full bg-neutral-200 rounded-full h-1 overflow-hidden">
-                          <div 
-                            className={cn(
-                              "h-full transition-all duration-500",
-                              classData.attendance_rate >= 80 ? "bg-success-500" : 
-                              classData.attendance_rate >= 50 ? "bg-warning-500" : "bg-error-500"
-                            )}
-                            style={{ width: `${classData.attendance_rate}%` }}
-                          />
-                        </div>
-                        <div className="text-[9px] text-neutral-400 mt-0.5 text-right italic">
-                          {classData.attendance_count}/{classData.total_clients} alunos
-                        </div>
-                      </div>
+                  <div className="text-left space-y-0.5 text-[10px] md:text-xs">
+                    {/* Horário */}
+                    {classData.class_time && (
+                      <p className="font-semibold text-neutral-900 truncate">
+                        {classData.class_time}
+                      </p>
                     )}
-                  </>
+                    
+                    {/* Descrição resumida */}
+                    {classData.description && (
+                      <p className="text-neutral-600 truncate line-clamp-1">
+                        {classData.description.substring(0, 12)}
+                      </p>
+                    )}
+                    
+                    {/* Presença (se registrada) */}
+                    {classData.status === 'registered' && classData.attendance_count > 0 && (
+                      <p className="text-success-600 font-medium">
+                        {classData.attendance_count} presentes
+                      </p>
+                    )}
+                    
+                    {/* Indicador de status */}
+                    <p className="text-neutral-500 font-medium truncate">
+                      {classData.status === 'registered' && '✓ Registrada'}
+                      {classData.status === 'pending' && '⏳ Pendente'}
+                      {classData.status === 'future' && '📅 Futura'}
+                    </p>
+                  </div>
                 ) : (
                   <div className="h-full border border-dashed border-neutral-100 rounded-md mt-1 group-hover:border-neutral-200 transition-colors" />
                 )}
