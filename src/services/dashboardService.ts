@@ -188,7 +188,16 @@ export const calculateDashboardMetrics = async (
       .gte('created_at', previousStartDate.toISOString())
       .lt('created_at', startDate.toISOString());
 
-    const previousRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const { data: previousSubPayments } = await supabase
+      .from('subscription_payments')
+      .select('amount')
+      .eq('organization_id', organizationId)
+      .gte('created_at', previousStartDate.toISOString())
+      .lt('created_at', startDate.toISOString());
+
+    const previousSalesRevenue = previousSales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const previousSubRevenue = previousSubPayments?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    const previousRevenue = previousSalesRevenue + previousSubRevenue;
     const revenueTrend = previousRevenue > 0 
       ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 
       : 0;
