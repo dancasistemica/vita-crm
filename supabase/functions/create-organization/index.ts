@@ -29,17 +29,16 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
 
-    // Verify caller via getClaims
-    const token = authHeader.replace('Bearer ', '');
-    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
-      return new Response(JSON.stringify({ error: 'Não autorizado' }), {
+    // Verify caller via getUser
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    if (authError || !caller) {
+      return new Response(JSON.stringify({ error: 'Não autorizado: ' + (authError?.message || 'Token inválido') }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const userId = claimsData.claims.sub as string;
+    const userId = caller.id;
 
     // Admin client with service role (bypasses RLS)
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
