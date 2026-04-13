@@ -8,16 +8,27 @@ export interface Venda {
   product_name: string;
   amount: number;
   
-  // NOVO: Campos de desconto
-  discount_type?: 'fixed' | 'percentage'; // fixed = R$, percentage = %
-  discount_value?: number; // Valor do desconto
-  discount_description?: string; // Motivo/detalhes do desconto
-  original_amount?: number; // Valor antes do desconto
-  final_amount?: number; // Valor após desconto
+  // Campos de desconto
+  discount_type?: 'none' | 'fixed' | 'percentage';
+  discount_value?: number;
+  discount_description?: string;
+  original_amount?: number;
+  final_amount?: number;
+  discount_granted_by?: string; // UUID do usuário
+  discount_granted_by_name?: string; // Nome do usuário
+  discount_granted_at?: string; // ISO timestamp
   
   status: 'pending' | 'completed' | 'cancelled';
   payment_status?: string;
   payment_date?: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface DiscountCalculation {
+  original_amount: number;
+  discount_type: 'none' | 'fixed' | 'percentage';
+  discount_value: number;
+  discount_amount: number;
+  final_amount: number;
 }
