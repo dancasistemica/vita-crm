@@ -34,6 +34,7 @@ export const convertLeadToClient = async (leadId: string, organizationId: string
 
 interface CreateSaleInput {
   client_id: string;
+  product_id?: string; // Adicionado product_id no topo
   value: number;
   status: string;
   installments: number;
