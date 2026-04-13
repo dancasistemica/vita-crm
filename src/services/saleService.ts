@@ -293,7 +293,10 @@ export const getSalesAndSubscriptions = async (organizationId: string) => {
         discount_value,
         discount_description,
         original_amount,
-        final_amount
+        final_amount,
+        discount_granted_by,
+        discount_granted_at,
+        granted_by:profiles!sales_discount_granted_by_fkey(full_name)
       `);
     
     if (organizationId !== 'consolidado') {
