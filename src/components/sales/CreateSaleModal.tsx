@@ -379,7 +379,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <Alert variant="destructive" title="Erro" className="animate-in fade-in slide-in-from-top-2">
+                <Alert variant="error" title="Erro" className="animate-in fade-in slide-in-from-top-2">
                   {error}
                 </Alert>
               )}
