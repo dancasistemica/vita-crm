@@ -27,7 +27,6 @@ import { Button } from "@/components/ui/ds";
 const COLORS = ['hsl(346,38%,52%)', 'hsl(16,50%,56%)', 'hsl(38,92%,50%)', 'hsl(152,55%,42%)', 'hsl(210,70%,55%)', 'hsl(280,40%,55%)', 'hsl(346,38%,68%)', 'hsl(220,20%,40%)'];
 
 export default function DashboardPage() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { organization, organizationId } = useOrganization();
   const { canAccessSettings, isSuperadmin } = useUserRole();
@@ -260,7 +259,7 @@ export default function DashboardPage() {
             />
           )}
           <Button 
-            variant="outline" 
+            variant="secondary" 
             size="sm" 
             onClick={() => window.location.reload()}
             className="hidden sm:flex gap-2"
