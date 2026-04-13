@@ -77,12 +77,18 @@ export const fetchClassesByMonth = async (
           }
         }
 
+        // NOVO: Extrair horário da descrição
+        const timeMatch = session.description?.match(/^(\d{2}:\d{2})/);
+        const classTime = timeMatch ? timeMatch[1] : '';
+        const cleanDescription = session.description?.replace(/^\d{2}:\d{2}\s*-\s*/, '') || '';
+
         return {
           id: session.id,
           product_id: session.product_id,
           product_name: session.products?.name || 'Produto desconhecido',
           class_date: session.class_date,
-          description: session.description || '',
+          class_time: classTime,
+          description: cleanDescription,
           status,
           attendance_count: presentCount,
           total_clients: totalCount,
