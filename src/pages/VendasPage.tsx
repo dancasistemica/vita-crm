@@ -189,7 +189,14 @@ export function VendasPage() {
                       </Badge>
                     </td>
                     <td className="py-3 px-2 sm:px-4 text-xs sm:text-sm text-neutral-900 font-semibold">
-                      R$ {Number(sale.stage_value).toFixed(2)}
+                      <div className="flex flex-col">
+                        <span>R$ {Number(sale.stage_value).toFixed(2)}</span>
+                        {sale.discount_type && sale.discount_type !== 'none' && (
+                          <span className="text-[10px] text-success-600 font-normal">
+                            Com desconto
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3 px-2 sm:px-4">
                       <Badge 

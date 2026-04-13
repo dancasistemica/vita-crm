@@ -1,6 +1,6 @@
 import { Alert, Badge, Button, Card, Input, Select } from "@/components/ui/ds";
 import { useState, useEffect, useMemo } from 'react';
-import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight } from 'lucide-react';
+import { X, Loader, ChevronRight, Check, Search, ShieldCheck, ArrowLeft, ArrowRight, Info, DollarSign, Percent } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createSale } from '@/services/salesService';
 import { createSubscription } from '@/services/subscriptionService';
