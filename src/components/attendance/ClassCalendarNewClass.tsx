@@ -46,22 +46,13 @@ export const ClassCalendarNewClass = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('[ClassCalendarNewClass] 🔘 Botão clicado');
+    console.log('[ClassCalendarNewClass] 🔘 Formulário enviado');
     console.log('[ClassCalendarNewClass] Validando formulário');
 
     const newErrors: string[] = [];
-    if (!classDate) {
-      newErrors.push('Data da aula é obrigatória');
-      console.warn('[ClassCalendarNewClass] ⚠️ Data faltando');
-    }
-    if (!classTime) {
-      newErrors.push('Horário da aula é obrigatório');
-      console.warn('[ClassCalendarNewClass] ⚠️ Horário faltando');
-    }
-    if (!description.trim()) {
-      newErrors.push('Descrição da aula é obrigatória');
-      console.warn('[ClassCalendarNewClass] ⚠️ Descrição faltando');
-    }
+    if (!classDate) newErrors.push('Data da aula é obrigatória');
+    if (!classTime) newErrors.push('Horário da aula é obrigatório');
+    if (!description.trim()) newErrors.push('Descrição da aula é obrigatória');
 
     // Validar se data não é no passado
     if (classDate) {
@@ -81,17 +72,22 @@ export const ClassCalendarNewClass = ({
       return;
     }
 
-    console.log('[ClassCalendarNewClass] ✅ Validação OK, chamando onSubmit');
     setErrors([]);
     setIsSubmitting(true);
 
     try {
+      console.log('[ClassCalendarNewClass] ✅ Validação OK, chamando onSubmit');
+      
+      // Chamar onSubmit (que está em ClassCalendarPage)
       await onSubmit({
         class_date: classDate,
         class_time: classTime,
         description,
       });
-      console.log('[ClassCalendarNewClass] ✅ Aula criada com sucesso');
+
+      console.log('[ClassCalendarNewClass] ✅ onSubmit completado');
+      // Modal será fechada por ClassCalendarPage após sucesso
+
     } catch (error) {
       console.error('[ClassCalendarNewClass] ❌ Erro ao criar aula:', error);
       setErrors(['Erro ao criar aula. Tente novamente.']);
