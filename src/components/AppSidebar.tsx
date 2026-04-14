@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, Columns3, UserCheck, MessageCircle,
-  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck, Calendar, Bell, Plug
+  CheckSquare, Package, BarChart3, Settings, LogOut, Shield, User, Palette, ShoppingCart, ClipboardCheck, Calendar, Bell, Plug, Database
 } from "lucide-react";
 
 import { NavLink } from "@/components/NavLink";
@@ -95,6 +95,7 @@ export function AppSidebar() {
       ? [
           { title: "Superadmin", url: "/superadmin", icon: Shield },
           { title: "Todos Usuários", url: "/admin/users", icon: Users },
+          { title: "Banco de Dados", url: "/database", icon: Database },
         ]
       : []),
   ];

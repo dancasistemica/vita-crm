@@ -22,6 +22,7 @@ export default function CRMLayout() {
     "/admin/users": "Usuários",
     "/debug": "Debug",
     "/import-wizard": "Importar Leads",
+    "/database": "Estrutura do Banco",
   };
 
   const getPageTitle = () => {
