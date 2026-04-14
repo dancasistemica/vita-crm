@@ -1965,6 +1965,12 @@ export type Database = {
         Args: { _org_id: string; _user_id: string }
         Returns: Database["public"]["Enums"]["org_role"]
       }
+      get_tables_info: {
+        Args: never
+        Returns: {
+          name: string
+        }[]
+      }
       get_user_org_ids: { Args: { _user_id: string }; Returns: string[] }
       has_any_superadmin: { Args: never; Returns: boolean }
       is_org_admin: { Args: { org_id: string }; Returns: boolean }
