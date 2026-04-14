@@ -63,12 +63,11 @@ export async function getExecutiveDashboardData(
       .select(
         `
         id,
-        client_id,
         product_id,
         payment_status,
         start_date,
         end_date,
-        clientes:client_id (
+        clientes:clients (
           id,
           name,
           engagement_level,
