@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen, ClipboardCheck, Calendar } from 'lucide-react';
+import { LayoutDashboard, Users, TrendingUp, Settings, X, ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen, ClipboardCheck, Calendar, DollarSign } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBrand } from '@/contexts/BrandContext';
 import { cn } from '@/lib/utils';
@@ -25,6 +25,7 @@ interface UserProfile {
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: DollarSign, label: 'Dashboard Financeiro', path: '/dashboard-financeiro' },
   { icon: Users, label: 'Clientes', path: '/clientes' },
   { icon: ClipboardCheck, label: 'Presença', path: '/registro-presenca' },
   { icon: Calendar, label: 'Calendário', path: '/calendario-aulas' },
