@@ -12,17 +12,22 @@ export default function DashboardFinanceiroPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!organizationId) {
+      console.log('[DashboardFinanceiroPage] ⚠️ Organization ID não disponível');
+      setLoading(false);
+      return;
+    }
+
     const loadMetrics = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        console.log('');
-        console.log('');
+        console.log('[DashboardFinanceiroPage] 🔍 Organization ID recebido:', organizationId);
+        console.log('[DashboardFinanceiroPage] 🔍 Tipo de organizationId:', typeof organizationId);
+        console.log('[DashboardFinanceiroPage] 🔍 organizationId está vazio?', !organizationId);
         console.log('[DashboardFinanceiroPage] 📊 INICIANDO carregamento de métricas');
-        console.log('[DashboardFinanceiroPage] Organization ID:', organizationId);
         console.log('[DashboardFinanceiroPage] Timestamp:', new Date().toISOString());
-        console.log('');
 
         const financialMetrics = await calculateFinancialMetrics(organizationId);
         
@@ -33,9 +38,6 @@ export default function DashboardFinanceiroPage() {
         setMetrics(financialMetrics);
 
         console.log('[DashboardFinanceiroPage] ✅ Estado atualizado com métricas');
-        console.log('');
-        console.log('');
-
       } catch (err) {
         console.error('[DashboardFinanceiroPage] ❌ ERRO ao carregar métricas:', err);
         setError('Erro ao carregar métricas financeiras');
@@ -44,10 +46,19 @@ export default function DashboardFinanceiroPage() {
       }
     };
 
-    if (organizationId) {
-      loadMetrics();
-    }
+    loadMetrics();
   }, [organizationId]);
+
+  console.log('[DashboardFinanceiroPage] 🔍 DEBUG - Estado atual:', {
+    loading,
+    error,
+    metrics: metrics ? {
+      totalRevenue: metrics.totalRevenue,
+      mrrValue: metrics.mrrValue,
+      uniqueSalesCount: metrics.uniqueSalesCount,
+      subscriptionCount: metrics.subscriptionCount,
+    } : null,
+  });
 
   if (loading) {
     return (
@@ -81,9 +92,17 @@ export default function DashboardFinanceiroPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">💰 Dashboard Financeiro</h1>
-          <p className="text-slate-600">Análise de receita, MRR e performance de vendas</p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-slate-900 mb-2">💰 Dashboard Financeiro</h1>
+            <p className="text-slate-600">Análise de receita, MRR e performance de vendas</p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm flex items-center gap-2 w-fit"
+          >
+            <span>🔄</span> Recarregar Dados
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
