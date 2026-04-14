@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useOrganization } from '../contexts/OrganizationContext';
 import { calculateFinancialMetrics, FinancialMetrics } from '../services/financeService';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
+import { Progress } from "@/components/ui/ds";
 import { DollarSign, TrendingUp, Users, ShoppingBag, PieChart, Activity } from "lucide-react";
 
 export default function DashboardFinanceiroPage() {

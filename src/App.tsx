@@ -43,6 +43,7 @@ const ClassCalendarPage = lazy(() => import("@/pages/ClassCalendarPage"));
 const AttendanceReportsPage = lazy(() => import("@/pages/AttendanceReportsPage"));
 const AlertsPage = lazy(() => import("@/pages/AlertsPage"));
 const IntegrationsPage = lazy(() => import("@/pages/IntegrationsPage"));
+const DashboardFinanceiroPage = lazy(() => import("@/pages/DashboardFinanceiroPage"));
 
 
 const queryClient = new QueryClient();
@@ -123,6 +124,7 @@ const App = () => {
                     <Route path="/calendario-aulas" element={<ClassCalendarPage />} />
                     <Route path="/integracoes" element={<IntegrationsPage />} />
                     <Route path="/search" element={<SearchResultsPage />} />
+                    <Route path="/dashboard-financeiro" element={<DashboardFinanceiroPage />} />
                   </Route>
                 </Route>
 
