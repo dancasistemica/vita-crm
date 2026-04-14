@@ -16,16 +16,19 @@ export interface FinancialMetrics {
 export const calculateFinancialMetrics = async (
   organizationId: string
 ): Promise<FinancialMetrics> => {
-  console.log('[financeService] 💰 Calculando métricas financeiras');
+  console.log('');
+  console.log('');
+  console.log('[financeService] 💰 INICIANDO cálculo de métricas financeiras');
   console.log('[financeService] Organization ID:', organizationId);
   console.log('[financeService] Timestamp:', new Date().toISOString());
+  console.log('');
 
   try {
     // BUSCA 1: Vendas únicas
-    console.log('[financeService] 🔍 Buscando vendas únicas...');
+    console.log('[financeService] 🔍 PASSO 1: Buscando vendas únicas...');
     const { data: uniqueSales, error: uniqueError } = await supabase
       .from('sales')
-      .select('id, value')
+      .select('id, value, status')
       .eq('organization_id', organizationId)
       .eq('status', 'ativo');
 
@@ -34,21 +37,32 @@ export const calculateFinancialMetrics = async (
       throw uniqueError;
     }
 
-    const totalUniqueRevenue = uniqueSales?.reduce((sum, sale) => sum + Number(sale.value || 0), 0) || 0;
+    console.log('[financeService] ✅ Vendas únicas encontradas:', uniqueSales?.length || 0);
+    if (uniqueSales && uniqueSales.length > 0) {
+      console.log('[financeService] Primeiras 3 vendas:', JSON.stringify(uniqueSales.slice(0, 3), null, 2));
+    }
+
     const uniqueSalesCount = uniqueSales?.length || 0;
+    const totalUniqueRevenue = uniqueSales?.reduce((sum, sale) => {
+      const value = parseFloat(String(sale.value || 0));
+      console.log('[financeService] Venda ID:', sale.id, '| Valor:', value);
+      return sum + value;
+    }, 0) || 0;
+
     const avgTicketUnique = uniqueSalesCount > 0 ? totalUniqueRevenue / uniqueSalesCount : 0;
 
-    console.log('[financeService] ✅ Vendas únicas:', {
+    console.log('[financeService] 📊 Resumo Vendas Únicas:', {
       count: uniqueSalesCount,
       totalRevenue: totalUniqueRevenue,
       avgTicket: avgTicketUnique,
     });
+    console.log('');
 
     // BUSCA 2: Mensalidades ativas
-    console.log('[financeService] 🔍 Buscando mensalidades ativas...');
+    console.log('[financeService] 🔍 PASSO 2: Buscando mensalidades ativas...');
     const { data: subscriptions, error: subscriptionError } = await supabase
       .from('subscriptions')
-      .select('id, monthly_value')
+      .select('id, monthly_value, status')
       .eq('organization_id', organizationId)
       .eq('status', 'ativo');
 
@@ -57,18 +71,30 @@ export const calculateFinancialMetrics = async (
       throw subscriptionError;
     }
 
-    const totalSubscriptionRevenue = subscriptions?.reduce((sum, sub) => sum + Number(sub.monthly_value || 0), 0) || 0;
+    console.log('[financeService] ✅ Mensalidades encontradas:', subscriptions?.length || 0);
+    if (subscriptions && subscriptions.length > 0) {
+      console.log('[financeService] Primeiras 3 mensalidades:', JSON.stringify(subscriptions.slice(0, 3), null, 2));
+    }
+
     const subscriptionCount = subscriptions?.length || 0;
+    const totalSubscriptionRevenue = subscriptions?.reduce((sum, sub) => {
+      const value = parseFloat(String(sub.monthly_value || 0));
+      console.log('[financeService] Mensalidade ID:', sub.id, '| Valor mensal:', value);
+      return sum + value;
+    }, 0) || 0;
+
     const avgTicketSubscription = subscriptionCount > 0 ? totalSubscriptionRevenue / subscriptionCount : 0;
 
-    console.log('[financeService] ✅ Mensalidades:', {
+    console.log('[financeService] 📊 Resumo Mensalidades:', {
       count: subscriptionCount,
       mrrValue: totalSubscriptionRevenue,
       avgTicket: avgTicketSubscription,
     });
+    console.log('');
 
-    // CÁLCULOS
-    const mrrValue = totalSubscriptionRevenue; // MRR = soma de todas as mensalidades ativas
+    // CÁLCULOS FINAIS
+    console.log('[financeService] 🔢 PASSO 3: Calculando métricas finais...');
+    const mrrValue = totalSubscriptionRevenue;
     const totalRevenue = totalUniqueRevenue + mrrValue;
     const subscriptionPercentage = totalRevenue > 0 ? (mrrValue / totalRevenue) * 100 : 0;
     const uniquePercentage = totalRevenue > 0 ? (totalUniqueRevenue / totalRevenue) * 100 : 0;
@@ -86,13 +112,21 @@ export const calculateFinancialMetrics = async (
       uniquePercentage,
     };
 
-    console.log('[financeService] 📊 Métricas calculadas:', JSON.stringify(metrics, null, 2));
+    console.log('[financeService] ✅ MÉTRICAS FINAIS CALCULADAS:', JSON.stringify(metrics, null, 2));
+    console.log('');
+    console.log('[financeService] 📊 BREAKDOWN:');
+    console.log('  - Receita Total: R$', totalRevenue.toFixed(2));
+    console.log('  - MRR: R$', mrrValue.toFixed(2));
+    console.log('  - Receita Vendas Únicas: R$', totalUniqueRevenue.toFixed(2));
+    console.log('  - % Mensalidades:', subscriptionPercentage.toFixed(1) + '%');
+    console.log('  - % Vendas Únicas:', uniquePercentage.toFixed(1) + '%');
+    console.log('');
     console.log('');
 
     return metrics;
 
   } catch (error) {
-    console.error('[financeService] ❌ ERRO crítico ao calcular métricas:', error);
+    console.error('[financeService] ❌ ERRO CRÍTICO ao calcular métricas:', error);
     throw error;
   }
 };
