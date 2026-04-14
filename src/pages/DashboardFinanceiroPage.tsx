@@ -13,17 +13,29 @@ export default function DashboardFinanceiroPage() {
 
   useEffect(() => {
     const loadMetrics = async () => {
-      if (!organizationId) return;
-      
       try {
         setLoading(true);
         setError(null);
 
+        console.log('');
+        console.log('');
         console.log('[DashboardFinanceiroPage] 📊 INICIANDO carregamento de métricas');
+        console.log('[DashboardFinanceiroPage] Organization ID:', organizationId);
+        console.log('[DashboardFinanceiroPage] Timestamp:', new Date().toISOString());
+        console.log('');
+
         const financialMetrics = await calculateFinancialMetrics(organizationId);
+        
+        console.log('[DashboardFinanceiroPage] ✅ Métricas recebidas:', financialMetrics);
+        console.log('[DashboardFinanceiroPage] Tipo de totalRevenue:', typeof financialMetrics.totalRevenue);
+        console.log('[DashboardFinanceiroPage] Tipo de mrrValue:', typeof financialMetrics.mrrValue);
+        
         setMetrics(financialMetrics);
 
-        console.log('[DashboardFinanceiroPage] ✅ Métricas carregadas com sucesso');
+        console.log('[DashboardFinanceiroPage] ✅ Estado atualizado com métricas');
+        console.log('');
+        console.log('');
+
       } catch (err) {
         console.error('[DashboardFinanceiroPage] ❌ ERRO ao carregar métricas:', err);
         setError('Erro ao carregar métricas financeiras');
@@ -32,7 +44,9 @@ export default function DashboardFinanceiroPage() {
       }
     };
 
-    loadMetrics();
+    if (organizationId) {
+      loadMetrics();
+    }
   }, [organizationId]);
 
   if (loading) {
