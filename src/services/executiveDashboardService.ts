@@ -63,12 +63,11 @@ export async function getExecutiveDashboardData(
       .select(
         `
         id,
-        client_id,
         product_id,
         payment_status,
         start_date,
         end_date,
-        clientes:client_id (
+        clientes:clients (
           id,
           name,
           engagement_level,
@@ -105,14 +104,18 @@ export async function getExecutiveDashboardData(
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const churnRiskCount = productClients.filter((cp) => {
         // @ts-ignore - Handle the nested relationship accurately based on client data
-        const lastAccess = cp.clientes?.last_attendance_date;
+        const clientData = Array.isArray(cp.clientes) ? cp.clientes[0] : cp.clientes;
+        const lastAccess = clientData?.last_attendance_date;
         return !lastAccess || new Date(lastAccess) < sevenDaysAgo;
       }).length;
       const churnRiskPercentage = totalClients > 0 ? (churnRiskCount / totalClients) * 100 : 0;
 
       // Calcular engajamento médio
       // @ts-ignore
-      const engagementLevels = productClients.map((cp) => cp.clientes?.engagement_level);
+      const engagementLevels = productClients.map((cp) => {
+        const clientData = Array.isArray(cp.clientes) ? cp.clientes[0] : cp.clientes;
+        return clientData?.engagement_level;
+      });
       const highCount = engagementLevels.filter((e) => e === 'ALTO').length;
       const mediumCount = engagementLevels.filter((e) => e === 'MÉDIO').length;
       const lowCount = engagementLevels.filter((e) => e === 'BAIXO').length;
