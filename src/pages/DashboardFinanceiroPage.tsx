@@ -12,41 +12,62 @@ export default function DashboardFinanceiroPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!organizationId) {
-      console.log('[DashboardFinanceiroPage] ⚠️ Organization ID não disponível');
-      setLoading(false);
-      return;
-    }
-
     const loadMetrics = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        console.log('[DashboardFinanceiroPage] 🔍 Organization ID recebido:', organizationId);
-        console.log('[DashboardFinanceiroPage] 🔍 Tipo de organizationId:', typeof organizationId);
-        console.log('[DashboardFinanceiroPage] 🔍 organizationId está vazio?', !organizationId);
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════');
         console.log('[DashboardFinanceiroPage] 📊 INICIANDO carregamento de métricas');
+        console.log('═══════════════════════════════════════════════════════');
+        console.log('[DashboardFinanceiroPage] Organization ID:', organizationId);
+        console.log('[DashboardFinanceiroPage] Tipo de organizationId:', typeof organizationId);
+        console.log('[DashboardFinanceiroPage] organizationId está vazio?', !organizationId);
         console.log('[DashboardFinanceiroPage] Timestamp:', new Date().toISOString());
+        console.log('');
 
+        // VALIDAR se organizationId existe
+        if (!organizationId) {
+          console.error('[DashboardFinanceiroPage] ❌ ERRO: organizationId não foi fornecido!');
+          setError('Organization ID não disponível. Verifique se você está logado.');
+          setLoading(false);
+          return;
+        }
+
+        // Chamar função de cálculo
         const financialMetrics = await calculateFinancialMetrics(organizationId);
         
-        console.log('[DashboardFinanceiroPage] ✅ Métricas recebidas:', financialMetrics);
-        console.log('[DashboardFinanceiroPage] Tipo de totalRevenue:', typeof financialMetrics.totalRevenue);
-        console.log('[DashboardFinanceiroPage] Tipo de mrrValue:', typeof financialMetrics.mrrValue);
+        console.log('[DashboardFinanceiroPage] ✅ Métricas recebidas com sucesso');
+        console.log('[DashboardFinanceiroPage] Valores recebidos:', {
+          totalRevenue: financialMetrics.totalRevenue,
+          mrrValue: financialMetrics.mrrValue,
+          uniqueSalesCount: financialMetrics.uniqueSalesCount,
+          subscriptionCount: financialMetrics.subscriptionCount,
+        });
         
         setMetrics(financialMetrics);
 
         console.log('[DashboardFinanceiroPage] ✅ Estado atualizado com métricas');
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════');
+        console.log('[DashboardFinanceiroPage] ✅ loadMetrics finalizado com sucesso');
+        console.log('═══════════════════════════════════════════════════════');
+        console.log('');
+
       } catch (err) {
         console.error('[DashboardFinanceiroPage] ❌ ERRO ao carregar métricas:', err);
-        setError('Erro ao carregar métricas financeiras');
+        setError(`Erro ao carregar métricas financeiras: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
       } finally {
         setLoading(false);
       }
     };
 
-    loadMetrics();
+    if (organizationId) {
+      loadMetrics();
+    } else {
+      console.warn('[DashboardFinanceiroPage] ⚠️ organizationId não disponível ainda');
+    }
   }, [organizationId]);
 
   console.log('[DashboardFinanceiroPage] 🔍 DEBUG - Estado atual:', {
