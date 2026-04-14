@@ -17,12 +17,11 @@ export default function DashboardFinanceiroPage() {
         setLoading(true);
         setError(null);
 
-        console.log('');
-        console.log('');
+        console.log('[DashboardFinanceiroPage] 🔍 Organization ID recebido:', organizationId);
+        console.log('[DashboardFinanceiroPage] 🔍 Tipo de organizationId:', typeof organizationId);
+        console.log('[DashboardFinanceiroPage] 🔍 organizationId está vazio?', !organizationId);
         console.log('[DashboardFinanceiroPage] 📊 INICIANDO carregamento de métricas');
-        console.log('[DashboardFinanceiroPage] Organization ID:', organizationId);
         console.log('[DashboardFinanceiroPage] Timestamp:', new Date().toISOString());
-        console.log('');
 
         const financialMetrics = await calculateFinancialMetrics(organizationId);
         
@@ -33,9 +32,6 @@ export default function DashboardFinanceiroPage() {
         setMetrics(financialMetrics);
 
         console.log('[DashboardFinanceiroPage] ✅ Estado atualizado com métricas');
-        console.log('');
-        console.log('');
-
       } catch (err) {
         console.error('[DashboardFinanceiroPage] ❌ ERRO ao carregar métricas:', err);
         setError('Erro ao carregar métricas financeiras');
@@ -48,6 +44,17 @@ export default function DashboardFinanceiroPage() {
       loadMetrics();
     }
   }, [organizationId]);
+
+  console.log('[DashboardFinanceiroPage] 🔍 DEBUG - Estado atual:', {
+    loading,
+    error,
+    metrics: metrics ? {
+      totalRevenue: metrics.totalRevenue,
+      mrrValue: metrics.mrrValue,
+      uniqueSalesCount: metrics.uniqueSalesCount,
+      subscriptionCount: metrics.subscriptionCount,
+    } : null,
+  });
 
   if (loading) {
     return (
