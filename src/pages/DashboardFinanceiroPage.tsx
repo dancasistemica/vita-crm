@@ -13,17 +13,29 @@ export default function DashboardFinanceiroPage() {
 
   useEffect(() => {
     const loadMetrics = async () => {
-      if (!organizationId) return;
-      
       try {
         setLoading(true);
         setError(null);
 
+        console.log('');
+        console.log('');
         console.log('[DashboardFinanceiroPage] 📊 INICIANDO carregamento de métricas');
+        console.log('[DashboardFinanceiroPage] Organization ID:', organizationId);
+        console.log('[DashboardFinanceiroPage] Timestamp:', new Date().toISOString());
+        console.log('');
+
         const financialMetrics = await calculateFinancialMetrics(organizationId);
+        
+        console.log('[DashboardFinanceiroPage] ✅ Métricas recebidas:', financialMetrics);
+        console.log('[DashboardFinanceiroPage] Tipo de totalRevenue:', typeof financialMetrics.totalRevenue);
+        console.log('[DashboardFinanceiroPage] Tipo de mrrValue:', typeof financialMetrics.mrrValue);
+        
         setMetrics(financialMetrics);
 
-        console.log('[DashboardFinanceiroPage] ✅ Métricas carregadas com sucesso');
+        console.log('[DashboardFinanceiroPage] ✅ Estado atualizado com métricas');
+        console.log('');
+        console.log('');
+
       } catch (err) {
         console.error('[DashboardFinanceiroPage] ❌ ERRO ao carregar métricas:', err);
         setError('Erro ao carregar métricas financeiras');
@@ -32,7 +44,9 @@ export default function DashboardFinanceiroPage() {
       }
     };
 
-    loadMetrics();
+    if (organizationId) {
+      loadMetrics();
+    }
   }, [organizationId]);
 
   if (loading) {
@@ -72,55 +86,70 @@ export default function DashboardFinanceiroPage() {
           <p className="text-slate-600">Análise de receita, MRR e performance de vendas</p>
         </div>
 
-        {/* GRID DE MÉTRICAS PRINCIPAIS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* CARD 1: Receita Total */}
-          <Card className="border-l-4 border-blue-500 shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">Receita Total</CardTitle>
-              <DollarSign className="h-5 w-5 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-slate-900">{formatCurrency(metrics.totalRevenue)}</p>
-              <p className="text-xs text-slate-500 mt-2">Vendas + Mensalidades (Ativas)</p>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Receita Total</p>
+              <span className="text-2xl">💵</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">
+              {metrics && metrics.totalRevenue !== undefined ? (
+                `R$ ${metrics.totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              ) : (
+                'R$ 0,00'
+              )}
+            </p>
+            <p className="text-xs text-slate-500 mt-2">Vendas + Mensalidades (Ativas)</p>
+          </div>
 
-          {/* CARD 2: MRR (Receita Recorrente Mensal) */}
-          <Card className="border-l-4 border-green-500 shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">MRR</CardTitle>
-              <TrendingUp className="h-5 w-5 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-slate-900">{formatCurrency(metrics.mrrValue)}</p>
-              <p className="text-xs text-slate-500 mt-2">Receita Recorrente Mensal</p>
-            </CardContent>
-          </Card>
+          {/* CARD 2: MRR */}
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">MRR</p>
+              <span className="text-2xl">📈</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">
+              {metrics && metrics.mrrValue !== undefined ? (
+                `R$ ${metrics.mrrValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              ) : (
+                'R$ 0,00'
+              )}
+            </p>
+            <p className="text-xs text-slate-500 mt-2">Receita Recorrente Mensal</p>
+          </div>
 
           {/* CARD 3: Ticket Médio (Vendas Únicas) */}
-          <Card className="border-l-4 border-purple-500 shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">Ticket Médio (Únicas)</CardTitle>
-              <ShoppingBag className="h-5 w-5 text-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-slate-900">{formatCurrency(metrics.avgTicketUnique)}</p>
-              <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.uniqueSalesCount} vendas</p>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Ticket Médio (Únicas)</p>
+              <span className="text-2xl">🛍️</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">
+              {metrics && metrics.avgTicketUnique !== undefined ? (
+                `R$ ${metrics.avgTicketUnique.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              ) : (
+                'R$ 0,00'
+              )}
+            </p>
+            <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.uniqueSalesCount} vendas</p>
+          </div>
 
           {/* CARD 4: Ticket Médio (Recorrente) */}
-          <Card className="border-l-4 border-orange-500 shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">Ticket Médio (MRR)</CardTitle>
-              <Activity className="h-5 w-5 text-orange-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-slate-900">{formatCurrency(metrics.avgTicketSubscription)}</p>
-              <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.subscriptionCount} assinaturas</p>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Ticket Médio (MRR)</p>
+              <span className="text-2xl">📊</span>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">
+              {metrics && metrics.avgTicketSubscription !== undefined ? (
+                `R$ ${metrics.avgTicketSubscription.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              ) : (
+                'R$ 0,00'
+              )}
+            </p>
+            <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.subscriptionCount} assinaturas</p>
+          </div>
         </div>
 
         {/* DETALHAMENTO E COMPOSIÇÃO */}
