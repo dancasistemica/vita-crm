@@ -68,7 +68,7 @@ export async function getExecutiveDashboardData(
         payment_status,
         start_date,
         end_date,
-        clientes:clients (
+        clientes:client_id (
           id,
           name,
           engagement_level,
