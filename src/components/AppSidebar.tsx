@@ -33,6 +33,13 @@ import {
 const baseItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Dashboard Executivo", url: "/dashboard/executivo", icon: BarChart3 },
+  { 
+    title: "Dashboard Financeiro", 
+    url: "/dashboard-financeiro", 
+    icon: ({ className }: { className?: string }) => (
+      <span className={cn("flex items-center justify-center", className)} style={{ fontSize: '1.1rem' }}>💰</span>
+    )
+  },
 
   { title: "Leads", url: "/leads", icon: Users },
   { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
