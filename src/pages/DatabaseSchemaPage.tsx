@@ -17,35 +17,34 @@ import {
 } from "@/components/ui/ds";
 import { Database, Table as TableIcon, Hash } from "lucide-react";
 
+interface DbTable {
+  name: string;
+}
+
 export default function DatabaseSchemaPage() {
   const { data: tables, isLoading } = useQuery({
     queryKey: ["database-tables"],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_tables_info');
+      const { data, error } = await supabase.rpc('get_tables_info' as any);
       
       if (error) {
-        // Fallback if RPC doesn't exist
-        const { data: fallbackData, error: fallbackError } = await supabase
-          .from('information_schema.tables' as any)
-          .select('table_name')
-          .eq('table_schema', 'public');
-          
-        if (fallbackError) {
-          // If even that fails, return a static list of known tables or an error
-          console.error("Error fetching tables:", fallbackError);
-          return [
-            { name: 'leads', rows: 0 },
-            { name: 'products', rows: 0 },
-            { name: 'sales', rows: 0 },
-            { name: 'clients', rows: 0 },
-            { name: 'interactions', rows: 0 },
-            { name: 'tasks', rows: 0 },
-          ];
-        }
-        return fallbackData.map((t: any) => ({ name: t.table_name, rows: '?' }));
+        console.error("Error fetching tables via RPC:", error);
+        // Fallback to manual list based on initial findings
+        return [
+          { name: 'leads' },
+          { name: 'products' },
+          { name: 'sales' },
+          { name: 'clients' },
+          { name: 'interactions' },
+          { name: 'tasks' },
+          { name: 'organizations' },
+          { name: 'profiles' },
+          { name: 'pipeline_stages' },
+          { name: 'tags' }
+        ] as DbTable[];
       }
       
-      return data;
+      return (data || []) as DbTable[];
     }
   });
 
@@ -89,7 +88,7 @@ export default function DatabaseSchemaPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {tables?.map((table: any) => (
+                  {Array.isArray(tables) && tables.map((table) => (
                     <TableRow key={table.name}>
                       <TableCell className="font-medium flex items-center gap-2">
                         <Hash className="h-4 w-4 text-neutral-400" />
@@ -101,9 +100,7 @@ export default function DatabaseSchemaPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right text-xs text-neutral-500">
-                        {table.name === 'leads' ? 'Gerenciar Leads' : 
-                         table.name === 'sales' ? 'Ver Vendas' : 
-                         table.name === 'products' ? 'Ver Produtos' : 'Visualizar Dados'}
+                        Visualizar Dados
                       </TableCell>
                     </TableRow>
                   ))}
