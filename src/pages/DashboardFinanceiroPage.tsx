@@ -12,6 +12,12 @@ export default function DashboardFinanceiroPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!organizationId) {
+      console.log('[DashboardFinanceiroPage] ⚠️ Organization ID não disponível');
+      setLoading(false);
+      return;
+    }
+
     const loadMetrics = async () => {
       try {
         setLoading(true);
@@ -40,9 +46,7 @@ export default function DashboardFinanceiroPage() {
       }
     };
 
-    if (organizationId) {
-      loadMetrics();
-    }
+    loadMetrics();
   }, [organizationId]);
 
   console.log('[DashboardFinanceiroPage] 🔍 DEBUG - Estado atual:', {
