@@ -29,10 +29,10 @@ export const fetchClientsByProduct = async (
   classDate?: string
 ) => {
   try {
-    console.log('[attendanceService] 📋 Buscando alunos para o produto:', productId);
+    console.log('[AttendanceRegisterPage] 📋 Carregando alunos para o produto:', productId);
     
     // BUSCA 1: Vendas únicas para o produto
-    // Nota: Usando lead_id pois é o nome da coluna na tabela sales
+    console.log('[AttendanceRegisterPage] 🔍 PASSO 1: Buscando vendas únicas...');
     const { data: uniqueSales, error: salesError } = await supabase
       .from('sales')
       .select(`
@@ -47,11 +47,13 @@ export const fetchClientsByProduct = async (
       .in('status', ['ativo', 'pago', 'finalizado']);
 
     if (salesError) {
-      console.error('[attendanceService] ❌ Erro ao buscar sales:', salesError);
+      console.error('[AttendanceRegisterPage] ❌ Erro ao buscar sales:', salesError);
+    } else {
+      console.log('[AttendanceRegisterPage] ✅ Vendas únicas encontradas:', uniqueSales?.length || 0);
     }
 
     // BUSCA 2: Mensalidades para o produto
-    // Nota: Usando client_id pois é o nome da coluna na tabela subscriptions
+    console.log('[AttendanceRegisterPage] 🔍 PASSO 2: Buscando mensalidades...');
     const { data: subscriptions, error: subsError } = await supabase
       .from('subscriptions')
       .select(`
@@ -66,8 +68,11 @@ export const fetchClientsByProduct = async (
       .in('status', ['ativo', 'ativa', 'pago', 'regular']);
 
     if (subsError) {
-      console.error('[attendanceService] ❌ Erro ao buscar subscriptions:', subsError);
+      console.error('[AttendanceRegisterPage] ❌ Erro ao buscar subscriptions:', subsError);
+    } else {
+      console.log('[AttendanceRegisterPage] ✅ Mensalidades encontradas:', subscriptions?.length || 0);
     }
+
 
     // COMBINAR: Vendas + Mensalidades
     const allStudents = [
