@@ -122,7 +122,7 @@ export const WeeklyClassesList = ({
                 {/* Ausências (Mobile Label + Value) */}
                 <div className="col-span-1 flex flex-row md:flex-col items-center justify-between md:justify-center gap-2">
                   <span className="md:hidden text-xs text-neutral-500 font-medium">Ausências:</span>
-                  <Badge variant="destructive" className="px-3 py-1 text-sm font-bold">
+                  <Badge variant="error" className="px-3 py-1 text-sm font-bold">
                     <Users className="w-3 h-3 mr-1.5" />
                     {Math.max(0, absence)}
                   </Badge>
