@@ -62,8 +62,8 @@ export const AttendanceForm = ({
       setErrors([]);
       console.log('[AttendanceForm] Carregando clientes e presença anterior');
 
-      // PASSO 1: Carregar clientes (filtrados por acesso ativo)
-      const clientsData = await fetchClientsByProduct(organizationId, productId);
+      // PASSO 1: Carregar clientes (filtrados por acesso ativo na data da aula)
+      const clientsData = await fetchClientsByProduct(organizationId, productId, classDate);
       setClients(clientsData);
 
       // PASSO 2: Carregar presença anterior
