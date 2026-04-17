@@ -11,7 +11,7 @@ import { SalesFilters } from '@/components/sales/SalesFilters';
 import { deleteSale } from '@/services/saleService';
 
 export function VendasPage() {
-  const { organization } = useOrganization();
+  const { organizationId, organization } = useOrganization();
   const [vendas, setVendas] = useState<any[]>([]);
   const [allVendas, setAllVendas] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,8 +27,6 @@ export function VendasPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSale, setSelectedSale] = useState<any>(null);
-
-  const organizationId = organization?.id;
 
   useEffect(() => {
     if (organizationId) {
@@ -77,6 +75,19 @@ export function VendasPage() {
       setLoading(false);
     }
   };
+
+  console.log('[VendasPage] 🔍 Organization ID:', organizationId);
+  console.log('[VendasPage] Organization ID disponível?', !!organizationId);
+
+  if (!organizationId) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-lg m-6">
+        <h1 className="text-xl font-bold text-red-900">❌ Erro</h1>
+        <p className="text-red-700">Organization ID não disponível. Verifique se você está logado.</p>
+      </div>
+    );
+  }
+
 
   const handleDeleteSale = async (sale: any) => {
     if (!confirm(`Tem certeza que deseja excluir esta venda de ${sale.client_name}?`)) return;
