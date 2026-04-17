@@ -27,6 +27,8 @@ export const SalesForm = ({
     discount_type: initialData?.discount_type || 'none',
     discount_value: initialData?.discount_value || '',
     discount_description: initialData?.discount_description || '',
+    sale_date: initialData?.sale_date || initialData?.start_date || new Date().toISOString().split('T')[0],
+    first_payment_date: initialData?.first_payment_date || initialData?.start_date || new Date().toISOString().split('T')[0],
   });
 
   const [calculatedValues, setCalculatedValues] = useState({
