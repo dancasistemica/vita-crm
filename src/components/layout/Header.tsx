@@ -25,13 +25,8 @@ export function Header({
   const navigate = useNavigate();
   const { brand } = useBrand();
   
-  // Try to get sidebar context if available (used in CRMLayout)
-  let sidebarContext;
-  try {
-    sidebarContext = useSidebar();
-  } catch (e) {
-    // Not in a SidebarProvider context
-  }
+  // Get sidebar context (now guaranteed by SidebarProvider in App.tsx)
+  const sidebarContext = useSidebar();
 
   const handleLogout = async () => {
     try {

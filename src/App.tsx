@@ -1,4 +1,4 @@
-import { Toaster, Tooltip } from "@/components/ui/ds";
+import { Toaster, Tooltip, SidebarProvider } from "@/components/ui/ds";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
@@ -74,8 +74,9 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <OrganizationProvider>
         <BrandProvider>
-          <Toaster />
-          <BrowserRouter>
+          <SidebarProvider>
+            <Toaster />
+            <BrowserRouter>
             <Suspense fallback={
               <div className="min-h-screen flex items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-3">
@@ -134,6 +135,7 @@ const App = () => {
               </Routes>
             </Suspense>
           </BrowserRouter>
+          </SidebarProvider>
         </BrandProvider>
       </OrganizationProvider>
     </QueryClientProvider>
