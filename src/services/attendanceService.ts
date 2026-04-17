@@ -22,7 +22,7 @@ export interface AttendanceFormData {
   }>;
 }
 
-// Buscar clientes de um produto (Lógica atualizada para incluir Vendas e Mensalidades)
+// Buscar clientes de um produto (Lógica robusta: Vendas + Mensalidades)
 export const fetchClientsByProduct = async (
   organizationId: string,
   productId: string,
@@ -32,6 +32,7 @@ export const fetchClientsByProduct = async (
     console.log('[attendanceService] 📋 Buscando alunos para o produto:', productId);
     
     // BUSCA 1: Vendas únicas para o produto
+    // Nota: Usando lead_id pois é o nome da coluna na tabela sales
     const { data: uniqueSales, error: salesError } = await supabase
       .from('sales')
       .select(`
@@ -39,17 +40,18 @@ export const fetchClientsByProduct = async (
         lead_id,
         product_id,
         status,
-        leads:lead_id(id, name, email, phone)
+        clients:lead_id(id, name, email, phone)
       `)
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
-      .eq('status', 'ativo');
+      .in('status', ['ativo', 'pago', 'finalizado']);
 
     if (salesError) {
       console.error('[attendanceService] ❌ Erro ao buscar sales:', salesError);
     }
 
     // BUSCA 2: Mensalidades para o produto
+    // Nota: Usando client_id pois é o nome da coluna na tabela subscriptions
     const { data: subscriptions, error: subsError } = await supabase
       .from('subscriptions')
       .select(`
@@ -57,11 +59,11 @@ export const fetchClientsByProduct = async (
         client_id,
         product_id,
         status,
-        leads:client_id(id, name, email, phone)
+        clients:client_id(id, name, email, phone)
       `)
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
-      .eq('status', 'ativo');
+      .in('status', ['ativo', 'ativa', 'pago', 'regular']);
 
     if (subsError) {
       console.error('[attendanceService] ❌ Erro ao buscar subscriptions:', subsError);
@@ -70,18 +72,18 @@ export const fetchClientsByProduct = async (
     // COMBINAR: Vendas + Mensalidades
     const allStudents = [
       ...(uniqueSales || []).map(sale => ({
-        id: (sale.leads as any)?.id || sale.lead_id,
-        name: (sale.leads as any)?.name || 'Cliente desconhecido',
-        email: (sale.leads as any)?.email || '',
-        phone: (sale.leads as any)?.phone || '',
+        id: (sale.clients as any)?.id || sale.lead_id,
+        name: (sale.clients as any)?.name || 'Cliente desconhecido',
+        email: (sale.clients as any)?.email || '',
+        phone: (sale.clients as any)?.phone || '',
         type: 'venda_unica',
         sale_id: sale.id,
       })),
       ...(subscriptions || []).map(sub => ({
-        id: (sub.leads as any)?.id || sub.client_id,
-        name: (sub.leads as any)?.name || 'Cliente desconhecido',
-        email: (sub.leads as any)?.email || '',
-        phone: (sub.leads as any)?.phone || '',
+        id: (sub.clients as any)?.id || sub.client_id,
+        name: (sub.clients as any)?.name || 'Cliente desconhecido',
+        email: (sub.clients as any)?.email || '',
+        phone: (sub.clients as any)?.phone || '',
         type: 'mensalidade',
         subscription_id: sub.id,
       })),
@@ -100,6 +102,7 @@ export const fetchClientsByProduct = async (
     throw error;
   }
 };
+
 
 export const getStudentsForClass = fetchClientsByProduct;
 
