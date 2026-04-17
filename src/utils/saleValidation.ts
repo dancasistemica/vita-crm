@@ -153,6 +153,7 @@ export const validateFormComplete = (
   if (saleType === 'unica') {
     const installments = parseInt(formData.installments) || 0;
     if (installments < 1) errors.push({ field: 'installments', message: 'Parcelas inválidas' });
+    if (!formData.sale_date) errors.push({ field: 'sale_date', message: 'Data da venda obrigatória' });
     if (!formData.first_payment_date) errors.push({ field: 'first_payment_date', message: 'Data de vencimento obrigatória' });
   } else {
     if (!formData.start_date) errors.push({ field: 'start_date', message: 'Data de início obrigatória' });
