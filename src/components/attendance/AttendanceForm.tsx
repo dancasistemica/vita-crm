@@ -73,23 +73,38 @@ export const AttendanceForm = ({
         classDate
       );
 
-      // PASSO 3: Se tem presença anterior, usar; senão, inicializar com "ausente"
-      if (previousAttendanceMap.size > 0) {
-        console.log('[AttendanceForm] ✅ Presença anterior encontrada');
-        
-        const previousAttendances = clientsData.map(client => {
-          const previous = previousAttendanceMap.get(client.id);
-          return {
-            client_id: client.id,
-            attendance_type: (previous?.attendance_type || 'ausente') as 'presente' | 'ausente' | 'gravada',
-          };
-        });
+      // PASSO 3: Se tem presença anterior, garantir que esses clientes apareçam na lista
+      // mesmo que não estejam mais ativos no produto
+      const allClients = [...clientsData];
+      const previousAttendances: Array<{ client_id: string; attendance_type: 'presente' | 'ausente' | 'gravada' }> = [];
 
-        setAttendances(previousAttendances);
-      } else {
-        console.log('[AttendanceForm] ℹ️ Nenhuma presença anterior encontrada');
-        setAttendances(clientsData.map(c => ({ client_id: c.id, attendance_type: 'ausente' })));
-      }
+      // Adicionar clientes que têm presença gravada mas não estão na lista de ativos
+      previousAttendanceMap.forEach((att: any, clientId: string) => {
+        if (!allClients.find(c => c.id === clientId)) {
+          // Buscar dados do cliente na resposta da presença (está no mapa agora)
+          // Nota: precisamos ajustar fetchAttendanceWithPreviousData para retornar os dados do cliente
+          console.log('[AttendanceForm] ℹ️ Adicionando cliente inativo com presença gravada:', clientId);
+          if (att.client_data) {
+            allClients.push({
+              id: clientId,
+              name: att.client_data.name || 'Cliente desconhecido',
+              email: att.client_data.email || '',
+            });
+          }
+        }
+      });
+
+      // Mapear presenças
+      allClients.forEach(client => {
+        const previous = previousAttendanceMap.get(client.id);
+        previousAttendances.push({
+          client_id: client.id,
+          attendance_type: (previous?.attendance_type || 'ausente') as 'presente' | 'ausente' | 'gravada',
+        });
+      });
+
+      setClients(allClients);
+      setAttendances(previousAttendances);
 
       // PASSO 4: Carregar descrição da aula
       const session = await fetchClassSession(organizationId, productId, classDate);
