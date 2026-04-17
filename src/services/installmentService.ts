@@ -23,13 +23,18 @@ export const getInstallments = async (
     dateRange?: { from: string; to: string };
   }
 ) => {
-  console.log('[installmentService] 📋 Buscando parcelas');
+  console.log('');
+  console.log('[installmentService] 📋 INICIANDO busca de parcelas');
   console.log('[installmentService] Organization ID:', organizationId);
-  console.log('[installmentService] Filtros:', filters);
+  console.log('[installmentService] Filtros aplicados:', filters);
   console.log('');
 
   try {
-    let query = supabase
+    // BUSCA 1: Todas as parcelas sem filtro
+    console.log('[installmentService] 🔍 PASSO 1: Buscando TODAS as parcelas (sem filtro)...');
+    
+    // Usamos lead_id em vez de client_id pois é o nome real da coluna na tabela sales
+    const { data: allInstallments, error: allError } = await supabase
       .from('sale_installments')
       .select(`
         id,
@@ -41,38 +46,63 @@ export const getInstallments = async (
         status,
         payment_method,
         sales(
+          id,
           lead_id,
-          leads:lead_id(name),
-          products:product_id(name)
+          product_id,
+          leads:lead_id(id, name, email),
+          products:product_id(id, name)
         )
       `)
       .eq('organization_id', organizationId);
 
-    // Aplicar filtros
+    if (allError) {
+      console.error('[installmentService] ❌ ERRO ao buscar todas as parcelas:', allError);
+      throw allError;
+    }
+
+    console.log('[installmentService] ✅ Total de parcelas encontradas (sem filtro):', allInstallments?.length || 0);
+    
+    if (allInstallments && allInstallments.length > 0) {
+      console.log('[installmentService] Primeiras 3 parcelas:');
+      allInstallments.slice(0, 3).forEach((inst, idx) => {
+        console.log(`[${idx}] ID: ${inst.id}, Status: ${inst.status}, Sale ID: ${inst.sale_id}`);
+      });
+    } else {
+      console.log('[installmentService] ⚠️ Nenhuma parcela encontrada no banco');
+    }
+    console.log('');
+
+    // BUSCA 2: Aplicar filtros se fornecidos
+    let filteredInstallments = allInstallments || [];
+
     if (filters?.status && filters.status !== 'todos') {
-      query = query.eq('status', filters.status);
+      console.log('[installmentService] 🔍 PASSO 2: Filtrando por status:', filters.status);
+      filteredInstallments = filteredInstallments.filter(inst => inst.status === filters.status);
+      console.log('[installmentService] ✅ Parcelas após filtro de status:', filteredInstallments.length);
+      console.log('');
     }
 
-    // Nota: Filtros de clientId e productId em tabelas relacionadas (sales)
-    // requerem sintaxe específica ou filtragem manual se não houver joins complexos habilitados.
-    // Aqui assumimos que o Supabase permite o filtro direto ou faremos pós-processamento se necessário.
-
-    const { data: installments, error } = await query.order('due_date', { ascending: false });
-
-    if (error) {
-      console.error('[installmentService] ❌ ERRO ao buscar parcelas:', error);
-      throw error;
+    if (filters?.clientId) {
+      console.log('[installmentService] 🔍 PASSO 3: Filtrando por cliente:', filters.clientId);
+      filteredInstallments = filteredInstallments.filter(inst => (inst.sales as any)?.lead_id === filters.clientId);
+      console.log('[installmentService] ✅ Parcelas após filtro de cliente:', filteredInstallments.length);
+      console.log('');
     }
 
-    console.log('[installmentService] ✅ Parcelas encontradas:', installments?.length || 0);
+    if (filters?.productId) {
+      console.log('[installmentService] 🔍 PASSO 4: Filtrando por produto:', filters.productId);
+      filteredInstallments = filteredInstallments.filter(inst => (inst.sales as any)?.product_id === filters.productId);
+      console.log('[installmentService] ✅ Parcelas após filtro de produto:', filteredInstallments.length);
+      console.log('');
+    }
 
-    // Processar dados e calcular dias em atraso
-    const processedInstallments: Installment[] = (installments || []).map(inst => {
+    // PROCESSAR DADOS
+    console.log('[installmentService] 🔄 PASSO 5: Processando dados das parcelas...');
+    const processedInstallments: Installment[] = filteredInstallments.map(inst => {
+      const salesData = inst.sales as any;
       const daysOverdue = inst.status === 'atrasado' 
         ? Math.floor((new Date().getTime() - new Date(inst.due_date).getTime()) / (1000 * 60 * 60 * 24))
         : 0;
-
-      const salesData = inst.sales as any;
 
       return {
         id: inst.id,
@@ -89,14 +119,12 @@ export const getInstallments = async (
       };
     });
 
-    // Filtros manuais para campos em tabelas relacionadas se necessário
-    let filtered = processedInstallments;
-    if (filters?.clientId) {
-      // Se precisássemos filtrar por lead_id que vem da tabela sales
-    }
+    console.log('[installmentService] ✅ Parcelas processadas:', processedInstallments.length);
+    console.log('[installmentService] ✅ getInstallments finalizado com sucesso');
+    console.log('');
+    console.log('');
 
-    console.log('[installmentService] ✅ Parcelas processadas:', filtered.length);
-    return filtered;
+    return processedInstallments;
 
   } catch (error) {
     console.error('[installmentService] ❌ ERRO crítico:', error);
@@ -144,7 +172,7 @@ export const updateInstallmentStatus = async (
     }
 
     console.log('[installmentService] ✅ Parcela atualizada com sucesso');
-    return data[0];
+    return data?.[0];
 
   } catch (error) {
     console.error('[installmentService] ❌ ERRO crítico:', error);
@@ -158,26 +186,32 @@ export const getInstallmentStats = async (organizationId: string) => {
   try {
     const { data: allInstallments, error } = await supabase
       .from('sale_installments')
-      .select('amount, status, due_date')
+      .select('amount, status')
       .eq('organization_id', organizationId);
 
-    if (error) throw error;
+    if (error) {
+      console.error('[installmentService] ❌ ERRO ao buscar stats:', error);
+      throw error;
+    }
+
+    console.log('[installmentService] ✅ Parcelas para stats:', allInstallments?.length || 0);
 
     const stats = {
       total_parcelas: allInstallments?.length || 0,
+      total_valor: allInstallments?.reduce((sum, i) => sum + (i.amount || 0), 0) || 0,
       parcelas_pagas: allInstallments?.filter(i => i.status === 'pago').length || 0,
       parcelas_pendentes: allInstallments?.filter(i => i.status === 'pendente').length || 0,
       parcelas_atrasadas: allInstallments?.filter(i => i.status === 'atrasado').length || 0,
-      valor_total: allInstallments?.reduce((acc, i) => acc + (i.amount || 0), 0) || 0,
-      valor_pago: allInstallments?.filter(i => i.status === 'pago').reduce((acc, i) => acc + (i.amount || 0), 0) || 0,
-      valor_pendente: allInstallments?.filter(i => i.status !== 'pago').reduce((acc, i) => acc + (i.amount || 0), 0) || 0,
+      valor_atrasado: allInstallments?.filter(i => i.status === 'atrasado').reduce((sum, i) => sum + (i.amount || 0), 0) || 0,
+      valor_pago: allInstallments?.filter(i => i.status === 'pago').reduce((sum, i) => sum + (i.amount || 0), 0) || 0,
+      valor_pendente: allInstallments?.filter(i => i.status === 'pendente').reduce((sum, i) => sum + (i.amount || 0), 0) || 0,
     };
 
-    console.log('[installmentService] ✅ Estatísticas calculadas:', stats);
+    console.log('[installmentService] ✅ Stats calculadas:', stats);
     return stats;
 
   } catch (error) {
-    console.error('[installmentService] ❌ ERRO ao calcular stats:', error);
+    console.error('[installmentService] ❌ ERRO crítico em stats:', error);
     throw error;
   }
 };
