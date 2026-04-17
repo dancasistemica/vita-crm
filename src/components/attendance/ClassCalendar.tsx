@@ -113,7 +113,7 @@ export const ClassCalendar = ({
                 "min-h-[100px] border-r border-b border-neutral-100 p-2 transition-all cursor-pointer hover:bg-neutral-50 relative group",
                 !isSelectedMonth && "bg-neutral-50/50 text-neutral-400 opacity-60",
                 isSelectedMonth && "bg-white",
-                isSelected && "bg-primary-50 ring-1 ring-inset ring-primary-500 z-10",
+                isSelected && "bg-primary-50 ring-1 ring-inset ring-primary-500",
                 index % 7 === 6 && "border-r-0"
               )}
             >

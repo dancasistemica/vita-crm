@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Z_INDEX } from '@/constants/zIndex';
 
 const SidebarContext = createContext<any>(null);
 
@@ -47,12 +48,12 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
     <>
       {isMobile && open && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] transition-opacity duration-300" 
+          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[${Z_INDEX.SIDEBAR_OVERLAY}] transition-opacity duration-300`} 
           onClick={() => setOpen(false)}
         />
       )}
       <aside className={`
-        bg-white border-r border-neutral-200 transition-all duration-300 z-[101]
+        bg-white border-r border-neutral-200 transition-all duration-300 z-[${Z_INDEX.SIDEBAR}]
         ${isMobile ? 'fixed inset-y-0 left-0 shadow-2xl' : 'relative'}
         ${open ? 'translate-x-0 w-64' : (isMobile ? '-translate-x-full w-64' : 'w-20')}
         ${!open && isMobile ? 'invisible pointer-events-none' : 'visible'}
