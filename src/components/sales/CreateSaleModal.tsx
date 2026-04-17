@@ -59,7 +59,7 @@ const INITIAL_FORM_DATA: SaleFormData = {
   final_amount: 0,
 };
 
-export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }: CreateSaleModalProps) => {
+export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, organizationId }: CreateSaleModalProps) => {
   const { organization } = useOrganization();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
