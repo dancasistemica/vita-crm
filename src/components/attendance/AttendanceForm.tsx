@@ -39,10 +39,9 @@ export const AttendanceForm = ({
   const [productId, setProductId] = useState(initialData?.product_id || '');
   const [classDate, setClassDate] = useState(initialData?.class_date || new Date().toISOString().split('T')[0]);
   const [classDescription, setClassDescription] = useState(initialData?.class_description || '');
-  const [clients, setClients] = useState<Array<{ id: string; name: string; email: string }>>([]);
-  const [attendances, setAttendances] = useState<
-    Array<{ client_id: string; attendance_type: 'presente' | 'ausente' | 'gravada' }>
-  >(initialData?.attendances || []);
+  const [clients, setClients] = useState<any[]>([]);
+  const [attendances, setAttendances] = useState<any[]>(initialData?.attendances || []);
+
   const [loadingClients, setLoadingClients] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
