@@ -250,8 +250,12 @@ export function VendasPage() {
       {/* Modais */}
       <CreateSaleModal 
         isOpen={showCreateModal} 
-        onClose={() => setShowCreateModal(false)} 
+        onClose={() => {
+          console.log('[VendasPage] ❌ Fechando modal de venda');
+          setShowCreateModal(false);
+        }} 
         onSuccess={loadVendas}
+        organizationId={organizationId}
       />
       
       {showEditModal && selectedSale && (
