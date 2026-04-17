@@ -111,10 +111,10 @@ export default function InstallmentsPage() {
 
   const filteredInstallments = installments.filter(item => {
     const matchesSearch = 
-      item.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.product_name.toLowerCase().includes(searchTerm.toLowerCase());
+      item.client_name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      item.product_name.toLowerCase().includes(filters.searchTerm.toLowerCase());
     
-    const matchesStatus = statusFilter === 'todos' || item.status === statusFilter;
+    const matchesStatus = filters.status === 'todos' || item.status === filters.status;
     
     return matchesSearch && matchesStatus;
   });
