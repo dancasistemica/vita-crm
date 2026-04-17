@@ -32,6 +32,8 @@ export const getInstallments = async (
   try {
     // BUSCA 1: Todas as parcelas sem filtro
     console.log('[installmentService] 🔍 PASSO 1: Buscando TODAS as parcelas (sem filtro)...');
+    
+    // Usamos lead_id em vez de client_id pois é o nome real da coluna na tabela sales
     const { data: allInstallments, error: allError } = await supabase
       .from('sale_installments')
       .select(`
@@ -45,13 +47,13 @@ export const getInstallments = async (
         payment_method,
         sales(
           id,
-          client_id,
+          lead_id,
           product_id,
-          leads(id, name, email),
-          products(id, name)
+          leads:lead_id(id, name, email),
+          products:product_id(id, name)
         )
       `)
-      .eq('sales.organization_id', organizationId);
+      .eq('organization_id', organizationId);
 
     if (allError) {
       console.error('[installmentService] ❌ ERRO ao buscar todas as parcelas:', allError);
@@ -82,7 +84,7 @@ export const getInstallments = async (
 
     if (filters?.clientId) {
       console.log('[installmentService] 🔍 PASSO 3: Filtrando por cliente:', filters.clientId);
-      filteredInstallments = filteredInstallments.filter(inst => (inst.sales as any)?.client_id === filters.clientId);
+      filteredInstallments = filteredInstallments.filter(inst => (inst.sales as any)?.lead_id === filters.clientId);
       console.log('[installmentService] ✅ Parcelas após filtro de cliente:', filteredInstallments.length);
       console.log('');
     }
@@ -184,8 +186,8 @@ export const getInstallmentStats = async (organizationId: string) => {
   try {
     const { data: allInstallments, error } = await supabase
       .from('sale_installments')
-      .select('amount, status, sales!inner(organization_id)')
-      .eq('sales.organization_id', organizationId);
+      .select('amount, status')
+      .eq('organization_id', organizationId);
 
     if (error) {
       console.error('[installmentService] ❌ ERRO ao buscar stats:', error);
