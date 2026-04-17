@@ -97,8 +97,8 @@ export const ClassCalendarNewClass = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[9999] p-4 backdrop-blur-sm">
-      <Card variant="elevated" padding="lg" className="max-w-md w-full space-y-6 relative z-[10000]">
+    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <Card variant="elevated" padding="lg" className="max-w-md w-full space-y-6 relative z-50">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-neutral-900">Nova Aula</h2>
           <Button
