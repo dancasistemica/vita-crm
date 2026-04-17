@@ -45,6 +45,7 @@ const AlertsPage = lazy(() => import("@/pages/AlertsPage"));
 const IntegrationsPage = lazy(() => import("@/pages/IntegrationsPage"));
 const DashboardFinanceiroPage = lazy(() => import("@/pages/DashboardFinanceiroPage"));
 const DatabaseSchemaPage = lazy(() => import("@/pages/DatabaseSchemaPage"));
+const InstallmentsPage = lazy(() => import("@/pages/InstallmentsPage"));
 
 
 const queryClient = new QueryClient();
