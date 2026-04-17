@@ -90,8 +90,31 @@ export const createSubscription = async (
     }
 
     console.log('[SubscriptionService] ✅ Primeira parcela criada');
+    
+    // PASSO 3: Registrar relacionamento com produto em client_products
+    console.log('[SubscriptionService] 📍 PASSO 3: Registrando relacionamento com produto...');
+    try {
+      const { error: cpError } = await supabase
+        .from('client_products')
+        .upsert({
+          organization_id: organizationId,
+          client_id: data.client_id,
+          product_id: data.product_id,
+          payment_status: 'ATIVO',
+          start_date: data.start_date || new Date().toISOString().split('T')[0],
+          plan_type: 'MENSALIDADE'
+        }, { onConflict: 'client_id,product_id' });
+      
+      if (cpError) {
+        console.error('[SubscriptionService] ❌ Erro no upsert de client_products:', cpError);
+      } else {
+        console.log('[SubscriptionService] ✅ Relacionamento client_product registrado');
+      }
+    } catch (cpErr) {
+      console.warn('[SubscriptionService] ⚠️ Erro inesperado ao registrar client_product:', cpErr);
+    }
 
-    // ✨ NOVO: Converter lead em cliente
+    // PASSO 4: Converter lead em cliente
     console.log('[SubscriptionService] 📍 PASSO 3: Convertendo lead em cliente...');
     await convertLeadToClient(data.client_id, organizationId);
     console.log('[SubscriptionService] ✅ Lead convertido');
