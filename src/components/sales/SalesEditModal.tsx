@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button } from "@/components/ui/ds";
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { SalesForm } from './SalesForm';
 import { updateSale } from '@/services/saleService';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface SalesEditModalProps {
