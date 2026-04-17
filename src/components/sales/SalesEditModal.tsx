@@ -20,8 +20,45 @@ export const SalesEditModal = ({
   onSuccess 
 }: SalesEditModalProps) => {
   const [loading, setLoading] = useState(false);
+  const [fetchingDetails, setFetchingDetails] = useState(false);
+  const [fullSaleData, setFullSaleData] = useState<any>(sale);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen && sale?.id && sale?.sale_type === 'unica') {
+      fetchInstallmentDetails();
+    } else if (isOpen && sale) {
+      setFullSaleData({
+        ...sale,
+        first_payment_date: sale.start_date || sale.created_at?.split('T')[0]
+      });
+    }
+  }, [isOpen, sale?.id]);
+
+  const fetchInstallmentDetails = async () => {
+    try {
+      setFetchingDetails(true);
+      console.log('[SalesEditModal] Buscando detalhes da primeira parcela para:', sale.id);
+      
+      const { data, error } = await supabase
+        .from('sale_installments')
+        .select('due_date')
+        .eq('sale_id', sale.id)
+        .eq('installment_number', 1)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      setFullSaleData({
+        ...sale,
+        first_payment_date: data?.due_date || sale.sale_date || sale.created_at?.split('T')[0]
+      });
+    } catch (err) {
+      console.error('[SalesEditModal] Erro ao buscar parcela:', err);
+      setFullSaleData(sale);
+    } finally {
+      setFetchingDetails(false);
+    }
+  };
 
   const handleSubmit = async (formData: any) => {
     try {
