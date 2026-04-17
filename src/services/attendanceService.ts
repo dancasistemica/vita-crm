@@ -25,10 +25,11 @@ export interface AttendanceFormData {
 // Buscar clientes de um produto
 export const fetchClientsByProduct = async (
   organizationId: string,
-  productId: string
+  productId: string,
+  classDate?: string // Adicionado parâmetro opcional classDate
 ) => {
   try {
-    console.log('[attendanceService] Buscando clientes do produto:', productId);
+    console.log('[attendanceService] Buscando clientes do produto:', productId, 'para a data:', classDate);
 
     // PASSO 1: Buscar clientes com acesso ao produto
     const { data, error } = await supabase
@@ -49,20 +50,25 @@ export const fetchClientsByProduct = async (
     if (error) throw error;
 
     // PASSO 2: Filtrar apenas clientes com acesso ativo
-    const today = new Date().toISOString().split('T')[0];
+    // Se não informar classDate, usa o dia de hoje
+    const referenceDate = classDate || new Date().toISOString().split('T')[0];
+    
     const activeClients = (data || []).filter((cp: any) => {
       const startDate = cp.start_date;
       const endDate = cp.end_date;
 
-      // Cliente ativo se: data >= start_date E (sem end_date OU data <= end_date)
-      const isActive = startDate <= today && (!endDate || endDate >= today);
+      // Cliente ativo se: (sem start_date OU data >= start_date) E (sem end_date OU data <= end_date)
+      // Corrigido para tratar start_date nulo como ativo
+      const isStarted = !startDate || startDate <= referenceDate;
+      const isNotEnded = !endDate || endDate >= referenceDate;
+      const isActive = isStarted && isNotEnded;
 
       if (!isActive) {
-        console.log('[attendanceService] ⚠️ Cliente inativo:', {
+        console.log('[attendanceService] ⚠️ Cliente inativo para a data:', {
           name: cp.clients?.name,
           startDate,
           endDate,
-          today,
+          referenceDate,
         });
       }
 
