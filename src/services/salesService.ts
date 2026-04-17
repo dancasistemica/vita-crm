@@ -124,6 +124,7 @@ export const saveVenda = async (
       organization_id: organizationId,
       lead_id: leadId,
       product_id: vendaData.product_id || null,
+      value: vendaData.amount || 0,
       sale_date: vendaData.sale_date || new Date().toISOString().split('T')[0],
       status: vendaData.status || 'pending',
       client_email: vendaData.client_email || '',
