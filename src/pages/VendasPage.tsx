@@ -140,7 +140,11 @@ export function VendasPage() {
           <Button 
             variant="primary" 
             icon={<Plus className="w-5 h-5" />}
-            onClick={() => setShowCreateModal(true)}
+            onClick={() => {
+              console.log('[VendasPage] 📋 Abrindo modal de nova venda');
+              console.log('[VendasPage] organizationId:', organizationId);
+              setShowCreateModal(true);
+            }}
             className="w-full sm:w-auto"
             disabled={organization?.id === 'consolidado'}
             title={organization?.id === 'consolidado' ? "Selecione uma organização específica para criar vendas" : ""}
