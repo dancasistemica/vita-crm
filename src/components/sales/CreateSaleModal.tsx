@@ -295,7 +295,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
       return;
     }
 
-    const organizationId = organizationId || organization?.id;
+    // organizationId is already available as a prop
     if (!organizationId) {
       setError('Organização não identificada.');
       return;

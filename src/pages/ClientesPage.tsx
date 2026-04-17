@@ -14,8 +14,8 @@ import RecordCounter from "@/components/common/RecordCounter";
 
 export default function ClientesPage() {
   const hook = useClientsFilter();
-  const { organization } = useOrganization();
-  
+  const { organization, organizationId } = useOrganization();
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   
   const [saleLeadId, setSaleLeadId] = useState<string | undefined>();
