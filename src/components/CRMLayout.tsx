@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { SidebarProvider } from "@/components/ui/ds";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Header } from "@/components/layout/Header";
 
@@ -31,7 +30,7 @@ export default function CRMLayout() {
   };
 
   return (
-    <SidebarProvider>
+    <>
       <AppSidebar />
       <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden min-w-0">
         <Header />
@@ -39,6 +38,6 @@ export default function CRMLayout() {
           <Outlet />
         </main>
       </div>
-    </SidebarProvider>
+    </>
   );
 }
