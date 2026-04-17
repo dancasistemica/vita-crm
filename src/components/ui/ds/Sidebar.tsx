@@ -65,7 +65,8 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const SidebarContent = ({ children }: { children: React.ReactNode }) => <div className="p-4 h-full overflow-y-auto bg-white">{children}</div>;
+export const SidebarHeader = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => <div className={`p-4 border-b border-neutral-100 bg-white sticky top-0 z-10 ${className}`}>{children}</div>;
+export const SidebarContent = ({ children }: { children: React.ReactNode }) => <div className="p-4 flex-1 overflow-y-auto bg-white">{children}</div>;
 export const SidebarGroup = ({ children }: { children: React.ReactNode }) => <div className="mb-6">{children}</div>;
 export const SidebarGroupLabel = ({ children }: { children: React.ReactNode }) => <div className="px-2 mb-2 text-xs font-semibold text-neutral-400 uppercase tracking-wider">{children}</div>;
 export const SidebarGroupContent = ({ children }: { children: React.ReactNode }) => <div className="space-y-1">{children}</div>;
