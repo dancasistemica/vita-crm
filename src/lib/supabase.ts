@@ -5,9 +5,12 @@ import type { Database } from '@/integrations/supabase/types';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+console.log('[supabase] 🔍 Verificando configuração');
+console.log('[supabase] URL:', supabaseUrl ? '✅ Definida' : '❌ Não definida');
+console.log('[supabase] Key:', supabaseAnonKey ? '✅ Definida' : '❌ Não definida');
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ ERRO: Variáveis de ambiente Supabase não configuradas!');
-  console.error('Adicione VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY em .env.local');
+  console.error('[supabase] ❌ ERRO: Variáveis de ambiente não configuradas!');
 }
 
 // Criar cliente Supabase com configurações de segurança
