@@ -14,6 +14,7 @@ interface CreateSaleModalProps {
   onClose: () => void;
   onSuccess?: () => void;
   initialClientId?: string; // Permitir abrir já com um cliente selecionado
+  organizationId?: string;
 }
 
 interface ProductSalesStage {
