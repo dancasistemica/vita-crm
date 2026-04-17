@@ -109,6 +109,7 @@ const App = () => {
                     <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                     <Route path="/pipeline" element={<PipelinePage />} />
                     <Route path="/vendas" element={<VendasPage />} />
+                    <Route path="/parcelas" element={<InstallmentsPage />} />
 
                     <Route path="/clientes" element={<ClientesPage />} />
                     <Route path="/clientes/por-produto" element={<ClientesPorProdutoPage />} />
