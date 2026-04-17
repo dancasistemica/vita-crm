@@ -46,6 +46,13 @@ const baseItems = [
   { title: "Leads", url: "/leads", icon: Users },
   { title: "Funil de Vendas", url: "/pipeline", icon: Columns3 },
   { title: "Vendas", url: "/vendas", icon: ShoppingCart },
+  { 
+    title: "Parcelas", 
+    url: "/parcelas", 
+    icon: ({ className }: { className?: string }) => (
+      <span className={cn("flex items-center justify-center mr-1", className)} style={{ fontSize: '1rem' }}>📅</span>
+    )
+  },
   { title: "Clientes", url: "/clientes", icon: UserCheck },
   { title: "Clientes por Produto", url: "/clientes/por-produto", icon: Package },
   { title: "Alertas de Churn", url: "/alertas", icon: Bell },
