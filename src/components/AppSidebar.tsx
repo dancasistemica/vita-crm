@@ -114,45 +114,46 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarContent>
-        {/* Organization Switcher (SuperAdmin only) */}
-        {!collapsed && <OrganizationSwitcher />}
-
-        {/* User & Organization Info */}
-        <div className={cn("pt-2 pb-1 px-4", collapsed && "px-2 flex justify-center")}>
-          <div className={cn("flex items-center gap-3", collapsed && "flex-col")}>
-            <Avatar className="h-9 w-9 shrink-0">
-              {avatarUrl ? (
-                <AvatarImage src={avatarUrl} alt={profileName || "Usuário"} />
-              ) : (
-                <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
-                  {initials}
-                </AvatarFallback>
-              )}
-            </Avatar>
-            
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                {profileName ? (
-                  <p className="text-sm font-semibold text-neutral-900 truncate">
-                    {profileName}
-                  </p>
-                ) : (
-                  <Skeleton className="h-4 w-24" />
-                )}
-                {/* Always show current organization name if available */}
-                {organization?.name ? (
-                  <p className="text-[10px] text-neutral-500 truncate mt-0.5">
-                    {organization.name}
-                  </p>
-                ) : orgLoading ? (
-                  <Skeleton className="h-3 w-32 mt-1" />
-                ) : null}
-              </div>
+      <SidebarHeader className={cn(collapsed && "px-2 flex justify-center items-center")}>
+        {/* User Info */}
+        <div className={cn("flex items-center gap-3", collapsed && "flex-col")}>
+          <Avatar className="h-9 w-9 shrink-0 border border-neutral-200">
+            {avatarUrl ? (
+              <AvatarImage src={avatarUrl} alt={profileName || "Usuário"} />
+            ) : (
+              <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
+                {initials}
+              </AvatarFallback>
             )}
-          </div>
-          {!collapsed && <Separator className="mt-4 mb-2" />}
+          </Avatar>
+          
+          {!collapsed && (
+            <div className="min-w-0 flex-1">
+              {profileName ? (
+                <p className="text-sm font-bold text-neutral-900 truncate leading-tight">
+                  {profileName}
+                </p>
+              ) : (
+                <Skeleton className="h-4 w-24" />
+              )}
+              {organization?.name && (
+                <p className="text-[10px] text-neutral-500 truncate mt-0.5">
+                  {organization.name}
+                </p>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Organization Switcher (SuperAdmin only) */}
+        {!collapsed && isSuperadmin && (
+          <div className="mt-3">
+            <OrganizationSwitcher />
+          </div>
+        )}
+      </SidebarHeader>
+
+      <SidebarContent>
 
         {/* Navigation */}
         <SidebarGroup>
