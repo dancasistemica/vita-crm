@@ -38,6 +38,7 @@ interface CreateSaleInput {
   value: number;
   status: string;
   installments: number;
+  sale_date: string;
   first_payment_date: string;
   auto_payment_enabled: boolean;
   notes?: string;
@@ -273,7 +274,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       final_amount: Number(saleData.final_amount) || Number(saleData.value) || 0,
       discount_granted_by: saleData.discount_granted_by,
       discount_granted_at: saleData.discount_granted_at,
-      sale_date: saleData.first_payment_date || new Date().toISOString().split('T')[0],
+      sale_date: saleData.sale_date || saleData.first_payment_date || new Date().toISOString().split('T')[0],
     };
 
     console.log('[SalesService] Dados para INSERT:', JSON.stringify(insertData, null, 2));
@@ -361,7 +362,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
               client_id: saleData.client_id,
               product_id: stage.product_id,
               payment_status: 'ATIVO',
-              start_date: saleData.first_payment_date || new Date().toISOString().split('T')[0],
+              start_date: saleData.sale_date || saleData.first_payment_date || new Date().toISOString().split('T')[0],
               plan_type: 'AVULSO'
             }, { onConflict: 'client_id,product_id' });
           
