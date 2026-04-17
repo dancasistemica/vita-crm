@@ -189,23 +189,23 @@ export default function ClientDetailPage() {
 
         // Atualizar estados compatíveis com o componente existente
         if (uniqueSales) {
-          const mappedSales = uniqueSales.map(s => ({
+          const mappedSales: SaleView[] = uniqueSales.map(s => ({
             id: s.id, leadId: id || '', productId: s.product_id || '',
             value: Number(s.value) || 0, date: s.sale_date || '',
             paymentMethod: s.payment_method || '', status: s.status || 'ativo',
-            sale_type: 'unica' as const,
+            sale_type: 'unica',
             created_at: s.created_at,
             updated_at: s.created_at,
           }));
           
-          let allSales = [...mappedSales];
+          let allSales: SaleView[] = [...mappedSales];
           
           if (subscriptionsData) {
-            const mappedSubs = subscriptionsData.map(s => ({
+            const mappedSubs: SaleView[] = subscriptionsData.map(s => ({
               id: s.id, leadId: id || '', productId: s.product_id || '',
               value: Number(s.monthly_value) || 0, date: s.start_date || '',
               paymentMethod: 'Mensalidade', status: s.status || 'ativa',
-              sale_type: 'mensalidade' as const,
+              sale_type: 'mensalidade',
               created_at: s.created_at || '',
               updated_at: s.created_at || '',
             }));
