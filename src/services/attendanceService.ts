@@ -22,73 +22,95 @@ export interface AttendanceFormData {
   }>;
 }
 
-// Buscar clientes de um produto
+// Buscar clientes de um produto (Lógica robusta: Vendas + Mensalidades)
 export const fetchClientsByProduct = async (
   organizationId: string,
   productId: string,
-  classDate?: string // Adicionado parâmetro opcional classDate
+  classDate?: string
 ) => {
   try {
-    console.log('[attendanceService] Buscando clientes do produto:', productId, 'para a data:', classDate);
-
-    // PASSO 1: Buscar clientes com acesso ao produto
-    const { data, error } = await supabase
-      .from('client_products')
-      .select(`
-        client_id,
-        start_date,
-        end_date,
-        clients(
-          id,
-          name,
-          email
-        )
-      `)
-      .eq('product_id', productId)
-      .eq('organization_id', organizationId);
-
-    if (error) throw error;
-
-    // PASSO 2: Filtrar apenas clientes com acesso ativo
-    // Se não informar classDate, usa o dia de hoje
-    const referenceDate = classDate || new Date().toISOString().split('T')[0];
+    console.log('[AttendanceRegisterPage] 📋 Carregando alunos para o produto:', productId);
     
-    const activeClients = (data || []).filter((cp: any) => {
-      const startDate = cp.start_date;
-      const endDate = cp.end_date;
+    // BUSCA 1: Vendas únicas para o produto
+    console.log('[AttendanceRegisterPage] 🔍 PASSO 1: Buscando vendas únicas...');
+    const { data: uniqueSales, error: salesError } = await supabase
+      .from('sales')
+      .select(`
+        id,
+        lead_id,
+        product_id,
+        status,
+        clients:lead_id(id, name, email, phone)
+      `)
+      .eq('organization_id', organizationId)
+      .eq('product_id', productId)
+      .in('status', ['ativo', 'pago', 'finalizado']);
 
-      // Cliente ativo se: (sem start_date OU data >= start_date) E (sem end_date OU data <= end_date)
-      // Corrigido para tratar start_date nulo como ativo
-      const isStarted = !startDate || startDate <= referenceDate;
-      const isNotEnded = !endDate || endDate >= referenceDate;
-      const isActive = isStarted && isNotEnded;
+    if (salesError) {
+      console.error('[AttendanceRegisterPage] ❌ Erro ao buscar sales:', salesError);
+    } else {
+      console.log('[AttendanceRegisterPage] ✅ Vendas únicas encontradas:', uniqueSales?.length || 0);
+    }
 
-      if (!isActive) {
-        console.log('[attendanceService] ⚠️ Cliente inativo para a data:', {
-          name: cp.clients?.name,
-          startDate,
-          endDate,
-          referenceDate,
-        });
-      }
+    // BUSCA 2: Mensalidades para o produto
+    console.log('[AttendanceRegisterPage] 🔍 PASSO 2: Buscando mensalidades...');
+    const { data: subscriptions, error: subsError } = await supabase
+      .from('subscriptions')
+      .select(`
+        id,
+        client_id,
+        product_id,
+        status,
+        clients:client_id(id, name, email, phone)
+      `)
+      .eq('organization_id', organizationId)
+      .eq('product_id', productId)
+      .in('status', ['ativo', 'ativa', 'pago', 'regular']);
 
-      return isActive;
-    });
+    if (subsError) {
+      console.error('[AttendanceRegisterPage] ❌ Erro ao buscar subscriptions:', subsError);
+    } else {
+      console.log('[AttendanceRegisterPage] ✅ Mensalidades encontradas:', subscriptions?.length || 0);
+    }
 
-    const clients = activeClients.map((cp: any) => ({
-      id: cp.client_id,
-      name: cp.clients?.name || 'Cliente desconhecido',
-      email: cp.clients?.email || '',
-    }));
 
-    console.log('[attendanceService] ✅ Clientes ativos encontrados:', clients.length);
-    return clients;
+    // COMBINAR: Vendas + Mensalidades
+    const allStudents = [
+      ...(uniqueSales || []).map(sale => ({
+        id: (sale.clients as any)?.id || sale.lead_id,
+        name: (sale.clients as any)?.name || 'Cliente desconhecido',
+        email: (sale.clients as any)?.email || '',
+        phone: (sale.clients as any)?.phone || '',
+        type: 'venda_unica',
+        sale_id: sale.id,
+      })),
+      ...(subscriptions || []).map(sub => ({
+        id: (sub.clients as any)?.id || sub.client_id,
+        name: (sub.clients as any)?.name || 'Cliente desconhecido',
+        email: (sub.clients as any)?.email || '',
+        phone: (sub.clients as any)?.phone || '',
+        type: 'mensalidade',
+        subscription_id: sub.id,
+      })),
+    ];
+
+    // REMOVER DUPLICATAS
+    const uniqueStudents = Array.from(
+      new Map(allStudents.map(student => [student.id, student])).values()
+    );
+
+    console.log('[attendanceService] ✅ Total de alunos únicos encontrados:', uniqueStudents.length);
+    return uniqueStudents;
 
   } catch (error) {
-    console.error('[attendanceService] ❌ Erro ao buscar clientes:', error);
+    console.error('[attendanceService] ❌ Erro crítico ao buscar clientes:', error);
     throw error;
   }
 };
+
+
+export const getStudentsForClass = fetchClientsByProduct;
+
 
 export const fetchAttendanceWithPreviousData = async (
   organizationId: string,

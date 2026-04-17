@@ -39,10 +39,9 @@ export const AttendanceForm = ({
   const [productId, setProductId] = useState(initialData?.product_id || '');
   const [classDate, setClassDate] = useState(initialData?.class_date || new Date().toISOString().split('T')[0]);
   const [classDescription, setClassDescription] = useState(initialData?.class_description || '');
-  const [clients, setClients] = useState<Array<{ id: string; name: string; email: string }>>([]);
-  const [attendances, setAttendances] = useState<
-    Array<{ client_id: string; attendance_type: 'presente' | 'ausente' | 'gravada' }>
-  >(initialData?.attendances || []);
+  const [clients, setClients] = useState<any[]>([]);
+  const [attendances, setAttendances] = useState<any[]>(initialData?.attendances || []);
+
   const [loadingClients, setLoadingClients] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -60,23 +59,40 @@ export const AttendanceForm = ({
     try {
       setLoadingClients(true);
       setErrors([]);
-      console.log('[AttendanceForm] Carregando clientes e presença anterior');
+      
+      console.log('');
+      console.log('[AttendanceRegisterPage] 📋 Carregando alunos para aula');
+      console.log('[AttendanceRegisterPage] Product ID:', productId);
+      console.log('[AttendanceRegisterPage] Organization ID:', organizationId);
+      console.log('[AttendanceRegisterPage] Data da aula:', classDate);
+      console.log('');
 
-      // PASSO 1: Carregar clientes (filtrados por acesso ativo na data da aula)
-      const clientsData = await fetchClientsByProduct(organizationId, productId, classDate);
-      setClients(clientsData);
+      // PASSO 1: Carregar clientes (Vendas + Mensalidades via service)
+      const uniqueStudents = await fetchClientsByProduct(organizationId, productId, classDate);
+      
+      console.log('[AttendanceRegisterPage] 🔀 PASSO 3: Combinando vendas e mensalidades...');
+      console.log('[AttendanceRegisterPage] ✅ Total de alunos únicos:', uniqueStudents.length);
+      console.log('[AttendanceRegisterPage] Lista de alunos:');
+      uniqueStudents.forEach((student, idx) => {
+        console.log(`  ${idx + 1}. ${student.name} (${student.type})`);
+      });
+      console.log('');
 
       // PASSO 2: Carregar presença anterior
+      console.log('[AttendanceRegisterPage] 🔍 PASSO 4: Buscando registros de presença existentes...');
       const previousAttendanceMap = await fetchAttendanceWithPreviousData(
         organizationId,
         productId,
         classDate
       );
 
-      // PASSO 3: Se tem presença anterior, garantir que esses clientes apareçam na lista
-      // mesmo que não estejam mais ativos no produto
-      const allClients = [...clientsData];
-      const previousAttendances: Array<{ client_id: string; attendance_type: 'presente' | 'ausente' | 'gravada' }> = [];
+      console.log('[AttendanceRegisterPage] ✅ Registros de presença encontrados:', previousAttendanceMap.size);
+      console.log('');
+
+
+      // PASSO 3: Mesclar
+      const allClients = [...uniqueStudents];
+      const finalAttendances: Array<{ client_id: string; attendance_type: 'presente' | 'ausente' | 'gravada' }> = [];
 
       // Adicionar clientes que têm presença gravada mas não estão na lista de ativos
       previousAttendanceMap.forEach((att: any, clientId: string) => {
@@ -86,33 +102,41 @@ export const AttendanceForm = ({
             id: clientId,
             name: att.client_data?.name || 'Cliente não encontrado',
             email: att.client_data?.email || '',
-          });
+            phone: att.client_data?.phone || '',
+            type: 'presenca_anterior'
+          } as any);
         }
       });
 
       // Mapear presenças
       allClients.forEach(client => {
         const previous = previousAttendanceMap.get(client.id);
-        previousAttendances.push({
+        finalAttendances.push({
           client_id: client.id,
           attendance_type: (previous?.attendance_type || 'ausente') as 'presente' | 'ausente' | 'gravada',
         });
       });
 
+      console.log('[AttendanceRegisterPage] ✅ Alunos com status de presença:', allClients.length);
+      console.log('[AttendanceRegisterPage] Dados finais:', JSON.stringify(allClients, null, 2));
+
+      console.log('');
+
       setClients(allClients);
-      setAttendances(previousAttendances);
+      setAttendances(finalAttendances);
 
       // PASSO 4: Carregar descrição da aula
       const session = await fetchClassSession(organizationId, productId, classDate);
       setClassDescription(session?.description || '');
 
     } catch (error) {
-      console.error('[AttendanceForm] Erro ao carregar dados:', error);
+      console.error('[AttendanceForm] ❌ ERRO crítico:', error);
       setErrors(['Erro ao carregar clientes ou presença anterior.']);
     } finally {
       setLoadingClients(false);
     }
   };
+
 
   const handleAttendanceChange = (clientId: string, type: 'presente' | 'ausente' | 'gravada') => {
     setAttendances(prev => 
