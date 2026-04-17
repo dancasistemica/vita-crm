@@ -13,8 +13,8 @@ interface CreateSaleModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  initialClientId?: string; // Permitir abrir já com um cliente selecionado
-  organizationId?: string;
+  initialClientId?: string;
+  organizationId: string; // CRÍTICO: Receber como prop obrigatória
 }
 
 interface ProductSalesStage {
