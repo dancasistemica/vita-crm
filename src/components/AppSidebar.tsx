@@ -64,7 +64,7 @@ export function AppSidebar() {
   const collapsed = !open;
   const { user, signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
-  const { organization } = useOrganization();
+  const { organization, loading: orgLoading } = useOrganization();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -140,11 +140,13 @@ export function AppSidebar() {
                   <Skeleton className="h-4 w-24" />
                 )}
                 {/* Always show current organization name if available */}
-                {organization?.name && (
+                {organization?.name ? (
                   <p className="text-[10px] text-neutral-500 truncate mt-0.5">
                     {organization.name}
                   </p>
-                )}
+                ) : orgLoading ? (
+                  <Skeleton className="h-3 w-32 mt-1" />
+                ) : null}
               </div>
             )}
           </div>
