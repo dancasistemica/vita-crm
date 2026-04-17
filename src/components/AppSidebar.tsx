@@ -116,18 +116,19 @@ export function AppSidebar() {
         {!collapsed && <OrganizationSwitcher />}
 
         {/* User & Organization Info */}
-        {!collapsed && (
-          <div className="pt-2 pb-1 px-4">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 shrink-0">
-                {avatarUrl ? (
-                  <AvatarImage src={avatarUrl} alt={profileName || "Usuário"} />
-                ) : (
-                  <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
-                    {initials}
-                  </AvatarFallback>
-                )}
-              </Avatar>
+        <div className={cn("pt-2 pb-1 px-4", collapsed && "px-2 flex justify-center")}>
+          <div className={cn("flex items-center gap-3", collapsed && "flex-col")}>
+            <Avatar className="h-9 w-9 shrink-0">
+              {avatarUrl ? (
+                <AvatarImage src={avatarUrl} alt={profileName || "Usuário"} />
+              ) : (
+                <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-medium">
+                  {initials}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            
+            {!collapsed && (
               <div className="min-w-0 flex-1">
                 {profileName ? (
                   <p className="text-sm font-semibold text-neutral-900 truncate">
@@ -136,11 +137,17 @@ export function AppSidebar() {
                 ) : (
                   <Skeleton className="h-4 w-24" />
                 )}
+                {/* Always show current organization name if available */}
+                {organization?.name && (
+                  <p className="text-[10px] text-neutral-500 truncate mt-0.5">
+                    {organization.name}
+                  </p>
+                )}
               </div>
-            </div>
-            <Separator className="mt-4 mb-2" />
+            )}
           </div>
-        )}
+          {!collapsed && <Separator className="mt-4 mb-2" />}
+        </div>
 
         {/* Navigation */}
         <SidebarGroup>
