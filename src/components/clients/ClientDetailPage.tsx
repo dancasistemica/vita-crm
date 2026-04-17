@@ -74,23 +74,39 @@ export default function ClientDetailPage() {
   const fetchData = useCallback(async () => {
     if (!dataAccess || !id) return;
     try {
-      const [salesRes, intRes, prodRes, tasksRes] = await Promise.allSettled([
+      const [salesRes, intRes, prodRes, tasksRes, subRes] = await Promise.allSettled([
         dataAccess.getSales(),
         dataAccess.getInteractions(),
         dataAccess.getProducts(),
         dataAccess.getTasks(),
+        (dataAccess as any).getSubscriptions(),
       ]);
 
+      let allSales: SaleView[] = [];
+
       if (salesRes.status === 'fulfilled') {
-        setSales((salesRes.value as any[]).filter(s => s.lead_id === id).map(s => ({
+        allSales = [...allSales, ...(salesRes.value as any[]).filter(s => s.lead_id === id).map(s => ({
           id: s.id, leadId: s.lead_id, productId: s.product_id || '',
           value: Number(s.value) || 0, date: s.sale_date || '',
           paymentMethod: s.payment_method || '', status: s.status || 'ativo',
-          sale_type: s.sale_type || 'unica',
+          sale_type: 'unica',
           created_at: s.created_at,
           updated_at: s.updated_at,
-        })));
+        }))];
       }
+
+      if (subRes.status === 'fulfilled') {
+        allSales = [...allSales, ...(subRes.value as any[]).filter(s => s.client_id === id).map(s => ({
+          id: s.id, leadId: s.client_id, productId: s.product_id || '',
+          value: Number(s.monthly_value) || 0, date: s.start_date || '',
+          paymentMethod: 'Mensalidade', status: s.status || 'ativa',
+          sale_type: 'mensalidade',
+          created_at: s.created_at,
+          updated_at: s.updated_at,
+        }))];
+      }
+
+      setSales(allSales.sort((a, b) => b.date.localeCompare(a.date)));
       if (intRes.status === 'fulfilled') {
         setInteractions((intRes.value as any[]).filter(i => i.lead_id === id)
           .map(i => ({ id: i.id, leadId: i.lead_id, date: i.interaction_date || '', type: i.type, note: i.note || '' }))
