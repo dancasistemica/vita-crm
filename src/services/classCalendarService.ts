@@ -130,7 +130,7 @@ export const fetchClassDetail = async (
 
     if (sessionError && sessionError.code !== 'PGRST116') throw sessionError;
 
-    // PASSO 2: Buscar presença
+    // PASSO 2: Buscar presenças registradas
     const { data: attendances, error: attError } = await supabase
       .from('class_attendance')
       .select(`
@@ -145,20 +145,69 @@ export const fetchClassDetail = async (
       `)
       .eq('organization_id', organizationId)
       .eq('product_id', productId)
-      .eq('class_date', classDate)
-      .order('name', { foreignTable: 'clients', ascending: true });
+      .eq('class_date', classDate);
 
     if (attError) throw attError;
 
-    return {
-      session,
-      attendances: (attendances || []).map((att: any) => ({
+    // PASSO 3: Buscar todos os alunos ativos para este produto na data da aula
+    // Isso garante que novas vendas apareçam na lista mesmo sem presença registrada
+    const { data: enrolledClients, error: enrolledError } = await supabase
+      .from('client_products')
+      .select(`
+        client_id,
+        start_date,
+        end_date,
+        clients(
+          id,
+          name,
+          email
+        )
+      `)
+      .eq('organization_id', organizationId)
+      .eq('product_id', productId);
+
+    if (enrolledError) throw enrolledError;
+
+    // Filtrar apenas ativos na data da aula
+    const activeEnrolled = (enrolledClients || []).filter((cp: any) => {
+      const isStarted = !cp.start_date || cp.start_date <= classDate;
+      const isNotEnded = !cp.end_date || cp.end_date >= classDate;
+      return isStarted && isNotEnded;
+    });
+
+    // PASSO 4: Mesclar as listas
+    const attendanceMap = new Map();
+    (attendances || []).forEach((att: any) => {
+      attendanceMap.set(att.client_id, {
         id: att.id,
         client_id: att.client_id,
         client_name: att.clients?.name || 'Cliente desconhecido',
         client_email: att.clients?.email || '',
         attendance_type: att.attendance_type,
-      })),
+      });
+    });
+
+    // Adicionar alunos matriculados que ainda não têm registro de presença
+    activeEnrolled.forEach((cp: any) => {
+      if (!attendanceMap.has(cp.client_id)) {
+        attendanceMap.set(cp.client_id, {
+          id: `pending-${cp.client_id}`,
+          client_id: cp.client_id,
+          client_name: cp.clients?.name || 'Cliente desconhecido',
+          client_email: cp.clients?.email || '',
+          attendance_type: 'pendente', // Status padrão para quem não foi marcado
+        });
+      }
+    });
+
+    // Converter mapa para array e ordenar por nome
+    const finalAttendances = Array.from(attendanceMap.values()).sort((a, b) => 
+      a.client_name.localeCompare(b.client_name)
+    );
+
+    return {
+      session,
+      attendances: finalAttendances,
     };
 
   } catch (error) {
