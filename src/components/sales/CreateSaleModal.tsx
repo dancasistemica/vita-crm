@@ -564,7 +564,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                         error={validationErrors.find(e => e.field === 'installments')?.message}
                       />
                       <Input
-                        label="Data do 1º Vencimento"
+                        label="Data da Venda / 1º Vencimento"
                         type="date"
                         value={formData.first_payment_date}
                         onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}

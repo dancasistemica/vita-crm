@@ -123,7 +123,7 @@ export const saveVenda = async (
       organization_id: organizationId,
       lead_id: leadId,
       product_id: vendaData.product_id || null,
-      sale_date: new Date().toISOString().split('T')[0],
+      sale_date: vendaData.sale_date || new Date().toISOString().split('T')[0],
       status: vendaData.status || 'pending',
       client_email: vendaData.client_email || '',
       payment_method: vendaData.payment_method || null,
@@ -273,7 +273,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
       final_amount: Number(saleData.final_amount) || Number(saleData.value) || 0,
       discount_granted_by: saleData.discount_granted_by,
       discount_granted_at: saleData.discount_granted_at,
-      sale_date: new Date().toISOString().split('T')[0],
+      sale_date: saleData.first_payment_date || new Date().toISOString().split('T')[0],
     };
 
     console.log('[SalesService] Dados para INSERT:', JSON.stringify(insertData, null, 2));
@@ -361,7 +361,7 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
               client_id: saleData.client_id,
               product_id: stage.product_id,
               payment_status: 'ATIVO',
-              start_date: new Date().toISOString().split('T')[0],
+              start_date: saleData.first_payment_date || new Date().toISOString().split('T')[0],
               plan_type: 'AVULSO'
             }, { onConflict: 'client_id,product_id' });
           
