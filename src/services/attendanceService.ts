@@ -405,10 +405,10 @@ export const fetchWeeklyClasses = async (
           product_name: session.products?.name,
         });
 
-        // Buscar contagem de presença
+        // Buscar registros de presença para contar tipos
         const { data: attendances, error: attError } = await supabase
           .from('class_attendance')
-          .select('id', { count: 'exact' })
+          .select('attendance_type')
           .eq('organization_id', organizationId)
           .eq('product_id', session.product_id)
           .eq('class_date', session.class_date);
@@ -417,8 +417,18 @@ export const fetchWeeklyClasses = async (
           console.error('[fetchWeeklyClasses] ❌ Erro ao buscar presença:', attError);
         }
 
-        const attendanceCount = attendances?.length || 0;
-        console.log(`[fetchWeeklyClasses] Presença para ${session.class_date}:`, attendanceCount);
+        const attendanceList = attendances || [];
+        const presenceCount = attendanceList.filter(a => 
+          a.attendance_type?.toLowerCase() === 'presente' || 
+          a.attendance_type?.toLowerCase() === 'presença'
+        ).length;
+        
+        const absenceCount = attendanceList.filter(a => 
+          a.attendance_type?.toLowerCase() === 'ausente' || 
+          a.attendance_type?.toLowerCase() === 'falta'
+        ).length;
+
+        console.log(`[fetchWeeklyClasses] Estatísticas para ${session.class_date}:`, { presenceCount, absenceCount });
 
         // Extrair data/hora
         const classDateTime = new Date(session.class_date + 'T00:00:00');
@@ -439,8 +449,10 @@ export const fetchWeeklyClasses = async (
           description: description,
           day_of_week: dayName.charAt(0).toUpperCase() + dayName.slice(1),
           day_number: dayNumber,
-          attendance_count: attendanceCount,
-          total_clients: attendanceCount,
+          attendance_count: presenceCount,
+          total_clients: attendanceList.length,
+          presence_count: presenceCount,
+          absence_count: absenceCount,
         };
 
         console.log('[fetchWeeklyClasses] ✅ Sessão processada:', processedClass);
