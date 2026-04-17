@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Input, Alert } from '@/components/ui/ds';
 import { X, Calendar, Clock, BookOpen, Loader } from 'lucide-react';
+import { Z_INDEX } from '@/constants/zIndex';
 
 interface ClassCalendarNewClassProps {
   organizationId: string;
@@ -97,8 +98,8 @@ export const ClassCalendarNewClass = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <Card variant="elevated" padding="lg" className="max-w-md w-full space-y-6 relative z-50">
+    <div className={`fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[${Z_INDEX.MODAL_BACKDROP}] p-4 backdrop-blur-sm`}>
+      <Card variant="elevated" padding="lg" className={`max-w-md w-full space-y-6 relative z-[${Z_INDEX.MODAL}]`}>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-neutral-900">Nova Aula</h2>
           <Button

@@ -4,6 +4,7 @@ import { User, CheckCircle, XCircle, Clock, ExternalLink, Calendar, MapPin, User
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Z_INDEX } from '@/constants/zIndex';
 
 interface ClassCalendarDetailProps {
   classDate: string;
@@ -66,8 +67,8 @@ export const ClassCalendarDetail = ({
   const formattedDate = format(new Date(classDate + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: ptBR });
 
   return (
-    <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <Card variant="elevated" padding="lg" className="max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-50 space-y-6">
+    <div className={`fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[${Z_INDEX.MODAL_BACKDROP}] p-4 backdrop-blur-sm`}>
+      <Card variant="elevated" padding="lg" className={`max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[${Z_INDEX.MODAL}] space-y-6`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-6">
         <div className="flex items-start gap-4">
           <div className="bg-primary-100 p-3 rounded-xl">
