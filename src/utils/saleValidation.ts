@@ -12,6 +12,7 @@ export interface SaleFormData {
   sale_type: 'unica' | 'mensalidade';
   // Venda Única
   installments: string;
+  sale_date: string;
   first_payment_date: string;
   // Mensalidade
   start_date: string;
