@@ -83,14 +83,122 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
   const totalPhases = formData.sale_type === 'unica' ? 6 : 7;
 
   useEffect(() => {
-    if (isOpen && organization?.id) {
-      loadAllData();
-      if (initialClientId) {
-        setFormData(prev => ({ ...prev, client_id: initialClientId }));
-        // Se já tem cliente, talvez queira pular para fase 2? Vamos deixar o usuário decidir
+    const loadModalData = async () => {
+      const currentOrgId = organizationId || organization?.id;
+      
+      try {
+        console.log('[CreateSaleModal] 🔍 INICIANDO carregamento de dados do modal');
+        console.log('[CreateSaleModal] isOpen:', isOpen);
+        console.log('[CreateSaleModal] initialClientId:', initialClientId);
+        console.log('[CreateSaleModal] organizationId (prop):', organizationId);
+        console.log('[CreateSaleModal] organizationId (context):', organization?.id);
+        console.log('');
+
+        if (!isOpen) {
+          console.log('[CreateSaleModal] ⚠️ Modal não está aberto, saindo');
+          setLoadingData(false);
+          return;
+        }
+
+        if (!currentOrgId) {
+          console.error('[CreateSaleModal] ❌ ERRO: organizationId não fornecido');
+          setError('Organization ID não disponível');
+          setLoadingData(false);
+          return;
+        }
+
+        setLoadingData(true);
+        setError(null);
+
+        // BUSCA 1: Produtos
+        console.log('[CreateSaleModal] 🔍 Buscando produtos...');
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('id, name')
+          .eq('organization_id', currentOrgId)
+          .order('name');
+
+        if (productsError) {
+          console.error('[CreateSaleModal] ❌ ERRO ao buscar produtos:', productsError);
+          throw productsError;
+        }
+        console.log('[CreateSaleModal] ✅ Produtos carregados:', productsData?.length || 0);
+        setProducts(productsData || []);
+        console.log('');
+
+        // BUSCA 2: Clientes (Leads)
+        console.log('[CreateSaleModal] 🔍 Buscando clientes (leads)...');
+        const { data: clientsData, error: clientsError } = await supabase
+          .from('leads')
+          .select('id, name, email')
+          .eq('organization_id', currentOrgId)
+          .order('name');
+
+        if (clientsError) {
+          console.error('[CreateSaleModal] ❌ ERRO ao buscar clientes:', clientsError);
+          throw clientsError;
+        }
+        console.log('[CreateSaleModal] ✅ Clientes carregados:', clientsData?.length || 0);
+        setClients(clientsData || []);
+        console.log('');
+
+        // BUSCA 3: Métodos de Pagamento
+        console.log('[CreateSaleModal] 🔍 Buscando métodos de pagamento...');
+        const { data: paymentData, error: paymentError } = await supabase
+          .from('payment_methods')
+          .select('id, name, active')
+          .eq('organization_id', currentOrgId)
+          .order('sort_order');
+
+        if (paymentError) {
+          console.error('[CreateSaleModal] ❌ ERRO ao buscar métodos de pagamento:', paymentError);
+          throw paymentError;
+        }
+        console.log('[CreateSaleModal] ✅ Métodos de pagamento carregados:', paymentData?.length || 0);
+        setPaymentMethods(paymentData || []);
+        console.log('');
+
+        // BUSCA 4: Etapas de Vendas (Específico do projeto)
+        console.log('[CreateSaleModal] 🔍 Buscando etapas de vendas...');
+        const { data: stagesData, error: stagesError } = await supabase
+          .from('product_sales_stages')
+          .select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)')
+          .eq('products.organization_id', currentOrgId);
+
+        if (stagesError) {
+          console.error('[CreateSaleModal] ❌ ERRO ao buscar etapas de vendas:', stagesError);
+          throw stagesError;
+        }
+        
+        const mappedStages: ProductSalesStage[] = (stagesData || []).map((stage: any) => ({
+          id: stage.id,
+          product_id: stage.product_id,
+          product_name: stage.products?.name || '',
+          name: stage.name,
+          value: Number(stage.value) || 0,
+          sale_type: stage.sale_type || 'unica',
+        }));
+        
+        console.log('[CreateSaleModal] ✅ Etapas de vendas carregadas:', mappedStages.length);
+        setProductSalesStages(mappedStages);
+        console.log('');
+
+        if (initialClientId) {
+          setFormData(prev => ({ ...prev, client_id: initialClientId }));
+        }
+
+        console.log('[CreateSaleModal] ✅ Todos os dados carregados com sucesso');
+        setLoadingData(false);
+
+      } catch (err) {
+        console.error('[CreateSaleModal] ❌ ERRO crítico ao carregar dados:', err);
+        setError(err instanceof Error ? err.message : 'Erro ao carregar dados');
+        setLoadingData(false);
       }
-    }
-  }, [isOpen, organization?.id, initialClientId]);
+    };
+
+    loadModalData();
+  }, [isOpen, organizationId, organization?.id, initialClientId]);
 
   // Sincronizar nome do cliente se o initialClientId mudar
   useEffect(() => {
@@ -131,39 +239,6 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
       }));
     }
   }, [formData.stage_value, formData.discount_type, formData.discount_value]);
-
-  const loadAllData = async () => {
-    if (!organization?.id) return;
-    try {
-      setLoadingData(true);
-      const [leadsRes, productsRes, paymentMethodsRes, stagesRes] = await Promise.all([
-        supabase.from('leads').select('id, name, email').eq('organization_id', organization.id).order('name'),
-        supabase.from('products').select('id, name').eq('organization_id', organization.id).order('name'),
-        supabase.from('payment_methods').select('id, name, active').eq('organization_id', organization.id).order('sort_order'),
-        supabase.from('product_sales_stages').select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)').eq('products.organization_id', organization.id)
-      ]);
-
-      setClients(leadsRes.data || []);
-      setProducts(productsRes.data || []);
-      setPaymentMethods(paymentMethodsRes.data || []);
-      
-      const mappedStages: ProductSalesStage[] = (stagesRes.data || []).map((stage: any) => ({
-        id: stage.id,
-        product_id: stage.product_id,
-        product_name: stage.products?.name || '',
-        name: stage.name,
-        value: Number(stage.value) || 0,
-        sale_type: stage.sale_type || 'unica',
-      }));
-      setProductSalesStages(mappedStages);
-
-    } catch (error) {
-      console.error('[CreateSaleModal] Erro ao carregar dados:', error);
-      toast.error('Erro ao carregar dados do formulário');
-    } finally {
-      setLoadingData(false);
-    }
-  };
 
   const filteredClients = useMemo(() => {
     if (!clientSearch.trim()) return clients;
@@ -222,7 +297,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
       return;
     }
 
-    if (!organization?.id) {
+    const currentOrgId = organizationId || organization?.id;
+    if (!currentOrgId) {
       setError('Organização não identificada.');
       return;
     }
@@ -237,13 +313,13 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         .from('products')
         .select('id, name')
         .eq('id', formData.product_id)
-        .eq('organization_id', organization.id)
+        .eq('organization_id', currentOrgId)
         .single();
 
       if (productCheckError || !productExists) {
         console.error('[CreateSaleModal] ❌ ERRO: Produto não encontrado', {
           product_id: formData.product_id,
-          organization_id: organization.id,
+          organization_id: currentOrgId,
           error: productCheckError,
         });
         
@@ -261,7 +337,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         product_name: productExists?.name,
         value: formData.stage_value,
         status: 'ativo',
-        organization_id: organization.id,
+        organization_id: currentOrgId,
         user_id: user?.id,
         timestamp: new Date().toISOString(),
         sale_type: formData.sale_type
@@ -301,7 +377,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSale com:', JSON.stringify(saleData, null, 2));
-        const result = await createSale(organization.id, saleData);
+        const result = await createSale(currentOrgId, saleData);
         console.log('[CreateSaleModal] ✅ Venda salva com sucesso:', result);
         toast.success('Venda única criada com sucesso!');
       } else {
@@ -319,7 +395,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSubscription com:', JSON.stringify(subscriptionData, null, 2));
-        await createSubscription(organization.id, subscriptionData);
+        await createSubscription(currentOrgId, subscriptionData);
         console.log('[CreateSaleModal] ✅ createSubscription retornou com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
@@ -396,14 +472,15 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
           {loadingData ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader className="w-10 h-10 animate-spin text-primary-600 mb-4" />
-              <p className="text-neutral-500">Carregando dados...</p>
+              <p className="text-neutral-500">Carregando dados do modal de vendas...</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <Alert variant="error" title="Erro" className="animate-in fade-in slide-in-from-top-2">
-                  {error}
-                </Alert>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-red-600 mb-4">❌ Erro ao Carregar Modal</h2>
+                  <p className="text-slate-600 mb-6">{error}</p>
+                </div>
               )}
               
               {/* FASE 1: Cliente */}
