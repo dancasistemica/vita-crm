@@ -22,22 +22,76 @@ export default function InstallmentsPage() {
   const [loading, setLoading] = useState(true);
   const [installments, setInstallments] = useState<Installment[]>([]);
   const [stats, setStats] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('todos');
+  const [filters, setFilters] = useState({
+    status: 'todos',
+    clientId: '',
+    productId: '',
+    searchTerm: ''
+  });
   const [selectedInstallment, setSelectedInstallment] = useState<Installment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        console.log('');
+        console.log('[InstallmentsPage] 📋 INICIANDO carregamento de dados');
+        console.log('[InstallmentsPage] Organization ID:', organizationId);
+        console.log('[InstallmentsPage] Filtros atuais:', filters);
+        console.log('');
+
+        if (!organizationId) {
+          console.error('[InstallmentsPage] ❌ ERRO: organizationId não fornecido');
+          setLoading(false);
+          return;
+        }
+
+        // Buscar parcelas
+        console.log('[InstallmentsPage] 🔍 Buscando parcelas com filtros...');
+        const installmentsData = await getInstallments(organizationId, {
+          status: filters.status !== 'todos' ? filters.status : undefined,
+          clientId: filters.clientId || undefined,
+          productId: filters.productId || undefined,
+        });
+
+        console.log('[InstallmentsPage] ✅ Parcelas recebidas:', installmentsData.length);
+        setInstallments(installmentsData);
+
+        // Buscar estatísticas
+        console.log('[InstallmentsPage] 🔍 Calculando estatísticas...');
+        const statsData = await getInstallmentStats(organizationId);
+        console.log('[InstallmentsPage] ✅ Estatísticas calculadas:', statsData);
+        setStats(statsData);
+
+        console.log('[InstallmentsPage] ✅ Carregamento finalizado');
+        console.log('');
+        console.log('');
+
+      } catch (error) {
+        console.error('[InstallmentsPage] ❌ ERRO ao carregar:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (organizationId) {
       loadData();
+    } else {
+      console.warn('[InstallmentsPage] ⚠️ organizationId não disponível');
     }
-  }, [organizationId]);
+  }, [organizationId, filters.status, filters.clientId, filters.productId]);
 
   const loadData = async () => {
+    // Keep this for the refresh button, but it will use the current state
     try {
       setLoading(true);
       const [data, statistics] = await Promise.all([
-        getInstallments(organizationId!),
+        getInstallments(organizationId!, {
+          status: filters.status !== 'todos' ? filters.status : undefined,
+          clientId: filters.clientId || undefined,
+          productId: filters.productId || undefined,
+        }),
         getInstallmentStats(organizationId!)
       ]);
       setInstallments(data);
