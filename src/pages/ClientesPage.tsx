@@ -181,6 +181,7 @@ export default function ClientesPage() {
         onClose={() => setShowCreateModal(false)}
         onSuccess={() => hook.refetchData()}
         initialClientId={saleLeadId}
+        organizationId={organizationId || ''}
       />
     </div>
   );
