@@ -127,6 +127,7 @@ export const fetchAttendanceWithPreviousData = async (
       attendanceMap.set(att.client_id, {
         id: att.id,
         attendance_type: att.attendance_type,
+        client_data: att.clients, // Dados completos do cliente incluídos
       });
     });
 
