@@ -162,6 +162,20 @@ export class DataAccessService {
     return true;
   }
 
+  // ── SUBSCRIPTIONS ──────────────────────────────────────
+  async getSubscriptions(filters?: { status?: string }) {
+    let query = supabase.from('subscriptions').select('*, leads(name)');
+    query = this.applyOrgFilter(query);
+
+    if (filters?.status) {
+      query = query.eq('status', filters.status);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+    if (error) { console.error('[DataAccessService] getSubscriptions error:', error); throw error; }
+    return data || [];
+  }
+
   // ── TASKS ──────────────────────────────────────────────
   async getTasks(filters?: { completed?: boolean }) {
     let query = supabase.from('tasks').select('*, leads(name)');
