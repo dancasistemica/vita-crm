@@ -113,7 +113,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         const { data: productsData, error: productsError } = await supabase
           .from('products')
           .select('id, name')
-          .eq('organization_id', currentOrgId)
+          .eq('organization_id', organizationId)
           .order('name');
 
         if (productsError) {
@@ -129,7 +129,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         const { data: clientsData, error: clientsError } = await supabase
           .from('leads')
           .select('id, name, email')
-          .eq('organization_id', currentOrgId)
+          .eq('organization_id', organizationId)
           .order('name');
 
         if (clientsError) {
@@ -145,7 +145,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         const { data: paymentData, error: paymentError } = await supabase
           .from('payment_methods')
           .select('id, name, active')
-          .eq('organization_id', currentOrgId)
+          .eq('organization_id', organizationId)
           .order('sort_order');
 
         if (paymentError) {
@@ -161,7 +161,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         const { data: stagesData, error: stagesError } = await supabase
           .from('product_sales_stages')
           .select('id, product_id, name, value, sale_type, products!inner(id, name, organization_id)')
-          .eq('products.organization_id', currentOrgId);
+          .eq('products.organization_id', organizationId);
 
         if (stagesError) {
           console.error('[CreateSaleModal] ❌ ERRO ao buscar etapas de vendas:', stagesError);
@@ -295,8 +295,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
       return;
     }
 
-    const currentOrgId = organizationId || organization?.id;
-    if (!currentOrgId) {
+    const organizationId = organizationId || organization?.id;
+    if (!organizationId) {
       setError('Organização não identificada.');
       return;
     }
@@ -311,13 +311,13 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         .from('products')
         .select('id, name')
         .eq('id', formData.product_id)
-        .eq('organization_id', currentOrgId)
+        .eq('organization_id', organizationId)
         .single();
 
       if (productCheckError || !productExists) {
         console.error('[CreateSaleModal] ❌ ERRO: Produto não encontrado', {
           product_id: formData.product_id,
-          organization_id: currentOrgId,
+          organization_id: organizationId,
           error: productCheckError,
         });
         
@@ -335,7 +335,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         product_name: productExists?.name,
         value: formData.stage_value,
         status: 'ativo',
-        organization_id: currentOrgId,
+        organization_id: organizationId,
         user_id: user?.id,
         timestamp: new Date().toISOString(),
         sale_type: formData.sale_type
@@ -375,7 +375,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSale com:', JSON.stringify(saleData, null, 2));
-        const result = await createSale(currentOrgId, saleData);
+        const result = await createSale(organizationId, saleData);
         console.log('[CreateSaleModal] ✅ Venda salva com sucesso:', result);
         toast.success('Venda única criada com sucesso!');
       } else {
@@ -393,7 +393,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSubscription com:', JSON.stringify(subscriptionData, null, 2));
-        await createSubscription(currentOrgId, subscriptionData);
+        await createSubscription(organizationId, subscriptionData);
         console.log('[CreateSaleModal] ✅ createSubscription retornou com sucesso');
         toast.success('Mensalidade criada com sucesso!');
       }
