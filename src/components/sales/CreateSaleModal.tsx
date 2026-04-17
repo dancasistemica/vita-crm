@@ -84,24 +84,22 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
 
   useEffect(() => {
     const loadModalData = async () => {
-      const currentOrgId = organizationId || organization?.id;
-      
       try {
-        console.log('[CreateSaleModal] 🔍 INICIANDO carregamento de dados do modal');
+        console.log('[CreateSaleModal] 🔍 Iniciando carregamento de dados');
         console.log('[CreateSaleModal] isOpen:', isOpen);
-        console.log('[CreateSaleModal] initialClientId:', initialClientId);
-        console.log('[CreateSaleModal] organizationId (prop):', organizationId);
-        console.log('[CreateSaleModal] organizationId (context):', organization?.id);
+        console.log('[CreateSaleModal] organizationId recebido:', organizationId);
+        console.log('[CreateSaleModal] organizationId é válido?', !!organizationId);
         console.log('');
 
+        // VALIDAÇÃO CRÍTICA
         if (!isOpen) {
-          console.log('[CreateSaleModal] ⚠️ Modal não está aberto, saindo');
+          console.log('[CreateSaleModal] ⚠️ Modal não está aberto');
           setLoadingData(false);
           return;
         }
 
-        if (!currentOrgId) {
-          console.error('[CreateSaleModal] ❌ ERRO: organizationId não fornecido');
+        if (!organizationId || organizationId.trim() === '') {
+          console.error('[CreateSaleModal] ❌ ERRO: organizationId não fornecido ou vazio');
           setError('Organization ID não disponível');
           setLoadingData(false);
           return;
