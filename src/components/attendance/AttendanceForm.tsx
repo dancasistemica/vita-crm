@@ -61,32 +61,34 @@ export const AttendanceForm = ({
       setErrors([]);
       
       console.log('');
-      console.log('[AttendanceForm] 📋 Carregando alunos para aula');
-      console.log('[AttendanceForm] Product ID:', productId);
-      console.log('[AttendanceForm] Organization ID:', organizationId);
-      console.log('[AttendanceForm] Data da aula:', classDate);
+      console.log('[AttendanceRegisterPage] 📋 Carregando alunos para aula');
+      console.log('[AttendanceRegisterPage] Product ID:', productId);
+      console.log('[AttendanceRegisterPage] Organization ID:', organizationId);
+      console.log('[AttendanceRegisterPage] Data da aula:', classDate);
       console.log('');
 
       // PASSO 1: Carregar clientes (Vendas + Mensalidades via service)
       const uniqueStudents = await fetchClientsByProduct(organizationId, productId, classDate);
       
-      console.log('[AttendanceForm] ✅ Total de alunos únicos:', uniqueStudents.length);
-      console.log('[AttendanceForm] Lista de alunos:');
+      console.log('[AttendanceRegisterPage] 🔀 PASSO 3: Combinando vendas e mensalidades...');
+      console.log('[AttendanceRegisterPage] ✅ Total de alunos únicos:', uniqueStudents.length);
+      console.log('[AttendanceRegisterPage] Lista de alunos:');
       uniqueStudents.forEach((student, idx) => {
         console.log(`  ${idx + 1}. ${student.name} (${student.type})`);
       });
       console.log('');
 
       // PASSO 2: Carregar presença anterior
-      console.log('[AttendanceForm] 🔍 Buscando registros de presença existentes...');
+      console.log('[AttendanceRegisterPage] 🔍 PASSO 4: Buscando registros de presença existentes...');
       const previousAttendanceMap = await fetchAttendanceWithPreviousData(
         organizationId,
         productId,
         classDate
       );
 
-      console.log('[AttendanceForm] ✅ Registros de presença encontrados:', previousAttendanceMap.size);
+      console.log('[AttendanceRegisterPage] ✅ Registros de presença encontrados:', previousAttendanceMap.size);
       console.log('');
+
 
       // PASSO 3: Mesclar
       const allClients = [...uniqueStudents];
