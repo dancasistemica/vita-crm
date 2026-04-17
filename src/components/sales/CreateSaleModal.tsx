@@ -191,6 +191,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
     if (currentPhase > 1) setCurrentPhase(currentPhase - 1);
   };
 
+  const isDateInPast = (date: string) => {
+    if (!date) return false;
+    const selectedDate = new Date(date + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return selectedDate < today;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -256,6 +264,17 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
         timestamp: new Date().toISOString(),
         sale_type: formData.sale_type
       });
+
+      // Log de venda retroativa
+      const targetDate = formData.sale_type === 'unica' ? formData.first_payment_date : formData.first_payment_due_date;
+      if (isDateInPast(targetDate)) {
+        console.log('[CreateSaleModal] ⚠️ Venda retroativa detectada:', {
+          first_payment_due_date: targetDate,
+          sale_type: formData.sale_type,
+          value: formData.stage_value,
+        });
+      }
+
 
       if (formData.sale_type === 'unica') {
         const saleData = {
@@ -551,6 +570,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                         onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
                         error={validationErrors.find(e => e.field === 'first_payment_date')?.message}
                       />
+                      {formData.first_payment_date && isDateInPast(formData.first_payment_date) && (
+                        <div className="col-span-full mt-1 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                          <p className="text-xs text-amber-800">
+                            ⚠️ <strong>Data no passado:</strong> Você está registrando uma venda retroativa.
+                          </p>
+                        </div>
+                      )}
+
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -568,6 +595,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                         onChange={(e) => setFormData({ ...formData, first_payment_due_date: e.target.value })}
                         error={validationErrors.find(e => e.field === 'first_payment_due_date')?.message}
                       />
+                      {(isDateInPast(formData.first_payment_due_date) || isDateInPast(formData.start_date)) && (
+                        <div className="col-span-full mt-1 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                          <p className="text-xs text-amber-800">
+                            ⚠️ <strong>Data no passado:</strong> Você está registrando uma mensalidade retroativa.
+                          </p>
+                        </div>
+                      )}
+
                     </div>
                   )}
                   

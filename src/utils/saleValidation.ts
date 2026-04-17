@@ -78,12 +78,11 @@ export const validatePhase = (
           errors.push({ field: 'first_payment_date', message: 'Data do 1º vencimento é obrigatória' });
         } else {
           const selectedDate = new Date(formData.first_payment_date + 'T00:00:00');
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          if (selectedDate < today) {
-            errors.push({ field: 'first_payment_date', message: 'Data do vencimento não pode ser no passado' });
+          if (isNaN(selectedDate.getTime())) {
+            errors.push({ field: 'first_payment_date', message: 'Data inválida' });
           }
+          // REMOVIDO: Validação de data passada permitindo vendas retroativas
+
         }
       } else {
         // Mensalidade
