@@ -36,6 +36,8 @@ export const SalesEditModal = ({
         status: formData.status || sale.status,
         notes: formData.notes || '',
       };
+      
+      console.log('[SalesEditModal] formData:', formData);
 
       if (isUnica) {
         // Campos para tabela 'sales'
@@ -47,10 +49,27 @@ export const SalesEditModal = ({
         cleanData.final_amount = formData.final_amount;
         cleanData.discount_granted_by = formData.discount_granted_by;
         cleanData.discount_granted_at = formData.discount_granted_at;
+        cleanData.sale_date = formData.sale_date;
+
+        // Se a data da primeira parcela mudou, atualizar na tabela sale_installments
+        if (formData.first_payment_date) {
+          console.log('[SalesEditModal] Atualizando data da primeira parcela');
+          const { error: installmentError } = await (window as any).supabase
+            .from('sale_installments')
+            .update({ due_date: formData.first_payment_date })
+            .eq('sale_id', sale.id)
+            .eq('installment_number', 1);
+
+          if (installmentError) {
+            console.error('[SalesEditModal] Erro ao atualizar parcela:', installmentError);
+          }
+        }
       } else {
         // Campos para tabela 'subscriptions'
         cleanData.monthly_value = formData.amount;
-        // Se houver um lead_id, não precisamos de client_email na tabela subscriptions
+        cleanData.start_date = formData.first_payment_date;
+        // Na mensalidade, o start_date pode ser considerado tanto a data de venda quanto da primeira parcela
+        // mas aqui estamos separando se houver lógica diferente
       }
 
       console.log('[SalesEditModal] Enviando dados limpos para updateSale:', cleanData);
