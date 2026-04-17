@@ -155,8 +155,8 @@ export default function ClientDetailPage() {
         console.log('[ClientDetailPage] 🔍 Buscando vendas únicas...');
         const { data: uniqueSales, error: salesError } = await supabase
           .from('sales')
-          .select('id, product_id, value, status, created_at, sale_date, payment_method_id')
-          .eq('client_id', id)
+          .select('id, product_id, value, status, created_at, sale_date, payment_method')
+          .eq('lead_id', id)
           .eq('organization_id', organizationId);
 
         if (salesError) {
@@ -192,11 +192,13 @@ export default function ClientDetailPage() {
           const mappedSales = uniqueSales.map(s => ({
             id: s.id, leadId: id || '', productId: s.product_id || '',
             value: Number(s.value) || 0, date: s.sale_date || '',
-            paymentMethod: s.payment_method_id || '', status: s.status || 'ativo',
+            paymentMethod: s.payment_method || '', status: s.status || 'ativo',
             sale_type: 'unica' as const,
             created_at: s.created_at,
             updated_at: s.created_at,
           }));
+          
+          let allSales = [...mappedSales];
           
           if (subscriptionsData) {
             const mappedSubs = subscriptionsData.map(s => ({
@@ -204,13 +206,13 @@ export default function ClientDetailPage() {
               value: Number(s.monthly_value) || 0, date: s.start_date || '',
               paymentMethod: 'Mensalidade', status: s.status || 'ativa',
               sale_type: 'mensalidade' as const,
-              created_at: s.created_at,
-              updated_at: s.created_at,
+              created_at: s.created_at || '',
+              updated_at: s.created_at || '',
             }));
-            setSales([...mappedSales, ...mappedSubs].sort((a, b) => b.date.localeCompare(a.date)));
-          } else {
-            setSales(mappedSales.sort((a, b) => b.date.localeCompare(a.date)));
+            allSales = [...allSales, ...mappedSubs];
           }
+          
+          setSales(allSales.sort((a, b) => b.date.localeCompare(a.date)));
         }
 
       } catch (error) {
