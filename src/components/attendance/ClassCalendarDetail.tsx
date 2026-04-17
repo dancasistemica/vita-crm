@@ -54,6 +54,10 @@ export const ClassCalendarDetail = ({
         return <Badge variant="success" size="sm">Presente</Badge>;
       case 'ausente':
         return <Badge variant="error" size="sm">Ausente</Badge>;
+      case 'pendente':
+        return <Badge variant="warning" size="sm">Pendente</Badge>;
+      case 'gravada':
+        return <Badge variant="info" size="sm">Gravada</Badge>;
       default:
         return <Badge variant="neutral" size="sm">{type}</Badge>;
     }
