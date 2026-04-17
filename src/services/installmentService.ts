@@ -26,20 +26,14 @@ export const getInstallments = async (
     type?: string;
   }
 ) => {
-  console.log('');
   console.log('[installmentService] 📋 INICIANDO busca híbrida (vendas + mensalidades)');
-  console.log('[installmentService] Organization ID:', organizationId);
-  console.log('[installmentService] Filtros:', filters);
-  console.log('');
 
   try {
     const allItems: Installment[] = [];
 
     // BUSCA 1: Parcelas de Vendas Únicas
     if (!filters?.type || filters.type === 'todos' || filters.type === 'venda_unica') {
-      console.log('[installmentService] 🔍 PASSO 1: Buscando parcelas de vendas únicas...');
-      
-      const { data: installments, error: instError } = await supabase
+      let query = supabase
         .from('sale_installments')
         .select(`
           id,
@@ -59,13 +53,21 @@ export const getInstallments = async (
             products:product_id(id, name)
           )
         `)
-        .eq('sales.organization_id', organizationId);
+        .eq('organization_id', organizationId);
+
+      if (filters?.clientId) {
+        query = query.eq('sales.lead_id', filters.clientId);
+      }
+      
+      if (filters?.productId) {
+        query = query.eq('sales.product_id', filters.productId);
+      }
+
+      const { data: installments, error: instError } = await query;
 
       if (instError) {
         console.error('[installmentService] ❌ ERRO ao buscar parcelas:', instError);
       } else {
-        console.log('[installmentService] ✅ Parcelas encontradas:', installments?.length || 0);
-
         const processedInstallments: Installment[] = (installments || []).map(inst => {
           const daysOverdue = inst.status === 'atrasado' 
             ? Math.floor((new Date().getTime() - new Date(inst.due_date).getTime()) / (1000 * 60 * 60 * 24))
@@ -90,15 +92,12 @@ export const getInstallments = async (
         });
 
         allItems.push(...processedInstallments);
-        console.log('[installmentService] ✅ Parcelas processadas:', processedInstallments.length);
       }
     }
 
     // BUSCA 2: Mensalidades Ativas
     if (!filters?.type || filters.type === 'todos' || filters.type === 'mensalidade') {
-      console.log('[installmentService] 🔍 PASSO 2: Buscando mensalidades ativas...');
-      
-      const { data: subscriptions, error: subError } = await supabase
+      let subQuery = supabase
         .from('subscriptions')
         .select(`
           id,
@@ -113,14 +112,20 @@ export const getInstallments = async (
         .eq('organization_id', organizationId)
         .eq('status', 'ativa');
 
+      if (filters?.clientId) {
+        subQuery = subQuery.eq('client_id', filters.clientId);
+      }
+      
+      if (filters?.productId) {
+        subQuery = subQuery.eq('product_id', filters.productId);
+      }
+
+      const { data: subscriptions, error: subError } = await subQuery;
+
       if (subError) {
         console.error('[installmentService] ❌ ERRO ao buscar mensalidades:', subError);
       } else {
-        console.log('[installmentService] ✅ Mensalidades encontradas:', subscriptions?.length || 0);
-
         const processedSubscriptions: Installment[] = (subscriptions || []).map(sub => {
-          // Calcular próxima data de cobrança se não houver
-          // Por enquanto, usaremos start_date e current month
           const start = new Date(sub.start_date || new Date());
           const today = new Date();
           const nextBillingDate = new Date(today.getFullYear(), today.getMonth(), start.getDate()).toISOString().split('T')[0];
@@ -154,19 +159,13 @@ export const getInstallments = async (
         });
 
         allItems.push(...processedSubscriptions);
-        console.log('[installmentService] ✅ Mensalidades processadas:', processedSubscriptions.length);
       }
     }
 
-    // APLICAR FILTROS
+    // APLICAR FILTROS (STATUS)
     let filteredItems = allItems;
-
     if (filters?.status && filters.status !== 'todos') {
       filteredItems = filteredItems.filter(item => item.status === filters.status);
-    }
-
-    if (filters?.clientId) {
-      // Filtrar por ID de cliente se necessário
     }
 
     // ORDENAR por data de vencimento
@@ -184,8 +183,8 @@ export const getInstallmentStats = async (organizationId: string) => {
   try {
     const { data: installments } = await supabase
       .from('sale_installments')
-      .select('amount, status, sales!inner(organization_id)')
-      .eq('sales.organization_id', organizationId);
+      .select('amount, status')
+      .eq('organization_id', organizationId);
 
     const { data: subscriptions } = await supabase
       .from('subscriptions')
@@ -196,7 +195,7 @@ export const getInstallmentStats = async (organizationId: string) => {
     const allInstallments = installments || [];
     const allSubscriptions = subscriptions || [];
 
-    const stats = {
+    return {
       total_parcelas: allInstallments.length,
       total_mensalidades: allSubscriptions.length,
       total_itens: allInstallments.length + allSubscriptions.length,
@@ -214,13 +213,10 @@ export const getInstallmentStats = async (organizationId: string) => {
       mensalidades_ativas: allSubscriptions.length,
       mrr: allSubscriptions.reduce((sum, s) => sum + (s.monthly_value || 0), 0),
       
-      // UI expected fields
       valor_pago: allInstallments.filter(i => i.status === 'pago').reduce((sum, i) => sum + (i.amount || 0), 0),
       valor_pendente: allInstallments.filter(i => i.status === 'pendente').reduce((sum, i) => sum + (i.amount || 0), 0) + 
                      allSubscriptions.reduce((sum, s) => sum + (s.monthly_value || 0), 0),
     };
-
-    return stats;
   } catch (error) {
     console.error('[installmentService] ❌ ERRO em stats:', error);
     throw error;
@@ -260,7 +256,7 @@ export const updateInstallmentStatus = async (
       if (error) throw error;
       return data?.[0];
     } else {
-      console.log('[installmentService] Mensalidade selecionada para atualização');
+      console.log('[installmentService] Mensalidade selecionada para atualização - Automático');
       return null;
     }
   } catch (error) {
