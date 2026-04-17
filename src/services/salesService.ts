@@ -341,26 +341,34 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
     console.log('[SalesService] ✅ Lead convertido');
 
     // ✨ NOVO: Registrar relacionamento com produto se houver
-    if (saleData.sales_stage_id) {
+    const productIdForEnrollment = saleData.product_id || null;
+    
+    if (productIdForEnrollment || saleData.sales_stage_id) {
       console.log('[SalesService] 📍 PASSO 5: Registrando relacionamento com produto...');
       try {
-        // Obter o product_id real da etapa de venda
-        const { data: stage, error: stageError } = await supabase
-          .from('product_sales_stages')
-          .select('product_id')
-          .eq('id', saleData.sales_stage_id)
-          .single();
+        let finalProductId = productIdForEnrollment;
 
-        if (stageError) {
-          console.warn('[SalesService] ⚠️ Aviso ao buscar etapa do produto:', stageError);
-        } else if (stage?.product_id) {
-          console.log('[SalesService] Vinculando cliente ao produto:', stage.product_id);
+        // Se não temos product_id mas temos stage_id, tentamos obter da etapa
+        if (!finalProductId && saleData.sales_stage_id) {
+          const { data: stage, error: stageError } = await supabase
+            .from('product_sales_stages')
+            .select('product_id')
+            .eq('id', saleData.sales_stage_id)
+            .single();
+
+          if (!stageError && stage?.product_id) {
+            finalProductId = stage.product_id;
+          }
+        }
+
+        if (finalProductId) {
+          console.log('[SalesService] Vinculando cliente ao produto:', finalProductId);
           const { error: cpError } = await supabase
             .from('client_products')
             .upsert({
               organization_id: organizationId,
               client_id: saleData.client_id,
-              product_id: stage.product_id,
+              product_id: finalProductId,
               payment_status: 'ATIVO',
               start_date: saleData.sale_date || saleData.first_payment_date || new Date().toISOString().split('T')[0],
               plan_type: 'AVULSO'
@@ -371,6 +379,8 @@ export const createSaleWithInstallments = async (organizationId: string, saleDat
           } else {
             console.log('[SalesService] ✅ Relacionamento client_product registrado');
           }
+        } else {
+          console.warn('[SalesService] ⚠️ Não foi possível identificar o produto para vincular ao cliente');
         }
       } catch (cpErr) {
         console.warn('[SalesService] ⚠️ Erro inesperado ao registrar client_product:', cpErr);
