@@ -435,6 +435,26 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
 
   if (!isOpen) return null;
 
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-neutral-200">
+          <h2 className="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
+            <span>❌</span> Erro ao Carregar Modal
+          </h2>
+          <p className="text-neutral-600 mb-6">{error}</p>
+          <Button
+            onClick={handleClose}
+            variant="primary"
+            className="w-full bg-neutral-600 hover:bg-neutral-700 border-neutral-600"
+          >
+            Fechar
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-[999] p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-visible border border-neutral-200">
