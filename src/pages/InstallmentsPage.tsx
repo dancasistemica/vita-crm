@@ -12,7 +12,8 @@ import {
   DollarSign,
   ArrowRight,
   MoreVertical,
-  RefreshCw
+  RefreshCw,
+  Tag
 } from 'lucide-react';
 import { toast } from 'sonner';
 import InstallmentModal from '@/components/InstallmentModal';
@@ -24,6 +25,7 @@ export default function InstallmentsPage() {
   const [stats, setStats] = useState<any>(null);
   const [filters, setFilters] = useState({
     status: 'todos',
+    type: 'todos',
     clientId: '',
     productId: '',
     searchTerm: ''
@@ -35,41 +37,23 @@ export default function InstallmentsPage() {
     const loadData = async () => {
       try {
         setLoading(true);
-        console.log('');
-        console.log('[InstallmentsPage] 📋 INICIANDO carregamento de dados');
-        console.log('[InstallmentsPage] Organization ID:', organizationId);
-        console.log('[InstallmentsPage] Filtros atuais:', filters);
-        console.log('');
+        if (!organizationId) return;
 
-        if (!organizationId) {
-          console.error('[InstallmentsPage] ❌ ERRO: organizationId não fornecido');
-          setLoading(false);
-          return;
-        }
+        const [installmentsData, statsData] = await Promise.all([
+          getInstallments(organizationId, {
+            status: filters.status !== 'todos' ? filters.status : undefined,
+            type: filters.type !== 'todos' ? filters.type : undefined,
+            clientId: filters.clientId || undefined,
+            productId: filters.productId || undefined,
+          }),
+          getInstallmentStats(organizationId)
+        ]);
 
-        // Buscar parcelas
-        console.log('[InstallmentsPage] 🔍 Buscando parcelas com filtros...');
-        const installmentsData = await getInstallments(organizationId, {
-          status: filters.status !== 'todos' ? filters.status : undefined,
-          clientId: filters.clientId || undefined,
-          productId: filters.productId || undefined,
-        });
-
-        console.log('[InstallmentsPage] ✅ Parcelas recebidas:', installmentsData.length);
         setInstallments(installmentsData);
-
-        // Buscar estatísticas
-        console.log('[InstallmentsPage] 🔍 Calculando estatísticas...');
-        const statsData = await getInstallmentStats(organizationId);
-        console.log('[InstallmentsPage] ✅ Estatísticas calculadas:', statsData);
         setStats(statsData);
-
-        console.log('[InstallmentsPage] ✅ Carregamento finalizado');
-        console.log('');
-        console.log('');
-
       } catch (error) {
         console.error('[InstallmentsPage] ❌ ERRO ao carregar:', error);
+        toast.error('Erro ao carregar dados');
       } finally {
         setLoading(false);
       }
@@ -77,18 +61,16 @@ export default function InstallmentsPage() {
 
     if (organizationId) {
       loadData();
-    } else {
-      console.warn('[InstallmentsPage] ⚠️ organizationId não disponível');
     }
-  }, [organizationId, filters.status, filters.clientId, filters.productId]);
+  }, [organizationId, filters.status, filters.type, filters.clientId, filters.productId]);
 
   const loadData = async () => {
-    // Keep this for the refresh button, but it will use the current state
     try {
       setLoading(true);
       const [data, statistics] = await Promise.all([
         getInstallments(organizationId!, {
           status: filters.status !== 'todos' ? filters.status : undefined,
+          type: filters.type !== 'todos' ? filters.type : undefined,
           clientId: filters.clientId || undefined,
           productId: filters.productId || undefined,
         }),
@@ -114,9 +96,7 @@ export default function InstallmentsPage() {
       item.client_name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
       item.product_name.toLowerCase().includes(filters.searchTerm.toLowerCase());
     
-    const matchesStatus = filters.status === 'todos' || item.status === filters.status;
-    
-    return matchesSearch && matchesStatus;
+    return matchesSearch;
   });
 
   const getStatusBadge = (status: string) => {
@@ -134,12 +114,19 @@ export default function InstallmentsPage() {
     }
   };
 
+  const getTypeBadge = (type: string) => {
+    if (type === 'venda_unica') {
+      return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-50 text-blue-700 border border-blue-100">Venda</span>;
+    }
+    return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-50 text-purple-700 border border-purple-100">Mensalidade</span>;
+  };
+
   return (
     <div className="p-6 space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Acompanhamento de Parcelas</h1>
-          <p className="text-slate-500 mt-1">Gerencie e monitore as mensalidades e pagamentos dos seus clientes.</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Página de Parcelas Híbrida</h1>
+          <p className="text-slate-500 mt-1">Acompanhamento unificado de vendas únicas e mensalidades recorrentes.</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -159,21 +146,21 @@ export default function InstallmentsPage() {
             <DollarSign className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Total Recebido</p>
+            <p className="text-sm font-medium text-slate-500">Receita Total (Mês)</p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {loading ? <Skeleton className="h-8 w-24" /> : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.valor_pago || 0)}
+              {loading ? <Skeleton className="h-8 w-24" /> : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.total_valor || 0)}
             </h3>
           </div>
         </Card>
 
         <Card className="p-6 flex items-start gap-4">
-          <div className="p-3 bg-yellow-50 rounded-lg">
-            <Clock className="w-6 h-6 text-yellow-600" />
+          <div className="p-3 bg-purple-50 rounded-lg">
+            <RefreshCw className="w-6 h-6 text-purple-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Pendente</p>
+            <p className="text-sm font-medium text-slate-500">MRR (Mensalidades)</p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {loading ? <Skeleton className="h-8 w-24" /> : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.valor_pendente || 0)}
+              {loading ? <Skeleton className="h-8 w-24" /> : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.mrr || 0)}
             </h3>
           </div>
         </Card>
@@ -183,22 +170,21 @@ export default function InstallmentsPage() {
             <AlertTriangle className="w-6 h-6 text-red-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Atrasados</p>
+            <p className="text-sm font-medium text-slate-500">Valor em Atraso</p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {loading ? <Skeleton className="h-8 w-12" /> : stats?.parcelas_atrasadas || 0}
+              {loading ? <Skeleton className="h-8 w-24" /> : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.valor_atrasado || 0)}
             </h3>
-            <p className="text-xs text-red-600 mt-1 font-medium">Inadimplência detectada</p>
           </div>
         </Card>
 
         <Card className="p-6 flex items-start gap-4">
           <div className="p-3 bg-green-50 rounded-lg">
-            <CheckCircle2 className="w-6 h-6 text-green-600" />
+            <Tag className="w-6 h-6 text-green-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Taxa de Liquidez</p>
+            <p className="text-sm font-medium text-slate-500">Total de Itens</p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {loading ? <Skeleton className="h-8 w-16" /> : `${stats?.total_parcelas ? Math.round((stats.parcelas_pagas / stats.total_parcelas) * 100) : 0}%`}
+              {loading ? <Skeleton className="h-8 w-16" /> : stats?.total_itens || 0}
             </h3>
           </div>
         </Card>
@@ -218,6 +204,17 @@ export default function InstallmentsPage() {
           </div>
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-slate-400" />
+            
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
+              className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+            >
+              <option value="todos">Todos os tipos</option>
+              <option value="venda_unica">Vendas Únicas</option>
+              <option value="mensalidade">Mensalidades</option>
+            </select>
+
             <select
               value={filters.status}
               onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
@@ -240,7 +237,8 @@ export default function InstallmentsPage() {
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente / Produto</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Parcela</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tipo</th>
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Parcela / Referência</th>
                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Valor</th>
                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Vencimento</th>
                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
@@ -252,7 +250,8 @@ export default function InstallmentsPage() {
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
                     <td className="px-6 py-4"><Skeleton className="h-5 w-40" /><Skeleton className="h-4 w-24 mt-1" /></td>
-                    <td className="px-6 py-4"><Skeleton className="h-5 w-12" /></td>
+                    <td className="px-6 py-4"><Skeleton className="h-5 w-16" /></td>
+                    <td className="px-6 py-4"><Skeleton className="h-5 w-20" /></td>
                     <td className="px-6 py-4"><Skeleton className="h-5 w-20" /></td>
                     <td className="px-6 py-4"><Skeleton className="h-5 w-24" /></td>
                     <td className="px-6 py-4"><Skeleton className="h-6 w-16 rounded-full" /></td>
@@ -267,7 +266,12 @@ export default function InstallmentsPage() {
                       <div className="text-sm text-slate-500">{item.product_name}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-slate-600">Parcela #{item.installment_number}</span>
+                      {getTypeBadge(item.type)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-slate-600">
+                        {item.type === 'venda_unica' ? `Parcela #${item.installment_number}` : 'Mensalidade'}
+                      </span>
                     </td>
                     <td className="px-6 py-4 font-bold text-slate-900">
                       {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.amount)}
@@ -291,21 +295,25 @@ export default function InstallmentsPage() {
                       {getStatusBadge(item.status)}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleEdit(item)}
-                        className="hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200"
-                      >
-                        Editar
-                      </Button>
+                      {item.type === 'venda_unica' ? (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleEdit(item)}
+                          className="hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200"
+                        >
+                          Editar
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-slate-400 italic">Automático</span>
+                      )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
-                    Nenhuma parcela encontrada para os filtros aplicados.
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                    Nenhum item encontrado para os filtros aplicados.
                   </td>
                 </tr>
               )}
