@@ -295,18 +295,14 @@ export default function InstallmentsPage() {
                       {getStatusBadge(item.status)}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {item.type === 'venda_unica' ? (
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => handleEdit(item)}
-                          className="hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200"
-                        >
-                          Editar
-                        </Button>
-                      ) : (
-                        <span className="text-xs text-slate-400 italic">Automático</span>
-                      )}
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleEdit(item)}
+                        className="hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200"
+                      >
+                        {item.type === 'venda_unica' ? 'Editar' : 'Dar Baixa'}
+                      </Button>
                     </td>
                   </tr>
                 ))
