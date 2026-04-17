@@ -163,6 +163,24 @@ export const SalesForm = ({
           className={isEditing ? "bg-neutral-100 opacity-70 cursor-not-allowed" : ""}
         />
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Data da Venda"
+            type="date"
+            value={formData.sale_date}
+            onChange={(e) => setFormData({ ...formData, sale_date: e.target.value })}
+            required
+          />
+
+          <Input
+            label="Data da 1ª Parcela / Início"
+            type="date"
+            value={formData.first_payment_date}
+            onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
+            required
+          />
+        </div>
+
         <Input
           label="Valor da Venda (R$)"
           type="number"
