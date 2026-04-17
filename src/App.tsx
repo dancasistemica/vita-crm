@@ -45,6 +45,7 @@ const AlertsPage = lazy(() => import("@/pages/AlertsPage"));
 const IntegrationsPage = lazy(() => import("@/pages/IntegrationsPage"));
 const DashboardFinanceiroPage = lazy(() => import("@/pages/DashboardFinanceiroPage"));
 const DatabaseSchemaPage = lazy(() => import("@/pages/DatabaseSchemaPage"));
+const InstallmentsPage = lazy(() => import("@/pages/InstallmentsPage"));
 
 
 const queryClient = new QueryClient();
@@ -108,6 +109,7 @@ const App = () => {
                     <Route path="/import-wizard" element={<ImportLeadsWizard />} />
                     <Route path="/pipeline" element={<PipelinePage />} />
                     <Route path="/vendas" element={<VendasPage />} />
+                    <Route path="/parcelas" element={<InstallmentsPage />} />
 
                     <Route path="/clientes" element={<ClientesPage />} />
                     <Route path="/clientes/por-produto" element={<ClientesPorProdutoPage />} />
