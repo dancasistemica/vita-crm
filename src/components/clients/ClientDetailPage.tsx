@@ -89,7 +89,7 @@ export default function ClientDetailPage() {
           id: s.id, leadId: s.lead_id, productId: s.product_id || '',
           value: Number(s.value) || 0, date: s.sale_date || '',
           paymentMethod: s.payment_method || '', status: s.status || 'ativo',
-          sale_type: 'unica',
+          sale_type: 'unica' as const,
           created_at: s.created_at,
           updated_at: s.updated_at,
         }))];
@@ -100,7 +100,7 @@ export default function ClientDetailPage() {
           id: s.id, leadId: s.client_id, productId: s.product_id || '',
           value: Number(s.monthly_value) || 0, date: s.start_date || '',
           paymentMethod: 'Mensalidade', status: s.status || 'ativa',
-          sale_type: 'mensalidade',
+          sale_type: 'mensalidade' as const,
           created_at: s.created_at,
           updated_at: s.updated_at,
         }))];
