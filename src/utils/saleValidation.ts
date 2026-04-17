@@ -12,6 +12,7 @@ export interface SaleFormData {
   sale_type: 'unica' | 'mensalidade';
   // Venda Única
   installments: string;
+  sale_date: string;
   first_payment_date: string;
   // Mensalidade
   start_date: string;
@@ -73,16 +74,24 @@ export const validatePhase = (
           errors.push({ field: 'installments', message: 'Número de parcelas deve ser maior que 0' });
         }
 
+        // Validar data da venda
+        if (!formData.sale_date) {
+          errors.push({ field: 'sale_date', message: 'Data da venda é obrigatória' });
+        } else {
+          const selectedDate = new Date(formData.sale_date + 'T00:00:00');
+          if (isNaN(selectedDate.getTime())) {
+            errors.push({ field: 'sale_date', message: 'Data de venda inválida' });
+          }
+        }
+
         // Validar data primeiro vencimento
         if (!formData.first_payment_date) {
           errors.push({ field: 'first_payment_date', message: 'Data do 1º vencimento é obrigatória' });
         } else {
           const selectedDate = new Date(formData.first_payment_date + 'T00:00:00');
           if (isNaN(selectedDate.getTime())) {
-            errors.push({ field: 'first_payment_date', message: 'Data inválida' });
+            errors.push({ field: 'first_payment_date', message: 'Data do 1º vencimento inválida' });
           }
-          // REMOVIDO: Validação de data passada permitindo vendas retroativas
-
         }
       } else {
         // Mensalidade
@@ -144,6 +153,7 @@ export const validateFormComplete = (
   if (saleType === 'unica') {
     const installments = parseInt(formData.installments) || 0;
     if (installments < 1) errors.push({ field: 'installments', message: 'Parcelas inválidas' });
+    if (!formData.sale_date) errors.push({ field: 'sale_date', message: 'Data da venda obrigatória' });
     if (!formData.first_payment_date) errors.push({ field: 'first_payment_date', message: 'Data de vencimento obrigatória' });
   } else {
     if (!formData.start_date) errors.push({ field: 'start_date', message: 'Data de início obrigatória' });

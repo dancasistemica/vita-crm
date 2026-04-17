@@ -44,6 +44,7 @@ const INITIAL_FORM_DATA: SaleFormData = {
   payment_method_id: '',
   sale_type: 'unica',
   installments: '1',
+  sale_date: '',
   first_payment_date: '',
   start_date: '',
   end_date: '',
@@ -266,7 +267,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
       });
 
       // Log de venda retroativa
-      const targetDate = formData.sale_type === 'unica' ? formData.first_payment_date : formData.first_payment_due_date;
+      const targetDate = formData.sale_type === 'unica' ? formData.sale_date : formData.start_date;
       if (isDateInPast(targetDate)) {
         console.log('[CreateSaleModal] ⚠️ Venda retroativa detectada:', {
           first_payment_due_date: targetDate,
@@ -282,6 +283,7 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
           value: formData.final_amount,
           status: 'ativo',
           installments: parseInt(formData.installments) || 1,
+          sale_date: formData.sale_date,
           first_payment_date: formData.first_payment_date,
           auto_payment_enabled: formData.auto_payment_enabled,
           notes: formData.notes,
@@ -564,7 +566,14 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
                         error={validationErrors.find(e => e.field === 'installments')?.message}
                       />
                       <Input
-                        label="Data da Venda / 1º Vencimento"
+                        label="Data da Venda (Início)"
+                        type="date"
+                        value={formData.sale_date}
+                        onChange={(e) => setFormData({ ...formData, sale_date: e.target.value })}
+                        error={validationErrors.find(e => e.field === 'sale_date')?.message}
+                      />
+                      <Input
+                        label="Data do 1º Vencimento"
                         type="date"
                         value={formData.first_payment_date}
                         onChange={(e) => setFormData({ ...formData, first_payment_date: e.target.value })}
