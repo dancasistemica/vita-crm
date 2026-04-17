@@ -1,4 +1,5 @@
 import { Alert, Badge, Button, Card, Dialog, Input, Label, Select, Tabs, TabsList, TabsTrigger, TabsContent, Textarea } from "@/components/ui/ds";
+import { supabase } from "@/integrations/supabase/client";
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLeadsData } from '@/hooks/useLeadsData';
@@ -127,8 +128,101 @@ export default function ClientDetailPage() {
   }, [dataAccess, id]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const loadClientData = async () => {
+      try {
+        console.log('[ClientDetailPage] 📋 Carregando dados do cliente');
+        console.log('[ClientDetailPage] Client ID:', id);
+        console.log('[ClientDetailPage] Organization ID:', organizationId);
+        console.log('');
+
+        // Buscar cliente
+        const { data: clientData, error: clientError } = await supabase
+          .from('leads')
+          .select('*')
+          .eq('id', id)
+          .eq('organization_id', organizationId)
+          .single();
+
+        if (clientError) {
+          console.error('[ClientDetailPage] ❌ ERRO ao buscar cliente:', clientError);
+          return;
+        }
+
+        console.log('[ClientDetailPage] ✅ Cliente carregado:', clientData?.name);
+        console.log('');
+
+        // Buscar vendas únicas
+        console.log('[ClientDetailPage] 🔍 Buscando vendas únicas...');
+        const { data: uniqueSales, error: salesError } = await supabase
+          .from('sales')
+          .select('id, product_id, value, status, created_at, sale_date, payment_method_id')
+          .eq('client_id', id)
+          .eq('organization_id', organizationId);
+
+        if (salesError) {
+          console.error('[ClientDetailPage] ❌ ERRO ao buscar sales:', salesError);
+        } else {
+          console.log('[ClientDetailPage] ✅ Vendas únicas encontradas:', uniqueSales?.length || 0);
+          if (uniqueSales && uniqueSales.length > 0) {
+            console.log('[ClientDetailPage] Primeiras vendas:', JSON.stringify(uniqueSales.slice(0, 2), null, 2));
+          }
+        }
+        console.log('');
+
+        // Buscar mensalidades
+        console.log('[ClientDetailPage] 🔍 Buscando mensalidades...');
+        const { data: subscriptionsData, error: subsError } = await supabase
+          .from('subscriptions')
+          .select('id, product_id, monthly_value, status, created_at, start_date')
+          .eq('client_id', id)
+          .eq('organization_id', organizationId);
+
+        if (subsError) {
+          console.error('[ClientDetailPage] ❌ ERRO ao buscar subscriptions:', subsError);
+        } else {
+          console.log('[ClientDetailPage] ✅ Mensalidades encontradas:', subscriptionsData?.length || 0);
+          if (subscriptionsData && subscriptionsData.length > 0) {
+            console.log('[ClientDetailPage] Primeiras mensalidades:', JSON.stringify(subscriptionsData.slice(0, 2), null, 2));
+          }
+        }
+        console.log('');
+
+        // Atualizar estados compatíveis com o componente existente
+        if (uniqueSales) {
+          const mappedSales = uniqueSales.map(s => ({
+            id: s.id, leadId: id || '', productId: s.product_id || '',
+            value: Number(s.value) || 0, date: s.sale_date || '',
+            paymentMethod: s.payment_method_id || '', status: s.status || 'ativo',
+            sale_type: 'unica' as const,
+            created_at: s.created_at,
+            updated_at: s.created_at,
+          }));
+          
+          if (subscriptionsData) {
+            const mappedSubs = subscriptionsData.map(s => ({
+              id: s.id, leadId: id || '', productId: s.product_id || '',
+              value: Number(s.monthly_value) || 0, date: s.start_date || '',
+              paymentMethod: 'Mensalidade', status: s.status || 'ativa',
+              sale_type: 'mensalidade' as const,
+              created_at: s.created_at,
+              updated_at: s.created_at,
+            }));
+            setSales([...mappedSales, ...mappedSubs].sort((a, b) => b.date.localeCompare(a.date)));
+          } else {
+            setSales(mappedSales.sort((a, b) => b.date.localeCompare(a.date)));
+          }
+        }
+
+      } catch (error) {
+        console.error('[ClientDetailPage] ❌ ERRO crítico:', error);
+      }
+    };
+
+    if (id && organizationId) {
+      loadClientData();
+      fetchData(); // Mantém o fetchData original para outras abas (interações, tarefas, etc)
+    }
+  }, [id, organizationId, fetchData]);
 
   const handleDeleteClientSale = async (saleId: string, saleType: 'unica' | 'mensalidade') => {
     if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.')) {

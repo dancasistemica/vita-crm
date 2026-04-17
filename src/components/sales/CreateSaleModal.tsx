@@ -300,8 +300,8 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId }:
         };
 
         console.log('[CreateSaleModal] 📤 Chamando createSale com:', JSON.stringify(saleData, null, 2));
-        await createSale(organization.id, saleData);
-        console.log('[CreateSaleModal] ✅ createSale retornou com sucesso');
+        const result = await createSale(organization.id, saleData);
+        console.log('[CreateSaleModal] ✅ Venda salva com sucesso:', result);
         toast.success('Venda única criada com sucesso!');
       } else {
         const subscriptionData = {
