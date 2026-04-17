@@ -92,7 +92,7 @@ export const SalesEditModal = ({
         // Se a data da primeira parcela mudou, atualizar na tabela sale_installments
         if (formData.first_payment_date) {
           console.log('[SalesEditModal] Atualizando data da primeira parcela');
-          const { error: installmentError } = await (window as any).supabase
+          const { error: installmentError } = await supabase
             .from('sale_installments')
             .update({ due_date: formData.first_payment_date })
             .eq('sale_id', sale.id)
@@ -107,7 +107,6 @@ export const SalesEditModal = ({
         cleanData.monthly_value = formData.amount;
         cleanData.start_date = formData.first_payment_date;
         // Na mensalidade, o start_date pode ser considerado tanto a data de venda quanto da primeira parcela
-        // mas aqui estamos separando se houver lógica diferente
       }
 
       console.log('[SalesEditModal] Enviando dados limpos para updateSale:', cleanData);
@@ -128,6 +127,8 @@ export const SalesEditModal = ({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <Card variant="elevated" padding="none" className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -142,12 +143,19 @@ export const SalesEditModal = ({
         </div>
         
         <div className="p-6">
-          <SalesForm 
-            initialData={sale} 
-            onSubmit={handleSubmit} 
-            isLoading={loading}
-            isEditing={true}
-          />
+          {fetchingDetails ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="w-10 h-10 animate-spin text-primary-600 mb-4" />
+              <p className="text-neutral-600">Buscando detalhes da venda...</p>
+            </div>
+          ) : (
+            <SalesForm 
+              initialData={fullSaleData} 
+              onSubmit={handleSubmit} 
+              isLoading={loading}
+              isEditing={true}
+            />
+          )}
         </div>
       </Card>
     </div>
