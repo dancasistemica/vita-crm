@@ -198,7 +198,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
 
         const sales = dateRange
           ? allSales.filter((s: any) => {
-              const d = new Date(s.created_at || '');
+               const d = new Date(s.sale_date || s.created_at || '');
               return d >= dateRange.start && d <= dateRange.end;
             })
           : allSales;
@@ -266,7 +266,7 @@ export function useDashboardData(dateRange?: { start: Date; end: Date }, forceCo
         const periodStart = dateRange?.start || (() => { const d = new Date(); d.setDate(d.getDate() - 30); return d; })();
         const salesByDayMap: Record<string, number> = {};
         sales.forEach((s: any) => {
-          const d = new Date(s.created_at || '');
+          const d = new Date(s.sale_date || s.created_at || '');
           if (d >= periodStart) {
             const key = d.toLocaleDateString('pt-BR');
             salesByDayMap[key] = (salesByDayMap[key] || 0) + (s.value || 0);
