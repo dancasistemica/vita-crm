@@ -496,12 +496,6 @@ export const CreateSaleModal = ({ isOpen, onClose, onSuccess, initialClientId, o
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold text-red-600 mb-4">❌ Erro ao Carregar Modal</h2>
-                  <p className="text-slate-600 mb-6">{error}</p>
-                </div>
-              )}
               
               {/* FASE 1: Cliente */}
               {currentPhase === 1 && (
