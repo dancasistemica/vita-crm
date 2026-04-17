@@ -13,6 +13,8 @@ interface WeeklyClassesListProps {
     day_number: number;
     attendance_count: number;
     total_clients: number;
+    presence_count?: number;
+    absence_count?: number;
   }>;
   filteredClasses: Array<{
     id: string;
@@ -25,6 +27,8 @@ interface WeeklyClassesListProps {
     day_number: number;
     attendance_count: number;
     total_clients: number;
+    presence_count?: number;
+    absence_count?: number;
   }>;
   onSelectClass: (classData: any) => void;
   isLoading: boolean;
