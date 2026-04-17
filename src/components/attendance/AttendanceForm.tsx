@@ -81,16 +81,12 @@ export const AttendanceForm = ({
       // Adicionar clientes que têm presença gravada mas não estão na lista de ativos
       previousAttendanceMap.forEach((att: any, clientId: string) => {
         if (!allClients.find(c => c.id === clientId)) {
-          // Buscar dados do cliente na resposta da presença (está no mapa agora)
-          // Nota: precisamos ajustar fetchAttendanceWithPreviousData para retornar os dados do cliente
-          console.log('[AttendanceForm] ℹ️ Adicionando cliente inativo com presença gravada:', clientId);
-          if (att.client_data) {
-            allClients.push({
-              id: clientId,
-              name: att.client_data.name || 'Cliente desconhecido',
-              email: att.client_data.email || '',
-            });
-          }
+          console.log('[AttendanceForm] ℹ️ Adicionando cliente com presença gravada:', clientId);
+          allClients.push({
+            id: clientId,
+            name: att.client_data?.name || 'Cliente não encontrado',
+            email: att.client_data?.email || '',
+          });
         }
       });
 
