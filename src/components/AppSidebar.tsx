@@ -9,6 +9,7 @@ import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useOrganization } from "@/contexts/OrganizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { OrganizationSwitcher } from "@/components/OrganizationSwitcher";
 import { 
@@ -63,6 +64,7 @@ export function AppSidebar() {
   const collapsed = !open;
   const { user, signOut } = useAuth();
   const { canAccessSettings, isSuperadmin } = useUserRole();
+  const { organization } = useOrganization();
 
   const [profileName, setProfileName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
