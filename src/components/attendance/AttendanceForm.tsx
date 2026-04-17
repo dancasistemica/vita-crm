@@ -117,8 +117,9 @@ export const AttendanceForm = ({
         });
       });
 
-      console.log('[AttendanceForm] ✅ Alunos com status de presença:', allClients.length);
-      console.log('[AttendanceForm] Dados finais:', JSON.stringify(allClients, null, 2));
+      console.log('[AttendanceRegisterPage] ✅ Alunos com status de presença:', allClients.length);
+      console.log('[AttendanceRegisterPage] Dados finais:', JSON.stringify(allClients, null, 2));
+
       console.log('');
 
       setClients(allClients);
