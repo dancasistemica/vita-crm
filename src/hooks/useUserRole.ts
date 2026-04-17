@@ -32,11 +32,7 @@ export function useUserRole(): UseUserRoleReturn {
     const resolve = async () => {
       try {
         // Check superadmin first
-        const { data: sa } = await supabase
-          .from('superadmin_roles')
-          .select('id')
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const { data: sa } = await supabase.rpc('is_superadmin', { _user_id: user.id });
 
         if (sa) {
           setRole('superadmin');

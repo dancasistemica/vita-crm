@@ -22,11 +22,7 @@ export function useSuperadmin(): UseSuperadminReturn {
 
     const checkSuperadmin = async () => {
       try {
-        const { data, error } = await supabase
-          .from('superadmin_roles')
-          .select('id')
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const { data, error } = await supabase.rpc('is_superadmin', { _user_id: user.id });
 
         if (error) {
           console.error('[useSuperadmin] Error checking role:', error);
