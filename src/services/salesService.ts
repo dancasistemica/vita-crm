@@ -491,6 +491,7 @@ export const loadAllSales = async (organizationId: string) => {
         created_at,
         updated_at,
         discount_value,
+        sale_date,
         leads:lead_id(name, email),
         products(name)
       `)
@@ -543,6 +544,7 @@ export const loadAllSales = async (organizationId: string) => {
         sale_type: 'unica',
         is_subscription: false,
         discount_value: sale.discount_value || 0,
+        sale_date: sale.sale_date,
         client_name: (sale.leads as any)?.name || 'Cliente desconhecido',
         client_email: (sale.leads as any)?.email || '',
         stage_name: (sale.products as any)?.name || 'Venda Única',
