@@ -491,6 +491,7 @@ export const loadAllSales = async (organizationId: string) => {
         created_at,
         updated_at,
         discount_value,
+        sale_date,
         leads:lead_id(name, email),
         products(name)
       `)
