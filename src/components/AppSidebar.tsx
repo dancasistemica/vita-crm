@@ -25,7 +25,8 @@ import {
   SidebarMenu, 
   SidebarMenuButton, 
   SidebarMenuItem,
-  SidebarFooter, 
+  SidebarFooter,
+  SidebarHeader,
   useSidebar,
   Button,
   Skeleton
