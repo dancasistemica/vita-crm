@@ -784,6 +784,7 @@ export type Database = {
           pipeline_stage: string | null
           responsible: string | null
           rg: string | null
+          sellflux_customer_id: string | null
           tags: string[] | null
           updated_at: string
         }
@@ -809,6 +810,7 @@ export type Database = {
           pipeline_stage?: string | null
           responsible?: string | null
           rg?: string | null
+          sellflux_customer_id?: string | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -834,6 +836,7 @@ export type Database = {
           pipeline_stage?: string | null
           responsible?: string | null
           rg?: string | null
+          sellflux_customer_id?: string | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -1189,6 +1192,7 @@ export type Database = {
           name: string
           notes: string | null
           organization_id: string
+          sellflux_product_id: string | null
           type: string | null
         }
         Insert: {
@@ -1198,6 +1202,7 @@ export type Database = {
           name: string
           notes?: string | null
           organization_id: string
+          sellflux_product_id?: string | null
           type?: string | null
         }
         Update: {
@@ -1207,6 +1212,7 @@ export type Database = {
           name?: string
           notes?: string | null
           organization_id?: string
+          sellflux_product_id?: string | null
           type?: string | null
         }
         Relationships: [
@@ -1385,6 +1391,7 @@ export type Database = {
           payment_status: string | null
           product_id: string | null
           sale_date: string | null
+          sellflux_order_id: string | null
           status: string
           updated_at: string
           value: number
@@ -1408,6 +1415,7 @@ export type Database = {
           payment_status?: string | null
           product_id?: string | null
           sale_date?: string | null
+          sellflux_order_id?: string | null
           status?: string
           updated_at?: string
           value?: number
@@ -1431,6 +1439,7 @@ export type Database = {
           payment_status?: string | null
           product_id?: string | null
           sale_date?: string | null
+          sellflux_order_id?: string | null
           status?: string
           updated_at?: string
           value?: number
@@ -1605,6 +1614,7 @@ export type Database = {
           payment_method_id: string | null
           product_id: string
           sales_stage_id: string
+          sellflux_id: string | null
           start_date: string
           status: string
           updated_at: string | null
@@ -1621,6 +1631,7 @@ export type Database = {
           payment_method_id?: string | null
           product_id: string
           sales_stage_id: string
+          sellflux_id?: string | null
           start_date: string
           status?: string
           updated_at?: string | null
@@ -1637,6 +1648,7 @@ export type Database = {
           payment_method_id?: string | null
           product_id?: string
           sales_stage_id?: string
+          sellflux_id?: string | null
           start_date?: string
           status?: string
           updated_at?: string | null
