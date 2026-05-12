@@ -126,7 +126,7 @@ export const FinancialCategoryModal = ({ isOpen, onClose, onSuccess, mode, categ
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="secondary" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
