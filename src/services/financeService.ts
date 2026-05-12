@@ -4,7 +4,9 @@ export interface FinancialMetrics {
   totalRevenue: number; // Receita total (Recebido + A Receber)
   receivedRevenue: number; // Recebido
   toReceiveRevenue: number; // A Receber (Previsão)
-  totalExpenses: number; // Despesas totais
+  totalExpenses: number; // Despesas totais (Previsto)
+  paidExpenses: number; // Pago
+  pendingExpenses: number; // A pagar (Previsto - Pago)
   mrrValue: number; // Receita Recorrente Mensal
   uniqueSalesCount: number; // Quantidade de vendas únicas
   subscriptionCount: number; // Quantidade de mensalidades
