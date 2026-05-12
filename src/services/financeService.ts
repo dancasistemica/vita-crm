@@ -1,16 +1,17 @@
 import { supabase } from '../lib/supabase';
 
 export interface FinancialMetrics {
-  totalRevenue: number; // Receita total (vendas + mensalidades)
+  totalRevenue: number; // Receita total (Recebido + A Receber)
+  receivedRevenue: number; // Recebido
+  toReceiveRevenue: number; // A Receber (Previsão)
+  totalExpenses: number; // Despesas totais
   mrrValue: number; // Receita Recorrente Mensal
   uniqueSalesCount: number; // Quantidade de vendas únicas
   subscriptionCount: number; // Quantidade de mensalidades
-  avgTicketUnique: number; // Ticket médio de vendas únicas
-  avgTicketSubscription: number; // Ticket médio de mensalidades
-  totalUniqueRevenue: number; // Receita total de vendas únicas
-  totalSubscriptionRevenue: number; // Receita total de mensalidades (mensal)
-  subscriptionPercentage: number; // % de receita recorrente
-  uniquePercentage: number; // % de vendas únicas
+  avgTicketUnique: number; 
+  avgTicketSubscription: number;
+  subscriptionPercentage: number;
+  uniquePercentage: number;
 }
 
 export const calculateFinancialMetrics = async (
