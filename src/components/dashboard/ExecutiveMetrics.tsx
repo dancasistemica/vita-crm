@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/ds";
-import { DollarSign, Users, Bell, Globe, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { DollarSign, Users, Bell, Globe, TrendingUp, TrendingDown, Minus, Wallet } from "lucide-react";
 import type { DashboardMetrics } from "@/services/dashboardService";
 
 interface ExecutiveMetricsProps {
