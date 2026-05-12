@@ -12,6 +12,8 @@ export interface DashboardMetrics {
     average_ticket: number;
     sales_trend: 'up' | 'down' | 'stable';
     sales_trend_percentage: number;
+    total_received: number;
+    total_to_receive: number;
   };
   
   // Presença
