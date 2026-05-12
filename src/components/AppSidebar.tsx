@@ -39,6 +39,13 @@ const baseItems = [
     title: "Dashboard Financeiro", 
     url: "/dashboard-financeiro", 
     icon: ({ className }: { className?: string }) => (
+      <span className={cn("flex items-center justify-center mr-1", className)} style={{ fontSize: '1rem' }}>📈</span>
+    )
+  },
+  { 
+    title: "Controle Financeiro", 
+    url: "/financeiro", 
+    icon: ({ className }: { className?: string }) => (
       <span className={cn("flex items-center justify-center mr-1", className)} style={{ fontSize: '1rem' }}>💰</span>
     )
   },
