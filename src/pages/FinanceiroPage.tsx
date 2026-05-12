@@ -284,6 +284,15 @@ export default function FinanceiroPage() {
                       <div className="text-xs text-slate-400">{tx.supplier_client_name}</div>
                     </TableCell>
                     <TableCell>
+                      {tx.origin === 'manual' ? (
+                        <Badge variant="ghost" className="bg-slate-100">Manual</Badge>
+                      ) : tx.origin === 'venda' ? (
+                        <Badge variant="ghost" className="bg-blue-50 text-blue-600 border-blue-100">Venda</Badge>
+                      ) : (
+                        <Badge variant="ghost" className="bg-purple-50 text-purple-600 border-purple-100">Assinatura</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <div className="text-sm">{tx.category?.name || '-'}</div>
                       <div className="text-xs text-slate-400">{tx.subcategory?.name || ''}</div>
                     </TableCell>
@@ -293,21 +302,28 @@ export default function FinanceiroPage() {
                     <TableCell>{getStatusBadge(tx.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => { setSelectedTx(tx); setIsTxModalOpen(true); }}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDelete(tx.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {tx.origin === 'manual' && (
+                          <>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => { setSelectedTx(tx); setIsTxModalOpen(true); }}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-red-500 hover:text-red-700"
+                              onClick={() => handleDelete(tx.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        {tx.origin !== 'manual' && (
+                          <span className="text-xs text-slate-400 italic">Sistema</span>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
