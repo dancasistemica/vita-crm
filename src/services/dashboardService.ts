@@ -266,6 +266,8 @@ export const calculateDashboardMetrics = async (
         average_ticket: averageTicket,
         sales_trend: salesTrend as 'up' | 'down' | 'stable',
         sales_trend_percentage: revenueTrend,
+        total_received: totalReceived,
+        total_to_receive: totalToReceive,
       },
       attendance: {
         total_classes: totalClasses,
