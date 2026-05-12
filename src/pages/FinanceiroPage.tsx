@@ -145,50 +145,61 @@ export default function FinanceiroPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card className="border-l-4 border-green-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 uppercase">Recebido</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.received)}</div>
-            <p className="text-xs text-slate-400 mt-1">Receitas confirmadas</p>
+            <div className="text-xl font-bold text-green-600">{formatCurrency(totals.received)}</div>
+            <p className="text-xs text-slate-400 mt-1">Realizado</p>
           </CardContent>
         </Card>
         
-        <Card className="border-l-4 border-blue-500 shadow-sm">
+        <Card className="border-l-4 border-blue-400 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Receber</CardTitle>
-            <Wallet className="h-4 w-4 text-blue-500" />
+            <Wallet className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{formatCurrency(totals.toReceive)}</div>
-            <p className="text-xs text-slate-400 mt-1">Previsão (vendas/mensalidades)</p>
+            <div className="text-xl font-bold text-blue-500">{formatCurrency(totals.toReceive)}</div>
+            <p className="text-xs text-slate-400 mt-1">Previsão</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-slate-400 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Despesas (Pago)</CardTitle>
+            <TrendingDown className="h-4 w-4 text-slate-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold text-slate-700">{formatCurrency(totals.paidExpenses)}</div>
+            <p className="text-xs text-slate-400 mt-1">Total realizado</p>
           </CardContent>
         </Card>
 
         <Card className="border-l-4 border-red-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Despesas</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Pagar</CardTitle>
             <TrendingDown className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{formatCurrency(totals.paidExpenses + totals.pendingExpenses)}</div>
-            <p className="text-xs text-slate-400 mt-1">Pagas: {formatCurrency(totals.paidExpenses)}</p>
+            <div className="text-xl font-bold text-red-600">{formatCurrency(totals.pendingExpenses)}</div>
+            <p className="text-xs text-slate-400 mt-1">Previsto - Pago</p>
           </CardContent>
         </Card>
         
-        <Card className="border-l-4 border-slate-500 shadow-sm">
+        <Card className="border-l-4 border-slate-900 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 uppercase">Saldo Previsto</CardTitle>
-            <Activity className="h-4 w-4 text-slate-500" />
+            <Activity className="h-4 w-4 text-slate-900" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-xl font-bold text-slate-900">
               {formatCurrency((totals.received + totals.toReceive) - (totals.paidExpenses + totals.pendingExpenses))}
             </div>
-            <p className="text-xs text-slate-400 mt-1">Considerando todos os lançamentos</p>
+            <p className="text-xs text-slate-400 mt-1">Final do período</p>
           </CardContent>
         </Card>
       </div>
