@@ -3,7 +3,7 @@ import { useOrganization } from '../contexts/OrganizationContext';
 import { calculateFinancialMetrics, FinancialMetrics } from '../services/financeService';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ds";
 import { Progress } from "@/components/ui/ds";
-import { DollarSign, TrendingUp, Users, ShoppingBag, PieChart, Activity } from "lucide-react";
+import { DollarSign, TrendingUp, TrendingDown, Users, ShoppingBag, PieChart, Activity, Wallet } from "lucide-react";
 
 export default function DashboardFinanceiroPage() {
   const { organizationId } = useOrganization();
