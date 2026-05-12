@@ -151,16 +151,16 @@ export default function DashboardFinanceiroPage() {
             <p className="text-xs text-slate-500 mt-2">Previsão de recebimento</p>
           </div>
 
-          {/* CARD 3: Despesas */}
+          {/* CARD 3: A Pagar */}
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Despesas</p>
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">A Pagar</p>
               <TrendingDown className="h-5 w-5 text-red-500" />
             </div>
             <p className="text-3xl font-bold text-slate-900">
-              {formatCurrency(metrics.totalExpenses)}
+              {formatCurrency(metrics.pendingExpenses)}
             </p>
-            <p className="text-xs text-slate-500 mt-2">Pagas e Pendentes</p>
+            <p className="text-xs text-slate-500 mt-2">Previsto: {formatCurrency(metrics.totalExpenses)}</p>
           </div>
 
           {/* CARD 4: MRR */}
