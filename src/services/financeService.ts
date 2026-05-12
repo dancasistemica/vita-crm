@@ -17,66 +17,79 @@ export interface FinancialMetrics {
 export const calculateFinancialMetrics = async (
   organizationId: string
 ): Promise<FinancialMetrics> => {
-  console.log('');
-  console.log('[financeService] 💰 INICIANDO cálculo de métricas');
-  console.log('[financeService] Organization ID:', organizationId);
-  console.log('');
-
   try {
-    // BUSCA 1: Vendas
-    console.log('[financeService] 🔍 Buscando vendas...');
-    const { data: sales, error: salesError } = await supabase
-      .from('sales')
-      .select('id, value')
-      .eq('organization_id', organizationId)
-      .eq('status', 'ativo');
-
-    if (salesError) {
-      console.error('[financeService] ❌ ERRO ao buscar sales:', salesError);
-      throw salesError;
-    }
-
-    console.log('[financeService] ✅ Vendas encontradas:', sales?.length || 0);
-    const totalSales = sales?.reduce((sum, s) => sum + (Number(s.value) || 0), 0) || 0;
-    console.log('[financeService] Total vendas: R$', totalSales.toFixed(2));
-    console.log('');
-
-    // BUSCA 2: Mensalidades
-    console.log('[financeService] 🔍 Buscando mensalidades...');
-    const { data: subs, error: subsError } = await supabase
+    // We can reuse getFinancialTransactions logic or fetch here.
+    // Let's fetch the 3 main sources for the dashboard summary.
+    
+    // 1. Sales & Installments
+    const { data: installments } = await supabase
+      .from('sale_installments')
+      .select('amount, status')
+      .eq('organization_id', organizationId);
+      
+    // 2. Subscriptions & Payments
+    const { data: subPayments } = await supabase
+      .from('subscription_payments')
+      .select('amount, status')
+      .eq('organization_id', organizationId);
+      
+    const { data: subs } = await supabase
       .from('subscriptions')
-      .select('id, monthly_value')
+      .select('monthly_value')
       .eq('organization_id', organizationId)
-      .eq('status', 'ativo');
+      .eq('status', 'ativa');
+      
+    // 3. Manual Transactions
+    const { data: manualTx } = await supabase
+      .from('financial_transactions')
+      .select('amount, type, status')
+      .eq('organization_id', organizationId);
 
-    if (subsError) {
-      console.error('[financeService] ❌ ERRO ao buscar subscriptions:', subsError);
-      throw subsError;
-    }
+    let received = 0;
+    let toReceive = 0;
+    let expenses = 0;
 
-    console.log('[financeService] ✅ Mensalidades encontradas:', subs?.length || 0);
-    const totalSubs = subs?.reduce((sum, s) => sum + (Number(s.monthly_value) || 0), 0) || 0;
-    console.log('[financeService] Total MRR: R$', totalSubs.toFixed(2));
-    console.log('');
+    // Process Installments
+    installments?.forEach(inst => {
+      const val = Number(inst.amount) || 0;
+      if (inst.status === 'pago') received += val;
+      else if (inst.status !== 'cancelado') toReceive += val;
+    });
 
-    const metrics: FinancialMetrics = {
-      totalRevenue: totalSales + totalSubs,
-      mrrValue: totalSubs,
-      uniqueSalesCount: sales?.length || 0,
+    // Process Subscription Payments
+    subPayments?.forEach(pay => {
+      const val = Number(pay.amount) || 0;
+      if (pay.status === 'pago') received += val;
+      else if (pay.status !== 'cancelado') toReceive += val;
+    });
+
+    // Process Manual
+    manualTx?.forEach(tx => {
+      const val = Number(tx.amount) || 0;
+      if (tx.type === 'receita') {
+        if (tx.status === 'pago') received += val;
+        else if (tx.status !== 'cancelado') toReceive += val;
+      } else {
+        expenses += val;
+      }
+    });
+
+    const mrr = subs?.reduce((sum, s) => sum + (Number(s.monthly_value) || 0), 0) || 0;
+    const totalRev = received + toReceive;
+
+    return {
+      totalRevenue: totalRev,
+      receivedRevenue: received,
+      toReceiveRevenue: toReceive,
+      totalExpenses: expenses,
+      mrrValue: mrr,
+      uniqueSalesCount: installments?.length || 0,
       subscriptionCount: subs?.length || 0,
-      avgTicketUnique: sales && sales.length > 0 ? totalSales / sales.length : 0,
-      avgTicketSubscription: subs && subs.length > 0 ? totalSubs / subs.length : 0,
-      totalUniqueRevenue: totalSales,
-      totalSubscriptionRevenue: totalSubs,
-      subscriptionPercentage: (totalSales + totalSubs) > 0 ? (totalSubs / (totalSales + totalSubs)) * 100 : 0,
-      uniquePercentage: (totalSales + totalSubs) > 0 ? (totalSales / (totalSales + totalSubs)) * 100 : 0,
+      avgTicketUnique: installments && installments.length > 0 ? (received + toReceive - mrr) / installments.length : 0,
+      avgTicketSubscription: subs && subs.length > 0 ? mrr / subs.length : 0,
+      subscriptionPercentage: totalRev > 0 ? (mrr / totalRev) * 100 : 0,
+      uniquePercentage: totalRev > 0 ? ((totalRev - mrr) / totalRev) * 100 : 0,
     };
-
-    console.log('[financeService] ✅ Métricas calculadas:', metrics);
-    console.log('');
-
-    return metrics;
-
   } catch (error) {
     console.error('[financeService] ❌ ERRO crítico:', error);
     throw error;
