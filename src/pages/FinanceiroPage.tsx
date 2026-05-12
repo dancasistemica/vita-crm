@@ -94,10 +94,15 @@ export default function FinanceiroPage() {
 
   const totals = transactions.reduce((acc, tx) => {
     if (tx.status === 'cancelado') return acc;
-    if (tx.type === 'receita') acc.income += tx.amount;
-    else acc.expense += tx.amount;
+    if (tx.type === 'receita') {
+      if (tx.status === 'pago') acc.received += tx.amount;
+      else acc.toReceive += tx.amount;
+    } else {
+      if (tx.status === 'pago') acc.paidExpenses += tx.amount;
+      else acc.pendingExpenses += tx.amount;
+    }
     return acc;
-  }, { income: 0, expense: 0 });
+  }, { received: 0, toReceive: 0, paidExpenses: 0, pendingExpenses: 0 });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
