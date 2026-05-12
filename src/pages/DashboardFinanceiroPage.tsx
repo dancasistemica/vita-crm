@@ -127,68 +127,52 @@ export default function DashboardFinanceiroPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {/* CARD 1: Receita Total */}
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Receita Total</p>
-              <span className="text-2xl">💵</span>
-            </div>
-            <p className="text-3xl font-bold text-slate-900">
-              {metrics && metrics.totalRevenue !== undefined ? (
-                `R$ ${metrics.totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-              ) : (
-                'R$ 0,00'
-              )}
-            </p>
-            <p className="text-xs text-slate-500 mt-2">Vendas + Mensalidades (Ativas)</p>
-          </div>
-
-          {/* CARD 2: MRR */}
+          {/* CARD 1: Recebido */}
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">MRR</p>
-              <span className="text-2xl">📈</span>
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Recebido</p>
+              <TrendingUp className="h-5 w-5 text-green-500" />
             </div>
             <p className="text-3xl font-bold text-slate-900">
-              {metrics && metrics.mrrValue !== undefined ? (
-                `R$ ${metrics.mrrValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-              ) : (
-                'R$ 0,00'
-              )}
+              {formatCurrency(metrics.receivedRevenue)}
             </p>
-            <p className="text-xs text-slate-500 mt-2">Receita Recorrente Mensal</p>
+            <p className="text-xs text-slate-500 mt-2">Receita já confirmada</p>
           </div>
 
-          {/* CARD 3: Ticket Médio (Vendas Únicas) */}
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+          {/* CARD 2: A Receber */}
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Ticket Médio (Únicas)</p>
-              <span className="text-2xl">🛍️</span>
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">A Receber</p>
+              <Wallet className="h-5 w-5 text-blue-500" />
             </div>
             <p className="text-3xl font-bold text-slate-900">
-              {metrics && metrics.avgTicketUnique !== undefined ? (
-                `R$ ${metrics.avgTicketUnique.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-              ) : (
-                'R$ 0,00'
-              )}
+              {formatCurrency(metrics.toReceiveRevenue)}
             </p>
-            <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.uniqueSalesCount} vendas</p>
+            <p className="text-xs text-slate-500 mt-2">Previsão de recebimento</p>
           </div>
 
-          {/* CARD 4: Ticket Médio (Recorrente) */}
+          {/* CARD 3: Despesas */}
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Despesas</p>
+              <TrendingDown className="h-5 w-5 text-red-500" />
+            </div>
+            <p className="text-3xl font-bold text-slate-900">
+              {formatCurrency(metrics.totalExpenses)}
+            </p>
+            <p className="text-xs text-slate-500 mt-2">Pagas e Pendentes</p>
+          </div>
+
+          {/* CARD 4: MRR */}
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">Ticket Médio (MRR)</p>
-              <span className="text-2xl">📊</span>
+              <p className="text-slate-600 text-sm font-semibold uppercase tracking-wider">MRR</p>
+              <Activity className="h-5 w-5 text-orange-500" />
             </div>
             <p className="text-3xl font-bold text-slate-900">
-              {metrics && metrics.avgTicketSubscription !== undefined ? (
-                `R$ ${metrics.avgTicketSubscription.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-              ) : (
-                'R$ 0,00'
-              )}
+              {formatCurrency(metrics.mrrValue)}
             </p>
-            <p className="text-xs text-slate-500 mt-2">Baseado em {metrics.subscriptionCount} assinaturas</p>
+            <p className="text-xs text-slate-500 mt-2">Receita Recorrente Mensal</p>
           </div>
         </div>
 
