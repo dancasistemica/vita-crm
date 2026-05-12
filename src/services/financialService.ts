@@ -25,15 +25,19 @@ export interface FinancialTransaction {
   category_id?: string;
   subcategory_id?: string;
   due_date: string;
-  payment_date?: string;
+  payment_date?: string | null;
   status: 'pendente' | 'pago' | 'atrasado' | 'cancelado';
   payment_method_id?: string;
   supplier_client_name?: string;
   notes?: string;
   created_at: string;
-  category?: { name: string };
-  subcategory?: { name: string };
-  payment_method?: { name: string };
+  updated_at?: string;
+}
+
+export interface FinancialTransactionWithJoins extends FinancialTransaction {
+  category?: { name: string } | null;
+  subcategory?: { name: string } | null;
+  payment_method?: { name: string } | null;
 }
 
 export const getFinancialCategories = async (organizationId: string) => {
@@ -91,14 +95,10 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
   const { data, error } = await query;
   
   if (error) throw error;
-  return data as (FinancialTransaction & { 
-    category: { name: string } | null; 
-    subcategory: { name: string } | null;
-    payment_method: { name: string } | null;
-  })[];
+  return data as FinancialTransactionWithJoins[];
 };
 
-export const createFinancialTransaction = async (transaction: Omit<FinancialTransaction, 'id' | 'created_at'>) => {
+export const createFinancialTransaction = async (transaction: Omit<FinancialTransaction, 'id' | 'created_at' | 'updated_at'>) => {
   const { data, error } = await supabase
     .from('financial_transactions')
     .insert([transaction])
@@ -109,7 +109,7 @@ export const createFinancialTransaction = async (transaction: Omit<FinancialTran
   return data;
 };
 
-export const updateFinancialTransaction = async (id: string, updates: Partial<FinancialTransaction>) => {
+export const updateFinancialTransaction = async (id: string, updates: Partial<Omit<FinancialTransaction, 'id' | 'created_at' | 'updated_at' | 'organization_id'>>) => {
   const { data, error } = await supabase
     .from('financial_transactions')
     .update(updates)
