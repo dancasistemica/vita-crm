@@ -1,7 +1,7 @@
 import { Card, Skeleton } from "@/components/ui/ds";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, DollarSign, TrendingUp, Target, RefreshCw } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, RefreshCw, Wallet } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
