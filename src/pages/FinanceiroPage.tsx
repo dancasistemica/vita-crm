@@ -27,7 +27,7 @@ import {
   TableCell,
   Badge,
 } from "@/components/ui/ds";
-import { Plus, Filter, Trash2, Edit2, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { Plus, Filter, Trash2, Edit2, TrendingUp, TrendingDown, Wallet, Activity } from "lucide-react";
 import { toast } from 'sonner';
 import { FinancialTransactionModal } from '@/components/financial/FinancialTransactionModal';
 import { FinancialCategoryModal } from '@/components/financial/FinancialCategoryModal';
