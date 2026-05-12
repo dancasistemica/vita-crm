@@ -1,7 +1,7 @@
 import { Card, Skeleton } from "@/components/ui/ds";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, DollarSign, TrendingUp, Target, RefreshCw } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Target, RefreshCw, Wallet } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import AIWeeklySummary from "@/components/ai/AIWeeklySummary";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -85,8 +85,9 @@ export default function DashboardPage() {
     { icon: Users, label: "Total de Leads", value: totalLeads ?? 0, color: 'bg-primary/10 text-primary' },
     { icon: Target, label: "Clientes", value: clients ?? 0, color: 'bg-success/10 text-success' },
     { icon: TrendingUp, label: "Taxa de Conversão", value: `${conversionRate ?? '0'}%`, color: 'bg-info/10 text-info' },
-    { icon: DollarSign, label: "Receita Total", value: `R$ ${(totalRevenue ?? 0).toLocaleString('pt-BR')}`, color: 'bg-accent/10 text-accent' },
-    { icon: DollarSign, label: "Receita Prevista", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
+    { icon: DollarSign, label: "Receita Recebida", value: `R$ ${(execMetrics?.sales.total_received ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-green-100 text-green-600' },
+    { icon: Wallet, label: "A Receber", value: `R$ ${(execMetrics?.sales.total_to_receive ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-blue-100 text-blue-600' },
+    { icon: DollarSign, label: "Receita Prevista (Leads)", value: `R$ ${(predictedRevenue ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: `${predictedLeadsCount} leads ativos`, color: 'bg-warning/10 text-warning' },
     { icon: DollarSign, label: "Total de Vendas", value: totalSales ?? 0, color: 'bg-primary/10 text-primary' },
     { icon: Users, label: "Clientes Recorrentes", value: recurringClients ?? 0, color: 'bg-accent/10 text-accent' },
     { icon: DollarSign, label: "Ticket Médio", value: `R$ ${(ticketMedio ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, color: 'bg-info/10 text-info' },

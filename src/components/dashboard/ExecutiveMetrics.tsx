@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/ds";
-import { DollarSign, Users, Bell, Globe, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { DollarSign, Users, Bell, Globe, TrendingUp, TrendingDown, Minus, Wallet } from "lucide-react";
 import type { DashboardMetrics } from "@/services/dashboardService";
 
 interface ExecutiveMetricsProps {
@@ -26,7 +26,15 @@ export default function ExecutiveMetrics({ metrics }: ExecutiveMetricsProps) {
       icon: DollarSign,
       trend: metrics.sales.sales_trend,
       trendValue: `${metrics.sales.sales_trend_percentage.toFixed(1)}%`,
+      subtitle: `Recebido: ${formatCurrency(metrics.sales.total_received)}`,
       color: "bg-primary/10 text-primary",
+    },
+    {
+      label: "A Receber",
+      value: formatCurrency(metrics.sales.total_to_receive),
+      icon: Wallet,
+      subtitle: "Previsão de caixa",
+      color: "bg-blue-100 text-blue-600",
     },
     {
       label: "Taxa de Presença",
@@ -42,13 +50,6 @@ export default function ExecutiveMetrics({ metrics }: ExecutiveMetricsProps) {
       icon: Bell,
       subtitle: `${metrics.alerts.high_severity_alerts} críticos`,
       color: "bg-destructive/10 text-destructive",
-    },
-    {
-      label: "Integrações",
-      value: `${metrics.integrations.connected_integrations}/${metrics.integrations.total_integrations}`,
-      icon: Globe,
-      subtitle: `Última sinc: ${metrics.integrations.last_sync_time}`,
-      color: "bg-info/10 text-info",
     },
   ];
 

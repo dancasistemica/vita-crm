@@ -12,6 +12,8 @@ export interface DashboardMetrics {
     average_ticket: number;
     sales_trend: 'up' | 'down' | 'stable';
     sales_trend_percentage: number;
+    total_received: number;
+    total_to_receive: number;
   };
   
   // Presença
@@ -100,9 +102,22 @@ export const calculateDashboardMetrics = async (
     }
 
     const totalSales = (sales?.length || 0) + (subPayments?.length || 0);
-    const salesRevenue = sales?.reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
-    const subRevenue = subPayments?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
-    const totalRevenue = salesRevenue + subRevenue;
+    
+    // Calculate received and to receive for sales
+    const salesReceived = sales?.filter(s => ['completed', 'concluido', 'pago', 'ativo'].includes(s.status?.toLowerCase()))
+      .reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+    const salesToReceive = sales?.filter(s => ['pending', 'pendente', 'atrasado'].includes(s.status?.toLowerCase()))
+      .reduce((acc, s) => acc + (Number(s.value) || 0), 0) || 0;
+
+    // Calculate received and to receive for subscriptions
+    const subReceived = subPayments?.filter(s => ['pago', 'concluido'].includes(s.status?.toLowerCase()))
+      .reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    const subToReceive = subPayments?.filter(s => ['pendente', 'atrasado'].includes(s.status?.toLowerCase()))
+      .reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+
+    const totalRevenue = salesReceived + salesToReceive + subReceived + subToReceive;
+    const totalReceived = salesReceived + subReceived;
+    const totalToReceive = salesToReceive + subToReceive;
 
     const completedSales = (sales?.filter(s => ['completed', 'concluido', 'pago', 'ativo'].includes(s.status?.toLowerCase())).length || 0) +
                            (subPayments?.filter(s => ['pago', 'concluido'].includes(s.status?.toLowerCase())).length || 0);
@@ -251,6 +266,8 @@ export const calculateDashboardMetrics = async (
         average_ticket: averageTicket,
         sales_trend: salesTrend as 'up' | 'down' | 'stable',
         sales_trend_percentage: revenueTrend,
+        total_received: totalReceived,
+        total_to_receive: totalToReceive,
       },
       attendance: {
         total_classes: totalClasses,
