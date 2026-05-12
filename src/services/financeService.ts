@@ -49,7 +49,8 @@ export const calculateFinancialMetrics = async (
 
     let received = 0;
     let toReceive = 0;
-    let expenses = 0;
+    let paidExpenses = 0;
+    let pendingExpenses = 0;
 
     // Process Installments
     installments?.forEach(inst => {
@@ -72,7 +73,8 @@ export const calculateFinancialMetrics = async (
         if (tx.status === 'pago') received += val;
         else if (tx.status !== 'cancelado') toReceive += val;
       } else {
-        expenses += val;
+        if (tx.status === 'pago') paidExpenses += val;
+        else if (tx.status !== 'cancelado') pendingExpenses += val;
       }
     });
 
@@ -83,7 +85,9 @@ export const calculateFinancialMetrics = async (
       totalRevenue: totalRev,
       receivedRevenue: received,
       toReceiveRevenue: toReceive,
-      totalExpenses: expenses,
+      totalExpenses: paidExpenses + pendingExpenses,
+      paidExpenses,
+      pendingExpenses,
       mrrValue: mrr,
       uniqueSalesCount: installments?.length || 0,
       subscriptionCount: subs?.length || 0,
