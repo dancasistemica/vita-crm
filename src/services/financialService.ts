@@ -95,7 +95,12 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
     if (manualError) throw manualError;
 
     if (manualData) {
-      allTransactions.push(...manualData.map(tx => ({ ...tx, origin: 'manual' as const })));
+      allTransactions.push(...manualData.map(tx => ({ 
+        ...tx, 
+        type: tx.type as 'receita' | 'despesa',
+        status: tx.status as any,
+        origin: 'manual' as const 
+      })));
     }
 
     // 2. Sales Installments (as Revenue)
@@ -104,15 +109,16 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
         .from('sale_installments')
         .select(`
           id,
+          sale_id,
           organization_id,
           due_date,
           paid_date,
           amount,
           status,
           notes,
-          sales:sale_id(
+          sales(
             id,
-            description,
+            notes,
             leads:lead_id(name)
           )
         `)
@@ -126,12 +132,12 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
       if (salesError) {
         console.error('Error fetching sales installments:', salesError);
       } else if (salesData) {
-        allTransactions.push(...salesData.map(inst => {
-          const sale = inst.sales as any;
+        allTransactions.push(...(salesData as any[]).map(inst => {
+          const sale = inst.sales;
           return {
             id: inst.id,
             organization_id: inst.organization_id,
-            description: `Parcela Venda: ${sale?.description || ''}`,
+            description: `Parcela Venda: ${sale?.notes || 'Sem descrição'}`,
             amount: Number(inst.amount),
             type: 'receita' as const,
             due_date: inst.due_date,
@@ -141,7 +147,7 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
             notes: inst.notes,
             origin: 'venda' as const,
             sale_id: inst.sale_id,
-            created_at: new Date().toISOString(), // Mocked as we don't need it for listing
+            created_at: new Date().toISOString(),
             category: { name: 'Vendas' }
           };
         }));
@@ -152,13 +158,14 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
         .from('subscription_payments')
         .select(`
           id,
+          subscription_id,
           organization_id,
           due_date,
           paid_date,
           amount,
           status,
           notes,
-          subscriptions:subscription_id(
+          subscriptions(
             id,
             leads:client_id(name),
             products:product_id(name)
@@ -174,8 +181,8 @@ export const getFinancialTransactions = async (organizationId: string, filters?:
       if (subsError) {
         console.error('Error fetching subscription payments:', subsError);
       } else if (subsData) {
-        allTransactions.push(...subsData.map(pay => {
-          const sub = pay.subscriptions as any;
+        allTransactions.push(...(subsData as any[]).map(pay => {
+          const sub = pay.subscriptions;
           return {
             id: pay.id,
             organization_id: pay.organization_id,
