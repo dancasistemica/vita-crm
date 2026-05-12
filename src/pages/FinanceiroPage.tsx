@@ -27,7 +27,7 @@ import {
   TableCell,
   Badge,
 } from "@/components/ui/ds";
-import { Plus, Filter, Trash2, Edit2, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { Plus, Filter, Trash2, Edit2, TrendingUp, TrendingDown, Wallet, Activity } from "lucide-react";
 import { toast } from 'sonner';
 import { FinancialTransactionModal } from '@/components/financial/FinancialTransactionModal';
 import { FinancialCategoryModal } from '@/components/financial/FinancialCategoryModal';
@@ -94,10 +94,15 @@ export default function FinanceiroPage() {
 
   const totals = transactions.reduce((acc, tx) => {
     if (tx.status === 'cancelado') return acc;
-    if (tx.type === 'receita') acc.income += tx.amount;
-    else acc.expense += tx.amount;
+    if (tx.type === 'receita') {
+      if (tx.status === 'pago') acc.received += tx.amount;
+      else acc.toReceive += tx.amount;
+    } else {
+      if (tx.status === 'pago') acc.paidExpenses += tx.amount;
+      else acc.pendingExpenses += tx.amount;
+    }
     return acc;
-  }, { income: 0, expense: 0 });
+  }, { received: 0, toReceive: 0, paidExpenses: 0, pendingExpenses: 0 });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -114,7 +119,7 @@ export default function FinanceiroPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Controle Financeiro</h1>
-          <p className="text-slate-500">Gerencie suas contas a pagar e receber</p>
+          <p className="text-slate-500">Fluxo de caixa unificado: Vendas, Mensalidades e Despesas</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button 
@@ -140,32 +145,50 @@ export default function FinanceiroPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-l-4 border-green-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-l-4 border-green-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Total Receitas</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Recebido</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.income)}</div>
+            <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.received)}</div>
+            <p className="text-xs text-slate-400 mt-1">Receitas confirmadas</p>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-red-500">
+        
+        <Card className="border-l-4 border-blue-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Total Despesas</CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{formatCurrency(totals.expense)}</div>
-          </CardContent>
-        </Card>
-        <Card className="border-l-4 border-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Saldo Previsto</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Receber</CardTitle>
             <Wallet className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{formatCurrency(totals.income - totals.expense)}</div>
+            <div className="text-2xl font-bold text-blue-600">{formatCurrency(totals.toReceive)}</div>
+            <p className="text-xs text-slate-400 mt-1">Previsão (vendas/mensalidades)</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-red-500 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Despesas</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{formatCurrency(totals.paidExpenses + totals.pendingExpenses)}</div>
+            <p className="text-xs text-slate-400 mt-1">Pagas: {formatCurrency(totals.paidExpenses)}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-l-4 border-slate-500 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Saldo Previsto</CardTitle>
+            <Activity className="h-4 w-4 text-slate-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-slate-900">
+              {formatCurrency((totals.received + totals.toReceive) - (totals.paidExpenses + totals.pendingExpenses))}
+            </div>
+            <p className="text-xs text-slate-400 mt-1">Considerando todos os lançamentos</p>
           </CardContent>
         </Card>
       </div>
@@ -234,6 +257,7 @@ export default function FinanceiroPage() {
               <TableRow>
                 <TableHead>Vencimento</TableHead>
                 <TableHead>Descrição</TableHead>
+                <TableHead>Origem</TableHead>
                 <TableHead>Categoria / Sub</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead>Status</TableHead>
@@ -260,6 +284,15 @@ export default function FinanceiroPage() {
                       <div className="text-xs text-slate-400">{tx.supplier_client_name}</div>
                     </TableCell>
                     <TableCell>
+                      {tx.origin === 'manual' ? (
+                        <Badge variant="ghost" className="bg-slate-100">Manual</Badge>
+                      ) : tx.origin === 'venda' ? (
+                        <Badge variant="ghost" className="bg-blue-50 text-blue-600 border-blue-100">Venda</Badge>
+                      ) : (
+                        <Badge variant="ghost" className="bg-purple-50 text-purple-600 border-purple-100">Assinatura</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <div className="text-sm">{tx.category?.name || '-'}</div>
                       <div className="text-xs text-slate-400">{tx.subcategory?.name || ''}</div>
                     </TableCell>
@@ -269,21 +302,28 @@ export default function FinanceiroPage() {
                     <TableCell>{getStatusBadge(tx.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => { setSelectedTx(tx); setIsTxModalOpen(true); }}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDelete(tx.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {tx.origin === 'manual' && (
+                          <>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => { setSelectedTx(tx); setIsTxModalOpen(true); }}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-red-500 hover:text-red-700"
+                              onClick={() => handleDelete(tx.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        {tx.origin !== 'manual' && (
+                          <span className="text-xs text-slate-400 italic">Sistema</span>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
