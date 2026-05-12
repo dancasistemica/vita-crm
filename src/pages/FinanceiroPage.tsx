@@ -145,64 +145,78 @@ export default function FinanceiroPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="border-l-4 border-green-500 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Recebido</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Bloco de Recebimentos */}
+        <Card className="border-t-4 border-t-green-500 shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-green-500" />
+              Fluxo de Recebimentos
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-green-600">{formatCurrency(totals.received)}</div>
-            <p className="text-xs text-slate-400 mt-1">Realizado</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-blue-400 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Receber</CardTitle>
-            <Wallet className="h-4 w-4 text-blue-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl font-bold text-blue-500">{formatCurrency(totals.toReceive)}</div>
-            <p className="text-xs text-slate-400 mt-1">Previsão</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-slate-400 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Despesas (Pago)</CardTitle>
-            <TrendingDown className="h-4 w-4 text-slate-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl font-bold text-slate-700">{formatCurrency(totals.paidExpenses)}</div>
-            <p className="text-xs text-slate-400 mt-1">Total realizado</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-red-500 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Pagar</CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl font-bold text-red-600">{formatCurrency(totals.pendingExpenses)}</div>
-            <p className="text-xs text-slate-400 mt-1">Previsto - Pago</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-slate-900 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Saldo Previsto</CardTitle>
-            <Activity className="h-4 w-4 text-slate-900" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl font-bold text-slate-900">
-              {formatCurrency((totals.received + totals.toReceive) - (totals.paidExpenses + totals.pendingExpenses))}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <p className="text-xs font-medium text-slate-500 uppercase">Previsão</p>
+                <p className="text-lg font-bold text-slate-900">{formatCurrency(totals.received + totals.toReceive)}</p>
+              </div>
+              <div className="p-3 bg-green-50 rounded-lg border border-green-100">
+                <p className="text-xs font-medium text-green-700 uppercase">Recebido</p>
+                <p className="text-lg font-bold text-green-600">{formatCurrency(totals.received)}</p>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                <p className="text-xs font-medium text-blue-700 uppercase">A Receber</p>
+                <p className="text-lg font-bold text-blue-600">{formatCurrency(totals.toReceive)}</p>
+              </div>
             </div>
-            <p className="text-xs text-slate-400 mt-1">Final do período</p>
+          </CardContent>
+        </Card>
+
+        {/* Bloco de Pagamentos */}
+        <Card className="border-t-4 border-t-red-500 shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <TrendingDown className="h-5 w-5 text-red-500" />
+              Fluxo de Pagamentos
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <p className="text-xs font-medium text-slate-500 uppercase">Previsão</p>
+                <p className="text-lg font-bold text-slate-900">{formatCurrency(totals.paidExpenses + totals.pendingExpenses)}</p>
+              </div>
+              <div className="p-3 bg-slate-100 rounded-lg border border-slate-200">
+                <p className="text-xs font-medium text-slate-700 uppercase">Pago</p>
+                <p className="text-lg font-bold text-slate-800">{formatCurrency(totals.paidExpenses)}</p>
+              </div>
+              <div className="p-3 bg-red-50 rounded-lg border border-red-100">
+                <p className="text-xs font-medium text-red-700 uppercase">A Pagar</p>
+                <p className="text-lg font-bold text-red-600">{formatCurrency(totals.pendingExpenses)}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      <Card className="bg-slate-900 text-white shadow-lg overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+          <Activity className="h-24 w-24" />
+        </div>
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">Saldo Final Previsto</p>
+              <h2 className="text-4xl font-bold mt-1">
+                {formatCurrency((totals.received + totals.toReceive) - (totals.paidExpenses + totals.pendingExpenses))}
+              </h2>
+            </div>
+            <div className="text-right">
+              <p className="text-slate-400 text-xs italic">Considerando todos os lançamentos confirmados e previstos para o período.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
