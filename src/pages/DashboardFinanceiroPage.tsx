@@ -202,7 +202,7 @@ export default function DashboardFinanceiroPage() {
                   <span className="text-sm font-bold text-blue-600">{metrics.uniquePercentage.toFixed(1)}%</span>
                 </div>
                 <Progress value={metrics.uniquePercentage} className="h-3 bg-slate-100 [&>div]:bg-blue-500" />
-                <p className="text-xs text-slate-500 mt-1">{formatCurrency(metrics.totalUniqueRevenue)} totais</p>
+                <p className="text-xs text-slate-500 mt-1">{formatCurrency(metrics.totalRevenue - metrics.mrrValue)} totais</p>
               </div>
             </CardContent>
           </Card>
