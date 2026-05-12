@@ -130,6 +130,7 @@ const App = () => {
                     <Route path="/integracoes" element={<IntegrationsPage />} />
                     <Route path="/search" element={<SearchResultsPage />} />
                     <Route path="/dashboard-financeiro" element={<DashboardFinanceiroPage />} />
+                    <Route path="/financeiro" element={<FinanceiroPage />} />
                     <Route path="/database" element={<DatabaseSchemaPage />} />
                   </Route>
                 </Route>
