@@ -257,6 +257,7 @@ export default function FinanceiroPage() {
               <TableRow>
                 <TableHead>Vencimento</TableHead>
                 <TableHead>Descrição</TableHead>
+                <TableHead>Origem</TableHead>
                 <TableHead>Categoria / Sub</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead>Status</TableHead>
