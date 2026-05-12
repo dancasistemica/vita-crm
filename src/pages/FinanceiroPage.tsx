@@ -119,7 +119,7 @@ export default function FinanceiroPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Controle Financeiro</h1>
-          <p className="text-slate-500">Gerencie suas contas a pagar e receber</p>
+          <p className="text-slate-500">Fluxo de caixa unificado: Vendas, Mensalidades e Despesas</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button 
@@ -145,32 +145,50 @@ export default function FinanceiroPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-l-4 border-green-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-l-4 border-green-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Total Receitas</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Recebido</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.income)}</div>
+            <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.received)}</div>
+            <p className="text-xs text-slate-400 mt-1">Receitas confirmadas</p>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-red-500">
+        
+        <Card className="border-l-4 border-blue-500 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Total Despesas</CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{formatCurrency(totals.expense)}</div>
-          </CardContent>
-        </Card>
-        <Card className="border-l-4 border-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Saldo Previsto</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">A Receber</CardTitle>
             <Wallet className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{formatCurrency(totals.income - totals.expense)}</div>
+            <div className="text-2xl font-bold text-blue-600">{formatCurrency(totals.toReceive)}</div>
+            <p className="text-xs text-slate-400 mt-1">Previsão (vendas/mensalidades)</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-red-500 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Despesas</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{formatCurrency(totals.paidExpenses + totals.pendingExpenses)}</div>
+            <p className="text-xs text-slate-400 mt-1">Pagas: {formatCurrency(totals.paidExpenses)}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-l-4 border-slate-500 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500 uppercase">Saldo Previsto</CardTitle>
+            <Activity className="h-4 w-4 text-slate-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-slate-900">
+              {formatCurrency((totals.received + totals.toReceive) - (totals.paidExpenses + totals.pendingExpenses))}
+            </div>
+            <p className="text-xs text-slate-400 mt-1">Considerando todos os lançamentos</p>
           </CardContent>
         </Card>
       </div>
