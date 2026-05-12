@@ -38,6 +38,10 @@ export interface FinancialTransactionWithJoins extends FinancialTransaction {
   category?: { name: string } | null;
   subcategory?: { name: string } | null;
   payment_method?: { name: string } | null;
+  origin?: 'manual' | 'venda' | 'assinatura';
+  client_id?: string;
+  sale_id?: string;
+  subscription_id?: string;
 }
 
 export const getFinancialCategories = async (organizationId: string) => {
