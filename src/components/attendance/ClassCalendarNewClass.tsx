@@ -55,17 +55,8 @@ export const ClassCalendarNewClass = ({
     if (!classTime) newErrors.push('Horário da aula é obrigatório');
     if (!description.trim()) newErrors.push('Descrição da aula é obrigatória');
 
-    // Validar se data não é no passado
-    if (classDate) {
-      const selectedDate = new Date(classDate + 'T00:00:00');
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+    // Permitir cadastro de aulas em datas passadas (registro retroativo)
 
-      if (selectedDate < today) {
-        newErrors.push('Data da aula não pode ser no passado');
-        console.warn('[ClassCalendarNewClass] ⚠️ Data no passado');
-      }
-    }
 
     if (newErrors.length > 0) {
       console.log('[ClassCalendarNewClass] ❌ Erros de validação:', newErrors);
